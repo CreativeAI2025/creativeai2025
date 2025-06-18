@@ -1,6 +1,13 @@
 using System;
 
-class Parameter //キャラのパラメータを列挙型で作る
-{
-    
-}
+enum Parameter//キャラクターのパラメータ
+ {
+    HP,
+    MP,
+    Attack,
+    Defence,
+    MagicAttack,
+    MagicDefence,
+    Speed,
+    Evasion
+ }
