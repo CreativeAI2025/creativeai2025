@@ -7,7 +7,7 @@ namespace SimpleRpg
 
     public class ExpRecord
     {
-        public int level;
-        public int exp;
+        public int Level;
+        public int Exp;
     }
 }
