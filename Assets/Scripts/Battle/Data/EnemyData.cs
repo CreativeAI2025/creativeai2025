@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Scriptable Objects/EnemyData")]
@@ -16,4 +17,5 @@ public class EnemyData : ScriptableObject
     public int Evasion;
     public int exp;
     public int gold;
+    public List<EnemyActionRecord> enemyActionRecords;
 }
