@@ -16,6 +16,11 @@ public class MenuManager : MonoBehaviour
     [SerializeField] TopMenuWindowController _topMenuWindowController;
 
     /// <summary>
+    /// メニュー画面のステータスウィンドウを制御するクラスへの参照
+    /// </summary>
+    [SerializeField] MenuCharacterWindowController _menuCharacterWindowController;
+
+    /// <summary>
     /// メニューのフェーズ
     /// </summary>
     public MenuPhase MenuPhase { get; private set; }
@@ -55,7 +60,7 @@ public class MenuManager : MonoBehaviour
             return;
         }
 
-        // メニューを開くキーが押された時、メニューを開く
+        // メニューキーが押された時、メニューを開く
         if (_inputSetting.GetMenuKeyDown())
         {
             OpenMenu();
@@ -72,6 +77,9 @@ public class MenuManager : MonoBehaviour
 
     IEnumerator OpenMenuProcess()
     {
+        /// <sumarry>
+        /// １フレームだけ遅延させる（その際、OpenMenu関数内にあるコルーチンを用いる）
+        /// </summary>
         yield return null;
 
         MenuPhase = MenuPhase.Top;
@@ -86,10 +94,9 @@ public class MenuManager : MonoBehaviour
     /// メニュー項目が選択された時のコールバック
     /// </summary>
     /// <param name="menuCOmmand"></param>
-    public void OnSelectedMenu(MenuCommand menuCOmmand)
+    public void OnSelectedMenu(MenuCommand menuCommand)
     {
-        SelectedMenu = menuCOmmand;
-        Debug.Log("メニューが選択された");
+        SelectedMenu = menuCommand;
         HandleMenu();
     }
 
@@ -102,6 +109,7 @@ public class MenuManager : MonoBehaviour
         {
             case MenuCommand.Character:
                 // キャラ詳細を開く処理
+                ShowCharacterMenu();
                 break;
             case MenuCommand.Skill:
                 // スキルを開く処理
@@ -115,8 +123,20 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    void ShowCharacterMenu()
+    {
+        MenuPhase = MenuPhase.Character;
+        _menuCharacterWindowController.SetUpController(this);
+        _menuCharacterWindowController.ShowWindow();
+    }
+
+    public void OnCharacterCanceled()
+    {
+        MenuPhase = MenuPhase.Top;
+    }
+
     /// <summary>
-    /// メニュー画面が閉じるおｔきのコールバック
+    /// メニュー画面が閉じるときのコールバック
     /// </summary>
     public void OnCloseMenu()
     {
