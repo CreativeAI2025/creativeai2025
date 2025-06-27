@@ -20,6 +20,8 @@ public class MenuManager : MonoBehaviour
     /// </summary>
     [SerializeField] MenuCharacterWindowController _menuCharacterWindowController;
 
+    [SerializeField] MenuSkillWindowController _menuSkillWindowController;
+
     /// <summary>
     /// メニューのフェーズ
     /// </summary>
@@ -113,6 +115,7 @@ public class MenuManager : MonoBehaviour
                 break;
             case MenuCommand.Skill:
                 // スキルを開く処理
+                ShowSkillMenu();
                 break;
             case MenuCommand.Item:
                 // アイテムを開く処理
@@ -130,7 +133,19 @@ public class MenuManager : MonoBehaviour
         _menuCharacterWindowController.ShowWindow();
     }
 
+    void ShowSkillMenu()
+    {
+        MenuPhase = MenuPhase.Skill;
+        _menuSkillWindowController.SetUpController(this);
+        _menuSkillWindowController.ShowWindow();
+    }
+
     public void OnCharacterCanceled()
+    {
+        MenuPhase = MenuPhase.Top;
+    }
+
+    public void OnSkillCanceled()
     {
         MenuPhase = MenuPhase.Top;
     }
