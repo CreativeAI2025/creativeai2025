@@ -13,14 +13,15 @@ public class MenuManager : MonoBehaviour
     /// <summary>
     /// メニューのトップ画面を制御するクラスへの参照
     /// </summary>
-    [SerializeField] TopMenuWindowController _topMenuWindowController;
+    [SerializeField] private TopMenuWindowController _topMenuWindowController;
 
     /// <summary>
     /// メニュー画面のステータスウィンドウを制御するクラスへの参照
     /// </summary>
-    [SerializeField] MenuCharacterWindowController _menuCharacterWindowController;
+    [SerializeField] private MenuCharacterWindowController _menuCharacterWindowController;
 
-    [SerializeField] MenuSkillWindowController _menuSkillWindowController;
+    [SerializeField] private MenuSkillWindowController _menuSkillWindowController;
+    [SerializeField] private MenuItemWindowController _menuItemWindowController;
 
     /// <summary>
     /// メニューのフェーズ
@@ -46,7 +47,7 @@ public class MenuManager : MonoBehaviour
         CheckOpenMenuKey();
     }
 
-    void CheckOpenMenuKey()
+    private void CheckOpenMenuKey()
     {
         /*
         // 移動中以外の場合は、メニューを開けないようにする
@@ -72,12 +73,12 @@ public class MenuManager : MonoBehaviour
     /// <summary>
     /// メニュー画面の表示
     /// </summary>
-    void OpenMenu()
+    private void OpenMenu()
     {
         StartCoroutine(OpenMenuProcess());
     }
 
-    IEnumerator OpenMenuProcess()
+    private IEnumerator OpenMenuProcess()
     {
         /// <sumarry>
         /// １フレームだけ遅延させる（その際、OpenMenu関数内にあるコルーチンを用いる）
@@ -119,6 +120,7 @@ public class MenuManager : MonoBehaviour
                 break;
             case MenuCommand.Item:
                 // アイテムを開く処理
+                ShowItemMenu();
                 break;
             case MenuCommand.SkillBoard:
                 // スキルボードを開く処理
@@ -126,18 +128,25 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    void ShowCharacterMenu()
+    private void ShowCharacterMenu()
     {
         MenuPhase = MenuPhase.Character;
         _menuCharacterWindowController.SetUpController(this);
         _menuCharacterWindowController.ShowWindow();
     }
 
-    void ShowSkillMenu()
+    private void ShowSkillMenu()
     {
         MenuPhase = MenuPhase.Skill;
         _menuSkillWindowController.SetUpController(this);
         _menuSkillWindowController.ShowWindow();
+    }
+
+    private void ShowItemMenu()
+    {
+        MenuPhase = MenuPhase.Item;
+        _menuItemWindowController.SetUpController(this);
+        _menuItemWindowController.ShowWindow();
     }
 
     public void OnCharacterCanceled()
@@ -146,6 +155,11 @@ public class MenuManager : MonoBehaviour
     }
 
     public void OnSkillCanceled()
+    {
+        MenuPhase = MenuPhase.Top;
+    }
+
+    public void OnItemCanceled()
     {
         MenuPhase = MenuPhase.Top;
     }

@@ -515,7 +515,7 @@ GameObject:
   - component: {fileID: 53901980}
   - component: {fileID: 53901979}
   m_Layer: 5
-  m_Name: Skill4Text
+  m_Name: Item4Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -560,7 +560,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Skill 4
+  m_text: Item 4
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -651,7 +651,7 @@ GameObject:
   - component: {fileID: 75450414}
   - component: {fileID: 75450413}
   m_Layer: 5
-  m_Name: Skill5Text
+  m_Name: Item5Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -696,7 +696,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Skill 5
+  m_text: Item 5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -787,7 +787,7 @@ GameObject:
   - component: {fileID: 77056335}
   - component: {fileID: 77056334}
   m_Layer: 5
-  m_Name: SelectedSkillNameText
+  m_Name: SelectedItemNameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1059,7 +1059,7 @@ GameObject:
   - component: {fileID: 173217672}
   - component: {fileID: 173217671}
   m_Layer: 5
-  m_Name: SelectedSkillDisc
+  m_Name: SelectedItemDisc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1705,7 +1705,7 @@ GameObject:
   - component: {fileID: 377653828}
   - component: {fileID: 377653827}
   m_Layer: 5
-  m_Name: SkillDetail
+  m_Name: ItemDetail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2364,7 +2364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 706242339}
   m_Layer: 5
-  m_Name: MenuSkillBoard
+  m_Name: MenuSkillTree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3305,7 +3305,7 @@ GameObject:
   - component: {fileID: 961617437}
   - component: {fileID: 961617436}
   m_Layer: 5
-  m_Name: Skill3Text
+  m_Name: Item3Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3350,7 +3350,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Skill3
+  m_text: Item 3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3384,7 +3384,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -3483,6 +3483,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 979704924}
+  - component: {fileID: 979704925}
   m_Layer: 0
   m_Name: MenuItemWindowController
   m_TagString: Untagged
@@ -3505,6 +3506,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1023168317}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &979704925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979704923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 285545eb686088543b88cc3aa24e439f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiController: {fileID: 1195905521}
 --- !u!1 &990071795
 GameObject:
   m_ObjectHideFlags: 0
@@ -3517,7 +3531,7 @@ GameObject:
   - component: {fileID: 990071798}
   - component: {fileID: 990071797}
   m_Layer: 5
-  m_Name: Skill2Text
+  m_Name: Item2Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3562,7 +3576,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Skill 2
+  m_text: Item 2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3654,7 +3668,7 @@ GameObject:
   - component: {fileID: 997471435}
   - component: {fileID: 997471434}
   m_Layer: 5
-  m_Name: SkillBaseBackground
+  m_Name: ItemBaseBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3956,6 +3970,7 @@ MonoBehaviour:
   _topMenuWindowController: {fileID: 36827825}
   _menuCharacterWindowController: {fileID: 1133865207}
   _menuSkillWindowController: {fileID: 1871556355}
+  _menuItemWindowController: {fileID: 979704925}
 --- !u!1 &1081799856
 GameObject:
   m_ObjectHideFlags: 0
@@ -4544,7 +4559,7 @@ GameObject:
   - component: {fileID: 1149324112}
   - component: {fileID: 1149324111}
   m_Layer: 5
-  m_Name: SkillParent
+  m_Name: ItemParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4647,7 +4662,7 @@ GameObject:
   - component: {fileID: 1162048171}
   - component: {fileID: 1162048170}
   m_Layer: 5
-  m_Name: Skill1Text
+  m_Name: Item1Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4692,7 +4707,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Skill 1
+  m_text: Item 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4817,6 +4832,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1195905520}
+  - component: {fileID: 1195905521}
   m_Layer: 5
   m_Name: ItemParent
   m_TagString: Untagged
@@ -4844,6 +4860,26 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1195905521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1195905519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d5f642cbbd90744a40305543d13ea9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _item1NameText: {fileID: 1162048170}
+  _item2NameText: {fileID: 990071797}
+  _item3NameText: {fileID: 961617436}
+  _item4NameText: {fileID: 53901979}
+  _item5NameText: {fileID: 75450413}
+  _itemSelectedNameText: {fileID: 77056334}
+  _itemSelectedValueText: {fileID: 1617749075}
+  _itemSelectedDiscText: {fileID: 173217671}
 --- !u!1 &1254372199
 GameObject:
   m_ObjectHideFlags: 0
@@ -5808,7 +5844,7 @@ GameObject:
   - component: {fileID: 1617749076}
   - component: {fileID: 1617749075}
   m_Layer: 5
-  m_Name: SelectedSkillValue
+  m_Name: SelectedItemValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5853,7 +5889,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Item 3 Value
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6346,7 +6382,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -6960,7 +6996,7 @@ GameObject:
   - component: {fileID: 1972451886}
   - component: {fileID: 1972451885}
   m_Layer: 5
-  m_Name: SkillAll
+  m_Name: ItemAll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7186,7 +7222,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SkillBoard
+  m_text: Skill Tree
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
