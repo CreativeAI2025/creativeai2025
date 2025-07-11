@@ -9,8 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
-  m_Name: Magic_ContentUpdateGroupSchema
+  m_Script: {fileID: 11500000, guid: 75fee2ab71e53c24bbd8e6a341727434, type: 3}
+  m_Name: SkillData_001
   m_EditorClassIdentifier: 
-  m_Group: {fileID: 11400000, guid: 2b7ca33103fff1e4b94f5435d990a2d1, type: 2}
-  m_StaticContent: 0
+  skillId: 1
+  skillName: 
+  skillDesc: 
+  cost: 5
+  skillEffects:
+  - skillCategory: 2
+    EffectTarget: 0
+    value: 30

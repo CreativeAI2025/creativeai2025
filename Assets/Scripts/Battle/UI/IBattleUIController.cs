@@ -1,14 +1,14 @@
-using UnityEngine;
+// using UnityEngine;
 
-public class IBattleUIController
-{
-     /// <summary>
-        /// UIを表示します。
-        /// </summary>
-        void Show();
+// public class IBattleUIController
+// {
+//      /// <summary>
+//         /// UIを表示します。
+//         /// </summary>
+//         void Show();
 
-        /// <summary>
-        /// UIを非表示にします。
-        /// </summary>
-        void Hide();
-}
+//         /// <summary>
+//         /// UIを非表示にします。
+//         /// </summary>
+//         void Hide();
+// }

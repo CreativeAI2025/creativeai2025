@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
  [Serializable]
-    public class CharacterMagicRecord
+    public class CharacterSkillRecord
     {
         /// <summary>
         /// 魔法を覚えるレベルの値です。

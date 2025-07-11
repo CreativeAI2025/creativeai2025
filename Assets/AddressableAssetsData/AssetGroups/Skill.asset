@@ -10,11 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Magic
+  m_Name: Skill
   m_EditorClassIdentifier: 
-  m_GroupName: Magic
+  m_GroupName: Skill
   m_GUID: 2ab4d1eaa6f7b814c9f7f19a9d60e762
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 800224cbb0106f74fa9e71f1c93be6d6
+    m_Address: Assets/Scripts/Battle/Data/SkillData/SkillData_001.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Skill
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: af955d78fda299348828e9365fb44ce0, type: 2}
   m_SchemaSet:

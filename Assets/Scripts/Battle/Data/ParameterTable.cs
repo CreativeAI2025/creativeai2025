@@ -8,7 +8,6 @@ namespace SimpleRpg
     {
          public Sprite characterIcon;  
         public int CharacterID;
-        public string CharacterName;
         public List<ParameterRecord> parameterRecords;
     }
 }

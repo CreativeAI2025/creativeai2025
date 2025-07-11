@@ -19,5 +19,5 @@ using System.Collections.Generic;
         /// <summary>
         /// レベルと覚える魔法の対応レコードのリストです。
         /// </summary>
-        public List<CharacterMagicRecord> characterMagicRecords;
+        public List<CharacterSkillRecord> characterSkillRecords;
     }
