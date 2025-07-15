@@ -12,5 +12,5 @@ using UnityEngine;
         /// <summary>
         /// 覚える魔法のIDです。
         /// </summary>
-        public int magicId;
+        public int skillId;
     }

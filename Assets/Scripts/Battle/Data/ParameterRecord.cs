@@ -1,8 +1,7 @@
 using UnityEngine;
 using System;
 
-namespace SimpleRpg
-{
+
    /// <summary>
    /// レベルに対応するパラメータを保持するクラスです。
    /// </summary>
@@ -22,4 +21,3 @@ namespace SimpleRpg
 
 
    }
-}
