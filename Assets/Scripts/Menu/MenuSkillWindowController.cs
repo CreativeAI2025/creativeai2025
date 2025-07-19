@@ -35,11 +35,11 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
 
     void CheckKeyInput()
     {
-        if (_menuManager == null)
+        if (MenuManager.Instance == null)
         {
             return;
         }
-        if (_menuManager.MenuPhase != MenuPhase.Skill)
+        if (MenuManager.Instance.MenuPhase != MenuPhase.Skill)
         {
             return;
         }
@@ -56,7 +56,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     {
         _canClose = false;
         yield return null;
-        _menuManager.OnSkillCanceled();
+        MenuManager.Instance.OnSkillCanceled();
         HideWindow();
     }
 

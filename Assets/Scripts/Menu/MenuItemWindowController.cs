@@ -36,11 +36,11 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
 
     private void CheckKeyInput()
     {
-        if (_menuManager == null)
+        if (MenuManager.Instance == null)
         {
             return;
         }
-        if (_menuManager.MenuPhase != MenuPhase.Item)
+        if (MenuManager.Instance.MenuPhase != MenuPhase.Item)
         {
             return;
         }
@@ -65,7 +65,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     {
         _canClose = false;
         yield return null;
-        _menuManager.OnItemCanceled();
+        MenuManager.Instance.OnItemCanceled();
         HideWindow();
     }
 

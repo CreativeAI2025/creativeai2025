@@ -4,18 +4,12 @@ using Unity.VisualScripting;
 
 public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowController
 {
-    MenuManager _menuManager;
     [SerializeField] MenuCharacterUIController _uiController;
     /// <summary>
     /// ステータス画面を閉じられるかどうかのフラグ
     /// </summary>
     bool _canClose;
     private InputSetting _inputSetting;
-
-    public void SetUpController(MenuManager menuManager)
-    {
-        _menuManager = menuManager;
-    }
 
     /// <summary>
     /// キャラクターのステータスを画面に表示する
@@ -39,11 +33,11 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
 
     void CheckKeyInput()
     {
-        if (_menuManager == null)
+        if (MenuManager.Instance == null)
         {
             return;
         }
-        if (_menuManager.MenuPhase != MenuPhase.Character)
+        if (MenuManager.Instance.MenuPhase != MenuPhase.Character)
         {
             return;
         }
@@ -60,7 +54,7 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
     {
         _canClose = false;
         yield return null;
-        _menuManager.OnCharacterCanceled();
+        MenuManager.Instance.OnCharacterCanceled();
         HideWindow();
     }
 

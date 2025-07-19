@@ -9,25 +9,11 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
     [SerializeField] TopMenuUIController _uiController;
 
     /// <summary>
-    /// メニュー画面に関する機能を管理するクラスへの参照
-    /// </summary>
-    MenuManager _menuManager;
-
-    /// <summary>
     /// 現在選択中のメニュー
     /// </summary>
     MenuCommand _selectedCommand;
 
     InputSetting _inputSetting;
-
-    /// <summary>
-    /// コントローラの状態をセットアップする
-    /// </summary>
-    /// <param name="menuManager"></param>
-    public void SetUpController(MenuManager menuManager)
-    {
-        _menuManager = menuManager;
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -43,12 +29,12 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
 
     void SelectCommand()
     {
-        if (_menuManager == null)
+        if (MenuManager.Instance == null)
         {
             return;
         }
 
-        if (_menuManager.MenuPhase != MenuPhase.Top)
+        if (MenuManager.Instance.MenuPhase != MenuPhase.Top)
         {
             return;
         }
@@ -64,11 +50,12 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
         }
         else if (_inputSetting.GetDecideInputDown())
         {
-            _menuManager.OnSelectedMenu(_selectedCommand);
+            MenuManager.Instance.OnSelectedMenu(_selectedCommand);
         }
         else if (_inputSetting.GetCancelKeyDown() || _inputSetting.GetMenuKeyDown())
         {
             CloseMenu();
+            Debug.Log("Close Menu");
         }
     }
 
@@ -124,7 +111,7 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
     IEnumerator CloseMenuProcess()
     {
         yield return null;
-        _menuManager.OnCloseMenu();
+        MenuManager.Instance.OnCloseMenu();
         HideWindow();
     }
 

@@ -3,7 +3,7 @@ using System.Collections;
 /// <summary>
 /// メニュー画面全体を管理するクラス
 /// </summary>
-public class MenuManager : MonoBehaviour
+public class MenuManager : DontDestroySingleton<MenuManager>
 {
     /// <summary>
     /// キャラクターの移動を行うクラスを管理するクラスへの参照
@@ -35,7 +35,14 @@ public class MenuManager : MonoBehaviour
 
     private InputSetting _inputSetting;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    public override void Awake()
+    {
+        base.Awake(); // DontDestroySingletonのAwakeロジックを実行
+
+        // メニューマネージャー固有の初期化処理をここに記述
+        Debug.Log("[MenuManager] Specific initialization for IMenuManager completed.");
+    }
     void Start()
     {
         _inputSetting = InputSetting.Load();
@@ -86,7 +93,6 @@ public class MenuManager : MonoBehaviour
         yield return null;
 
         MenuPhase = MenuPhase.Top;
-        _topMenuWindowController.SetUpController(this);
         _topMenuWindowController.InitializeCommand();
         _topMenuWindowController.ShowWindow();
 
@@ -131,21 +137,18 @@ public class MenuManager : MonoBehaviour
     private void ShowCharacterMenu()
     {
         MenuPhase = MenuPhase.Character;
-        _menuCharacterWindowController.SetUpController(this);
         _menuCharacterWindowController.ShowWindow();
     }
 
     private void ShowSkillMenu()
     {
         MenuPhase = MenuPhase.Skill;
-        _menuSkillWindowController.SetUpController(this);
         _menuSkillWindowController.ShowWindow();
     }
 
     private void ShowItemMenu()
     {
         MenuPhase = MenuPhase.Item;
-        _menuItemWindowController.SetUpController(this);
         _menuItemWindowController.ShowWindow();
     }
 
