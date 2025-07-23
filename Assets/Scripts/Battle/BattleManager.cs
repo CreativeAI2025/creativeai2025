@@ -3,7 +3,7 @@
 // /// <summary>
 // /// 戦闘に関する機能を管理するクラスです。
 // /// </summary>
-// public class BattleManager : MonoBehaviour
+// public class BattleManager : DontDestroySingleton<BattleManager>
 // {
 //     /// <summary>
 //     /// 戦闘開始の処理を行うクラスへの参照です。

@@ -55,7 +55,6 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
         else if (_inputSetting.GetCancelKeyDown() || _inputSetting.GetMenuKeyDown())
         {
             CloseMenu();
-            Debug.Log("Close Menu");
         }
     }
 

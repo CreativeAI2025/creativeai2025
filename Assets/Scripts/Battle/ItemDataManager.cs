@@ -13,6 +13,11 @@ public class ItemDataManager : DontDestroySingleton<ItemDataManager>
     /// </summary>
     private List<ItemData> _itemDataList;
 
+    public override void Awake()
+    {
+        base.Awake();
+    }
+
     /// <summary>
     /// アイテムデータをロードします。
     /// </summary>

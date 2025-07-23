@@ -25,7 +25,11 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// プレイヤーの所持アイテムのリストです。
     /// </summary>
     public List<PartyItemInfo> partyItemInfoList;
-    private string partyItemInfoSavePath;   // インベントリのセーブ用パス
+
+    public override void Awake()
+    {
+        base.Awake();
+    }
 
     /// <summary>
     /// パーティ内のキャラクターのステータスをIDで取得します。
@@ -43,7 +47,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     public BattleParameter GetCharacterBattleParameterById(int characterId)
     {
         var characterStatus = GetCharacterStatusById(characterId);
-        var parameterTable = CharacterDataManager.GetParameterTable(characterId);
+        var parameterTable = CharacterDataManager.Instance.GetParameterTable(characterId);
         var parameterRecord = parameterTable.parameterRecords.Find(p => p.Level == characterStatus.level);
         BattleParameter baseParameter = new()
         {
@@ -77,7 +81,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {characterId}");
             return;
         }
-        var parameterTable = CharacterDataManager.GetParameterTable(characterId);
+        var parameterTable = CharacterDataManager.Instance.GetParameterTable(characterId);
         var parameterRecord = parameterTable.parameterRecords.Find(p => p.Level == characterStatus.level);
         characterStatus.currentHp += hpDelta;
         if (characterStatus.currentHp > parameterRecord.HP)
@@ -191,7 +195,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     public bool CheckLevelUp(int characterId)
     {
         var characterStatus = GetCharacterStatusById(characterId);
-        var expTable = CharacterDataManager.GetExpTable();
+        var expTable = CharacterDataManager.Instance.GetExpTable();
         int targetLevel = 1;
         for (int i = 0; i < expTable.expRecords.Count; i++)
         {
