@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 795554165}
   - component: {fileID: 795554164}
+  - component: {fileID: 795554166}
   m_Layer: 0
   m_Name: SkillTreeGenerater
   m_TagString: Untagged
@@ -148,6 +149,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c20a35597aba45b695b0cf29a3576, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cellSize: 1
+  centerX: 0
+  centerY: 0
 --- !u!4 &795554165
 Transform:
   m_ObjectHideFlags: 0
@@ -163,6 +167,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &795554166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795554163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 607d64def56ea264eb8cac96cb4a8a99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2314336357501386282, guid: d361af4140478bd408d20d0eea34fb75, type: 3}
+  dataSetting: {fileID: 795554164}
 --- !u!1 &1101137585
 GameObject:
   m_ObjectHideFlags: 0
