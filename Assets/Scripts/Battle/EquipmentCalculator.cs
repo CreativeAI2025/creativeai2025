@@ -21,7 +21,7 @@ using UnityEngine;
         /// </summary>
         static void CalculateBattleParameter(int itemId, BattleParameter battleParameter)
         {
-            ItemData itemData = ItemDataManager.GetItemDataById(itemId);
+            ItemData itemData = ItemDataManager.Instance.GetItemDataById(itemId);
             if (itemData != null)
             {
                 // battleParameter.strength += itemData.strength;

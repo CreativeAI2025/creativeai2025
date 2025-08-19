@@ -6,17 +6,22 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 /// <summary>
 /// ゲーム内のアイテムを管理するクラスです。
 /// </summary>
-public static class ItemDataManager
+public class ItemDataManager : DontDestroySingleton<ItemDataManager>
 {
     /// <summary>
     /// 読み込んだアイテムデータの一覧です。
     /// </summary>
-    static List<ItemData> _itemDataList = new();
+    private List<ItemData> _itemDataList;
+
+    public override void Awake()
+    {
+        base.Awake();
+    }
 
     /// <summary>
     /// アイテムデータをロードします。
     /// </summary>
-    public static async void LoadItemData()
+    public async void LoadItemData()
     {
         AsyncOperationHandle<IList<ItemData>> handle = Addressables.LoadAssetsAsync<ItemData>(AddressablesLabels.Item, null);
         await handle.Task;
@@ -27,7 +32,7 @@ public static class ItemDataManager
     /// <summary>
     /// IDからアイテムデータを取得します。
     /// </summary>
-    public static ItemData GetItemDataById(int itemId)
+    public ItemData GetItemDataById(int itemId)
     {
         return _itemDataList.Find(item => item.itemId == itemId);
     }
@@ -35,7 +40,7 @@ public static class ItemDataManager
     /// <summary>
     /// 全てのデータを取得します。
     /// </summary>
-    public static List<ItemData> GetAllData()
+    public List<ItemData> GetAllData()
     {
         return _itemDataList;
     }

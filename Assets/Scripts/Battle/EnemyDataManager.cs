@@ -6,17 +6,22 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 /// <summary>
 /// ゲーム内の敵キャラクターのデータを管理するクラスです。
 /// </summary>
-public static class EnemyDataManager
+public class EnemyDataManager : DontDestroySingleton<EnemyDataManager>
 {
     /// <summary>
     /// 読み込んだ敵キャラクターのデータの一覧です。
     /// </summary>
-    static List<EnemyData> _enemyData = new();
+    private List<EnemyData> _enemyData = new();
 
+    public override void Awake()
+    {
+        base.Awake();
+    }
+    
     /// <summary>
     /// 敵キャラクターのデータをロードします。
     /// </summary>
-    public static async void LoadEnemyData()
+    public async void LoadEnemyData()
     {
         AsyncOperationHandle<IList<EnemyData>> handle = Addressables.LoadAssetsAsync<EnemyData>(AddressablesLabels.Enemy, null);
         await handle.Task;
@@ -27,7 +32,7 @@ public static class EnemyDataManager
     /// <summary>
     /// IDから敵キャラクターのデータを取得します。
     /// </summary>
-    public static EnemyData GetEnemyDataById(int enemyId)
+    public EnemyData GetEnemyDataById(int enemyId)
     {
         return _enemyData.Find(enemy => enemy.enemyId == enemyId);
     }
@@ -35,7 +40,7 @@ public static class EnemyDataManager
     /// <summary>
     /// 全てのデータを取得します。
     /// </summary>
-    public static List<EnemyData> GetAllData()
+    public List<EnemyData> GetAllData()
     {
         return _enemyData;
     }
