@@ -1,66 +1,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
-using System.Collections;
-using UnityEngine.Tilemaps;
 
-
-public class PlayerMove : MonoBehaviour
-{
-    [SerializeField] LayerMask solidObjectsLayer;
-    public float moveSpeed = 3f;
-    private Vector3 targetPosition;
-    private bool isMoving = false;
-
-    void Start()
-    {
-        targetPosition = transform.position;
-    }
-
-    void Update()
-    {
-        if (!isMoving)
-        {
-            float vx = Input.GetAxisRaw("Horizontal");
-            float vy = Input.GetAxisRaw("Vertical");
-
-            if (vx != 0)
-            {
-                vy = 0;
-            }
-
-            //transform.position += new Vector3(vx, vy);
-            StartCoroutine(Move(new Vector2(vx, vy)));
-        }
-    }
-
-    //1マス徐々に近づける
-    IEnumerator Move(Vector3 direction)
-    {
-        isMoving = true;
-        Vector3 targetPos = transform.position + direction;
-        if(!IsWalkable(targetPos))
-        {
-            isMoving = false;
-            yield break; //移動できないなら終了
-        }
-        //減殺のターゲットの場所が違うなら、近づける
-        while ((targetPos - transform.position).sqrMagnitude > Mathf.Epsilon)
-        {
-            //近づける
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, 5f * Time.deltaTime);
-            yield return null;
-        }
-
-        transform.position = targetPos;
-        isMoving = false;
-    }
-
-    bool IsWalkable(Vector3 targetPos)
-    {
-        return Physics2D.OverlapCircle(targetPos, 0.2f, solidObjectsLayer) == false;
-    }
-}
-/*[RequireComponent(typeof(Rigidbody2D))]//これがないとOnCollisionEnter2Dが動作しません。
+[RequireComponent(typeof(Rigidbody2D))]//これがないとOnCollisionEnter2Dが動作しません。
 
 public class PlayerMove : MonoBehaviour
 {
@@ -147,7 +88,7 @@ public class PlayerMove : MonoBehaviour
         Vector3 targetVector = new Vector3(targetPosition.x, targetPosition.y, 0);
         if (Vector3.Distance(targetVector, _playerTransform.position) >= allowDistance) return;
 
-        SoundManager.Instance.PlaySE(27, 1f);
+        //SoundManager.Instance.PlaySE(27, 1f);
         _playerTransform.position = targetVector;
         MovePrepare();
     }
@@ -172,5 +113,4 @@ public class PlayerMove : MonoBehaviour
     {
         return mapDataController.ConvertGridPosition(new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y)));
     }
-}*/
-
+}

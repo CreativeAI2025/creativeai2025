@@ -17,6 +17,12 @@ public class StreamingAssetLoader : IFileAssetLoader
     
     public string LoadFileAsset(string assetPath)
     {
+        Debug.Log("Loading file: " + assetPath);
+        if (!File.Exists(assetPath))
+        {
+            Debug.LogError($"File not found: {assetPath}");
+            return null;
+        }
         return File.ReadAllText(assetPath);
     }
 }

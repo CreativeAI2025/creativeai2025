@@ -29,7 +29,11 @@ public class ObjectEngine : MonoBehaviour
     private void Start()
     {
         _inputSetting = InputSetting.Load();
-        _mapName = SceneManager.GetActiveScene().name;
+        _mapName = "Mura";
+        if (_mapName == null)
+        {
+            print("Map name is null, using default map name.");
+        }
         mapDataController.LoadMapData(_mapName);
 
         //ConversationTextManager.Instance.OnConversationStart += Pause;
@@ -61,7 +65,7 @@ public class ObjectEngine : MonoBehaviour
                 //_trapEventObjects[i][j] = new List<ObjectData>(4);
             }
         }
-        IFileAssetLoader loader = SaveUtility.FileAssetLoaderFactory();
+        IFileAssetLoader loader = SaveUtility.FileAssetLoaderFactory(); //
         /*string path = loader.GetPath("ObjectData");
         foreach (string objectFilePath in loader.GetPathDirectory(path))
         {
@@ -337,9 +341,9 @@ public class ObjectEngine : MonoBehaviour
         }
     }*/
 
-    private void TileModify(string mapName, MapDataController.TileLayer layer, Vector2Int position, char tipSign)
+    private void TileModify(string mapName, MapDataController.TileLayer layer, Vector2Int position, char tipSign) 
     {
-        mapDataController.ChangeMapTile(mapName, layer, position, tipSign);
+        mapDataController.ChangeMapTile(mapName, layer, position, tipSign); 
         mapDataController.ApplyMapChange();
     }
 
