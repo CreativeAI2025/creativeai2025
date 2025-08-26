@@ -17,7 +17,7 @@ using System.Collections.Generic;
         /// <param name="index">確認するインデックス</param>
         public bool IsValidIndex(int index)
         {
-            bool isValid = index >= 0 && index < CharacterStatusManager.partyItemInfoList.Count;
+            bool isValid = index >= 0 && index < CharacterStatusManager.Instance.partyItemInfoList.Count;
             return isValid;
         }
 
@@ -36,7 +36,7 @@ using System.Collections.Generic;
             }
 
             var itemId = _itemIdDictionary[indexInPage];
-            var partyItemInfo = CharacterStatusManager.partyItemInfoList.Find(info => info.itemId == itemId);
+            var partyItemInfo = CharacterStatusManager.Instance.partyItemInfoList.Find(info => info.itemId == itemId);
             isValid = partyItemInfo.itemNum > 0;
             return isValid;
         }
@@ -46,7 +46,7 @@ using System.Collections.Generic;
         /// </summary>
         public int GetMaxPageNum()
         {
-            int maxPage = Mathf.CeilToInt(CharacterStatusManager.partyItemInfoList.Count * 1.0f / 4.0f);
+            int maxPage = Mathf.CeilToInt(CharacterStatusManager.Instance.partyItemInfoList.Count * 1.0f / 4.0f);
             return maxPage;
         }
 
@@ -62,10 +62,10 @@ using System.Collections.Generic;
             for (int i = startIndex; i < startIndex + 4; i++)
             {
                 int positionIndex = i - startIndex;
-                if (i < CharacterStatusManager.partyItemInfoList.Count)
+                if (i < CharacterStatusManager.Instance.partyItemInfoList.Count)
                 {
-                    var partyItemInfo = CharacterStatusManager.partyItemInfoList[i];
-                    var itemData = ItemDataManager.GetItemDataById(partyItemInfo.itemId);
+                    var partyItemInfo = CharacterStatusManager.Instance.partyItemInfoList[i];
+                    var itemData = ItemDataManager.Instance.GetItemDataById(partyItemInfo.itemId);
                     string itemName = itemData.itemName;
                     int itemNum = partyItemInfo.itemNum;
                     bool canSelect = CanSelectItem(itemData.itemId);
@@ -92,7 +92,7 @@ using System.Collections.Generic;
         /// <param name="itemId">アイテムID</param>
         bool CanSelectItem(int itemId)
         {
-            var partyItemInfo = CharacterStatusManager.partyItemInfoList.Find(info => info.itemId == itemId);
+            var partyItemInfo = CharacterStatusManager.Instance.partyItemInfoList.Find(info => info.itemId == itemId);
             return partyItemInfo.itemNum > 0;
         }
 
@@ -103,9 +103,9 @@ using System.Collections.Generic;
         public PartyItemInfo GetItemInfo(int selectedIndex)
         {
             PartyItemInfo itemInfo = null;
-            if (selectedIndex >= 0 && selectedIndex < CharacterStatusManager.partyItemInfoList.Count)
+            if (selectedIndex >= 0 && selectedIndex < CharacterStatusManager.Instance.partyItemInfoList.Count)
             {
-                itemInfo = CharacterStatusManager.partyItemInfoList[selectedIndex];
+                itemInfo = CharacterStatusManager.Instance.partyItemInfoList[selectedIndex];
             }
             return itemInfo;
         }

@@ -66,7 +66,7 @@ public class BattleSpriteController : MonoBehaviour
     public void ShowEnemy(int enemyId)
     {
         Sprite enemySprite = null;
-        var enemyData = EnemyDataManager.GetEnemyDataById(enemyId);
+        var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
         if (enemyData == null)
         {
             Logger.Instance.LogWarning($"敵キャラクターの画像が取得できませんでした。 ID: {enemyId}");

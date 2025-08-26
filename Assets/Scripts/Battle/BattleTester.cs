@@ -100,17 +100,17 @@ using UnityEngine;
         void SetPlayerStatus()
         {
             // 経験値表を使って、レベルから経験値を取得します。
-            var expTable = CharacterDataManager.GetExpTable();
+            var expTable = CharacterDataManager.Instance.GetExpTable();
             var expRecord = expTable.expRecords.Find(record => record.Level == _playerLevel);
             var exp = expRecord.Exp;
 
             // レベルに対応するパラメータデータを取得します。
             int charcterId = 1;
-            var parameterTable = CharacterDataManager.GetParameterTable(charcterId);
+            var parameterTable = CharacterDataManager.Instance.GetParameterTable(charcterId);
             var parameterRecord = parameterTable.parameterRecords.Find(record => record.Level == _playerLevel);
 
             // 指定したレベルまでに覚えている魔法のIDをリスト化します。
-            var skillList = GetMagicIdList(charcterId, _playerLevel);
+            var skillList = GetSkillIdList(charcterId, _playerLevel);
 
             // キャラクターのステータスを設定します。
             CharacterStatus status = new()
@@ -125,19 +125,19 @@ using UnityEngine;
                 skillList = skillList,
             };
 
-            CharacterStatusManager.characterStatuses = new()
+            CharacterStatusManager.Instance.characterStatuses = new()
             {
                 status
             };
 
             // パーティにいるキャラクターのIDをセットします。
-            CharacterStatusManager.partyCharacter = new()
+            CharacterStatusManager.Instance.partyCharacter = new()
             {
                 charcterId
             };
 
             // 所持アイテムをセットします。
-            CharacterStatusManager.partyItemInfoList = _partyItemInfoList;
+            CharacterStatusManager.Instance.partyItemInfoList = _partyItemInfoList;
         }
 
         /// <summary>
@@ -145,9 +145,9 @@ using UnityEngine;
         /// </summary>
         /// <param name="characterId">キャラクターID</param>
         /// <param name="level">キャラクターのレベル</param>
-        List<int> GetMagicIdList(int characterId, int level)
+        List<int> GetSkillIdList(int characterId, int level)
         {
-            var learnableSkill = CharacterDataManager.GetLearnableSkill(characterId, level);
+            var learnableSkill = CharacterDataManager.Instance.GetLearnableSkill(characterId, level);
             List<int> skillList = new();
             foreach (var record in learnableSkill)
             {

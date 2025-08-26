@@ -44,7 +44,7 @@ public class SelectionWindowSkillController : MonoBehaviour
         }
 
         var skillId = _skillIdDictionary[indexInPage];
-        var skillData = SkillDataManager.GetSkillDataById(skillId);
+        var skillData = SkillDataManager.Instance.GetSkillDataById(skillId);
         isValid = CanSelectSkill(skillData);
         return isValid;
     }
@@ -66,11 +66,11 @@ public class SelectionWindowSkillController : MonoBehaviour
         _characterSkillList.Clear();
 
         // 指定したキャラクターのステータスを取得します。
-        var currentSelectingCharacter = CharacterStatusManager.partyCharacter[0];
-        var characterStatus = CharacterStatusManager.GetCharacterStatusById(currentSelectingCharacter);
+        var currentSelectingCharacter = CharacterStatusManager.Instance.partyCharacter[0];
+        var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(currentSelectingCharacter);
         foreach (var skillId in characterStatus.skillList)
         {
-            var skillData = SkillDataManager.GetSkillDataById(skillId);
+            var skillData = SkillDataManager.Instance.GetSkillDataById(skillId);
             _characterSkillList.Add(skillData);
         }
     }
@@ -121,8 +121,8 @@ public class SelectionWindowSkillController : MonoBehaviour
             return false;
         }
 
-        var currentSelectingCharacter = CharacterStatusManager.partyCharacter[0];
-        var characterStatus = CharacterStatusManager.GetCharacterStatusById(currentSelectingCharacter);
+        var currentSelectingCharacter = CharacterStatusManager.Instance.partyCharacter[0];
+        var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(currentSelectingCharacter);
         return characterStatus.currentMp >= skillData.cost;
     }
 

@@ -14,12 +14,12 @@ using UnityEngine;
         /// </summary>
         void LoadDefinitionData()
         {
-            CharacterDataManager.LoadCharacterData();
-            CharacterDataManager.LoadExpTables();
-            CharacterDataManager.LoadParameterTables();
+            CharacterDataManager.Instance.LoadCharacterData();
+            CharacterDataManager.Instance.LoadExpTables();
+            CharacterDataManager.Instance.LoadParameterTables();
 
-            EnemyDataManager.LoadEnemyData();
-            ItemDataManager.LoadItemData();
-            SkillDataManager.LoadSkillData();
+            EnemyDataManager.Instance.LoadEnemyData();
+            ItemDataManager.Instance.LoadItemData();
+            SkillDataManager.Instance.LoadSkillData();
         }
     }

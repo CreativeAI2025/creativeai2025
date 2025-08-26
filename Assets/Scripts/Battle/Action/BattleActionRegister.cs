@@ -25,9 +25,9 @@ public class BattleActionRegister : MonoBehaviour
     /// <param name="characterId">キャラクターのID</param>
     public ParameterRecord GetCharacterParameterRecord(int characterId)
     {
-        var characterStatus = CharacterStatusManager.GetCharacterStatusById(characterId);
-        var parameterTable = CharacterDataManager.GetParameterTable(characterId);
-        var parameterRecord = parameterTable.parameterRecords.Find(p => p.level == characterStatus.level);
+        var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(characterId);
+        var parameterTable = CharacterDataManager.Instance.GetParameterTable(characterId);
+        var parameterRecord = parameterTable.parameterRecords.Find(p => p.Level == characterStatus.level);
         return parameterRecord;
     }
 
@@ -46,7 +46,7 @@ public class BattleActionRegister : MonoBehaviour
             targetId = targetId,
             isTargetFriend = false,
             battleCommand = BattleCommand.Attack,
-            actorSpeed = characterParam.speed,
+            actorSpeed = characterParam.Speed,
         };
 
         _actionProcessor.RegisterAction(action);
@@ -67,7 +67,7 @@ public class BattleActionRegister : MonoBehaviour
             targetId = targetId,
             isTargetFriend = true,
             battleCommand = BattleCommand.Attack,
-            actorSpeed = enemyData.speed,
+            actorSpeed = enemyData.Speed,
         };
 
         _actionProcessor.RegisterAction(action);
@@ -79,7 +79,7 @@ public class BattleActionRegister : MonoBehaviour
     /// <param name="actorId">アクションを行うキャラクターのID</param>
     /// <param name="targetId">攻撃対象のキャラクターのID</param>
     /// <param name="magicId">魔法のID</param>
-    public void SetFriendMagicAction(int actorId, int targetId, int magicId)
+    public void SetFriendSkillAction(int actorId, int targetId, int magicId)
     {
         var characterParam = GetCharacterParameterRecord(actorId);
         BattleAction action = new()
@@ -87,9 +87,9 @@ public class BattleActionRegister : MonoBehaviour
             actorId = actorId,
             isActorFriend = true,
             targetId = targetId,
-            battleCommand = BattleCommand.Magic,
+            battleCommand = BattleCommand.Skill,
             itemId = magicId,
-            actorSpeed = characterParam.speed,
+            actorSpeed = characterParam.Speed,
         };
 
         _actionProcessor.RegisterAction(action);
@@ -102,16 +102,16 @@ public class BattleActionRegister : MonoBehaviour
     /// <param name="targetId">攻撃対象のキャラクターの戦闘中ID</param>
     /// <param name="magicId">魔法のID</param>
     /// <param name="enemyData">敵キャラクターのデータ</param>
-    public void SetEnemyMagicAction(int actorId, int targetId, int magicId, EnemyData enemyData)
+    public void SetEnemySkillAction(int actorId, int targetId, int magicId, EnemyData enemyData)
     {
         BattleAction action = new()
         {
             actorId = actorId,
             isActorFriend = false,
             targetId = targetId,
-            battleCommand = BattleCommand.Magic,
+            battleCommand = BattleCommand.Skill,
             itemId = magicId,
-            actorSpeed = enemyData.speed,
+            actorSpeed = enemyData.Speed,
         };
 
         _actionProcessor.RegisterAction(action);
@@ -127,10 +127,10 @@ public class BattleActionRegister : MonoBehaviour
     {
         var characterParam = GetCharacterParameterRecord(actorId);
 
-        var itemData = ItemDataManager.GetItemDataById(itemId);
+        var itemData = ItemDataManager.Instance.GetItemDataById(itemId);
         if (itemData == null)
         {
-            SimpleLogger.Instance.LogError($"選択されたIDのアイテムは見つかりませんでした。ID : {itemId}");
+           Logger.Instance.LogError($"選択されたIDのアイテムは見つかりませんでした。ID : {itemId}");
             return;
         }
 
@@ -152,7 +152,7 @@ public class BattleActionRegister : MonoBehaviour
             isTargetFriend = isTargetFriend,
             battleCommand = BattleCommand.Item,
             itemId = itemId,
-            actorSpeed = characterParam.speed,
+            actorSpeed = characterParam.Speed,
         };
 
         _actionProcessor.RegisterAction(action);
@@ -170,7 +170,7 @@ public class BattleActionRegister : MonoBehaviour
             actorId = actorId,
             isActorFriend = true,
             battleCommand = BattleCommand.Run,
-            actorSpeed = characterParam.speed,
+            actorSpeed = characterParam.Speed,
         };
 
         _actionProcessor.RegisterAction(action);

@@ -100,7 +100,7 @@ using UnityEngine;
         /// <summary>
         /// 魔法を唱えた時のメッセージを生成します。
         /// </summary>
-        public void GenerateMagicCastMessage(string magicUserName, string magicName)
+        public void GenerateSkillCastMessage(string magicUserName, string magicName)
         {
             uiController.ClearMessage();
             string message = $"{magicUserName}{BattleMessage.MagicUserSuffix} {magicName} {BattleMessage.MagicNameSuffix}";
@@ -115,16 +115,24 @@ using UnityEngine;
             string message = $"{targetName}{BattleMessage.HealTargetSuffix} {healNum} {BattleMessage.HealNumSuffix}";
             StartCoroutine(ShowMessageAutoProcess(message));
         }
-
         /// <summary>
-        /// アイテムを使用した時のメッセージを生成します。
+        /// MPが回復する時のメッセージを生成します。
         /// </summary>
-        public void GenerateUseItemMessage(string itemUserName, string itemName)
+        public void GenerateMpHealMessage(string targetName, int healNum)
         {
-            uiController.ClearMessage();
-            string message = $"{itemUserName}{BattleMessage.ItemUserSuffix} {itemName} {BattleMessage.ItemNameSuffix}";
+            string message = $"{targetName}{BattleMessage.HealTargetSuffix} {healNum} {BattleMessage.HealNumSuffix}";
             StartCoroutine(ShowMessageAutoProcess(message));
         }
+
+        /// <summary>
+    /// アイテムを使用した時のメッセージを生成します。
+    /// </summary>
+    public void GenerateUseItemMessage(string itemUserName, string itemName)
+    {
+        uiController.ClearMessage();
+        string message = $"{itemUserName}{BattleMessage.ItemUserSuffix} {itemName} {BattleMessage.ItemNameSuffix}";
+        StartCoroutine(ShowMessageAutoProcess(message));
+    }
 
         /// <summary>
         /// 逃走した時のメッセージを生成します。

@@ -35,21 +35,6 @@ public class ItemData : ScriptableObject
         public int numberOfUse;
 
         /// <summary>
-        /// 攻撃力の補正値です。
-        /// </summary>
-        public int strength;
-
-        /// <summary>
-        /// 防御力の補正値です。
-        /// </summary>
-        public int guard;
-
-        /// <summary>
-        /// 素早さの補正値です。
-        /// </summary>
-        public int speed;
-
-        /// <summary>
         /// アイテムの価格です。
         /// </summary>
         public int price;

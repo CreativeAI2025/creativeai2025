@@ -32,11 +32,11 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
             return;
         }
 
-        var characterName = CharacterDataManager.GetCharacterName(characterStatus.characterId);
+        var characterName = CharacterDataManager.Instance.GetCharacterName(characterStatus.characterId);
         _uiController.SetCharacterName(characterName);
 
         var level = characterStatus.level;
-        var parameterTable = CharacterDataManager.GetParameterTable(characterStatus.characterId);
+        var parameterTable = CharacterDataManager.Instance.GetParameterTable(characterStatus.characterId);
         var record = parameterTable.parameterRecords.Find(r => r.Level == level);
 
         _uiController.SetCurrentHp(characterStatus.currentHp);
@@ -50,9 +50,9 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     public void UpdateAllCharacterStatus()
     {
-        foreach (var characterId in CharacterStatusManager.partyCharacter)
+        foreach (var characterId in CharacterStatusManager.Instance.partyCharacter)
         {
-            var characterStatus = CharacterStatusManager.GetCharacterStatusById(characterId);
+            var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(characterId);
             SetCharacterStatus(characterStatus);
         }
     }
