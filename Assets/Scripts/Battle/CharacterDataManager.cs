@@ -12,17 +12,17 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     /// <summary>
     /// 読み込んだキャラクターの経験値表の一覧です。
     /// </summary>
-    private List<ExpTable> _expTables = new();
+    private List<ExpTable> _expTables;
 
     /// <summary>
     /// 読み込んだキャラクターのパラメータ表の一覧です。
     /// </summary>
-    private List<ParameterTable> _parameterTables = new();
+    private List<ParameterTable> _parameterTables;
 
     /// <summary>
     /// 読み込んだキャラクターのデータの一覧です。
     /// </summary>
-    private List<CharacterData> _characterDataList = new();
+    private List<CharacterData> _characterDataList;
 
     public override void Awake()
     {

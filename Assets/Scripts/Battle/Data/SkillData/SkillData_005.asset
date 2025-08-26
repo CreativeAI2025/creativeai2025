@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75fee2ab71e53c24bbd8e6a341727434, type: 3}
-  m_Name: SkillData_001
+  m_Name: SkillData_005
   m_EditorClassIdentifier: 
-  skillId: 1
-  skillName: FlameSword
-  skillDesc: none
-  cost: 5
+  skillId: 5
+  skillName: Heal Wind
+  skillDesc: Slightly recovers HP for all allies.
+  cost: 10
   skillEffects:
-  - skillCategory: 2
-    EffectTarget: 3
-    value: 30
+  - skillCategory: 1
+    EffectTarget: 2
+    value: 20

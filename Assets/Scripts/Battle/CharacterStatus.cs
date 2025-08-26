@@ -45,7 +45,7 @@ using System.Collections.Generic;
         /// <summary>
         /// 覚えた魔法のIDのリストです。
         /// </summary>
-        public List<int> magicList;
+        public List<int> skillList;
 
         /// <summary>
         /// キャラクターが倒されたフラグです。

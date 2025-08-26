@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 /// <summary>
 /// メニュー画面全体を管理するクラス
 /// </summary>
@@ -74,6 +75,10 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         if (_inputSetting.GetMenuKeyDown())
         {
             OpenMenu();
+        }
+        else if (Input.GetKey(KeyCode.M))
+        {
+            SceneManager.LoadScene("Menu2");
         }
     }
 

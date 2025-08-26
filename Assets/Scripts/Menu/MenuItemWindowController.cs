@@ -54,11 +54,11 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         }
         else if (_inputSetting.GetRightKeyDown())
         {
-            StartCoroutine(SwitchItemClassification());
+            // ここに「通常アイテムリスト」と「たいせつなものリスト」の切り替えを行う
         }
         else if (_inputSetting.GetLeftKeyDown())
         {
-            StartCoroutine(SwitchItemClassification());
+            // ここに「通常アイテムリスト」と「たいせつなものリスト」の切り替えを行う
         }
     }
     private IEnumerator HideProcess()
@@ -88,25 +88,5 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     public void HideWindow()
     {
         _uiController.Hide();
-    }
-
-    /// <summary>
-    /// アイテムの分類を切り替える
-    /// 通常アイテム←→重要アイテム
-    /// </summary>
-    private IEnumerator SwitchItemClassification()
-    {
-        yield return null;
-        _itemClassification++;
-        string log = "Switch ItemClassification to ";
-        if (_itemClassification % 2 == 1)
-        {
-            log += "IMPORTANT";
-        }
-        else
-        {
-            log += "NORMAL";
-        }
-        Debug.Log(log);
     }
 }

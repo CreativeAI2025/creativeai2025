@@ -1,7 +1,8 @@
+using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-
+using System.Linq;
 
 /// <summary>
 /// ゲーム内のアイテムを管理するクラスです。
@@ -12,10 +13,12 @@ public class ItemDataManager : DontDestroySingleton<ItemDataManager>
     /// 読み込んだアイテムデータの一覧です。
     /// </summary>
     private List<ItemData> _itemDataList;
+    private Dictionary<int, ItemData> _itemDataDictionary;
 
     public override void Awake()
     {
         base.Awake();
+        LoadItemData();
     }
 
     /// <summary>
@@ -27,6 +30,8 @@ public class ItemDataManager : DontDestroySingleton<ItemDataManager>
         await handle.Task;
         _itemDataList = new List<ItemData>(handle.Result);
         handle.Release();
+        _itemDataDictionary = _itemDataList.ToDictionary(item => item.itemId, item => item);
+        Debug.Log("[ItemDataManager]LoadItemData Count:" + _itemDataDictionary.Count);
     }
 
     /// <summary>
@@ -34,7 +39,8 @@ public class ItemDataManager : DontDestroySingleton<ItemDataManager>
     /// </summary>
     public ItemData GetItemDataById(int itemId)
     {
-        return _itemDataList.Find(item => item.itemId == itemId);
+        _itemDataDictionary.TryGetValue(itemId, out ItemData itemData);
+        return itemData;
     }
 
     /// <summary>

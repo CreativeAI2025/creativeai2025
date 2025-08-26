@@ -9,12 +9,12 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// <summary>
     /// パーティ内にいるキャラクターのIDのリストです。
     /// </summary>
-    public List<int> partyCharacter;
+    public List<int> partyCharacter = new();
 
     /// <summary>
     /// キャラクターのステータスのリストです。
     /// </summary>
-    public List<CharacterStatus> characterStatuses;
+    public List<CharacterStatus> characterStatuses = new();
 
     /// <summary>
     /// プレイヤーの所持金です。
@@ -24,7 +24,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// <summary>
     /// プレイヤーの所持アイテムのリストです。
     /// </summary>
-    public List<PartyItemInfo> partyItemInfoList;
+    public List<PartyItemInfo> partyItemInfoList = new();
 
     public override void Awake()
     {
