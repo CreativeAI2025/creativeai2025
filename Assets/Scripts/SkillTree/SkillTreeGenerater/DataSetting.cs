@@ -23,9 +23,12 @@ public class DataSetting : MonoBehaviour{
     public static List<int[]> connections = new List<int[]>();//IDの遷移を記録
     public static List<Skill> nodeSkillData = new List<Skill>();//スキルをもつノードの情報の保存
 
+    public Dictionary<int, string> getTagData(){
+        return this.tagData;
+    }
+
     public void set(){
         reset();
-        DataSet();
         NodeDataSet();
         generateRandomConnections();
     }
@@ -37,6 +40,7 @@ public class DataSetting : MonoBehaviour{
         lineData.Clear();
         tagData.Clear();
         nodeSkillData.Clear();
+        branchNum.Clear();
     }
 
     public void DataSet() {
@@ -99,6 +103,7 @@ public class DataSetting : MonoBehaviour{
         statusData.Add("ステータス", new string[]{"攻撃力アップ", "攻撃力が5%上昇"});
     }
 
+    // ノードの位置を決める
     public void NodeDataSet() {
         int id = 0;
         for (int x = 0; x < nodelimitPerRow.Count; x++) {
@@ -368,6 +373,7 @@ public class DataSetting : MonoBehaviour{
 
     public void TagSet() // スキル・ステータスの振り分け
     {
+        tagData[0] = "初期状態";
         HashSet<int> usedid = new HashSet<int>();
 
         // --- ソート (C#ではList.Sortを使う) ---
@@ -450,6 +456,6 @@ public class DataSetting : MonoBehaviour{
             }
         }
 
-        Debug.Log($"Skill={skillCount}, Status={statusCount}");
+        // Debug.Log($"Skill={skillCount}, Status={statusCount}");//スキル・ステータスの数
     }
 }

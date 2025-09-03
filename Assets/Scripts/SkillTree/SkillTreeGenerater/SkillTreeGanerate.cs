@@ -1,22 +1,31 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SkillTreeGanerate : MonoBehaviour
 {
     [SerializeField] GameObject icon;
+    [SerializeField] GameObject icon1;
+    [SerializeField] GameObject icon2;
     [SerializeField] DataSetting dataSetting;
+
+    [SerializeField] Transform parentTransform;
 
     // int maxRetry = 0;
     // int retry = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        dataSetting.DataSet();
         View();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.R)){
+            dataSetting.reset();
+            View();
+        }
     }
 
     void View() {
@@ -31,23 +40,25 @@ public class SkillTreeGanerate : MonoBehaviour
     }
 
     void DrawNodes() {
+        Dictionary<int, string> tagData = dataSetting.getTagData();
+
         foreach (Node n in DataSetting.nodeData) {
+            GameObject prefab;
 
-            // if (n.getId() == 0) fill(255, 255, 0);
-            // if (n.getId() != 0){
-            // if(tagData.get(n.getId()) == "スキル"){
-            //     fill(255,0,0);
-            // }else if(tagData.get(n.getId()) == "ステータス"){
-            //     fill(0,0,255);
-            // }else{
-            //     fill(0);
-            // }
-            // }
+            if (tagData[n.getId()] == "スキル") {
+                prefab = icon;
+            } else if (tagData[n.getId()] == "ステータス") {
+                prefab = icon1;
+            } else {
+                prefab = icon2;
+            }
 
-            //ellipse(n.getX(), n.getY(), cellSize / 1.5, cellSize / 1.5);
-            //Debug.Log(n);
-            //Debug.Log(n.getX() + "," + n.getY());
-            Instantiate(icon,new Vector3(n.getX(), n.getY(),0.0f),Quaternion.identity);
+            // Canvas の子として生成
+            GameObject obj = Instantiate(prefab, parentTransform);
+
+            // UI の座標設定
+            RectTransform rect = obj.GetComponent<RectTransform>();
+            rect.anchoredPosition = new Vector2(n.getX(), n.getY());
         }
     }
 }
