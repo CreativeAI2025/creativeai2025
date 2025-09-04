@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class Skill {
+public class Skill
+{
   private int id;//各ノードのID
   private string tag;//タグ名（スキルorステータス）
   private string name;//スキル・ステータスの名前
@@ -13,7 +14,8 @@ public class Skill {
   private int duration;//持続ターン
   private int mp; // MP（コスト）
 
-  public Skill(string name, string subject, string action, int power, string type, string status, string extra, int duration) {//コンストラクタ（スキル用（詳細情報））
+  public Skill(string name, string subject, string action, int power, string type, string status, string extra, int duration)
+  {//コンストラクタ（スキル用（詳細情報））
     this.id = 0;//ID
     this.tag = "スキル";//分類
     this.name = name;//名前
@@ -27,19 +29,23 @@ public class Skill {
     this.mp = 0;//獲得に必要なコスト
   }
 
-  public string getName() {
+  public string getName()
+  {
     return this.name;
   }
 
-  public int getMp() {
+  public int getMp()
+  {
     return this.mp;
   }
 
-  public void setMp(int mp) {
+  public void setMp(int mp)
+  {
     this.mp = mp;
   }
 
-  string tostring() {
+  string tostring()
+  {
     return "スキル名: " + name
       + ", 対象: " + subject
       + ", 行動: " + action
@@ -49,19 +55,32 @@ public class Skill {
       + ", 持続ターン: " + duration;
   }
 
-  string toSkillstring(string type) {
-    if (type != null) {
-      if ("物理攻撃" == type || "特殊攻撃" == type) {
+  string toSkillstring(string type)
+  {
+    if (type != null)
+    {
+      if ("物理攻撃" == type || "特殊攻撃" == type)
+      {
         return "スキル:" + name + " 説明：" + subject + "に" + power + "ダメージの" + type;
-      } else if ("回復" == type) {
+      }
+      else if ("回復" == type)
+      {
         return "スキル:" + name + " 説明：" + subject + "に" + power + "の" + type;
-      } else if ("バフ" == type) {
+      }
+      else if ("バフ" == type)
+      {
         return "スキル:" + name + " 説明：" + subject + "の" + status + "を" + duration + "ターン上昇させる";
-      }else if ("デバフ" == type) {
+      }
+      else if ("デバフ" == type)
+      {
         return "スキル:" + name + " 説明：" + subject + "の" + status + "を" + duration + "ターン減少させる";
-      }else if ("毒" == type) {
+      }
+      else if ("毒" == type)
+      {
         return "スキル:" + name + " 説明：" + subject + "を" + duration + "ターン" + type + "状態にする";
-      }else if ("%で復活" == type) {
+      }
+      else if ("%で復活" == type)
+      {
         return "スキル:" + name + " 説明：" + subject + "をHP" + power + type + "させる";
       }
     }
