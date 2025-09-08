@@ -57,19 +57,19 @@ public class SkillBlocks : MonoBehaviour
 
     public void CheckActiveBlock()
     {
-        
-            // 習得可能？
-            if (SkillTreeManager.instance.CanLearnSkill(cost, id))
-            {
-                //Debug.Log("ID:" + id + "はFALSE");
-                hidePanel.SetActive(false);
-            }
-            else
-            {
-                //Debug.Log("ID:" + id + "はTRUE");
-                hidePanel.SetActive(true);
-            }
-        
+
+        // 習得可能？
+        if (SkillTreeManager.instance.CanLearnSkill(cost, id))
+        {
+            //Debug.Log("ID:" + id + "はFALSE");
+            hidePanel.SetActive(false);
+        }
+        else
+        {
+            //Debug.Log("ID:" + id + "はTRUE");
+            hidePanel.SetActive(true);
+        }
+
     }
 
     void CangeLearnBlock(Color color)

@@ -34,12 +34,12 @@ public class DataSetting : MonoBehaviour
 
     public void set()
     {
-        reset();
+        Reset();
         NodeDataSet();
         generateRandomConnections();
     }
 
-    public void reset()
+    public void Reset()
     {
         rows = 0;
         nodeSum = 0;

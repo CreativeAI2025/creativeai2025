@@ -25,7 +25,7 @@ public class SkillTreeGanerate : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            dataSetting.reset();
+            dataSetting.Reset();
             View();
         }
     }
