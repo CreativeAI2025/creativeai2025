@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -91,5 +92,10 @@ public class SkillManager : MonoBehaviour
         {
             skillBlock.CheckActiveBlock();
         }
+    }
+
+    internal bool HasSkill(int id)
+    {
+        throw new NotImplementedException();
     }
 }

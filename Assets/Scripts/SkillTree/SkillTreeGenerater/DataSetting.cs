@@ -22,10 +22,10 @@ public class DataSetting : MonoBehaviour
     Dictionary<string, string[]> statusData = new Dictionary<string, string[]>();// ステータス名とステータスの説明のデータ
     Dictionary<int, string> tagData = new Dictionary<int, string>();// IDとスキル・ステータスの格納
 
-    public static List<Node> nodeData = new List<Node>();//ノードデータの保存
-    public static List<Node> lineData = new List<Node>();//ラインデータの保存
+    public List<Node> nodeData = new List<Node>();//ノードデータの保存
+    public List<Node> lineData = new List<Node>();//ラインデータの保存
     public List<int[]> connections = new List<int[]>();//IDの遷移を記録
-    public static List<Skill> nodeSkillData = new List<Skill>();//スキルをもつノードの情報の保存
+    public List<Skill> nodeSkillData = new List<Skill>();//スキルをもつノードの情報の保存
 
     public Dictionary<int, string> getTagData()
     {
@@ -45,6 +45,7 @@ public class DataSetting : MonoBehaviour
         nodeSum = 0;
         nodeData.Clear();
         lineData.Clear();
+        connections.Clear();
         tagData.Clear();
         nodeSkillData.Clear();
         branchNum.Clear();

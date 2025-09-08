@@ -49,7 +49,7 @@ public class SkillTreeGanerate : MonoBehaviour
         int id = 0;
         Dictionary<int, string> tagData = dataSetting.getTagData();
 
-        foreach (Node n in DataSetting.nodeData)
+        foreach (Node n in dataSetting.nodeData)
         {
             GameObject prefab;
 
