@@ -10,6 +10,7 @@ public class SkillBlock : MonoBehaviour
     [SerializeField] new string name;
     [SerializeField] string info;
     [SerializeField] GameObject hidePanel;
+    
 
     void Start()
     {
