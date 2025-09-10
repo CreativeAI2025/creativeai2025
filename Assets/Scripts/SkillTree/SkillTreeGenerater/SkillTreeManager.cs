@@ -103,18 +103,28 @@ public class SkillTreeManager : MonoBehaviour
     /// <returns></returns>
     public bool CanLearnSkill(int cost, int id)
     {
+        if(id == 0) return true;
         if (skillPoint < cost)
         {
             return false;
         }
 
+
+        bool hasParentSkill = false;
+
         foreach (int[] d in dataSetting.connections)
         {
-            if (id == d[1])
+            if (id == d[1] || id == d[0])
             {
-                return HasSkill(d[0]);
+                if (HasSkill(d[0]) || HasSkill(d[1]))
+                {
+                    hasParentSkill = true;
+                    break;
+                }
             }
         }
+
+        if (!hasParentSkill) return false;
 
         return true;
     }
