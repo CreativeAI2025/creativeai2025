@@ -48,7 +48,7 @@ public class SkillTreeGanerate : MonoBehaviour
                 Debug.Log("警告: 入力0ノードが消せませんでした");
                 break;
             }
-        } while (hasNodeWithZeroInput());
+        } while (!hasNodeWithZeroInput());
 
 
         dataSetting.TagSet();
@@ -56,6 +56,12 @@ public class SkillTreeGanerate : MonoBehaviour
 
         DrawNodes();//ノードの表示
         DrawLines();//ノード間の線の描写
+
+        foreach (int[] c in dataSetting.connections)
+        {
+            //Debug.Log(c[0] + "," + c[1]);
+        }
+
         activeGenerate = false;
         Debug.Log($"新しいスキルツリー {retry}回再生成を行った");
     }
@@ -186,26 +192,27 @@ public class SkillTreeGanerate : MonoBehaviour
         List<int> endList = new List<int>();
         foreach (int[] pair in dataSetting.connections)
         {
+            //Debug.Log(pair[0] + "," + pair[1]);
             endList.Add(pair[1]);
         }
 
         endList.Sort();
-        Debug.Log(dataSetting.getNodeSum());
+        //Debug.Log(dataSetting.getNodeSum());
 
-        foreach (int list in endList)
-        {
-            Debug.Log(list);
-        }
+        // foreach (int list in endList)
+        // {
+        //     Debug.Log(list);
+        // }
 
         for (int i = 1; i < dataSetting.getNodeSum(); i++)
         {
             if (!endList.Contains(i))
             {
-                Debug.Log(i + " はリストに含まれています");
+                //Debug.Log(i + " はリストに含まれています");
             }
             else
             {
-                Debug.Log(i + " はリストに含まれていません");
+                //Debug.Log(i + " はリストに含まれていません");
                 return true;
             }
         }

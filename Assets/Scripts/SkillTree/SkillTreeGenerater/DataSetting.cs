@@ -179,8 +179,8 @@ public class DataSetting : MonoBehaviour
     public int getBranchCountFromDistribution(int nodeSum)
     {
         float[] probs = linelimitPerRow[nodeSum];// その階層での枝数の確率分布を入れる
-        float r = Random.Range(0, 1);//0~0.9999..までの乱数
-        float sum = 0;//確率の和
+        float r = Random.Range(0f, 1f);//0~0.9999..までの乱数
+        float sum = 0f;//確率の和
 
         for (int i = 0; i < probs.Length; i++)
         {
@@ -220,6 +220,8 @@ public class DataSetting : MonoBehaviour
     //  接続済みペアの格納
     public void branchNumCheck()
     {
+        branchNum.Clear();
+
         for (int i = 0; i < nodeSum; i++)
         {
             int branch = 0;
@@ -229,7 +231,7 @@ public class DataSetting : MonoBehaviour
                 int to = pair[1];
                 if (to == i || from == i) branch++;
             }
-            branchNum.Add(i, branch);
+            branchNum[i] = branch;
         }
     }
 
