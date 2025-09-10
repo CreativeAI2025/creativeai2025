@@ -14,7 +14,6 @@ public class SkillBlocks : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log("new");
         this_name = this.gameObject.name;
         id = int.Parse(Regex.Replace(this_name, @"[^0-9]", ""));
         CheckActiveBlock();
@@ -36,7 +35,7 @@ public class SkillBlocks : MonoBehaviour
         //　習得済なら何もしない
         if (SkillTreeManager.instance.HasSkill(id))
         {
-            Debug.Log("ID:" + id + "習得済");
+            //bug.Log("ID:" + id + "習得済");
             return;
         }
 
@@ -45,13 +44,13 @@ public class SkillBlocks : MonoBehaviour
         {
             // 習得可能なら習得する
             SkillTreeManager.instance.LearnSkill(cost, id);
-            Debug.Log("ID:" + id + "習得");
+            //bug.Log("ID:" + id + "習得");
             CangeLearnBlock(Color.blue);
         }
         else
         {
             // 習得不可能ならログを出す
-            Debug.Log("ID:" + id + "習得できません");
+            //bug.Log("ID:" + id + "習得できません");
         }
     }
 

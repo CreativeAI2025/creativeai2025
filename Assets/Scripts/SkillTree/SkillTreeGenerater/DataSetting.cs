@@ -12,6 +12,11 @@ public class DataSetting : MonoBehaviour
     [SerializeField] float positionX = 0;
     [SerializeField] float positionY = 0;
     int nodeSum = -1;//ノードの数のカウント
+
+    public int getNodeSum()
+    {
+        return this.nodeSum;
+    }
     int skillCount = 0;
     int statusCount = 0;
 
