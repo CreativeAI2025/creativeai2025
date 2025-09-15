@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Node
@@ -19,6 +20,7 @@ public class Node
         this.distY = dist_y;
         this.x = x;
         this.y = y;
+        this.tag = "タグがありません";
     }
 
     public Node(int id, int branch)
@@ -68,6 +70,11 @@ public class Node
         return this.branch;
     }
 
+    public void setTag(string tag)
+    {
+        this.tag = tag;
+    }
+
     void addInput()
     {
         inputCount++;
@@ -89,5 +96,10 @@ public class Node
     public string getTag()
     {
         return this.tag;
+    }
+
+    internal void setId(string v)
+    {
+        throw new NotImplementedException();
     }
 }

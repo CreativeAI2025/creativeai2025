@@ -12,13 +12,23 @@ public class DataSetting : MonoBehaviour
     [SerializeField] float positionX = 0;
     [SerializeField] float positionY = 0;
     int nodeSum = -1;//ノードの数のカウント
+    int skillCount = 0;
+    int statusCount = 0;
 
     public int getNodeSum()
     {
         return this.nodeSum;
     }
-    int skillCount = 0;
-    int statusCount = 0;
+
+    public int getSkillCount()
+    {
+        return this.skillCount;
+    }
+    public int getStatusCount()
+    {
+        return this.statusCount;
+    }
+
 
     Dictionary<int, int> nodelimitPerRow = new Dictionary<int, int>();//階層によるノード数の制限
     Dictionary<int, float[]> linelimitPerRow = new Dictionary<int, float[]>();//遷移による枝数の制限
@@ -31,6 +41,7 @@ public class DataSetting : MonoBehaviour
     public List<Node> lineData = new List<Node>();//ラインデータの保存
     public List<int[]> connections = new List<int[]>();//IDの遷移を記録
     public List<Skill> nodeSkillData = new List<Skill>();//スキルをもつノードの情報の保存
+    //public List<Status> nodeStatusData = new List<Status>();//ステータスをもつノードの情報の保存
 
     public Dictionary<int, string> getTagData()
     {
@@ -168,6 +179,8 @@ public class DataSetting : MonoBehaviour
         {
             serchSkillDescription(skillData[i]);
         }
+
+        putIdForNodeSkillDataListRandom(nodeData);
     }
 
 
@@ -506,6 +519,24 @@ public class DataSetting : MonoBehaviour
         }
 
         SScount();
+
+        nodeData = setTagDataForNode();
+    }
+
+    List<Node> setTagDataForNode()
+    {
+        List<Node> list = nodeData;
+        int count = 0;
+
+        foreach (Node n in list)
+        {
+            //Debug.Log(count + "," + tagData[count]);
+            n.setTag(tagData[count]);
+            count++;
+        }
+
+        Debug.Log("タグをセットしました");
+        return list;
     }
 
     /// <summary>
@@ -549,6 +580,9 @@ public class DataSetting : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// スキル・ステータスの数を数える
+    /// </summary>
     void SScount()
     {
         skillCount = 0;
@@ -567,5 +601,48 @@ public class DataSetting : MonoBehaviour
         }
 
         // Debug.Log($"Skill={skillCount}, Status={statusCount}");//スキル・ステータスの数
+    }
+
+    /// <summary>
+    /// スキルタグを持つidの配列を取得する
+    /// </summary>
+    int[] getSkillIdArray(List<Node> nodeList)
+    {
+        // "スキル" タグを持つノードだけ抽出
+        List<int> ids = new List<int>();
+
+        foreach (var list in nodeList)
+        {
+            if (list.getTag() == "スキル")
+            {
+                ids.Add(list.getId());
+            }
+        }
+
+        return ids.ToArray();
+    }
+
+
+    /// <summary>
+    /// nodeSkillDataのデータにランダムにIDを付与する
+    /// </summary>
+    void putIdForNodeSkillDataListRandom(List<Node> nodeList)
+    {
+        int[] id = getSkillIdArray(nodeList);
+        bool[] used = new bool[id.Length]; // 使ったIDを記録
+
+        for (int i = 0; i < nodeSkillData.Count; i++)
+        {
+            int rnd;
+            do
+            {
+                rnd = Random.Range(0, id.Length);
+            } while (used[rnd]); // すでに割り当て済みならやり直し
+
+            nodeSkillData[i].setId(id[rnd]);
+            used[rnd] = true;
+        }
+
+        nodeSkillData.Sort();
     }
 }

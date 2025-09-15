@@ -1,6 +1,7 @@
 using UnityEngine;
+using System;
 
-public class Skill
+public class Skill : IComparable<Skill>
 {
     private int id;//各ノードのID
     private string tag;//タグ名（スキルorステータス）
@@ -44,15 +45,21 @@ public class Skill
         this.mp = mp;
     }
 
-    string tostring()
+    public void setId(int id)
     {
-        return "スキル名: " + name
-          + ", 対象: " + subject
-          + ", 行動: " + action
-          + ", 効果量: " + power
-          + ", 種類: " + type
-          + ", 追加効果: " + extra
-          + ", 持続ターン: " + duration;
+        this.id = id;
+    }
+
+    public string toString()
+    {
+        return "ID:" + id
+        + "スキル名: " + name
+        + ", 対象: " + subject
+        + ", 行動: " + action
+        + ", 効果量: " + power
+        + ", 種類: " + type
+        + ", 追加効果: " + extra
+        + ", 持続ターン: " + duration;
     }
 
     string toSkillstring(string type)
@@ -92,5 +99,11 @@ public class Skill
           + ", ステータス: " + status
           + ", 追加効果: " + extra
           + ", 持続ターン: " + duration;
+    }
+
+    public int CompareTo(Skill other)
+    {
+        if (other == null) return 1;
+        return this.id.CompareTo(other.id);
     }
 }

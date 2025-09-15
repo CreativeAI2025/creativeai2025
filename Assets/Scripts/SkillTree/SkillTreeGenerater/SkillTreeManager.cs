@@ -59,6 +59,11 @@ public class SkillTreeManager : MonoBehaviour
             {
                 //Debug.Log(n[0] + "," + n[1]);
             }
+
+            foreach (Skill n in dataSetting.nodeSkillData)
+            {
+                Debug.Log(n.toString());
+            }
             onceAction = false;
         }
     }
@@ -103,7 +108,7 @@ public class SkillTreeManager : MonoBehaviour
     /// <returns></returns>
     public bool CanLearnSkill(int cost, int id)
     {
-        if(id == 0) return true;
+        if (id == 0) return true;
         if (skillPoint < cost)
         {
             return false;
@@ -161,4 +166,5 @@ public class SkillTreeManager : MonoBehaviour
             skillBlocks.CheckActiveBlock();
         }
     }
+
 }
