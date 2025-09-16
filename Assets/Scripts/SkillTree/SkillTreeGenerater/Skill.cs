@@ -5,7 +5,7 @@ public class Skill : IComparable<Skill>
 {
     private int id;//各ノードのID
     private string tag;//タグ名（スキルorステータス）
-    private string name;//スキル・ステータスの名前
+    private string name;//スキルの名前
     private string subject;//対象
     private string action;//行動(攻撃、回復など)
     private int power;//効果量

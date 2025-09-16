@@ -4,9 +4,9 @@ using Unity.VisualScripting;
 
 public class SkillTreeGanerate : MonoBehaviour
 {
-    [SerializeField] GameObject icon;
-    [SerializeField] GameObject icon1;
-    [SerializeField] GameObject icon2;
+    [SerializeField] GameObject skillIocn;
+    [SerializeField] GameObject statusIcon;
+    [SerializeField] GameObject startIcon;
     [SerializeField] GameObject line;
     [SerializeField] DataSetting dataSetting;
 
@@ -53,6 +53,7 @@ public class SkillTreeGanerate : MonoBehaviour
 
         dataSetting.TagSet();
         dataSetting.SkillDataSet();
+        dataSetting.StatusDataSet();
 
         DrawNodes();//ノードの表示
         DrawLines();//ノード間の線の描写
@@ -80,15 +81,15 @@ public class SkillTreeGanerate : MonoBehaviour
 
             if (tagData[n.getId()] == "スキル")
             {
-                prefab = icon;
+                prefab = skillIocn;
             }
             else if (tagData[n.getId()] == "ステータス")
             {
-                prefab = icon1;
+                prefab = statusIcon;
             }
             else
             {
-                prefab = icon2;
+                prefab = startIcon;
             }
 
             // Canvas の子として生成
@@ -136,11 +137,6 @@ public class SkillTreeGanerate : MonoBehaviour
 
     /// <summary>
     /// ノード間の距離（配列（X座標,Y座標））を取得
-    /// </summary>
-    /// <param name="beforeID"></param>
-    /// <param name="afterID"></param>
-    /// <returns></returns> <summary>
-    /// 
     /// </summary>
     /// <param name="beforeID"></param>
     /// <param name="afterID"></param>

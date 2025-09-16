@@ -377,11 +377,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensitivity: 0.01
-  minPosition: {x: -200, y: -200}
-  maxPosition: {x: 200, y: 200}
   scaleSpeed: 0.1
   minScale: 0.5
   maxScale: 2
+  baseMinPosition: {x: -200, y: -200}
+  baseMaxPosition: {x: 200, y: 200}
 --- !u!1 &493899153
 GameObject:
   m_ObjectHideFlags: 0
@@ -1610,7 +1610,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1295287029
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1858,9 +1858,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 607d64def56ea264eb8cac96cb4a8a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 1447738714311606801, guid: d8fa84e10ac57024d95be4a531289da4, type: 3}
-  icon1: {fileID: 8927151294216243759, guid: 2c7c681fc6e83834e88593990081e626, type: 3}
-  icon2: {fileID: 236245430332037112, guid: 748bc428255eae34bbe29ce325557aff, type: 3}
+  skillIocn: {fileID: 1447738714311606801, guid: d8fa84e10ac57024d95be4a531289da4, type: 3}
+  statusIcon: {fileID: 8927151294216243759, guid: 2c7c681fc6e83834e88593990081e626, type: 3}
+  startIcon: {fileID: 236245430332037112, guid: 748bc428255eae34bbe29ce325557aff, type: 3}
   line: {fileID: 6748225024623132174, guid: 2f821c1d09e1e8840bcfc84b1a46d156, type: 3}
   dataSetting: {fileID: 1594040575}
   skillBlocksPanel: {fileID: 440978614}
@@ -1879,6 +1879,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c20a35597aba45b695b0cf29a3576, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skillDataJson: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+  statuasDadaJson: {fileID: 0}
   cellSizeX: 80
   cellSizeY: 55
   positionX: 5

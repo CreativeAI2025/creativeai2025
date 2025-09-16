@@ -1,12 +1,46 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+
+// JSONデータのためのクラス
+[System.Serializable]
+public class SkillEntry
+{
+    public string name;
+    public string explain;
+    public bool get;
+}
+
+// JSON全体をまとめる型
+[System.Serializable]
+public class SkillEntryList
+{
+    public SkillEntry[] skills;
+}
+
+// JSONデータのためのクラス
+[System.Serializable]
+public class StatusEntry
+{
+    public string name;
+    public string explain;
+}
+
+// JSON全体をまとめる型
+[System.Serializable]
+public class StatusEntryList
+{
+    public StatusEntry[] statuses;
+}
 
 public class DataSetting : MonoBehaviour
 {
 
     //int cols = 11;//列
     int rows;//行
+    [SerializeField] TextAsset skillDataJson;
+    [SerializeField] TextAsset statusDadaJson;
     [SerializeField] int cellSizeX = 75;//行間距離
     [SerializeField] int cellSizeY = 75;//行間距離
     [SerializeField] float positionX = 0;
@@ -34,14 +68,14 @@ public class DataSetting : MonoBehaviour
     Dictionary<int, float[]> linelimitPerRow = new Dictionary<int, float[]>();//遷移による枝数の制限
     Dictionary<string, float[]> skill_or_statusPerRow = new Dictionary<string, float[]>();//スキル・ステータスの変移確率(スキル、ステータス、初期状態)
     Dictionary<int, string[]> skillData = new Dictionary<int, string[]>();// スキル名とスキルの説明のデータ
-    Dictionary<string, string[]> statusData = new Dictionary<string, string[]>();// ステータス名とステータスの説明のデータ
+    Dictionary<int, string[]> statusData = new Dictionary<int, string[]>();// ステータス名とステータスの説明のデータ
     Dictionary<int, string> tagData = new Dictionary<int, string>();// IDとスキル・ステータスの格納
 
     public List<Node> nodeData = new List<Node>();//ノードデータの保存
     public List<Node> lineData = new List<Node>();//ラインデータの保存
     public List<int[]> connections = new List<int[]>();//IDの遷移を記録
     public List<Skill> nodeSkillData = new List<Skill>();//スキルをもつノードの情報の保存
-    //public List<Status> nodeStatusData = new List<Status>();//ステータスをもつノードの情報の保存
+    public List<Status> nodeStatusData = new List<Status>();//ステータスをもつノードの情報の保存
 
     public Dictionary<int, string> getTagData()
     {
@@ -64,6 +98,7 @@ public class DataSetting : MonoBehaviour
         connections.Clear();
         tagData.Clear();
         nodeSkillData.Clear();
+        nodeStatusData.Clear();
         branchNum.Clear();
     }
 
@@ -75,8 +110,10 @@ public class DataSetting : MonoBehaviour
         NodeLimitData();
         lineLimitData();
         SkillOrStatusData();
-        SkillData();
-        StatusData();
+        //SkillData();
+        SkillJsonLoader();
+        //StatusData();
+        StatusJsonLoader();
     }
 
     public void NodeLimitData()
@@ -114,6 +151,28 @@ public class DataSetting : MonoBehaviour
         skill_or_statusPerRow.Add("初期状態", new float[] { 0.857f, 0.143f });//初期状態
     }
 
+    /// <summary>
+    /// スキルのJsonファイルの読み込み
+    /// </summary>
+    public void SkillJsonLoader()
+    {
+        if (skillDataJson == null) Debug.LogError("スキルのJsonファイルがセットされていません");
+
+        int id = 0;
+        // JSONをSkillEntryListに変換
+        SkillEntryList list = JsonUtility.FromJson<SkillEntryList>(skillDataJson.text);
+
+
+
+        // Dictionaryに変換
+        foreach (var skill in list.skills)
+        {
+            skillData[id] = new string[] { skill.name, skill.explain };
+            id++;
+        }
+
+        Debug.Log("スキルデータをロードしました: " + skillData.Count + "件");
+    }
     public void SkillData()
     {//ユーザが触るのはここだけ
         skillData.Add(0, new string[] { "エターナルブリザード", "相手に150ダメージの特殊攻撃" });
@@ -131,9 +190,36 @@ public class DataSetting : MonoBehaviour
         skillData.Add(12, new string[] { "ウィンドカッター", "相手に130ダメージの特殊攻撃" });
     }
 
+    /// <summary>
+    /// ステータスのJsonファイルの読み込み
+    /// </summary>
+    public void StatusJsonLoader()
+    {
+        if (statusDadaJson == null) Debug.LogError("ステータスのJsonファイルがセットされていません");
+
+        int id = 0;
+        // JSONをSkillEntryListに変換
+        StatusEntryList list = JsonUtility.FromJson<StatusEntryList>(statusDadaJson.text);
+
+        // Dictionaryに変換
+        foreach (var status in list.statuses)
+        {
+            statusData[id] = new string[] { status.name, status.explain };
+            id++;
+        }
+
+        Debug.Log("ステータスデータをロードしました: " + statusData.Count + "件");
+    }
     public void StatusData()
     {
-        statusData.Add("ステータス", new string[] { "攻撃力アップ", "攻撃力が5%上昇" });
+        statusData.Add(0, new string[] { "攻撃力アップ", "攻撃力が5%上昇" });
+        statusData.Add(1, new string[] { "防御力アップ", "防御力が5%上昇" });
+        statusData.Add(2, new string[] { "魔力アップ", "魔法攻撃力が5%上昇" });
+        statusData.Add(3, new string[] { "魔防アップ", "魔法防御力が5%上昇" });
+        statusData.Add(4, new string[] { "会心率アップ", "クリティカル発生率が3%上昇" });
+        statusData.Add(5, new string[] { "会心ダメージアップ", "クリティカル時のダメージが10%増加" });
+        statusData.Add(6, new string[] { "最大HPアップ", "最大HPが10%上昇" });
+        statusData.Add(7, new string[] { "最大MPアップ", "最大MPが10%上昇" });
     }
 
     /// <summary>
@@ -181,6 +267,21 @@ public class DataSetting : MonoBehaviour
         }
 
         putIdForNodeSkillDataListRandom(nodeData);
+    }
+
+    /// <summary>
+    /// ステータスデータのセッティング
+    /// </summary>
+    public void StatusDataSet()
+    {
+        int rnd;
+        for (int i = 0; i < statusCount; i++)
+        {
+            rnd = Random.Range(0, statusData.Count);
+            serchStatusDescription(statusData[rnd]);
+        }
+
+        putIdForNodeStatusDataListRandom(nodeData);
     }
 
 
@@ -394,13 +495,13 @@ public class DataSetting : MonoBehaviour
     }
 
     /// <summary>
-    /// リストへのスキルデータの格納
+    /// nodeSkillDataへのスキルデータの格納
     /// </summary>
-    /// <param name="skilldata"></param>  
-    void serchSkillDescription(string[] skilldata)
+    /// <param name="skillData"></param>  
+    void serchSkillDescription(string[] skillData)
     {
-        string name = skilldata[0];//スキル名
-        string explain = skilldata[1];//説明文
+        string name = skillData[0];//スキル名
+        string explain = skillData[1];//説明文
 
         string subject = null;//対象
         string action = null;//行動(攻撃、回復など)
@@ -489,8 +590,24 @@ public class DataSetting : MonoBehaviour
         nodeSkillData.Add(new Skill(name, subject, action, power, type, status, extra, duration));
     }
 
-    public void TagSet() // スキル・ステータスの振り分け
+    void serchStatusDescription(string[] statusData)
     {
+        string name = statusData[0];//スキル名
+        string explain = statusData[1];//説明文
+
+        int power = -1;//効果量
+        string type = null;//種類（攻撃上昇、HP上昇など）
+
+        //データの格納
+        nodeStatusData.Add(new Status(name, power, type, explain));
+    }
+
+    /// <summary>
+    /// スキル・ステータスの振り分け
+    /// </summary>
+    public void TagSet()
+    {
+        int skillTagCount = 0;
         tagData[0] = "初期状態";
         HashSet<int> usedid = new HashSet<int>();
 
@@ -512,6 +629,12 @@ public class DataSetting : MonoBehaviour
                 if (tagData.ContainsKey(from))
                 {
                     tagData[to] = tagName(tagData[from]);
+                    // if (tagData[to] == "スキル") skillTagCount++;
+                    // if (skillTagCount > skillData.Count)
+                    // {
+                    //     tagData[to] = "ステータス";
+                    //     Debug.Log("all");
+                    // }
                 }
             }
 
@@ -520,10 +643,14 @@ public class DataSetting : MonoBehaviour
 
         SScount();
 
-        nodeData = setTagDataForNode();
+        nodeData = setTagDataForNodeData();
     }
 
-    List<Node> setTagDataForNode()
+    /// <summary>
+    /// タグのデータを加えたNodeData（List）を返す
+    /// </summary>
+    /// <returns></returns>
+    List<Node> setTagDataForNodeData()
     {
         List<Node> list = nodeData;
         int count = 0;
@@ -600,7 +727,8 @@ public class DataSetting : MonoBehaviour
             }
         }
 
-        // Debug.Log($"Skill={skillCount}, Status={statusCount}");//スキル・ステータスの数
+        Debug.Log($"Skill={skillCount}, Status={statusCount}");//スキル・ステータスの数
+        if (skillData.Count < skillCount) Debug.Log("データを持たないアイコンがあります");
     }
 
     /// <summary>
@@ -614,6 +742,25 @@ public class DataSetting : MonoBehaviour
         foreach (var list in nodeList)
         {
             if (list.getTag() == "スキル")
+            {
+                ids.Add(list.getId());
+            }
+        }
+
+        return ids.ToArray();
+    }
+
+    /// <summary>
+    /// ステータスタグを持つidの配列を取得する
+    /// </summary>
+    int[] getStatusIdArray(List<Node> nodeList)
+    {
+        // "ステータス" タグを持つノードだけ抽出
+        List<int> ids = new List<int>();
+
+        foreach (var list in nodeList)
+        {
+            if (list.getTag() == "ステータス")
             {
                 ids.Add(list.getId());
             }
@@ -644,5 +791,38 @@ public class DataSetting : MonoBehaviour
         }
 
         nodeSkillData.Sort();
+    }
+
+    /// <summary>
+    /// nodeStatusDataのデータにランダムにIDを付与する
+    /// </summary>
+    void putIdForNodeStatusDataListRandom(List<Node> nodeList)
+    {
+        int[] id = getStatusIdArray(nodeList);
+        bool[] used = new bool[id.Length]; // 使ったIDを記録
+        // Debug.Log(nodeStatusData.Count + "," + statusCount);
+
+        for (int i = 0; i < nodeStatusData.Count; i++)
+        {
+            int rnd;
+            do
+            {
+                rnd = Random.Range(0, id.Length);
+            } while (used[rnd]); // すでに割り当て済みならやり直し
+
+            nodeStatusData[i].setId(id[rnd]);
+            used[rnd] = true;
+
+            if (used.Distinct().Count() == 1)
+            {
+                for (int j = 0; j < used.Length; j++)
+                {
+                    used[j] = false;
+                }
+                // Debug.Log("uesdをリセット");
+            }
+        }
+
+        nodeStatusData.Sort();
     }
 }

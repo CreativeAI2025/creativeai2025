@@ -92,6 +92,14 @@ public class SkillTreeManager : MonoBehaviour
                 text = n.toSkillstring(n.getType());
             }
         }
+
+        foreach (var n in dataSetting.nodeStatusData)
+        {
+            if (n.getId().Equals(id))
+            {
+                text = n.getExplain();
+            }
+        }
         skillInfoText.text = text;
     }
 
