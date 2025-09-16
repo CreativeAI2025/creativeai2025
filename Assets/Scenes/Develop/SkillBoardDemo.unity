@@ -376,6 +376,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d89011abe22ca340a30c3a8faaa807a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sensitivity: 0.01
+  minPosition: {x: -200, y: -200}
+  maxPosition: {x: 200, y: 200}
+  scaleSpeed: 0.1
+  minScale: 0.5
+  maxScale: 2
 --- !u!1 &493899153
 GameObject:
   m_ObjectHideFlags: 0

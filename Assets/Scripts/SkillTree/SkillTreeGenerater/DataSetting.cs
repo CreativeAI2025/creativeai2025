@@ -48,7 +48,7 @@ public class DataSetting : MonoBehaviour
         return this.tagData;
     }
 
-    public void set()
+    public void Set()
     {
         Reset();
         NodeDataSet();

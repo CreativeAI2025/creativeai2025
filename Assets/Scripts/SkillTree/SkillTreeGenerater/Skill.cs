@@ -30,9 +30,18 @@ public class Skill : IComparable<Skill>
         this.mp = 0;//獲得に必要なコスト
     }
 
+    public int getId()
+    {
+        return this.id;
+    }
     public string getName()
     {
         return this.name;
+    }
+
+    public string getType()
+    {
+        return this.type;
     }
 
     public int getMp()
@@ -62,33 +71,33 @@ public class Skill : IComparable<Skill>
         + ", 持続ターン: " + duration;
     }
 
-    string toSkillstring(string type)
+    public string toSkillstring(string type)
     {
         if (type != null)
         {
             if ("物理攻撃" == type || "特殊攻撃" == type)
             {
-                return "スキル:" + name + " 説明：" + subject + "に" + power + "ダメージの" + type;
+                return "スキル:" + name + "\n" + subject + "に" + power + "ダメージの" + type;
             }
             else if ("回復" == type)
             {
-                return "スキル:" + name + " 説明：" + subject + "に" + power + "の" + type;
+                return "スキル:" + name + "\n" + subject + "に" + power + "の" + type;
             }
             else if ("バフ" == type)
             {
-                return "スキル:" + name + " 説明：" + subject + "の" + status + "を" + duration + "ターン上昇させる";
+                return "スキル:" + name + "\n" + subject + "の" + status + "を" + duration + "ターン上昇させる";
             }
             else if ("デバフ" == type)
             {
-                return "スキル:" + name + " 説明：" + subject + "の" + status + "を" + duration + "ターン減少させる";
+                return "スキル:" + name + "\n" + subject + "の" + status + "を" + duration + "ターン減少させる";
             }
             else if ("毒" == type)
             {
-                return "スキル:" + name + " 説明：" + subject + "を" + duration + "ターン" + type + "状態にする";
+                return "スキル:" + name + "\n" + subject + "を" + duration + "ターン" + type + "状態にする";
             }
             else if ("%で復活" == type)
             {
-                return "スキル:" + name + " 説明：" + subject + "をHP" + power + type + "させる";
+                return "スキル:" + name + "\n" + subject + "をHP" + power + type + "させる";
             }
         }
         return "スキル名: " + name

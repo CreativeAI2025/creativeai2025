@@ -31,7 +31,7 @@ public class SkillBlocks : MonoBehaviour
 
     public void OnClick()
     {
-        //Debug.Log("ID:" + id + "が押されました");
+        Debug.Log("ID:" + id + "が押されました");
         //　習得済なら何もしない
         if (SkillTreeManager.instance.HasSkill(id))
         {
@@ -79,6 +79,6 @@ public class SkillBlocks : MonoBehaviour
 
     public void OnCursor()
     {
-        SkillTreeManager.instance.UpdateSkillInfoText(info);
+        SkillTreeManager.instance.UpdateSkillInfoText(id);
     }
 }

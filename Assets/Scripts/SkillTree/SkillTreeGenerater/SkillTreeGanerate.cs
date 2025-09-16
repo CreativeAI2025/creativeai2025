@@ -41,7 +41,7 @@ public class SkillTreeGanerate : MonoBehaviour
 
         do
         {
-            dataSetting.set();
+            dataSetting.Set();
             retry++;
             if (retry > maxRetry)
             {
@@ -175,6 +175,12 @@ public class SkillTreeGanerate : MonoBehaviour
         return dist;
     }
 
+    /// <summary>
+    /// 2点間の角度の取得
+    /// </summary>
+    /// <param name="beforeID"></param>
+    /// <param name="afterID"></param>
+    /// <returns></returns>
     float getAngle(int beforeID, int afterID)
     {
         float[] dist = checkNodeDist(beforeID, afterID);

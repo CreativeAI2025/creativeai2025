@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class MoveSkillTreePanel : MonoBehaviour
 {
@@ -10,16 +9,16 @@ public class MoveSkillTreePanel : MonoBehaviour
     [SerializeField, Range(0.01f, 1f)]
     private float sensitivity = 0.5f; // マウス移動の感度
 
-    // 移動範囲をローカル座標で指定（親RectTransform内）
-    [SerializeField]
-    private Vector2 minPosition = new Vector2(-200, -200); // 左下
-    [SerializeField]
-    private Vector2 maxPosition = new Vector2(200, 200);   // 右上
-
     // スケール制御用
     [SerializeField] private float scaleSpeed = 0.01f; // スクロール感度
     [SerializeField] private float minScale = 0.5f;
     [SerializeField] private float maxScale = 2f;
+
+    // 基準となる移動範囲（scale=1.0 のときの範囲）
+    [SerializeField]
+    private Vector2 baseMinPosition = new Vector2(-200, -200);
+    [SerializeField]
+    private Vector2 baseMaxPosition = new Vector2(200, 200);
 
     void Start()
     {
@@ -41,11 +40,19 @@ public class MoveSkillTreePanel : MonoBehaviour
         {
             Vector3 mouseDelta = Input.mousePosition - previousMousePos;
 
-            Vector3 newPos = rectTransform.localPosition + new Vector3(-mouseDelta.y, mouseDelta.x, 0) * sensitivity / rectTransform.lossyScale.x;
+            Vector3 newPos = rectTransform.localPosition +
+                             new Vector3(-mouseDelta.y, mouseDelta.x, 0) *
+                             sensitivity / rectTransform.lossyScale.x;
 
-            // 範囲制限
-            newPos.x = Mathf.Clamp(newPos.x, minPosition.x, maxPosition.x);
-            newPos.y = Mathf.Clamp(newPos.y, minPosition.y, maxPosition.y);
+            // 現在のスケールを取得
+            float scaleFactor = rectTransform.localScale.x;
+
+            // スケールに応じて移動範囲を拡大/縮小
+            Vector2 minPos = baseMinPosition * scaleFactor;
+            Vector2 maxPos = baseMaxPosition * scaleFactor;
+
+            newPos.x = Mathf.Clamp(newPos.x, minPos.x, maxPos.x);
+            newPos.y = Mathf.Clamp(newPos.y, minPos.y, maxPos.y);
 
             rectTransform.localPosition = newPos;
             previousMousePos = Input.mousePosition;

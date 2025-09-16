@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4758309007934401987}
   - component: {fileID: 6625758903621660896}
   - component: {fileID: -4336765214171404019}
+  - component: {fileID: 6961243275913340562}
   m_Layer: 5
   m_Name: StartIcon
   m_TagString: Untagged
@@ -147,6 +148,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hidePanel: {fileID: 8519210480047341707}
+--- !u!114 &6961243275913340562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236245430332037112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: -4336765214171404019}
+          m_TargetAssemblyTypeName: SkillBlocks, Assembly-CSharp
+          m_MethodName: OnCursor
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &8519210480047341707
 GameObject:
   m_ObjectHideFlags: 0

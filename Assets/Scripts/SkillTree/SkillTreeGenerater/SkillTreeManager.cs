@@ -23,7 +23,6 @@ public class SkillTreeManager : MonoBehaviour
         {
             instance = this;
         }
-        //skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks>();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -35,13 +34,11 @@ public class SkillTreeManager : MonoBehaviour
     /// <summary>
     /// 初期化
     /// </summary> <summary>
-    /// 
-    /// </summary>
     void Set()
     {
         onceAction = true;
         UpdateSkillPointText();
-        UpdateSkillInfoText("");
+        UpdateSkillInfoText(0);
         skillList = new List<Node>();
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks>();
     }
@@ -62,19 +59,39 @@ public class SkillTreeManager : MonoBehaviour
 
             foreach (Skill n in dataSetting.nodeSkillData)
             {
-                Debug.Log(n.toString());
+                //Debug.Log(n.toString());
             }
             onceAction = false;
         }
     }
 
+    /// <summary>
+    /// スキルポイントの更新
+    /// </summary>
     void UpdateSkillPointText()
     {
         skillPointText.text = string.Format("SP：{0}", skillPoint);
     }
 
-    public void UpdateSkillInfoText(string text)
+    /// <summary>
+    /// スキル・ステータスの説明をテキストに代入
+    /// </summary>
+    /// <param name="id"></param>
+    public void UpdateSkillInfoText(int id)
     {
+        string text = "データがありません";
+        if (id == 0)
+        {
+            text = "最初のパネルを押してスキルツリーを広げていこう‼";
+        }
+
+        foreach (var n in dataSetting.nodeSkillData)
+        {
+            if (n.getId().Equals(id))
+            {
+                text = n.toSkillstring(n.getType());
+            }
+        }
         skillInfoText.text = text;
     }
 
@@ -166,5 +183,4 @@ public class SkillTreeManager : MonoBehaviour
             skillBlocks.CheckActiveBlock();
         }
     }
-
 }
