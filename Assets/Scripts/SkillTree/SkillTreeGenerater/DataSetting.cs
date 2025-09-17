@@ -4,49 +4,10 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using System.IO;
 
-// JSONデータのためのクラス
-[System.Serializable]
-public class SkillEntry
-{
-    public string name;
-    public string explain;
-    public bool get;
-}
-
-// JSON全体をまとめる型
-[System.Serializable]
-public class SkillEntryList
-{
-    public SkillEntry[] skills;
-}
-
-// JSONデータのためのクラス
-[System.Serializable]
-public class StatusEntry
-{
-    public string name;
-    public string explain;
-}
-
-// JSON全体をまとめる型
-[System.Serializable]
-public class StatusEntryList
-{
-    public StatusEntry[] statuses;
-}
-
 public class DataSetting : MonoBehaviour
 {
-
     //int cols = 11;//列
     int rows;//行
-    [SerializeField] TextAsset skillDataJson;//Json読み込み専用
-    private SkillEntryList skillList;//Json読み込み用リスト
-    private string savePath;
-    public SkillEntryList getSkillEntryList()
-    {
-        return this.skillList;
-    }
     [SerializeField] TextAsset statusDadaJson;
     [SerializeField] int cellSizeX = 75;//行間距離
     [SerializeField] int cellSizeY = 75;//行間距離
@@ -107,21 +68,7 @@ public class DataSetting : MonoBehaviour
         nodeSkillData.Clear();
         nodeStatusData.Clear();
         branchNum.Clear();
-        ResetSkillJsonFile();
-    }
-
-    /// <summary>
-    /// Json(Application.persistentDataPath)の初期化
-    /// </summary>
-    public void ResetSkillJsonFile()
-    {
-        if (File.Exists(savePath))
-        {
-            File.Delete(savePath); // 保存済みデータを削除
-        }
-        skillList = JsonUtility.FromJson<SkillEntryList>(skillDataJson.text); // 初期データを読み込み
-        SaveSkillData(); // 再保存
-        Debug.Log("スキルデータを初期化しました");
+        SkillLoader.instance.ResetSkillJsonFile();
     }
 
     /// <summary>
@@ -178,11 +125,11 @@ public class DataSetting : MonoBehaviour
     /// </summary>
     public void SkillJsonLoader()
     {
-        if (skillDataJson == null) Debug.LogError("スキルのJsonファイルがセットされていません");
+        if (SkillLoader.instance.skillDataJson == null) Debug.LogError("スキルのJsonファイルがセットされていません");
 
         int id = 0;
         // JSONをSkillEntryListに変換
-        SkillEntryList list = JsonUtility.FromJson<SkillEntryList>(skillDataJson.text);
+        SkillEntryList list = JsonUtility.FromJson<SkillEntryList>(SkillLoader.instance.skillDataJson.text);
 
 
 
@@ -196,39 +143,6 @@ public class DataSetting : MonoBehaviour
         Debug.Log("スキルデータをロードしました: " + skillData.Count + "件");
     }
 
-    /// <summary>
-    /// スキルJsonファイルの読み込み
-    /// </summary>
-    public void LoadSkills()
-    {
-        savePath = Application.persistentDataPath + "/skillData.json";
-
-        if (System.IO.File.Exists(savePath))
-        {
-            // 保存済みデータを読む
-            string json = System.IO.File.ReadAllText(savePath);
-            skillList = JsonUtility.FromJson<SkillEntryList>(json);
-            Debug.Log("保存済みスキルデータをロードしました");
-        }
-        else
-        {
-            // 初回は TextAsset から読む
-            skillList = JsonUtility.FromJson<SkillEntryList>(skillDataJson.text);
-            Debug.Log("初期スキルデータをロードしました");
-        }
-    }
-
-    /// <summary>
-    /// JSON に保存
-    /// </summary>
-    public void SaveSkillData()
-    {
-        string json = JsonUtility.ToJson(skillList, true); // true = インデントつき
-        string path = Application.persistentDataPath + "/skillData.json";
-        File.WriteAllText(path, json);
-
-        Debug.Log("スキルデータを保存しました: " + path);
-    }
     public void SkillData()
     {//ユーザが触るのはここだけ
         skillData.Add(0, new string[] { "エターナルブリザード", "相手に150ダメージの特殊攻撃" });
@@ -878,7 +792,6 @@ public class DataSetting : MonoBehaviour
                 // Debug.Log("uesdをリセット");
             }
         }
-
         nodeStatusData.Sort();
     }
 }

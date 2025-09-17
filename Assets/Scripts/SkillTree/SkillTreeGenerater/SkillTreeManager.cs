@@ -170,7 +170,7 @@ public class SkillTreeManager : MonoBehaviour
         SkillEntry skillEntry = null;
         Skill skill = null;
 
-        dataSetting.LoadSkills();
+        SkillLoader.instance.LoadSkills();
 
         //Jsonファイルのスキル所得状況の更新
         foreach (Skill d in nodeSkillList)
@@ -182,7 +182,7 @@ public class SkillTreeManager : MonoBehaviour
         }
 
 
-        if (skill != null) skillEntry = System.Array.Find(dataSetting.getSkillEntryList().skills, s => s.name == skill.getName());
+        if (skill != null) skillEntry = System.Array.Find(SkillLoader.instance.getSkillEntryList().skills, s => s.name == skill.getName());
 
         // 獲得したスキルをskillListに追加
         foreach (Node n in dataSetting.nodeData)
@@ -197,7 +197,7 @@ public class SkillTreeManager : MonoBehaviour
         ChechActiveBlocks();
         skillPoint -= cost;
         UpdateSkillPointText();
-        dataSetting.SaveSkillData();// JSON に保存
+        SkillLoader.instance.SaveSkillData();// JSON に保存
         Debug.Log("保存先: " + Application.persistentDataPath);
 
     }
