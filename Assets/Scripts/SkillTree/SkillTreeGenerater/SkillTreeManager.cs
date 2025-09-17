@@ -13,6 +13,7 @@ public class SkillTreeManager : MonoBehaviour
     int skillPoint = 100;
 
     List<Node> skillList = new List<Node>();//取得済みのものを格納
+    List<Skill> nodeSkillList = new List<Skill>();
     SkillBlocks[] skillBlocks;//skillBlockPanelの子オブジェクトを格納
     public static SkillTreeManager instance;
     bool onceAction;
@@ -59,7 +60,7 @@ public class SkillTreeManager : MonoBehaviour
 
             foreach (Skill n in dataSetting.nodeSkillData)
             {
-                //Debug.Log(n.toString());
+                nodeSkillList.Add(n);
             }
             onceAction = false;
         }
@@ -166,10 +167,29 @@ public class SkillTreeManager : MonoBehaviour
     /// <param name="skillType"></param>
     public void LearnSkill(int cost, int id)
     {
+        SkillEntry skillEntry = null;
+        Skill skill = null;
+
+        dataSetting.LoadSkills();
+
+        //Jsonファイルのスキル所得状況の更新
+        foreach (Skill d in nodeSkillList)
+        {
+            if (d.getId().Equals(id))
+            {
+                skill = d;
+            }
+        }
+
+
+        if (skill != null) skillEntry = System.Array.Find(dataSetting.getSkillEntryList().skills, s => s.name == skill.getName());
+
+        // 獲得したスキルをskillListに追加
         foreach (Node n in dataSetting.nodeData)
         {
             if (n.getId() == id)
             {
+                if (skillEntry != null) skillEntry.get = true;
                 skillList.Add(n);
             }
         }
@@ -177,6 +197,9 @@ public class SkillTreeManager : MonoBehaviour
         ChechActiveBlocks();
         skillPoint -= cost;
         UpdateSkillPointText();
+        dataSetting.SaveSkillData();// JSON に保存
+        Debug.Log("保存先: " + Application.persistentDataPath);
+
     }
 
     /// <summary>
