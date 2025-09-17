@@ -6,6 +6,7 @@ using System.IO;
 
 public class DataSetting : MonoBehaviour
 {
+    [SerializeField] string characterName;
     //int cols = 11;//列
     int rows;//行
     [SerializeField] TextAsset statusDadaJson;
@@ -125,11 +126,13 @@ public class DataSetting : MonoBehaviour
     /// </summary>
     public void SkillJsonLoader()
     {
-        if (SkillLoader.instance.skillDataJson == null) Debug.LogError("スキルのJsonファイルがセットされていません");
+        if (characterName == "") Debug.LogError("キャラクター名がないです（DataSetting）");
+
+        if (SkillLoader.instance.GetSkillJsonFile(characterName) == null) Debug.LogError("スキルのJsonファイルがセットされていません");
 
         int id = 0;
         // JSONをSkillEntryListに変換
-        SkillEntryList list = JsonUtility.FromJson<SkillEntryList>(SkillLoader.instance.skillDataJson.text);
+        SkillEntryList list = JsonUtility.FromJson<SkillEntryList>(SkillLoader.instance.GetSkillJsonFile(characterName).text);
 
 
 
@@ -140,7 +143,7 @@ public class DataSetting : MonoBehaviour
             id++;
         }
 
-        Debug.Log("スキルデータをロードしました: " + skillData.Count + "件");
+        //Debug.Log(characterName + "のスキルデータをロードしました: " + skillData.Count + "件");
     }
 
     public void SkillData()
@@ -178,7 +181,7 @@ public class DataSetting : MonoBehaviour
             id++;
         }
 
-        Debug.Log("ステータスデータをロードしました: " + statusData.Count + "件");
+        //Debug.Log("ステータスデータをロードしました: " + statusData.Count + "件");
     }
     public void StatusData()
     {

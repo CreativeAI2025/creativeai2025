@@ -6,6 +6,8 @@ public class SkillBlocks : MonoBehaviour
 {
     [SerializeField] GameObject hidePanel;
 
+    private SkillTreeManager skillTreeManager;
+
     string this_name;//自分自身の名前
     int id;//自分自身のID
     string info = "説明";
@@ -14,6 +16,8 @@ public class SkillBlocks : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // 親から SkillTreeManager を探す
+        skillTreeManager = GetComponentInParent<SkillTreeManager>();
         this_name = this.gameObject.name;
         id = int.Parse(Regex.Replace(this_name, @"[^0-9]", ""));
         CheckActiveBlock();
@@ -33,17 +37,17 @@ public class SkillBlocks : MonoBehaviour
     {
         Debug.Log("ID:" + id + "が押されました");
         //　習得済なら何もしない
-        if (SkillTreeManager.instance.HasSkill(id))
+        if (skillTreeManager.HasSkill(id))
         {
             //bug.Log("ID:" + id + "習得済");
             return;
         }
 
         // 習得可能？
-        if (SkillTreeManager.instance.CanLearnSkill(cost, id))
+        if (skillTreeManager.CanLearnSkill(cost, id))
         {
             // 習得可能なら習得する
-            SkillTreeManager.instance.LearnSkill(cost, id);
+            skillTreeManager.LearnSkill(cost, id);
             //bug.Log("ID:" + id + "習得");
             CangeLearnBlock(Color.blue);
         }
@@ -58,7 +62,7 @@ public class SkillBlocks : MonoBehaviour
     {
 
         // 習得可能？
-        if (SkillTreeManager.instance.CanLearnSkill(cost, id))
+        if (skillTreeManager.CanLearnSkill(cost, id))
         {
             //Debug.Log("ID:" + id + "はFALSE");
             hidePanel.SetActive(false);
@@ -79,6 +83,6 @@ public class SkillBlocks : MonoBehaviour
 
     public void OnCursor()
     {
-        SkillTreeManager.instance.UpdateSkillInfoText(id);
+        skillTreeManager.UpdateSkillInfoText(id);
     }
 }

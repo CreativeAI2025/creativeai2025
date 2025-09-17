@@ -15,16 +15,8 @@ public class SkillTreeManager : MonoBehaviour
     List<Node> skillList = new List<Node>();//取得済みのものを格納
     List<Skill> nodeSkillList = new List<Skill>();
     SkillBlocks[] skillBlocks;//skillBlockPanelの子オブジェクトを格納
-    public static SkillTreeManager instance;
-    bool onceAction;
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-    }
+    bool onceAction;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -69,7 +61,7 @@ public class SkillTreeManager : MonoBehaviour
     /// <summary>
     /// スキルポイントの更新
     /// </summary>
-    void UpdateSkillPointText()
+    public void UpdateSkillPointText()
     {
         skillPointText.text = string.Format("SP：{0}", skillPoint);
     }
@@ -182,7 +174,7 @@ public class SkillTreeManager : MonoBehaviour
         }
 
 
-        if (skill != null) skillEntry = System.Array.Find(SkillLoader.instance.getSkillEntryList().skills, s => s.name == skill.getName());
+        if (skill != null) skillEntry = System.Array.Find(SkillLoader.instance.GetSkillEntryList().skills, s => s.name == skill.getName());
 
         // 獲得したスキルをskillListに追加
         foreach (Node n in dataSetting.nodeData)
