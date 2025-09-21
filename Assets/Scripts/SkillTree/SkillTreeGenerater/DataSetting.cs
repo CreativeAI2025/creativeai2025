@@ -70,6 +70,7 @@ public class DataSetting : MonoBehaviour
         nodeStatusData.Clear();
         branchNum.Clear();
         SkillStatusLoader.instance.ResetSkillJsonFile();
+        SkillStatusLoader.instance.ResetStatusJsonFile();
     }
 
     /// <summary>
