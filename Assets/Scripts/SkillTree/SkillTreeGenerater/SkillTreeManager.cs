@@ -32,7 +32,7 @@ public class SkillTreeManager : MonoBehaviour
     {
         onceAction = true;
         UpdateSkillPointText();
-        UpdateSkillInfoText(0);
+        UpdateSkillInfoText(0, true);
         skillList = new List<Node>();
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks>();
     }
@@ -76,29 +76,37 @@ public class SkillTreeManager : MonoBehaviour
     /// スキル・ステータスの説明をテキストに代入
     /// </summary>
     /// <param name="id"></param>
-    public void UpdateSkillInfoText(int id)
+    public void UpdateSkillInfoText(int id, bool canLearned)
     {
         string text = "データがありません";
-        if (id == 0)
+        if (canLearned)
         {
-            text = "最初のパネルを押してスキルツリーを広げていこう‼";
-        }
-
-        foreach (var n in dataSetting.nodeSkillData)
-        {
-            if (n.getId().Equals(id))
+            if (id == 0)
             {
-                text = n.toSkillstring(n.getType());
+                text = "最初のパネルを押してスキルツリーを広げていこう‼";
+            }
+
+            foreach (var n in dataSetting.nodeSkillData)
+            {
+                if (n.GetId().Equals(id))
+                {
+                    text = n.toSkillstring(n.GetTypeName());
+                }
+            }
+
+            foreach (var n in dataSetting.nodeStatusData)
+            {
+                if (n.getId().Equals(id))
+                {
+                    text = n.getExplain();
+                }
             }
         }
-
-        foreach (var n in dataSetting.nodeStatusData)
+        else
         {
-            if (n.getId().Equals(id))
-            {
-                text = n.getExplain();
-            }
+            text = "?";
         }
+
         skillInfoText.text = text;
     }
 
@@ -163,19 +171,19 @@ public class SkillTreeManager : MonoBehaviour
         SkillStatusLoader.instance.LoadSkills();
         SkillStatusLoader.instance.LoadStatuses();
 
-        Debug.Log("=== LearnSkill Debug ===");
-        Debug.Log("SkillStatusLoader.instance: " + (SkillStatusLoader.instance == null ? "null" : "OK"));
+        // Debug.Log("=== LearnSkill Debug ===");
+        // Debug.Log("SkillStatusLoader.instance: " + (SkillStatusLoader.instance == null ? "null" : "OK"));
 
-        if (SkillStatusLoader.instance != null)
-        {
-            Debug.Log("SkillStatusLoader.instance.GetStatusEntryList(): " + (SkillStatusLoader.instance.GetStatusEntryList() == null ? "null" : "OK"));
+        // if (SkillStatusLoader.instance != null)
+        // {
+        //     Debug.Log("SkillStatusLoader.instance.GetStatusEntryList(): " + (SkillStatusLoader.instance.GetStatusEntryList() == null ? "null" : "OK"));
 
-            if (SkillStatusLoader.instance.GetStatusEntryList() != null)
-            {
-                Debug.Log("statuses: " + (SkillStatusLoader.instance.GetStatusEntryList().statuses == null ? "null" : "OK"));
-                Debug.Log("statuses.Length: " + (SkillStatusLoader.instance.GetStatusEntryList().statuses == null ? "N/A" : SkillStatusLoader.instance.GetStatusEntryList().statuses.Length.ToString()));
-            }
-        }
+        //     if (SkillStatusLoader.instance.GetStatusEntryList() != null)
+        //     {
+        //         Debug.Log("statuses: " + (SkillStatusLoader.instance.GetStatusEntryList().statuses == null ? "null" : "OK"));
+        //         Debug.Log("statuses.Length: " + (SkillStatusLoader.instance.GetStatusEntryList().statuses == null ? "N/A" : SkillStatusLoader.instance.GetStatusEntryList().statuses.Length.ToString()));
+        //     }
+        // }
 
         SkillEntry skillEntry = null;
         Skill skill = null;
@@ -185,24 +193,14 @@ public class SkillTreeManager : MonoBehaviour
         //Jsonファイルのスキル所得状況の更新
         foreach (Skill d in nodeSkillList)
         {
-            if (d.getId().Equals(id))
+            if (d.GetId().Equals(id))
             {
                 skill = d;
             }
         }
 
 
-        if (skill != null) skillEntry = System.Array.Find(SkillStatusLoader.instance.GetSkillEntryList().skills, s => s.name == skill.getName());
-
-        // // 獲得したスキルをskillListに追加
-        // foreach (Node n in dataSetting.nodeData)
-        // {
-        //     if (n.getId() == id)
-        //     {
-        //         if (skillEntry != null) skillEntry.get = true;//取得状況の変更
-        //         skillList.Add(n);
-        //     }
-        // }
+        if (skill != null) skillEntry = System.Array.Find(SkillStatusLoader.instance.GetSkillEntryList().skills, s => s.name == skill.GetName());
 
         //Jsonファイルのスキル所得状況の更新
         foreach (Status d in nodeStatusList)
@@ -242,7 +240,6 @@ public class SkillTreeManager : MonoBehaviour
         SkillStatusLoader.instance.SaveSkillData();// スキルのJSONに保存
         SkillStatusLoader.instance.SaveStatusData();// ステータスのJSONに保存
         Debug.Log("保存先: " + Application.persistentDataPath);
-
     }
 
     /// <summary>
@@ -250,34 +247,11 @@ public class SkillTreeManager : MonoBehaviour
     /// </summary>
     void ChechActiveBlocks()
     {
-        if (skillBlockPanel == null)
-        {
-            Debug.LogError("skillBlockPanel が null です！");
-            return;
-        }
-
+        // Destroy 済みのオブジェクトを含まない最新の配列を取り直す
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks>();
-        if (skillBlocks == null || skillBlocks.Length == 0)
+        foreach (SkillBlocks skillBlocks in skillBlocks)
         {
-            Debug.LogWarning("SkillBlocks が見つかりません！");
-            return;
+            skillBlocks.CheckActiveBlock();
         }
-
-        foreach (SkillBlocks block in skillBlocks)
-        {
-            if (block == null)
-            {
-                Debug.LogError("SkillBlocks 配列内に null が含まれています！");
-                continue;
-            }
-            block.CheckActiveBlock();
-        }
-
-        // // Destroy 済みのオブジェクトを含まない最新の配列を取り直す
-        // skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks>();
-        // foreach (SkillBlocks skillBlocks in skillBlocks)
-        // {
-        //     skillBlocks.CheckActiveBlock();
-        // }
     }
 }

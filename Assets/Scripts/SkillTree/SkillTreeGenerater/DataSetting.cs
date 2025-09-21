@@ -9,11 +9,14 @@ public class DataSetting : MonoBehaviour
     [SerializeField] string characterName;
     //int cols = 11;//列
     int rows;//行
-    [SerializeField] TextAsset statusDadaJson;
-    [SerializeField] int cellSizeX = 75;//行間距離
-    [SerializeField] int cellSizeY = 75;//行間距離
-    [SerializeField] float positionX = 0;
-    [SerializeField] float positionY = 0;
+    [SerializeField] int cellSizeX = 80;//行間距離
+    [SerializeField] int cellSizeY = 55;//行間距離
+    [SerializeField] float positionX = 5f;
+    [SerializeField] float positionY = -90f;
+    [Header("効果量の重み"), SerializeField] float powerValue = 1f;
+    [Header("発動確率の重み"), SerializeField] float probabilityValue = 1f;
+    [Header("効果時間（ターン数）の重み"), SerializeField] float durationValue = 1f;
+    [Header("攻撃対象の重み"), SerializeField] float subjectValue = 1f;
     int nodeSum = -1;//ノードの数のカウント
     int skillCount = 0;
     int statusCount = 0;
@@ -169,7 +172,6 @@ public class DataSetting : MonoBehaviour
     /// </summary>
     public void StatusJsonLoader()
     {
-        if (statusDadaJson == null) Debug.LogError("ステータスのJsonファイルがセットされていません");
 
         int id = 0;
         // JSONをSkillEntryListに変換
@@ -239,6 +241,9 @@ public class DataSetting : MonoBehaviour
         {
             serchSkillDescription(skillData[i]);
         }
+
+        // 評価値を計算する
+        SetEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue);
 
         putIdForNodeSkillDataListRandom(nodeData);
     }
@@ -356,7 +361,7 @@ public class DataSetting : MonoBehaviour
     }
 
     /// <summary>
-    /// エッジ数の再現に沿って足りない線を引く
+    /// エッジ数の制限に沿って足りない線を引く
     /// </summary>
     /// <param name="nowStart"></param>
     /// <param name="nowEnd"></param>
@@ -479,6 +484,7 @@ public class DataSetting : MonoBehaviour
 
         string subject = null;//対象
         string action = null;//行動(攻撃、回復など)
+        int probability = -1;//発動確率
         int power = -1;//効果量
         string type = null;//種類（物理攻撃、特殊攻撃など）
         string status = null;//対象ステータス
@@ -486,9 +492,13 @@ public class DataSetting : MonoBehaviour
         int duration = -1;//持続ターン
 
         // 対象の抽出
-        if (explain.Contains("相手に") || explain.Contains("相手を"))
+        if (explain.Contains("相手に") || explain.Contains("相手を") || explain.Contains("敵に") || explain.Contains("敵を"))
         {
             subject = "相手";
+        }
+        else if (explain.Contains("相手全体に") || explain.Contains("相手全体を") || explain.Contains("敵全体に") || explain.Contains("敵全体を"))
+        {
+            subject = "相手全体";
         }
         else if (explain.Contains("味方1人の") || explain.Contains("味方1人を"))
         {
@@ -507,8 +517,15 @@ public class DataSetting : MonoBehaviour
             subject = "不明";
         }
 
+        // 発動確率
+        var result = Regex.Match(explain, @"(\d+)[^0-9]*(%|％)の確率で");
+        if (result.Success)
+        {
+            probability = int.Parse(result.Groups[1].Value);
+        }
+
         // 攻撃
-        var result = Regex.Match(explain, @"(\d+)[^0-9]*(物理|特殊)攻撃");
+        result = Regex.Match(explain, @"(\d+)[^0-9]*(物理|特殊)攻撃");
         if (result.Success)
         {
             power = int.Parse(result.Groups[1].Value);
@@ -560,8 +577,182 @@ public class DataSetting : MonoBehaviour
         if (explain.Contains("麻痺")) extra = "麻痺";
         if (explain.Contains("睡眠")) extra = "睡眠";
 
+        int mp = MpCalculate();
+        int sp = SpCalculatie();
+
         // データ格納
-        nodeSkillData.Add(new Skill(name, subject, action, power, type, status, extra, duration));
+        nodeSkillData.Add(new Skill(name, subject, action, probability, power, type, status, extra, duration, mp, sp));
+    }
+
+    /// <summary>
+    /// nodeSkillDataに評価値をセットする
+    /// </summary>
+    void SetEvaluationValue(float powerValue, float probabilityValue, float durationValue, float subjectValue)
+    {
+        float evaluationValue = 0f;
+        int maxPower = GetMaxValue("power");
+        int maxProbability = GetMaxValue("probability");
+        int maxDuration = GetMaxValue("duration");
+        int maxSubjectNum = GetMaxValue("subject");
+        int minPower = GetMinValue("power");
+        int minProbability = GetMinValue("probability");
+        int minDuration = GetMinValue("duration");
+        int minSubjectNum = GetMinValue("subject");
+
+        for (int i = 0; i < nodeSkillData.Count; i++)
+        {
+            int power = nodeSkillData[i].GetPower();
+            int probability = nodeSkillData[i].GetProbability();
+            int duration = nodeSkillData[i].GetDuration();
+            string subject = nodeSkillData[i].GetSubject();
+            int subjectNum = 1;
+
+            if (powerValue == 0f || probabilityValue == 0 || durationValue == 0 || subjectValue == 0)
+            {
+                nodeSkillData[i].SetEvaluationValue(0f); // 評価できないので0点
+            }
+
+            if (subject == "相手" || subject == "自分")
+            {
+                subjectNum = 1;
+            }
+            else if (subject == "相手全体" || subject == "味方1人")
+            {
+                subjectNum = 2;
+            }
+            else if (subject == "味方全体")
+            {
+                subjectNum = 3;
+            }
+
+            //あるスキルの効果をA、発動確立をB、発動回数・ターン数をC、対象をDとします。　重みをvalue、最大値をMax、最小値をminとします。
+            //評価値 = A.value × (A - A.min) / (A.Max - A.min) + B.value × (B - B.min) / (B.Max - B.min) + C.value × (C - C.min) / (C.Max - C.min) + D.value × (D - D.min) / (D.Max - D.min)
+
+
+            Debug.Log(powerValue * (float)(power - minPower) / (float)(maxPower - minPower));
+            Debug.Log(probabilityValue * (probability - minProbability) / (maxProbability - minProbability));
+            Debug.Log(durationValue * (duration - minDuration) / (maxDuration - minDuration));
+            Debug.Log(subjectNum + "," + subjectNum + "," + minSubjectNum + "," + maxSubjectNum + "," + minSubjectNum);
+
+            evaluationValue = (float)(
+            (powerValue * (power - minPower) / (maxPower - minPower))
+            + (probabilityValue * (probability - minProbability) / (maxProbability - minProbability))
+            + (durationValue * (duration - minDuration) / (maxDuration - minDuration))
+            + (subjectNum * (subjectNum - minSubjectNum) / (maxSubjectNum - minSubjectNum))
+            );
+
+            nodeSkillData[i].SetEvaluationValue(evaluationValue);
+        }
+    }
+
+    /// <summary>
+    /// 引数に関しての最大の値を返す
+    /// </summary>
+    int GetMaxValue(string name)
+    {
+        int max = 0;
+        foreach (var n in nodeSkillData)
+        {
+            switch (name)
+            {
+                case "power"://効果量
+                    if (n.GetPower() > max)
+                    {
+                        max = n.GetPower();
+                    }
+                    break;
+                case "duration"://ターン数
+                    if (n.GetDuration() > max)
+                    {
+                        max = n.GetDuration();
+                    }
+                    break;
+                case "probability"://発動確率
+                    if (n.GetProbability() > max)
+                    {
+                        max = n.GetProbability();
+                    }
+                    break;
+                case "subject"://対象数
+                    int subjectNum = 0;
+                    if (n.GetSubject().Equals("相手") || n.GetSubject().Equals("自分"))
+                    {
+                        subjectNum = 1;
+                    }
+                    else if (n.GetSubject().Equals("相手全体") || n.GetSubject().Equals("味方1人"))
+                    {
+                        subjectNum = 2;
+                    }
+                    else if (n.GetSubject().Equals("味方全体"))
+                    {
+                        subjectNum = 3;
+                    }
+
+                    if (subjectNum > max)
+                    {
+                        max = subjectNum;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return max;
+    }
+
+    /// <summary>
+    /// 引数に関しての最小の値を返す
+    /// </summary>
+    int GetMinValue(string name)
+    {
+        int min = -1;
+        foreach (var n in nodeSkillData)
+        {
+            switch (name)
+            {
+                case "power"://効果量
+                    if (n.GetPower() < min || min == -1)
+                    {
+                        min = n.GetPower();
+                    }
+                    break;
+                case "duration"://ターン数
+                    if (n.GetDuration() < min || min == -1)
+                    {
+                        min = n.GetDuration();
+                    }
+                    break;
+                case "probability"://発動確率
+                    if (n.GetProbability() < min || min == -1)
+                    {
+                        min = n.GetProbability();
+                    }
+                    break;
+                case "subject"://対象数
+                    int subjectNum = 1;
+                    if (n.GetSubject().Equals("相手") || n.GetSubject().Equals("自分"))
+                    {
+                        subjectNum = 1;
+                    }
+                    else if (n.GetSubject().Equals("相手全体") || n.GetSubject().Equals("味方1人"))
+                    {
+                        subjectNum = 2;
+                    }
+                    else if (n.GetSubject().Equals("味方全体"))
+                    {
+                        subjectNum = 3;
+                    }
+
+                    if (subjectNum < min || min == -1)
+                    {
+                        min = subjectNum;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return min;
     }
 
     void serchStatusDescription(string[] statusData)
@@ -577,11 +768,30 @@ public class DataSetting : MonoBehaviour
     }
 
     /// <summary>
+    /// スキルに合わせたMPを返す
+    /// </summary>
+    /// <returns></returns>
+    int MpCalculate()
+    {
+        int mp = 10;
+        return mp;
+    }
+
+    /// <summary>
+    /// スキルに合わせたSPを返す
+    /// </summary>
+    /// <returns></returns>
+    int SpCalculatie()
+    {
+        int sp = 10;
+        return sp;
+    }
+
+    /// <summary>
     /// スキル・ステータスの振り分け
     /// </summary>
     public void TagSet()
     {
-        int skillTagCount = 0;
         tagData[0] = "初期状態";
         HashSet<int> usedid = new HashSet<int>();
 
@@ -760,7 +970,7 @@ public class DataSetting : MonoBehaviour
                 rnd = Random.Range(0, id.Length);
             } while (used[rnd]); // すでに割り当て済みならやり直し
 
-            nodeSkillData[i].setId(id[rnd]);
+            nodeSkillData[i].SetId(id[rnd]);
             used[rnd] = true;
         }
 
@@ -774,7 +984,7 @@ public class DataSetting : MonoBehaviour
     {
         int[] id = getStatusIdArray(nodeList);
         bool[] used = new bool[id.Length]; // 使ったIDを記録
-        // Debug.Log(nodeStatusData.Count + "," + statusCount);
+                                           // Debug.Log(nodeStatusData.Count + "," + statusCount);
 
         for (int i = 0; i < nodeStatusData.Count; i++)
         {

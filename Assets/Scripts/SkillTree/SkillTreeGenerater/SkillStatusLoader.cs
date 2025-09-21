@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEditor.Overlays;
 
+//SP・MPはスキルツリーシーンを開くと適切な値がセットされます（現時点）
+
 // JSONデータのためのクラス
 [System.Serializable]
 public class SkillEntry
@@ -10,6 +12,7 @@ public class SkillEntry
     public string name;
     public string explain;
     public bool get;
+    public int mp;
 }
 
 // JSON全体をまとめる型

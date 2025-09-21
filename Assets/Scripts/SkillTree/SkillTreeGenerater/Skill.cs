@@ -16,49 +16,59 @@ public class Skill : IComparable<Skill>
     private int duration;//持続ターン
     private int mp; // MP（使用コスト）
     private int sp;//　SP（スキル獲得ポイント）
+    private float evaluationValue;//評価値
 
-    public Skill(string name, string subject, string action, int power, string type, string status, string extra, int duration)
+    public Skill(string name, string subject, string action, int probability, int power, string type, string status, string extra, int duration, int mp, int sp)
     {//コンストラクタ（スキル用（詳細情報））
         this.id = 0;//ID
         this.tag = "スキル";//分類
         this.name = name;//名前
         this.subject = subject;//対象
         this.action = action;//行動
+        this.probability = probability;//確率
         this.power = power;//強さ
         this.type = type;//種類
         this.status = status;
         this.extra = extra;
         this.duration = duration;
-        this.mp = 0;//獲得に必要なコスト
+        this.mp = mp;//スキル獲得に必要なコスト
+        this.sp = sp;//スキル使用に必要なコスト
+        this.evaluationValue = 0;
     }
 
-    public int getId()
-    {
-        return this.id;
-    }
-    public string getName()
-    {
-        return this.name;
-    }
+    public int GetId() { return id; }
+    public string GetTag() { return tag; }
+    public string GetName() { return name; }
+    public string GetSubject() { return subject; }
+    public string GetAction() { return action; }
+    public int GetProbability() { return probability; }
+    public int GetPower() { return power; }
+    public string GetTypeName() { return type; }
+    public string GetStatus() { return status; }
+    public string GetExtra() { return extra; }
+    public int GetDuration() { return duration; }
+    public int GetMp() { return mp; }
+    public int GetSp() { return sp; }
+    public float GetEvaluationValue() { return evaluationValue; }
 
-    public string getType()
-    {
-        return this.type;
-    }
-
-    public int getMp()
-    {
-        return this.mp;
-    }
-
-    public void setMp(int mp)
+    public void SetMp(int mp)
     {
         this.mp = mp;
     }
 
-    public void setId(int id)
+    public void SetSp(int sp)
+    {
+        this.sp = sp;
+    }
+
+    public void SetId(int id)
     {
         this.id = id;
+    }
+
+    public void SetEvaluationValue(float evaluationValue)
+    {
+        this.evaluationValue = evaluationValue;
     }
 
     public string toString()
@@ -67,10 +77,13 @@ public class Skill : IComparable<Skill>
         + "スキル名: " + name
         + ", 対象: " + subject
         + ", 行動: " + action
+        + ", 発動確率" + probability
         + ", 効果量: " + power
         + ", 種類: " + type
         + ", 追加効果: " + extra
-        + ", 持続ターン: " + duration;
+        + ", 持続ターン: " + duration
+        + ", MP:" + mp
+        + ", SP" + sp;
     }
 
     public string toSkillstring(string type)
@@ -79,37 +92,41 @@ public class Skill : IComparable<Skill>
         {
             if ("物理攻撃" == type || "特殊攻撃" == type)
             {
-                return "スキル:" + name + "\n" + subject + "に" + power + "ダメージの" + type;
+                return "スキル:" + name + "\n" + probability + "％の確率で" + subject + "に" + power + "ダメージの" + type + "\n必要SP:" + sp + " 必要MP:" + mp;
             }
             else if ("回復" == type)
             {
-                return "スキル:" + name + "\n" + subject + "に" + power + "の" + type;
+                return "スキル:" + name + "\n" + probability + "％の確率で" + subject + "に" + power + "の" + type + "\n必要SP:" + sp + " 必要MP:" + mp;
             }
             else if ("バフ" == type)
             {
-                return "スキル:" + name + "\n" + subject + "の" + status + "を" + duration + "ターン上昇させる";
+                return "スキル:" + name + "\n" + probability + "％の確率で" + subject + "の" + status + "を" + duration + "ターン上昇させる" + "\n必要SP:" + sp + " 必要MP:" + mp;
             }
             else if ("デバフ" == type)
             {
-                return "スキル:" + name + "\n" + subject + "の" + status + "を" + duration + "ターン減少させる";
+                return "スキル:" + name + "\n" + probability + "％の確率で" + subject + "の" + status + "を" + duration + "ターン減少させる" + "\n必要SP:" + sp + " 必要MP:" + mp;
             }
             else if ("毒" == type)
             {
-                return "スキル:" + name + "\n" + subject + "を" + duration + "ターン" + type + "状態にする";
+                return "スキル:" + name + "\n" + probability + "％の確率で" + subject + "を" + duration + "ターン" + type + "状態にする" + "\n必要SP:" + sp + " 必要MP:" + mp;
             }
             else if ("%で復活" == type)
             {
-                return "スキル:" + name + "\n" + subject + "をHP" + power + type + "させる";
+                return "スキル:" + name + "\n" + probability + "％の確率で" + subject + "をHP" + power + type + "させる" + "\n必要SP:" + sp + " 必要MP:" + mp;
             }
         }
         return "スキル名: " + name
           + ", 対象: " + subject
           + ", 行動: " + action
+          + ", 発動確率" + probability
           + ", 効果量: " + power
           + ", 種類: " + type
           + ", ステータス: " + status
           + ", 追加効果: " + extra
-          + ", 持続ターン: " + duration;
+          + ", 持続ターン: " + duration
+          + ", MP:" + mp
+          + ", SP" + sp
+          + ", 評価値" + evaluationValue;
     }
 
     public int CompareTo(Skill other)

@@ -83,6 +83,13 @@ public class SkillBlocks : MonoBehaviour
 
     public void OnCursor()
     {
-        skillTreeManager.UpdateSkillInfoText(id);
+        if (skillTreeManager.CanLearnSkill(cost, id))
+        {
+            skillTreeManager.UpdateSkillInfoText(id, true);
+        }
+        else
+        {
+            skillTreeManager.UpdateSkillInfoText(id, false);
+        }
     }
 }
