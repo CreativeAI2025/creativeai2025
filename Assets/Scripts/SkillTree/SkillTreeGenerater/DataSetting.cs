@@ -69,7 +69,7 @@ public class DataSetting : MonoBehaviour
         nodeSkillData.Clear();
         nodeStatusData.Clear();
         branchNum.Clear();
-        SkillLoader.instance.ResetSkillJsonFile();
+        SkillStatusLoader.instance.ResetSkillJsonFile();
     }
 
     /// <summary>
@@ -128,11 +128,11 @@ public class DataSetting : MonoBehaviour
     {
         if (characterName == "") Debug.LogError("キャラクター名がないです（DataSetting）");
 
-        if (SkillLoader.instance.GetSkillJsonFile(characterName) == null) Debug.LogError("スキルのJsonファイルがセットされていません");
+        if (SkillStatusLoader.instance.GetSkillJsonFile(characterName) == null) Debug.LogError("スキルのJsonファイルがセットされていません");
 
         int id = 0;
         // JSONをSkillEntryListに変換
-        SkillEntryList list = JsonUtility.FromJson<SkillEntryList>(SkillLoader.instance.GetSkillJsonFile(characterName).text);
+        SkillEntryList list = JsonUtility.FromJson<SkillEntryList>(SkillStatusLoader.instance.GetSkillJsonFile(characterName).text);
 
 
 
@@ -172,7 +172,7 @@ public class DataSetting : MonoBehaviour
 
         int id = 0;
         // JSONをSkillEntryListに変換
-        StatusEntryList list = JsonUtility.FromJson<StatusEntryList>(statusDadaJson.text);
+        StatusEntryList list = JsonUtility.FromJson<StatusEntryList>(SkillStatusLoader.instance.GetStatusJsonFile(characterName).text);
 
         // Dictionaryに変換
         foreach (var status in list.statuses)

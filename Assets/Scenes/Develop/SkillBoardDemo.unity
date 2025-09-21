@@ -716,6 +716,70 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6fd740a21f0aaf946a61cc39971995d3, type: 3}
+--- !u!1 &783172856
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 783172857}
+  - component: {fileID: 783172858}
+  m_Layer: 0
+  m_Name: SkillStatusLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &783172857
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783172856}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.27375042, y: -1.1832384, z: 53.058113}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &783172858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783172856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c6d7bf2f98671b46b0efa1a393a08ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillJsonFiles:
+  - characterName: "\u52C7\u8005"
+    textAsset: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+    saveFileName: yuusya-skill
+  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E91"
+    textAsset: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+    saveFileName: sub-charcter1-skill
+  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E92"
+    textAsset: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+    saveFileName: sub-charcter2-skill
+  statusJsonFiles:
+  - characterName: "\u52C7\u8005"
+    textAsset: {fileID: 4900000, guid: 9b8e526f4d5e7ff4ab2bed9234939c96, type: 3}
+    saveFileName: yuusya-status
+  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E91"
+    textAsset: {fileID: 4900000, guid: 9b8e526f4d5e7ff4ab2bed9234939c96, type: 3}
+    saveFileName: sub-character1-status
+  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E92"
+    textAsset: {fileID: 4900000, guid: 9b8e526f4d5e7ff4ab2bed9234939c96, type: 3}
+    saveFileName: sub-character2-status
 --- !u!1 &871166309
 GameObject:
   m_ObjectHideFlags: 0
@@ -2034,60 +2098,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4595255625971012665, guid: c07811bb4aed46f45b8c094ff35bfabf, type: 3}
   m_PrefabInstance: {fileID: 4391918896562823525}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2016252334
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2016252336}
-  - component: {fileID: 2016252335}
-  m_Layer: 0
-  m_Name: SkillLoader
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2016252335
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2016252334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c6d7bf2f98671b46b0efa1a393a08ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skillJsonFiles:
-  - characterName: "\u52C7\u8005"
-    textAsset: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
-    saveFileName: yuusya-skill-file
-  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E91"
-    textAsset: {fileID: 4900000, guid: e9c790314c380934abe1b637f1cf8c61, type: 3}
-    saveFileName: subcharcter1-skill-file
-  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E92"
-    textAsset: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
-    saveFileName: subcharcter2-skill-file
---- !u!4 &2016252336
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2016252334}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &2118966500 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4595255625971012665, guid: c07811bb4aed46f45b8c094ff35bfabf, type: 3}
@@ -3876,4 +3886,4 @@ SceneRoots:
   - {fileID: 1101137587}
   - {fileID: 1818163217}
   - {fileID: 1938452528149814032}
-  - {fileID: 2016252336}
+  - {fileID: 783172857}

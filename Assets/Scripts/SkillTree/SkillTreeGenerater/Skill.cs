@@ -8,12 +8,14 @@ public class Skill : IComparable<Skill>
     private string name;//スキルの名前
     private string subject;//対象
     private string action;//行動(攻撃、回復など)
+    private int probability;//確率
     private int power;//効果量
     private string type;//種類（物理攻撃、特殊攻撃など）
-    private string status;
+    private string status;//バフ・デバフ（ステータス）
     private string extra;//追加効果
     private int duration;//持続ターン
-    private int mp; // MP（コスト）
+    private int mp; // MP（使用コスト）
+    private int sp;//　SP（スキル獲得ポイント）
 
     public Skill(string name, string subject, string action, int power, string type, string status, string extra, int duration)
     {//コンストラクタ（スキル用（詳細情報））
