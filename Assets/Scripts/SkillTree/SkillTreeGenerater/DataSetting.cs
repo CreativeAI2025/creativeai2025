@@ -6,6 +6,7 @@ using System.IO;
 
 public class DataSetting : MonoBehaviour
 {
+    [Header("ノードデータのJsonFile"), SerializeField] TextAsset nodeDataJson;
     [SerializeField] string characterName;
     //int cols = 11;//列
     int rows;//行
@@ -81,17 +82,43 @@ public class DataSetting : MonoBehaviour
     /// </summary>
     public void DataSet()
     {
-        NodeLimitData();
-        lineLimitData();
-        SkillOrStatusData();
+        // NodeLimitData();
+        // lineLimitData();
+        // SkillOrStatusData();
+        NodeDataLoader();
         //SkillData();
         SkillJsonLoader();
         //StatusData();
         StatusJsonLoader();
     }
 
+    void NodeDataLoader()
+    {
+        // JSONをEntryListに変換
+        NodeLimitDataEntryList list = JsonUtility.FromJson<NodeLimitDataEntryList>(nodeDataJson.text);
+        LineLimitDataEntryList list1 = JsonUtility.FromJson<LineLimitDataEntryList>(nodeDataJson.text);
+        SkillOrStatusDataEntryList list2 = JsonUtility.FromJson<SkillOrStatusDataEntryList>(nodeDataJson.text);
+
+        // Dictionaryに変換
+        foreach (var data in list.nodeLimitData)
+        {
+            nodelimitPerRow.Add(data.row, data.nodeNum);
+        }
+
+        foreach (var data in list1.lineLimitData)
+        {
+            linelimitPerRow.Add(data.row, data.edge);
+        }
+
+        foreach (var data in list2.skillOrStatusData)
+        {
+            skill_or_statusPerRow.Add(data.category, data.transition_probability);
+        }
+
+    }
+
     public void NodeLimitData()
-    {//各階層でノードの個数の制限
+    {//各階層でノードの個数の制限(階層,ノード数)
         nodelimitPerRow.Add(0, 1);
         nodelimitPerRow.Add(1, 2);
         nodelimitPerRow.Add(2, 4);
@@ -245,7 +272,9 @@ public class DataSetting : MonoBehaviour
         // 評価値を計算する
         SetEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue);
 
-        putIdForNodeSkillDataListRandom(nodeData);
+        //putIdForNodeSkillDataListRandom(nodeData);
+
+        PutForNodeSkillDataListEvaluationValue(nodeData);
     }
 
     /// <summary>
@@ -629,10 +658,10 @@ public class DataSetting : MonoBehaviour
             //評価値 = A.value × (A - A.min) / (A.Max - A.min) + B.value × (B - B.min) / (B.Max - B.min) + C.value × (C - C.min) / (C.Max - C.min) + D.value × (D - D.min) / (D.Max - D.min)
 
 
-            Debug.Log(powerValue * (float)(power - minPower) / (float)(maxPower - minPower));
-            Debug.Log(probabilityValue * (probability - minProbability) / (maxProbability - minProbability));
-            Debug.Log(durationValue * (duration - minDuration) / (maxDuration - minDuration));
-            Debug.Log(subjectNum + "," + subjectNum + "," + minSubjectNum + "," + maxSubjectNum + "," + minSubjectNum);
+            // Debug.Log(powerValue * (float)(power - minPower) / (float)(maxPower - minPower));
+            // Debug.Log(probabilityValue * (probability - minProbability) / (maxProbability - minProbability));
+            // Debug.Log(durationValue * (duration - minDuration) / (maxDuration - minDuration));
+            // Debug.Log(subjectNum + "," + subjectNum + "," + minSubjectNum + "," + maxSubjectNum + "," + minSubjectNum);
 
             evaluationValue = (float)(
             (powerValue * (power - minPower) / (maxPower - minPower))
@@ -792,10 +821,10 @@ public class DataSetting : MonoBehaviour
     /// </summary>
     public void TagSet()
     {
+        int skillTagCount = 0;
         tagData[0] = "初期状態";
         HashSet<int> usedid = new HashSet<int>();
 
-        // --- ソート (C#ではList.Sortを使う) ---
         connections.Sort((a, b) => a[0].CompareTo(b[0]));
 
         foreach (int[] pair in connections)
@@ -813,12 +842,13 @@ public class DataSetting : MonoBehaviour
                 if (tagData.ContainsKey(from))
                 {
                     tagData[to] = tagName(tagData[from]);
-                    // if (tagData[to] == "スキル") skillTagCount++;
-                    // if (skillTagCount > skillData.Count)
-                    // {
-                    //     tagData[to] = "ステータス";
-                    //     Debug.Log("all");
-                    // }
+
+                    if (tagData[to] == "スキル") skillTagCount++;
+                    if (skillTagCount > skillData.Count)
+                    {
+                        tagData[to] = "ステータス";
+                        //Debug.Log("all");
+                    }
                 }
             }
 
@@ -974,7 +1004,26 @@ public class DataSetting : MonoBehaviour
             used[rnd] = true;
         }
 
-        nodeSkillData.Sort();
+        nodeSkillData.Sort((a, b) => a.GetId() - b.GetId());//降順
+    }
+
+    /// <summary>
+    /// 評価値に基づいてnodeStatusDataのデータにIDを付与する
+    /// </summary>
+    void PutForNodeSkillDataListEvaluationValue(List<Node> nodeList)
+    {
+        int[] id = getSkillIdArray(nodeList);
+        nodeSkillData.Sort((a, b) => a.GetEvaluationValue().CompareTo(b.GetEvaluationValue()));//評価値の小さい順にソート
+
+        for (int i = 0; i < nodeSkillData.Count; i++)
+        {
+            nodeSkillData[i].SetId(id[i]);
+        }
+
+        // foreach (var n in nodeSkillData)
+        // {
+        //     Debug.Log(n.toString());//nodeSkillDataの確認
+        // }
     }
 
     /// <summary>
@@ -1006,6 +1055,6 @@ public class DataSetting : MonoBehaviour
                 // Debug.Log("uesdをリセット");
             }
         }
-        nodeStatusData.Sort();
+        nodeSkillData.Sort((a, b) => a.GetId() - b.GetId());//降順
     }
 }

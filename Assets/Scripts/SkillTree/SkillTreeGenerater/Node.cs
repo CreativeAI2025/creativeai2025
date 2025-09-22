@@ -1,5 +1,47 @@
 using System;
-using UnityEngine;
+
+// JSONデータのためのクラス
+[System.Serializable]
+public class NodeLimitDataEntry
+{
+    public int row;
+    public int nodeNum;
+}
+
+// JSON全体をまとめる型
+[System.Serializable]
+public class NodeLimitDataEntryList
+{
+    public NodeLimitDataEntry[] nodeLimitData;
+}
+
+[System.Serializable]
+public class LineLimitDataEntry
+{
+    public int row;
+    public float[] edge;
+}
+
+// JSON全体をまとめる型
+[System.Serializable]
+public class LineLimitDataEntryList
+{
+    public LineLimitDataEntry[] lineLimitData;
+}
+
+[System.Serializable]
+public class SkillOrStatusDataEntry
+{
+    public string category;
+    public float[] transition_probability;
+}
+
+// JSON全体をまとめる型
+[System.Serializable]
+public class SkillOrStatusDataEntryList
+{
+    public SkillOrStatusDataEntry[] skillOrStatusData;
+}
 
 public class Node
 {
