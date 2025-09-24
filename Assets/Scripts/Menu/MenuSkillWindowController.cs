@@ -62,6 +62,11 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         {
             return;
         }
+        // アイテム/スキル使用ウィンドウが開いていたら、操作を受け付けない
+        if (MenuManager.Instance.MenuUsePhase != MenuUsePhase.Closed)
+        {
+            return;
+        }
         if (_inputSetting.GetCancelKeyDown())
         {
             StartCoroutine(HideProcess());
@@ -73,6 +78,10 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         else if (_inputSetting.GetForwardKeyDown())
         {
             ShowPreviousSkill();
+        }
+        else if (_inputSetting.GetDecideInputDown())
+        {
+            MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.SkillUse);
         }
     }
     private IEnumerator HideProcess()
@@ -99,9 +108,17 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         _canClose = true;
     }
 
+    private IEnumerator SetOpenStateDelay()
+    {
+        yield return null;
+        _canClose = false;
+    }
+
     public void HideWindow()
     {
         _uiController.Hide();
+        _canClose = true;
+        StartCoroutine(SetOpenStateDelay());
     }
 
     /// <summary>
@@ -156,5 +173,11 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         _uiController.SetSkillSelectedDiscText(_selectedSkillData.skillDesc);
         _uiController.SetSkillSelectedNameText(_selectedSkillData.skillName);
         _uiController.SetSkillSelectedValueText(_selectedSkillData.cost);
+    }
+
+    // 現在選択されているスキルデータを返す
+    public SkillData getSkillData()
+    {
+        return _selectedSkillData;
     }
 }

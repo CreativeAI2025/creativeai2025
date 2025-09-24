@@ -46,7 +46,7 @@ public class SkillDataManager : DontDestroySingleton<SkillDataManager>
         _skillDataList = new List<SkillData>(handle.Result);
         handle.Release();
         _skillDataDictionary = _skillDataList.ToDictionary(skill => skill.skillId, skill => skill);
-        Debug.Log("[SkillDataManager]LoadSkillData Count:" + _skillDataDictionary.Count);
+        //Debug.Log("[SkillDataManager]LoadSkillData Count:" + _skillDataDictionary.Count);
     }
 
     /// <summary>

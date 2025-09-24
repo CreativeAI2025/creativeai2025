@@ -7,5 +7,5 @@ public enum MenuCommand
     Character,
     Skill,
     Item,
-    SkillBoard,
+    SkillTree,
 }

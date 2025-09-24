@@ -13,7 +13,7 @@ public class TopMenuUIController : MonoBehaviour, IMenuUIController
     /// <summary>
     /// コマンドのカーソルを全て非表示にする
     /// </summary>
-    void HideAllCursor()
+    private void HideAllCursor()
     {
         _cursorObjCharacter.SetActive(false);
         _cursorObjSkill.SetActive(false);
@@ -33,19 +33,19 @@ public class TopMenuUIController : MonoBehaviour, IMenuUIController
         {
             case MenuCommand.Character:
                 _cursorObjCharacter.SetActive(true);
-                Debug.Log("キャラクター選択中");
+                //Debug.Log("キャラクター選択中");
                 break;
             case MenuCommand.Skill:
                 _cursorObjSkill.SetActive(true);
-                Debug.Log("スキル選択中");
+                //Debug.Log("スキル選択中");
                 break;
             case MenuCommand.Item:
                 _cursorObjItem.SetActive(true);
-                Debug.Log("アイテム選択中");
+                //Debug.Log("アイテム選択中");
                 break;
-            case MenuCommand.SkillBoard:
+            case MenuCommand.SkillTree:
                 _cursorObjSkillBoard.SetActive(true);
-                Debug.Log("スキルボード選択中");
+                //Debug.Log("スキルボード選択中");
                 break;
         }
     }

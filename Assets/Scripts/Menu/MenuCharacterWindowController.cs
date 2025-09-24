@@ -50,7 +50,7 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
             StartCoroutine(HideProcess());
         }
     }
-    IEnumerator HideProcess()
+    private IEnumerator HideProcess()
     {
         _canClose = false;
         yield return null;
@@ -68,7 +68,7 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         StartCoroutine(SetCloseStateDelay());
     }
 
-    IEnumerator SetCloseStateDelay()
+    private IEnumerator SetCloseStateDelay()
     {
         yield return null;
         _canClose = true;

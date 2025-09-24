@@ -23,6 +23,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
 
     [SerializeField] private MenuSkillWindowController _menuSkillWindowController;
     [SerializeField] private MenuItemWindowController _menuItemWindowController;
+    [SerializeField] private MenuSelectWindowController _menuSelectWindowController;
 
     /// <summary>
     /// メニューのフェーズ
@@ -33,6 +34,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     /// 選択されたメニュー
     /// </summary>
     public MenuCommand SelectedMenu { get; private set; }
+    public MenuUsePhase MenuUsePhase { get; private set; }
 
     private InputSetting _inputSetting;
 
@@ -72,20 +74,17 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         }
 
         // メニューキーが押された時、メニューを開く
+        // ここは将来いらないだろう
         if (_inputSetting.GetMenuKeyDown())
         {
             OpenMenu();
-        }
-        else if (Input.GetKey(KeyCode.M))
-        {
-            SceneManager.LoadScene("Menu2");
         }
     }
 
     /// <summary>
     /// メニュー画面の表示
     /// </summary>
-    private void OpenMenu()
+    public void OpenMenu()
     {
         StartCoroutine(OpenMenuProcess());
     }
@@ -98,6 +97,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         yield return null;
 
         MenuPhase = MenuPhase.Top;
+        MenuUsePhase = MenuUsePhase.Closed;
         _topMenuWindowController.InitializeCommand();
         _topMenuWindowController.ShowWindow();
 
@@ -133,8 +133,8 @@ public class MenuManager : DontDestroySingleton<MenuManager>
                 // アイテムを開く処理
                 ShowItemMenu();
                 break;
-            case MenuCommand.SkillBoard:
-                // スキルボードを開く処理
+            case MenuCommand.SkillTree:
+                // スキルツリーを開く処理
                 break;
         }
     }
@@ -157,6 +157,11 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         _menuItemWindowController.ShowWindow();
     }
 
+    private void ShowSkillTreeMenu()
+    {
+        //上と似たような感じに、スキルツリーを開くコードを記入
+    }
+
     public void OnCharacterCanceled()
     {
         MenuPhase = MenuPhase.Top;
@@ -172,6 +177,11 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         MenuPhase = MenuPhase.Top;
     }
 
+    public void OnSkillTreeCanceled()
+    {
+        MenuPhase = MenuPhase.Top;
+    }
+
     /// <summary>
     /// メニュー画面が閉じるときのコールバック
     /// </summary>
@@ -179,5 +189,28 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     {
         MenuPhase = MenuPhase.Closed;
         //_characterMoverManager.ResumeCharacterMover();
+    }
+
+    // アイテム/スキル選択ウィンドウを表示させる。引数にはSkillUseかItemUseの値を入れる
+    public void OnOpenSelectWindow(MenuUsePhase m)
+    {
+        MenuUsePhase = m;
+        if (m == MenuUsePhase.SkillUse)
+        {
+            _menuSelectWindowController.SetSkillData(_menuSkillWindowController.getSkillData());
+        }
+        else if (m == MenuUsePhase.ItemUse)
+        {
+            //
+        }
+        _menuSelectWindowController.ShowWindow();
+    }
+    /// <summary>
+    /// 選択ウィンドウを閉じる
+    /// </summary>
+    public void OnCloseSelectWindow()
+    {
+        MenuUsePhase = MenuUsePhase.Closed;
+        _menuSelectWindowController.HideWindow();
     }
 }
