@@ -7,6 +7,8 @@ using System.IO;
 public class DataSetting : MonoBehaviour
 {
     [Header("ノードデータのJsonFile"), SerializeField] TextAsset nodeDataJson;
+    [Header("自作の接続のJsonFile"), SerializeField] TextAsset nodeConnection;
+    [SerializeField] bool selfConnection = false;
     [SerializeField] string characterName;
     //int cols = 11;//列
     int rows;//行
@@ -59,7 +61,8 @@ public class DataSetting : MonoBehaviour
     {
         Reset();
         NodeDataSet();
-        generateRandomConnections();
+        if (!selfConnection) generateRandomConnections();
+        if (selfConnection) SelfConnections();
     }
 
     public void Reset()
@@ -503,6 +506,23 @@ public class DataSetting : MonoBehaviour
     }
 
     /// <summary>
+    /// 自作の接続
+    /// </summary>
+    void SelfConnections()
+    {
+        connections.Clear();
+        SelfConnectionDataEntryList list = JsonUtility.FromJson<SelfConnectionDataEntryList>(nodeConnection.text);
+
+        foreach (var l in list.selfConnections)
+        {
+            if (l.connection != null && l.connection.Length == 2)
+            {
+                connections.Add(new int[] { l.connection[0], l.connection[1] });
+            }
+        }
+    }
+
+    /// <summary>
     /// nodeSkillDataへのスキルデータの格納
     /// </summary>
     /// <param name="skillData"></param>  
@@ -606,11 +626,8 @@ public class DataSetting : MonoBehaviour
         if (explain.Contains("麻痺")) extra = "麻痺";
         if (explain.Contains("睡眠")) extra = "睡眠";
 
-        int mp = MpCalculate();
-        int sp = SpCalculatie();
-
         // データ格納
-        nodeSkillData.Add(new Skill(name, subject, action, probability, power, type, status, extra, duration, mp, sp));
+        nodeSkillData.Add(new Skill(name, subject, action, probability, power, type, status, extra, duration));
     }
 
     /// <summary>
@@ -671,6 +688,8 @@ public class DataSetting : MonoBehaviour
             );
 
             nodeSkillData[i].SetEvaluationValue(evaluationValue);
+            nodeSkillData[i].SetMp(MpCalculate(evaluationValue));
+            nodeSkillData[i].SetSp(SpCalculatie(evaluationValue));
         }
     }
 
@@ -791,29 +810,30 @@ public class DataSetting : MonoBehaviour
 
         int power = -1;//効果量
         string type = null;//種類（攻撃上昇、HP上昇など）
+        int sp = 20;
 
         //データの格納
-        nodeStatusData.Add(new Status(name, power, type, explain));
+        nodeStatusData.Add(new Status(name, power, type, explain, sp));
     }
 
     /// <summary>
     /// スキルに合わせたMPを返す
     /// </summary>
     /// <returns></returns>
-    int MpCalculate()
+    int MpCalculate(float evaluationValue)
     {
-        int mp = 10;
-        return mp;
+        int mp;
+        return mp = Mathf.RoundToInt(3.230558799f * evaluationValue + 7.081810434f);
     }
 
     /// <summary>
     /// スキルに合わせたSPを返す
     /// </summary>
     /// <returns></returns>
-    int SpCalculatie()
+    int SpCalculatie(float evaluationValue)
     {
-        int sp = 10;
-        return sp;
+        int sp;
+        return sp = Mathf.RoundToInt(12.63328112f * evaluationValue + 3.383938855f);
     }
 
     /// <summary>
@@ -821,41 +841,45 @@ public class DataSetting : MonoBehaviour
     /// </summary>
     public void TagSet()
     {
-        int skillTagCount = 0;
-        tagData[0] = "初期状態";
-        HashSet<int> usedid = new HashSet<int>();
-
-        connections.Sort((a, b) => a[0].CompareTo(b[0]));
-
-        foreach (int[] pair in connections)
+        do
         {
-            int from = pair[0];
-            int to = pair[1];
+            int skillTagCount = 0;
+            tagData[0] = "初期状態";
+            HashSet<int> usedid = new HashSet<int>();
 
-            if (from == 0 && !usedid.Contains(to))
-            {
-                tagData[to] = tagName("初期状態");
-            }
+            connections.Sort((a, b) => a[0].CompareTo(b[0]));
 
-            if (!usedid.Contains(to))
+            foreach (int[] pair in connections)
             {
-                if (tagData.ContainsKey(from))
+                int from = pair[0];
+                int to = pair[1];
+
+                if (from == 0 && !usedid.Contains(to))
                 {
-                    tagData[to] = tagName(tagData[from]);
+                    tagData[to] = tagName("初期状態");
+                }
 
-                    if (tagData[to] == "スキル") skillTagCount++;
-                    if (skillTagCount > skillData.Count)
+                if (!usedid.Contains(to))
+                {
+                    if (tagData.ContainsKey(from))
                     {
-                        tagData[to] = "ステータス";
-                        //Debug.Log("all");
+                        tagData[to] = tagName(tagData[from]);
+
+                        if (tagData[to] == "スキル") skillTagCount++;
+                        if (skillTagCount > skillData.Count)
+                        {
+                            tagData[to] = "ステータス";
+                            //Debug.Log("all");
+                        }
                     }
                 }
+
+                usedid.Add(to);
             }
 
-            usedid.Add(to);
-        }
-
-        SScount();
+            SScount();
+            Debug.Log(skillData.Count + "," + skillCount);
+        } while (skillData.Count > skillCount);
 
         nodeData = setTagDataForNodeData();
     }
@@ -1014,6 +1038,8 @@ public class DataSetting : MonoBehaviour
     {
         int[] id = getSkillIdArray(nodeList);
         nodeSkillData.Sort((a, b) => a.GetEvaluationValue().CompareTo(b.GetEvaluationValue()));//評価値の小さい順にソート
+
+        Debug.Log(nodeSkillData.Count + "," + id.Length);
 
         for (int i = 0; i < nodeSkillData.Count; i++)
         {

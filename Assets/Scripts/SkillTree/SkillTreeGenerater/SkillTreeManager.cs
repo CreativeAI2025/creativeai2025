@@ -10,7 +10,7 @@ public class SkillTreeManager : MonoBehaviour
     [SerializeField] Text skillPointText;//SPのテキスト
     [SerializeField] Text skillInfoText;//スキルの表示
     [SerializeField] GameObject skillBlockPanel;
-    int skillPoint = 100;
+    [SerializeField] int skillPoint = 100;
 
     List<Node> skillList = new List<Node>();//取得済みのものを格納
     List<Skill> nodeSkillList = new List<Skill>();
@@ -62,6 +62,11 @@ public class SkillTreeManager : MonoBehaviour
             }
             onceAction = false;
         }
+    }
+
+    void FixedUpdate()
+    {
+        UpdateSkillPointText();
     }
 
     /// <summary>
@@ -132,7 +137,7 @@ public class SkillTreeManager : MonoBehaviour
     /// </summary>
     /// <param name="cost"></param>
     /// <param name="node"></param>
-    /// <returns></returns> <summary>
+    /// <returns></returns>
     public bool CanLearnSkill(int cost, int id)
     {
         if (id == 0) return true;
@@ -235,11 +240,40 @@ public class SkillTreeManager : MonoBehaviour
         }
 
         ChechActiveBlocks();
+
         skillPoint -= cost;
+
         UpdateSkillPointText();
         SkillStatusLoader.instance.SaveSkillData();// スキルのJSONに保存
         SkillStatusLoader.instance.SaveStatusData();// ステータスのJSONに保存
         Debug.Log("保存先: " + Application.persistentDataPath);
+    }
+
+    /// <summary>
+    /// スキルツリーマネージャーからIDに対応するSPを受け取る
+    /// </summary>
+    /// <returns></returns>
+    public int GetMySp(int id)
+    {
+        int sp = 0;
+        //Jsonファイルのスキル所得状況の更新
+        foreach (Skill d in nodeSkillList)
+        {
+            if (d.GetId().Equals(id))
+            {
+                sp = d.GetSp();
+            }
+        }
+
+        //Jsonファイルのスキル所得状況の更新
+        foreach (Status d in nodeStatusList)
+        {
+            if (d.getId().Equals(id))
+            {
+                sp = d.GetSp();
+            }
+        }
+        return sp;
     }
 
     /// <summary>

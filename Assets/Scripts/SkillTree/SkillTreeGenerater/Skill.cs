@@ -18,7 +18,7 @@ public class Skill
     private int sp;//　SP（スキル獲得ポイント）
     private float evaluationValue;//評価値
 
-    public Skill(string name, string subject, string action, int probability, int power, string type, string status, string extra, int duration, int mp, int sp)
+    public Skill(string name, string subject, string action, int probability, int power, string type, string status, string extra, int duration)
     {//コンストラクタ（スキル用（詳細情報））
         this.id = 0;//ID
         this.tag = "スキル";//分類
@@ -31,8 +31,8 @@ public class Skill
         this.status = status;
         this.extra = extra;
         this.duration = duration;
-        this.mp = mp;//スキル獲得に必要なコスト
-        this.sp = sp;//スキル使用に必要なコスト
+        this.mp = 0;//スキル獲得に必要なコスト
+        this.sp = 0;//スキル使用に必要なコスト
         this.evaluationValue = 0;
     }
 

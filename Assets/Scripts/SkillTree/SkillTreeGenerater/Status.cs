@@ -8,16 +8,16 @@ public class Status : IComparable<Status>
     private string name;
     private int power;//効果量
     private string type;//種類（攻撃上昇、HP上昇など）
-    private int mp; // MP（コスト）
+    private int sp; // SP（コスト）
     private string explain;
-    public Status(string name, int power, string type, string explain)
+    public Status(string name, int power, string type, string explain, int sp)
     {
         this.id = 0;//ID
         this.tag = "ステータス";//分類
         this.name = name;//名前
         this.power = power;//効果量
         this.type = type;//種類
-        this.mp = 0;//獲得に必要なコスト
+        this.sp = sp;//獲得に必要なコスト
         this.explain = explain;
     }
 
@@ -35,14 +35,19 @@ public class Status : IComparable<Status>
         return this.type;
     }
 
+    public int GetSp()
+    {
+        return this.sp;
+    }
+
     public string getExplain()
     {
         return this.explain;
     }
 
-    public void setMp(int mp)
+    public void setSp(int mp)
     {
-        this.mp = mp;
+        this.sp = mp;
     }
 
     public void setId(int id)

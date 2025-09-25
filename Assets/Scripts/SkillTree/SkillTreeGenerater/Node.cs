@@ -43,6 +43,19 @@ public class SkillOrStatusDataEntryList
     public SkillOrStatusDataEntry[] skillOrStatusData;
 }
 
+[System.Serializable]
+public class SelfConnectionDataEntry
+{
+    public int[] connection;
+}
+
+// JSON全体をまとめる型
+[System.Serializable]
+public class SelfConnectionDataEntryList
+{
+    public SelfConnectionDataEntry[] selfConnections;
+}
+
 public class Node
 {
     private int id;//各ノードのID

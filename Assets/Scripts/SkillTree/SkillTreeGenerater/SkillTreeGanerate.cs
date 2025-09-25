@@ -132,6 +132,7 @@ public class SkillTreeGanerate : MonoBehaviour
             RectTransform rect = obj.GetComponent<RectTransform>();
             rect.anchoredPosition = new Vector2(posX, posY);
             rect.localEulerAngles = new Vector3(0, 0, angle);
+            rect.localScale = new Vector3(1, 1, 0);
         }
     }
 
