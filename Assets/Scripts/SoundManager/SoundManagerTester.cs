@@ -9,13 +9,13 @@ public class SoundManagerTester : MonoBehaviour
     void Start()
     {
         // ゲーム開始時に最初のBGMを再生
-        SoundManager.Instance.PlayBGM(1, 1f);
+        SoundManager.Instance.PlayBGM(0, 1f);
     }
 
     // シーンが移動するときに、BGMを変更してSEを再生
     public async void ToSampleScene()
     {
-        SoundManager.Instance.PlaySE(0, 0.5f); 
+        SoundManager.Instance.PlaySE(0, 0.5f);
 
         // シーンを非同期でロードする
         var loadScene = SceneManager.LoadSceneAsync("SampleScene");
