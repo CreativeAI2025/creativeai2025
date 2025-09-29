@@ -87,6 +87,11 @@ public class Skill
         + ", 評価値" + evaluationValue;
     }
 
+    /// <summary>
+    /// 元の文をきれいにした文字列を返す（引数：スキルの種類）
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
     public string toSkillstring(string type)
     {
         if (type != null)
