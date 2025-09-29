@@ -627,7 +627,7 @@ public class DataSetting : MonoBehaviour
         if (explain.Contains("睡眠")) extra = "睡眠";
 
         // データ格納
-        nodeSkillData.Add(new Skill(name, subject, action, probability, power, type, status, extra, duration));
+        nodeSkillData.Add(new Skill(name, explain, subject, action, probability, power, type, status, extra, duration));
     }
 
     /// <summary>

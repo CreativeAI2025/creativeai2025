@@ -4,6 +4,7 @@ using System;
 public class Skill
 {
     private int id;//各ノードのID
+    private string explain;
     private string tag;//タグ名（スキルorステータス）
     private string name;//スキルの名前
     private string subject;//対象
@@ -18,9 +19,10 @@ public class Skill
     private int sp;//　SP（スキル獲得ポイント）
     private float evaluationValue;//評価値
 
-    public Skill(string name, string subject, string action, int probability, int power, string type, string status, string extra, int duration)
+    public Skill(string name, string explain, string subject, string action, int probability, int power, string type, string status, string extra, int duration)
     {//コンストラクタ（スキル用（詳細情報））
         this.id = 0;//ID
+        this.explain = explain;
         this.tag = "スキル";//分類
         this.name = name;//名前
         this.subject = subject;//対象
@@ -37,6 +39,7 @@ public class Skill
     }
 
     public int GetId() { return id; }
+    public string GetExplain() { return explain; }
     public string GetTag() { return tag; }
     public string GetName() { return name; }
     public string GetSubject() { return subject; }
@@ -64,6 +67,11 @@ public class Skill
     public void SetId(int id)
     {
         this.id = id;
+    }
+
+    public void SetExplain(string explain)
+    {
+        this.explain = explain;
     }
 
     public void SetEvaluationValue(float evaluationValue)
