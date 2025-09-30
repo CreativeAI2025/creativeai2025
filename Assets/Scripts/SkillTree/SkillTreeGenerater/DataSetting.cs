@@ -7,8 +7,8 @@ using System.IO;
 public class DataSetting : MonoBehaviour
 {
     [Header("ノードデータのJsonFile"), SerializeField] TextAsset nodeDataJson;
-    [Header("自作の接続のJsonFile"), SerializeField] TextAsset nodeConnection;
-    [SerializeField] bool selfConnection = false;
+    [Header("自作のスキルツリーのJsonFile"), SerializeField] TextAsset selfSkillTree;
+    [SerializeField] bool selfTree = false;
     [SerializeField] string characterName;
     //int cols = 11;//列
     int rows;//行
@@ -61,8 +61,8 @@ public class DataSetting : MonoBehaviour
     {
         Reset();
         NodeDataSet();
-        if (!selfConnection) generateRandomConnections();
-        if (selfConnection) SelfConnections();
+        if (!selfTree) generateRandomConnections();
+        if (selfTree) SelfConnections();
     }
 
     public void Reset()
@@ -105,7 +105,7 @@ public class DataSetting : MonoBehaviour
         // Dictionaryに変換
         foreach (var data in list.nodeLimitData)
         {
-            nodelimitPerRow.Add(data.row, data.nodeNum);
+            if (!selfTree) nodelimitPerRow.Add(data.row, data.nodeNum);
         }
 
         foreach (var data in list1.lineLimitData)
@@ -121,7 +121,7 @@ public class DataSetting : MonoBehaviour
     }
 
     public void NodeLimitData()
-    {//各階層でノードの個数の制限(階層,ノード数)
+    {//各階層でノードの個数の制限(階層,ノード数)(自作)
         nodelimitPerRow.Add(0, 1);
         nodelimitPerRow.Add(1, 2);
         nodelimitPerRow.Add(2, 4);
@@ -511,7 +511,8 @@ public class DataSetting : MonoBehaviour
     void SelfConnections()
     {
         connections.Clear();
-        SelfConnectionDataEntryList list = JsonUtility.FromJson<SelfConnectionDataEntryList>(nodeConnection.text);
+        SelfConnectionDataEntryList list = JsonUtility.FromJson<SelfConnectionDataEntryList>(selfSkillTree.text);
+        SelfNodeLimitDataEntryList list1 = JsonUtility.FromJson<SelfNodeLimitDataEntryList>(selfSkillTree.text);
 
         foreach (var l in list.selfConnections)
         {
@@ -520,6 +521,13 @@ public class DataSetting : MonoBehaviour
                 connections.Add(new int[] { l.connection[0], l.connection[1] });
             }
         }
+
+        foreach (var l in list1.nodeLimitData)
+        {
+            nodelimitPerRow[l.row] = l.nodeNum;
+            //nodelimitPerRow.Add(l.row, l.nodeNum);
+        }
+        Debug.Log("自作の接続を作成");
     }
 
     /// <summary>
@@ -895,8 +903,14 @@ public class DataSetting : MonoBehaviour
 
         foreach (Node n in list)
         {
-            //Debug.Log(count + "," + tagData[count]);
-            n.setTag(tagData[count]);
+            if (tagData.TryGetValue(count, out var tag))//TryGetValue:キーが存在する → true を返し、value に値が入る
+            {
+                n.setTag(tag);
+            }
+            else
+            {
+                Debug.LogWarning($"tagData にキー {count} が存在しません");
+            }
             count++;
         }
 
