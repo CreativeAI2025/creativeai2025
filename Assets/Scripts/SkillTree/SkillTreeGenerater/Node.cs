@@ -43,6 +43,20 @@ public class SkillOrStatusDataEntryList
     public SkillOrStatusDataEntry[] skillOrStatusData;
 }
 
+// JSONデータのためのクラス
+[System.Serializable]
+public class SelfNodeLimitDataEntry
+{
+    public int row;
+    public int nodeNum;
+}
+
+// JSON全体をまとめる型
+[System.Serializable]
+public class SelfNodeLimitDataEntryList
+{
+    public NodeLimitDataEntry[] nodeLimitData;
+}
 [System.Serializable]
 public class SelfConnectionDataEntry
 {
