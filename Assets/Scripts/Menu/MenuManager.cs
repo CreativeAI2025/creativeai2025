@@ -24,6 +24,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     [SerializeField] private MenuSkillWindowController _menuSkillWindowController;
     [SerializeField] private MenuItemWindowController _menuItemWindowController;
     [SerializeField] private MenuSelectWindowController _menuSelectWindowController;
+    [SerializeField] private MenuSkillTreeWindowController _menuSkillTreeWindowController;
 
     /// <summary>
     /// メニューのフェーズ
@@ -135,6 +136,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
                 break;
             case MenuCommand.SkillTree:
                 // スキルツリーを開く処理
+                ShowSkillTreeMenu();
                 break;
         }
     }
@@ -160,6 +162,8 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     private void ShowSkillTreeMenu()
     {
         //上と似たような感じに、スキルツリーを開くコードを記入
+        MenuPhase = MenuPhase.SkillTree;
+        _menuSkillTreeWindowController.ShowWindow();
     }
 
     public void OnCharacterCanceled()
