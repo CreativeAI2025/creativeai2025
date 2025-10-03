@@ -50,6 +50,17 @@ public class BattleActionProcessorAttack : MonoBehaviour
         int hpDelta = damage * -1;
         int mpDelta = 0;
         bool isTargetDefeated = false;
+        // var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
+        // if (charaStatus != null && charaStatus.Confusion && Random.value < 0.5f)
+        // {
+        //     action.targetId = action.actorId;
+        // }
+        // var enemyStatus = _enemyStatusManager.GetEnemyStatusByBattleId(action.actorId);
+        // if (enemyStatus != null && enemyStatus.Confusion && Random.value < 0.5f)
+        // {
+        //     action.targetId = action.actorId;
+
+        // }
         if (action.isTargetFriend)
         {
             CharacterStatusManager.Instance.ChangeCharacterStatus(action.targetId, hpDelta, mpDelta);

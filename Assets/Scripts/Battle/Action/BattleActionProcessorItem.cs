@@ -84,6 +84,34 @@ public class BattleActionProcessorItem : MonoBehaviour
 
             StartCoroutine(ShowItemMpHealMessage(action, itemData.itemName, mpDelta));
         }
+        else if (itemData.itemEffect.itemEffectCategory == ItemEffectCategory.Revive)
+        {
+            // 蘇生時の回復HP（例: アイテム効果値の50%回復など）
+            int reviveHp = DamageFormula.CalculateHealValue(itemData.itemEffect.value);
+            int mpDelta = 0;
+
+            if (action.isActorFriend)
+            {
+                var status = CharacterStatusManager.Instance.GetCharacterStatusById(action.targetId);
+                if (status != null && status.isDefeated)
+                {
+                    status.isDefeated = false; // 蘇生！
+                    CharacterStatusManager.Instance.ChangeCharacterStatus(action.targetId, reviveHp, mpDelta);
+                }
+            }
+            else
+            {
+                var status = _enemyStatusManager.GetEnemyStatusByBattleId(action.targetId);
+                if (status != null && status.isDefeated)
+                {
+                    status.isDefeated = false; // 蘇生！
+                    _enemyStatusManager.ChangeEnemyStatus(action.targetId, reviveHp, mpDelta);
+                }
+            }
+
+            StartCoroutine(ShowItemReviveMessage(action, itemData.itemName, reviveHp));
+
+        }
         {
             Debug.LogWarning($"未定義のアイテム効果です。 ID: {itemData.itemId}");
         }
@@ -136,6 +164,27 @@ public class BattleActionProcessorItem : MonoBehaviour
         {
             yield return null;
         }
+
+        _actionProcessor.SetPauseProcess(false);
+    }
+    /// <summary>
+    /// 蘇生アイテムのメッセージを表示します。
+    /// </summary>
+    IEnumerator ShowItemReviveMessage(BattleAction action, string itemName, int reviveHp)
+    {
+        string actorName = _actionProcessor.GetCharacterName(action.actorId, action.isActorFriend);
+        string targetName = _actionProcessor.GetCharacterName(action.targetId, action.isTargetFriend);
+
+        // アイテム使用メッセージ
+        _actionProcessor.SetPauseMessage(true);
+        _messageWindowController.GenerateUseItemMessage(actorName, itemName);
+        while (_actionProcessor.IsPausedMessage) yield return null;
+
+        // 蘇生メッセージ（＋回復量表示）
+        _actionProcessor.SetPauseMessage(true);
+        _messageWindowController.GenerateReviveMessage(targetName, reviveHp);
+        _battleManager.OnUpdateStatus();
+        while (_actionProcessor.IsPausedMessage) yield return null;
 
         _actionProcessor.SetPauseProcess(false);
     }

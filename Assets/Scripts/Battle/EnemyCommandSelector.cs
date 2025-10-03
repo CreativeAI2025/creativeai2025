@@ -40,10 +40,11 @@ using UnityEngine;
         {
             foreach (var enemyStatus in _enemyStatusManager.GetEnemyStatusList())
             {
-                if (enemyStatus.isDefeated || enemyStatus.isRunaway)
-                {
-                    continue;
-                }
+                Logger.Instance.Log($"敵の状況：{enemyStatus.IsEnemyStop}");
+                if (enemyStatus.isDefeated || enemyStatus.isRunaway || enemyStatus.IsEnemyStop)
+            {
+                continue;
+            }
 
                 // 先頭のパーティキャラクターをターゲットにします。
                 int targetId = CharacterStatusManager.Instance.partyCharacter[0];

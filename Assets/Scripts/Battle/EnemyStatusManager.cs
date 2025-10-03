@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 戦闘中の敵キャラクターのデータを管理するクラスです。
 /// </summary>
-public class EnemyStatusManager : MonoBehaviour
+public class EnemyStatusManager : DontDestroySingleton<EnemyStatusManager>
 {
     /// <summary>
     /// 戦闘中の敵キャラクターのステータス一覧です。
@@ -59,7 +59,7 @@ public class EnemyStatusManager : MonoBehaviour
             enemyBattleId = battleId,
             enemyData = enemyData,
             currentHp = enemyData.HP,
-            currentMp = enemyData.HP
+            currentMp = enemyData.MP
         };
         _enemyStatuses.Add(enemyStatus);
     }
@@ -90,7 +90,7 @@ public class EnemyStatusManager : MonoBehaviour
         }
 
         enemyStatus.currentMp += mpDelta;
-        if (enemyStatus.currentMp > enemyStatus.enemyData.HP)
+        if (enemyStatus.currentMp > enemyStatus.enemyData.MP)
         {
             enemyStatus.currentMp = enemyStatus.enemyData.MP;
         }
@@ -99,6 +99,8 @@ public class EnemyStatusManager : MonoBehaviour
             enemyStatus.currentMp = 0;
         }
     }
+
+
 
     /// <summary>
     /// 敵キャラクターが倒れたかどうかを取得します。
@@ -118,6 +120,16 @@ public class EnemyStatusManager : MonoBehaviour
     {
         var enemyStatus = GetEnemyStatusByBattleId(battleId);
         enemyStatus.isDefeated = true;
+    }
+
+    /// <summary>
+    /// 引数の敵キャラクターが動けるかどうかを取得します。
+    /// </summary>
+    /// <param name="characterId">キャラクターのID</param>
+    public bool IsEnemyStop(int battleId)
+    {
+        var enemyStatus = GetEnemyStatusByBattleId(battleId);
+        return enemyStatus.IsEnemyStop;
     }
 
     /// <summary>

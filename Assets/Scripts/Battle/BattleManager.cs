@@ -20,7 +20,11 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     [SerializeField]
     BattleSpriteController _battleSpriteController;
-
+    /// <summary>
+    /// 状態異常の処理を行うクラスへの参照です。
+    /// </summary>
+    [SerializeField]
+    StatusEffectManager statusEffectManager;
     /// <summary>
     /// キャラクターの移動を行うクラスを管理するクラスへの参照です。
     /// </summary>
@@ -48,11 +52,11 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     [SerializeField]
     BattleActionProcessor _battleActionProcessor;
-     /// <summary>
-        /// 戦闘の結果処理を管理するクラスへの参照です。
-        /// </summary>
-        [SerializeField]
-        BattleResultManager _battleResultManager;
+    /// <summary>
+    /// 戦闘の結果処理を管理するクラスへの参照です。
+    /// </summary>
+    [SerializeField]
+    BattleResultManager _battleResultManager;
     /// <summary>
     /// 戦闘のフェーズです。
     /// </summary>
@@ -101,10 +105,10 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     public void StartBattle()
     {
         Logger.Instance.Log("戦闘を開始します。");
-       //  GameStateManager.ChangeToBattle();
+        //  GameStateManager.ChangeToBattle();
         SetBattlePhase(BattlePhase.ShowEnemy);
         TurnCount = 1;
-            IsBattleFinished = false;
+        IsBattleFinished = false;
 
         _battleWindowManager.SetUpWindowControllers(this);
         var messageWindowController = _battleWindowManager.GetMessageWindowController();
@@ -113,6 +117,8 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         _battleActionRegister.InitializeRegister(_battleActionProcessor);
         _enemyCommandSelector.SetReferences(this, _battleActionRegister);
         _battleResultManager.SetReferences(this);
+        statusEffectManager = GetStatusEffectManager();
+        statusEffectManager.SetBattleManager(this);
         // _characterMoverManager.StopCharacterMover();
         _battleStarter.StartBattle(this);
     }
@@ -136,6 +142,13 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     public EnemyStatusManager GetEnemyStatusManager()
     {
         return _enemyStatusManager;
+    }
+    /// <summary>
+    /// 状態異常の処理を行うクラスへの参照を取得します。
+    /// </summary>
+    public StatusEffectManager GetStatusEffectManager()
+    {
+        return statusEffectManager;
     }
     /// <summary>
     /// コマンド入力を開始します。
@@ -167,16 +180,16 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         Logger.Instance.Log($"入力されたコマンドに応じた処理を行います。選択されたコマンド: {SelectedCommand}");
         switch (SelectedCommand)
         {
-             case BattleCommand.Attack:
-                    SetAttackCommandAction();
-                    break;
-                case BattleCommand.Run:
-                    SetRunCommandAction();
-                    break;
-                case BattleCommand.Skill:
-                case BattleCommand.Item:
-                    ShowSelectionWindow();
-                    break;
+            case BattleCommand.Attack:
+                SetAttackCommandAction();
+                break;
+            case BattleCommand.Run:
+                SetRunCommandAction();
+                break;
+            case BattleCommand.Skill:
+            case BattleCommand.Item:
+                ShowSelectionWindow();
+                break;
         }
     }
 
@@ -211,72 +224,72 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         switch (SelectedCommand)
         {
             case BattleCommand.Skill:
-               SetSkillCommandAction(itemId);
-                    break;
-                case BattleCommand.Item:
-                    SetItemCommandAction(itemId);
-                    break;
+                SetSkillCommandAction(itemId);
+                break;
+            case BattleCommand.Item:
+                SetItemCommandAction(itemId);
+                break;
         }
     }
- /// <summary>
-        /// 攻撃コマンドを選択した際の処理です。
-        /// </summary>
-        void SetAttackCommandAction()
+    /// <summary>
+    /// 攻撃コマンドを選択した際の処理です。
+    /// </summary>
+    void SetAttackCommandAction()
+    {
+        // 1対1の戦闘のため、最初のキャラクターのIDを取得します。
+        int actorId = CharacterStatusManager.Instance.partyCharacter[0];
+        int targetId = _enemyStatusManager.GetEnemyStatusList()[0].enemyBattleId;
+        _battleActionRegister.SetFriendAttackAction(actorId, targetId);
+
+        Logger.Instance.Log($"攻撃するキャラクターのID: {actorId} || 攻撃対象のキャラクターのID: {targetId}");
+
+        PostCommandSelect();
+    }
+
+    /// <summary>
+    /// 魔法コマンドを選択した際の処理です。
+    /// </summary>
+    /// <param name="itemId">魔法のID</param>
+    void SetSkillCommandAction(int itemId)
+    {
+        int actorId = CharacterStatusManager.Instance.partyCharacter[0];
+        int targetId = _enemyStatusManager.GetEnemyStatusList()[0].enemyBattleId;
+        _battleActionRegister.SetFriendSkillAction(actorId, targetId, itemId);
+
+        PostCommandSelect();
+    }
+
+    /// <summary>
+    /// アイテムコマンドを選択した際の処理です。
+    /// </summary>
+    /// <param name="itemId">アイテムのID</param>
+    void SetItemCommandAction(int itemId)
+    {
+        Logger.Instance.Log($"SetItemCommandAction()が呼ばれました。選択されたアイテムのID : {itemId}");
+        int actorId = CharacterStatusManager.Instance.partyCharacter[0];
+        var itemData = ItemDataManager.Instance.GetItemDataById(itemId);
+        if (itemData == null)
         {
-            // 1対1の戦闘のため、最初のキャラクターのIDを取得します。
-            int actorId = CharacterStatusManager.Instance.partyCharacter[0];
-            int targetId = _enemyStatusManager.GetEnemyStatusList()[0].enemyBattleId;
-            _battleActionRegister.SetFriendAttackAction(actorId, targetId);
-
-            Logger.Instance.Log($"攻撃するキャラクターのID: {actorId} || 攻撃対象のキャラクターのID: {targetId}");
-
-            PostCommandSelect();
+            Logger.Instance.LogError($"選択されたIDのアイテムは見つかりませんでした。ID : {itemId}");
+            return;
         }
 
-        /// <summary>
-        /// 魔法コマンドを選択した際の処理です。
-        /// </summary>
-        /// <param name="itemId">魔法のID</param>
-        void SetSkillCommandAction(int itemId)
-        {
-            int actorId = CharacterStatusManager.Instance.partyCharacter[0];
-            int targetId = _enemyStatusManager.GetEnemyStatusList()[0].enemyBattleId;
-            _battleActionRegister.SetFriendSkillAction(actorId, targetId, itemId);
+        int targetId = _enemyStatusManager.GetEnemyStatusList()[0].enemyBattleId;
+        _battleActionRegister.SetFriendItemAction(actorId, targetId, itemId);
 
-            PostCommandSelect();
-        }
+        PostCommandSelect();
+    }
 
-        /// <summary>
-        /// アイテムコマンドを選択した際の処理です。
-        /// </summary>
-        /// <param name="itemId">アイテムのID</param>
-        void SetItemCommandAction(int itemId)
-        {
-            Logger.Instance.Log($"SetItemCommandAction()が呼ばれました。選択されたアイテムのID : {itemId}");
-            int actorId = CharacterStatusManager.Instance.partyCharacter[0];
-            var itemData = ItemDataManager.Instance.GetItemDataById(itemId);
-            if (itemData == null)
-            {
-                Logger.Instance.LogError($"選択されたIDのアイテムは見つかりませんでした。ID : {itemId}");
-                return;
-            }
+    /// <summary>
+    /// 逃げるコマンドを選択した際の処理です。
+    /// </summary>
+    void SetRunCommandAction()
+    {
+        int actorId = CharacterStatusManager.Instance.partyCharacter[0];
+        _battleActionRegister.SetFriendRunAction(actorId);
 
-            int targetId = _enemyStatusManager.GetEnemyStatusList()[0].enemyBattleId;
-            _battleActionRegister.SetFriendItemAction(actorId, targetId, itemId);
-
-            PostCommandSelect();
-        }
-
-        /// <summary>
-        /// 逃げるコマンドを選択した際の処理です。
-        /// </summary>
-        void SetRunCommandAction()
-        {
-            int actorId = CharacterStatusManager.Instance.partyCharacter[0];
-            _battleActionRegister.SetFriendRunAction(actorId);
-
-            PostCommandSelect();
-        }
+        PostCommandSelect();
+    }
     /// <summary>
     /// 選択ウィンドウでキャンセルボタンが押された時のコールバックです。
     /// </summary>
@@ -284,7 +297,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         BattlePhase = BattlePhase.InputCommand;
         var selectionWindowController = _battleWindowManager.GetSelectionWindowController();
-            selectionWindowController.HideWindow();
+        selectionWindowController.HideWindow();
     }
     /// <summary>
     /// メッセージウィンドウでメッセージの表示が完了した時のコールバックです。
@@ -300,9 +313,9 @@ public class BattleManager : DontDestroySingleton<BattleManager>
             case BattlePhase.Action:
                 _battleActionProcessor.ShowNextMessage();
                 break;
-                case BattlePhase.Result:
-                    _battleResultManager.ShowNextMessage();
-                    break;
+            case BattlePhase.Result:
+                _battleResultManager.ShowNextMessage();
+                break;
         }
     }
     /// <summary>
@@ -317,6 +330,8 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         }
 
         Logger.Instance.Log("ターン内の行動が完了しました。");
+            // ここで状態異常処理をまとめて実行
+    statusEffectManager.ProcessTurnEffects();
         TurnCount++;
         StartInputCommandPhase();
     }
@@ -334,20 +349,20 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     public void OnEnemyCommandSelected()
     {
-          StartAction();
+        StartAction();
     }
-      /// <summary>
-        /// 各キャラクターの行動を開始します。
-        /// </summary>
-        void StartAction()
-        {
-            Logger.Instance.Log("選択したアクションを実行します。");
-            BattlePhase = BattlePhase.Action;
-            var messageWindowController = _battleWindowManager.GetMessageWindowController();
-            messageWindowController.ShowWindow();
-            _battleActionProcessor.SetPriorities();
-            _battleActionProcessor.StartActions();
-        }
+    /// <summary>
+    /// 各キャラクターの行動を開始します。
+    /// </summary>
+    void StartAction()
+    {
+        Logger.Instance.Log("選択したアクションを実行します。");
+        BattlePhase = BattlePhase.Action;
+        var messageWindowController = _battleWindowManager.GetMessageWindowController();
+        messageWindowController.ShowWindow();
+        _battleActionProcessor.SetPriorities();
+        _battleActionProcessor.StartActions();
+    }
     /// <summary>
     /// ステータスの値が更新された時のコールバックです。
     /// </summary>
@@ -375,17 +390,17 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         Logger.Instance.Log("ゲームオーバーになりました。");
         BattlePhase = BattlePhase.Result;
         IsBattleFinished = true;
-         _battleResultManager.OnLose();
+        _battleResultManager.OnLose();
     }
-          /// <summary>
-        /// 味方が逃走に成功した時のコールバックです。
-        /// </summary>
-        public void OnRunaway()
-        {
-            Logger.Instance.Log("逃走に成功しました。");
-            IsBattleFinished = true;
-            OnFinishBattle();
-        }
+    /// <summary>
+    /// 味方が逃走に成功した時のコールバックです。
+    /// </summary>
+    public void OnRunaway()
+    {
+        Logger.Instance.Log("逃走に成功しました。");
+        IsBattleFinished = true;
+        OnFinishBattle();
+    }
 
     /// <summary>
     /// 敵が逃走に成功した時のコールバックです。
@@ -395,41 +410,41 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         Logger.Instance.Log("敵が逃走に成功しました。");
         BattlePhase = BattlePhase.Result;
         IsBattleFinished = true;
-            _battleResultManager.OnWin();
-        }
+        _battleResultManager.OnWin();
+    }
 
-         /// <summary>
-        /// 戦闘を終了する時のコールバックです。
-        /// </summary>
-        public void OnFinishBattle()
-        {
-            Logger.Instance.Log("戦闘に勝利して終了します。");
+    /// <summary>
+    /// 戦闘を終了する時のコールバックです。
+    /// </summary>
+    public void OnFinishBattle()
+    {
+        Logger.Instance.Log("戦闘に勝利して終了します。");
 
-            _battleWindowManager.HideAllWindow();
-            _battleSpriteController.HideBackground();
-            _battleSpriteController.HideEnemy();
-            _enemyStatusManager.InitializeEnemyStatusList();
-            _battleActionProcessor.InitializeActions();
-            _battleActionProcessor.StopActions();
+        _battleWindowManager.HideAllWindow();
+        _battleSpriteController.HideBackground();
+        _battleSpriteController.HideEnemy();
+        _enemyStatusManager.InitializeEnemyStatusList();
+        _battleActionProcessor.InitializeActions();
+        _battleActionProcessor.StopActions();
 
-            //_characterMoverManager.ResumeCharacterMover();
-            BattlePhase = BattlePhase.NotInBattle;
-        }
+        //_characterMoverManager.ResumeCharacterMover();
+        BattlePhase = BattlePhase.NotInBattle;
+    }
 
-        /// <summary>
-        /// 戦闘を終了する時のコールバックです。
-        /// </summary>
-        public void OnFinishBattleWithGameover()
-        {
-            Logger.Instance.Log("ゲームオーバーとして戦闘を終了します。");
-            _battleWindowManager.HideAllWindow();
-            _battleSpriteController.HideBackground();
-            _battleSpriteController.HideEnemy();
-            _enemyStatusManager.InitializeEnemyStatusList();
-            _battleActionProcessor.InitializeActions();
-            _battleActionProcessor.StopActions();
+    /// <summary>
+    /// 戦闘を終了する時のコールバックです。
+    /// </summary>
+    public void OnFinishBattleWithGameover()
+    {
+        Logger.Instance.Log("ゲームオーバーとして戦闘を終了します。");
+        _battleWindowManager.HideAllWindow();
+        _battleSpriteController.HideBackground();
+        _battleSpriteController.HideEnemy();
+        _enemyStatusManager.InitializeEnemyStatusList();
+        _battleActionProcessor.InitializeActions();
+        _battleActionProcessor.StopActions();
 
-           // _characterMoverManager.ResumeCharacterMover();
-            BattlePhase = BattlePhase.NotInBattle;
-        }
+        // _characterMoverManager.ResumeCharacterMover();
+        BattlePhase = BattlePhase.NotInBattle;
+    }
 }

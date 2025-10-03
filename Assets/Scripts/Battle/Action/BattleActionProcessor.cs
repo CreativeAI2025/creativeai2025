@@ -24,29 +24,33 @@ public class BattleActionProcessor : MonoBehaviour
     /// 戦闘中の敵キャラクターの管理を行うクラスへの参照です。
     /// </summary>
     EnemyStatusManager _enemyStatusManager;
-/// <summary>
-        /// 戦闘中の攻撃アクションを処理するクラスへの参照です。
-        /// </summary>
-        [SerializeField]
-        BattleActionProcessorAttack _battleActionProcessorAttack;
+    /// <summary>
+    /// 戦闘中の味方キャラクターの管理を行うクラスへの参照です。
+    /// </summary>
+    CharacterStatusManager _characterStatusManager;
+    /// <summary>
+    /// 戦闘中の攻撃アクションを処理するクラスへの参照です。
+    /// </summary>
+    [SerializeField]
+    BattleActionProcessorAttack _battleActionProcessorAttack;
 
-        /// <summary>
-        /// 戦闘中の魔法アクションを処理するクラスへの参照です。
-        /// </summary>
-        [SerializeField]
-        BattleActionProcessorSkill _battleActionProcessorSkill;
+    /// <summary>
+    /// 戦闘中の魔法アクションを処理するクラスへの参照です。
+    /// </summary>
+    [SerializeField]
+    BattleActionProcessorSkill _battleActionProcessorSkill;
 
-        /// <summary>
-        /// 戦闘中のアイテムアクションを処理するクラスへの参照です。
-        /// </summary>
-        [SerializeField]
-        BattleActionProcessorItem _battleActionProcessorItem;
+    /// <summary>
+    /// 戦闘中のアイテムアクションを処理するクラスへの参照です。
+    /// </summary>
+    [SerializeField]
+    BattleActionProcessorItem _battleActionProcessorItem;
 
-        /// <summary>
-        /// 戦闘中の逃げるアクションを処理するクラスへの参照です。
-        /// </summary>
-        [SerializeField]
-        BattleActionProcessorRun _battleActionProcessorRun;
+    /// <summary>
+    /// 戦闘中の逃げるアクションを処理するクラスへの参照です。
+    /// </summary>
+    [SerializeField]
+    BattleActionProcessorRun _battleActionProcessorRun;
     /// <summary>
     /// ターン内のアクションのリストです。
     /// </summary>
@@ -67,20 +71,20 @@ public class BattleActionProcessor : MonoBehaviour
     /// </summary>
     public bool IsPausedMessage { get; private set; }
 
-      /// <summary>
-        /// このクラスを初期化します。
-        /// </summary>
-        /// <param name="battleManager">戦闘に関する機能を管理するクラスへの参照</param>
-        public void InitializeProcessor(BattleManager battleManager)
-        {
-            _battleManager = battleManager;
-            _enemyStatusManager = _battleManager.GetEnemyStatusManager();
+    /// <summary>
+    /// このクラスを初期化します。
+    /// </summary>
+    /// <param name="battleManager">戦闘に関する機能を管理するクラスへの参照</param>
+    public void InitializeProcessor(BattleManager battleManager)
+    {
+        _battleManager = battleManager;
+        _enemyStatusManager = _battleManager.GetEnemyStatusManager();
 
-            _battleActionProcessorAttack.SetReferences(_battleManager, this);
-            _battleActionProcessorSkill.SetReferences(_battleManager, this);
-            _battleActionProcessorItem.SetReferences(_battleManager, this);
-            _battleActionProcessorRun.SetReferences(_battleManager, this);
-        }
+        _battleActionProcessorAttack.SetReferences(_battleManager, this);
+        _battleActionProcessorSkill.SetReferences(_battleManager, this);
+        _battleActionProcessorItem.SetReferences(_battleManager, this);
+        _battleActionProcessorRun.SetReferences(_battleManager, this);
+    }
 
     /// <summary>
     /// ターン内のアクションのリストを初期化します。
@@ -152,23 +156,43 @@ public class BattleActionProcessor : MonoBehaviour
                 Logger.Instance.Log("戦闘が終了しているため、処理を中断します。");
                 yield break;
             }
-
+            // ここで行動不能チェック
+            if (action.isActorFriend)
+            {
+                var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
+                if (charaStatus != null && charaStatus.IsCharaStop)
+                {
+                    Logger.Instance.Log($"味方 {action.actorId} は行動不能で動けなかった！");
+                    continue;
+                }
+            }
+            else
+            {
+                var enemyStatus = _enemyStatusManager.GetEnemyStatusByBattleId(action.actorId);
+                if (enemyStatus != null && enemyStatus.IsEnemyStop)
+                {
+                    Logger.Instance.Log($"敵 {action.actorId} は行動不能で動けなかった！");
+                    continue;
+                }
+            }
             Logger.Instance.Log($"コマンドに応じた行動を行います。 コマンド : {action.battleCommand}");
+
             switch (action.battleCommand)
             {
-                 case BattleCommand.Attack:
-                        _battleActionProcessorAttack.ProcessAction(action);
-                        break;
-                    case BattleCommand.Skill:
-                        _battleActionProcessorSkill.ProcessAction(action);
-                        break;
-                    case BattleCommand.Item:
-                        _battleActionProcessorItem.ProcessAction(action);
-                        break;
-                    case BattleCommand.Run:
-                        _battleActionProcessorRun.ProcessAction(action);
-                        break;
+                case BattleCommand.Attack:
+                    _battleActionProcessorAttack.ProcessAction(action);
+                    break;
+                case BattleCommand.Skill:
+                    _battleActionProcessorSkill.ProcessAction(action);
+                    break;
+                case BattleCommand.Item:
+                    _battleActionProcessorItem.ProcessAction(action);
+                    break;
+                case BattleCommand.Run:
+                    _battleActionProcessorRun.ProcessAction(action);
+                    break;
             }
+
 
             while (IsPausedProcess)
             {
@@ -213,10 +237,10 @@ public class BattleActionProcessor : MonoBehaviour
             battleParameter.Attack = enemyData.Attack;
             battleParameter.Defence = enemyData.Defence;
             battleParameter.Speed = enemyData.Speed;
-           battleParameter.MagicAttack = enemyData.MagicAttack;
+            battleParameter.MagicAttack = enemyData.MagicAttack;
             battleParameter.MagicDefence = enemyData.MagicDefence;
-             battleParameter.Evasion = enemyData.Evasion;
-    
+            battleParameter.Evasion = enemyData.Evasion;
+
         }
         return battleParameter;
     }

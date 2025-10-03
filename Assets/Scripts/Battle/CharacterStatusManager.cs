@@ -59,11 +59,6 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             Evasion= parameterRecord.Evasion,
         };
 
-        // BattleParameter equipmentParameter = EquipmentCalculator.GetEquipmentParameter(characterStatus.equipWeaponId, characterStatus.equipArmorId);
-        // baseParameter.Attack += equipmentParameter.strength;
-        // baseParameter.guard += equipmentParameter.guard;
-        // baseParameter.speed += equipmentParameter.speed;
-
         return baseParameter;
     }
 
@@ -110,6 +105,8 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         }
     }
 
+
+
     /// <summary>
     /// 対象のキャラクターが倒れたかどうかを取得します。
     /// </summary>
@@ -118,6 +115,15 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     {
         var characterStatus = GetCharacterStatusById(characterId);
         return characterStatus.isDefeated;
+    }
+        /// <summary>
+    /// 対象のキャラクターが動けるかどうかを取得します。
+    /// </summary>
+    /// <param name="characterId">キャラクターのID</param>
+    public bool IsCharacterStop(int characterId)
+    {
+        var characterStatus = GetCharacterStatusById(characterId);
+        return characterStatus.IsCharaStop;
     }
 
     /// <summary>
