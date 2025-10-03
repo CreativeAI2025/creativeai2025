@@ -3,6 +3,51 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using System.IO;
+using Unity.VisualScripting;
+
+/// <summary>
+/// 序盤中盤終盤でIDを入れる配列リストのクラス
+/// </summary>
+public class Step
+{
+    public string step;
+    public List<int> ids = new List<int>();
+
+    public Step(string step, int id)
+    {
+        this.step = step;
+        this.ids.Add(id);
+    }
+
+    public void AddId(int id)
+    {
+        this.ids.Add(id);
+    }
+
+    public string GetStep()
+    {
+        return this.step;
+    }
+
+    public List<int> GetIds()
+    {
+        return this.ids;
+    }
+
+    /// <summary>
+    /// リストにマッチするIDがあればtureを返す(引数：ID)
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public bool MatchId(int id)
+    {
+        foreach (int i in this.ids)
+        {
+            if (i == id) return true;
+        }
+        return false;
+    }
+}
 
 public class DataSetting : MonoBehaviour
 {
@@ -11,7 +56,8 @@ public class DataSetting : MonoBehaviour
     [SerializeField] bool selfTree = false;
     [SerializeField] string characterName;
     //int cols = 11;//列
-    int rows;//行
+    int rows;//行(スキルツリーの長さ)
+    List<Step> divisionList = new List<Step>();//序盤中盤終盤でIDを入れる配列リスト
     [SerializeField] int cellSizeX = 80;//行間距離
     [SerializeField] int cellSizeY = 55;//行間距離
     [SerializeField] float positionX = 5f;
@@ -41,7 +87,7 @@ public class DataSetting : MonoBehaviour
 
     Dictionary<int, int> nodelimitPerRow = new Dictionary<int, int>();//階層によるノード数の制限
     Dictionary<int, float[]> linelimitPerRow = new Dictionary<int, float[]>();//遷移による枝数の制限
-    Dictionary<string, float[]> skill_or_statusPerRow = new Dictionary<string, float[]>();//スキル・ステータスの変移確率(スキル、ステータス、初期状態)
+    Dictionary<string, float[][]> skill_or_statusPerRow = new Dictionary<string, float[][]>();//スキル・ステータスの変移確率(スキル、ステータス、初期状態)
     Dictionary<int, string[]> skillData = new Dictionary<int, string[]>();// スキル名とスキルの説明のデータ
     Dictionary<int, string[]> statusData = new Dictionary<int, string[]>();// ステータス名とステータスの説明のデータ
     Dictionary<int, string> tagData = new Dictionary<int, string>();// IDとスキル・ステータスの格納
@@ -98,24 +144,29 @@ public class DataSetting : MonoBehaviour
     void NodeDataLoader()
     {
         // JSONをEntryListに変換
-        NodeLimitDataEntryList list = JsonUtility.FromJson<NodeLimitDataEntryList>(nodeDataJson.text);
-        LineLimitDataEntryList list1 = JsonUtility.FromJson<LineLimitDataEntryList>(nodeDataJson.text);
-        SkillOrStatusDataEntryList list2 = JsonUtility.FromJson<SkillOrStatusDataEntryList>(nodeDataJson.text);
+        NodeDataEntryList nodeDataEntryList = JsonUtility.FromJson<NodeDataEntryList>(nodeDataJson.text);
 
         // Dictionaryに変換
-        foreach (var data in list.nodeLimitData)
+        foreach (var data in nodeDataEntryList.nodeLimitData)
         {
             if (!selfTree) nodelimitPerRow.Add(data.row, data.nodeNum);
         }
 
-        foreach (var data in list1.lineLimitData)
+        foreach (var data in nodeDataEntryList.lineLimitData)
         {
             linelimitPerRow.Add(data.row, data.edge);
         }
 
-        foreach (var data in list2.skillOrStatusData)
+        foreach (var data in nodeDataEntryList.skillOrStatusData)
         {
-            skill_or_statusPerRow.Add(data.category, data.transition_probability);
+            if (data.transition_probability != null)
+            {
+                float[][] arrayData = data.transition_probability
+                    .Select(innerList => innerList.ToArray())
+                    .ToArray();
+
+                skill_or_statusPerRow.Add(data.category, arrayData);
+            }
         }
 
     }
@@ -148,12 +199,12 @@ public class DataSetting : MonoBehaviour
         linelimitPerRow.Add(7, new float[] { 0, 0, 1, 0, 0, 0, 0 });
     }
 
-    public void SkillOrStatusData()
-    {//入力に対して次がスキルまたステータスの確率(スキル、ステータス、初期状態)
-        skill_or_statusPerRow.Add("スキル", new float[] { 0.518f, 0.482f });
-        skill_or_statusPerRow.Add("ステータス", new float[] { 0.435f, 0.565f });
-        skill_or_statusPerRow.Add("初期状態", new float[] { 0.857f, 0.143f });//初期状態
-    }
+    // public void SkillOrStatusData()
+    // {//入力に対して次がスキルまたステータスの確率(スキル、ステータス、初期状態)
+    //     skill_or_statusPerRow.Add("スキル", new float[] { 0.518f, 0.482f });
+    //     skill_or_statusPerRow.Add("ステータス", new float[] { 0.435f, 0.565f });
+    //     skill_or_statusPerRow.Add("初期状態", new float[] { 0.857f, 0.143f });//初期状態
+    // }
 
     /// <summary>
     /// スキルのJsonファイルの読み込み
@@ -845,10 +896,84 @@ public class DataSetting : MonoBehaviour
     }
 
     /// <summary>
+    /// IDを段階分けしたリストを作るための関数
+    /// </summary>
+    public void StageDivision()
+    {
+        divisionList = new List<Step>();
+
+        Step early = new Step("序盤", -1);
+        Step middle = new Step("中盤", -1);
+        Step late = new Step("終盤", -1);
+
+        // 各ノードを振り分ける
+        foreach (var n in nodeData)
+        {
+            float y = n.getDistY();
+
+            if (y < rows * (1.0f / 3.0f))
+            {
+                early.AddId(n.getId());
+            }
+            else if (y < rows * (2.0f / 3.0f))
+            {
+                middle.AddId(n.getId());
+            }
+            else
+            {
+                late.AddId(n.getId());
+            }
+        }
+
+        early.ids.Remove(-1);
+        middle.ids.Remove(-1);
+        late.ids.Remove(-1);
+
+        divisionList.Add(early);
+        divisionList.Add(middle);
+        divisionList.Add(late);
+    }
+
+    /// <summary>
+    /// id（引数）をもらい序盤中盤終盤を返す
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    string GetDivision(int id)
+    {
+        string division = "";
+        foreach (Step list in divisionList)
+        {
+            foreach (int list1 in list.GetIds())
+            {
+                if (list.GetStep() == "序盤")
+                {
+                    Debug.Log("序盤");
+                    return "序盤";
+                }
+                else if (list.GetStep() == "中盤")
+                {
+                    Debug.Log("中盤");
+                    return "中盤";
+                }
+                else if (list.GetStep() == "終盤")
+                {
+                    Debug.Log("終盤");
+                    return "終盤";
+                }
+            }
+        }
+        return division;
+    }
+
+
+    /// <summary>
     /// スキル・ステータスの振り分け
     /// </summary>
     public void TagSet()
     {
+        StageDivision();
+
         do
         {
             int skillTagCount = 0;
@@ -864,14 +989,14 @@ public class DataSetting : MonoBehaviour
 
                 if (from == 0 && !usedid.Contains(to))
                 {
-                    tagData[to] = tagName("初期状態");
+                    tagData[to] = tagName("初期状態", GetDivision(from));
                 }
 
                 if (!usedid.Contains(to))
                 {
                     if (tagData.ContainsKey(from))
                     {
-                        tagData[to] = tagName(tagData[from]);
+                        tagData[to] = tagName(tagData[from], GetDivision(from));
 
                         if (tagData[to] == "スキル") skillTagCount++;
                         if (skillTagCount > skillData.Count)
@@ -923,14 +1048,20 @@ public class DataSetting : MonoBehaviour
     /// </summary>
     /// <param name="tag"></param>
     /// <returns></returns>
-    string tagName(string tag)
+    string tagName(string tag, string division)
     {
-        int tagNum = 0; // タグ番号
-        float[] probs;
-
-        if (!skill_or_statusPerRow.TryGetValue(tag, out probs))
+        if (string.IsNullOrEmpty(tag))
         {
-            probs = new float[] { 0.0f };
+            Debug.LogError("tagがnullまたは空です");
+            return null;
+        }
+
+        int tagNum = 0; // タグ番号
+        float[][] probs;
+
+        if (!skill_or_statusPerRow.TryGetValue(tag, out probs))//tagが存在する → true を返し、probs に格納される
+        {
+            probs = new float[][] { };
         }
 
         float r = UnityEngine.Random.value; // 0.0 ~ 1.0 未満
@@ -938,7 +1069,9 @@ public class DataSetting : MonoBehaviour
 
         for (int i = 0; i < probs.Length; i++)
         {
-            sum += probs[i];
+            if (division == "序盤") sum += probs[i][0];
+            if (division == "中盤") sum += probs[i][1];
+            if (division == "終盤") sum += probs[i][2];
             if (r < sum)
             {
                 tagNum = i;

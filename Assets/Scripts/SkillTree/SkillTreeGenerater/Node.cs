@@ -1,4 +1,14 @@
 using System;
+using System.Collections.Generic;
+
+// JSON全体をまとめる型
+[System.Serializable]
+public class NodeDataEntryList
+{
+    public NodeLimitDataEntry[] nodeLimitData;
+    public LineLimitDataEntry[] lineLimitData;
+    public SkillOrStatusDataEntry[] skillOrStatusData;
+}
 
 // JSONデータのためのクラス
 [System.Serializable]
@@ -8,13 +18,6 @@ public class NodeLimitDataEntry
     public int nodeNum;
 }
 
-// JSON全体をまとめる型
-[System.Serializable]
-public class NodeLimitDataEntryList
-{
-    public NodeLimitDataEntry[] nodeLimitData;
-}
-
 [System.Serializable]
 public class LineLimitDataEntry
 {
@@ -22,25 +25,11 @@ public class LineLimitDataEntry
     public float[] edge;
 }
 
-// JSON全体をまとめる型
-[System.Serializable]
-public class LineLimitDataEntryList
-{
-    public LineLimitDataEntry[] lineLimitData;
-}
-
 [System.Serializable]
 public class SkillOrStatusDataEntry
 {
     public string category;
-    public float[] transition_probability;
-}
-
-// JSON全体をまとめる型
-[System.Serializable]
-public class SkillOrStatusDataEntryList
-{
-    public SkillOrStatusDataEntry[] skillOrStatusData;
+    public List<List<float>> transition_probability;
 }
 
 // JSONデータのためのクラス
@@ -90,6 +79,7 @@ public class Node
         this.x = x;
         this.y = y;
         this.tag = "タグがありません";
+        this.branch = 0;
     }
 
     public Node(int id, int branch)
@@ -112,6 +102,11 @@ public class Node
     public void setId(int id)
     {
         this.id = id;
+    }
+
+    public void AddBranch(int branch)
+    {
+        this.branch += branch;
     }
 
     public int getDistX()
