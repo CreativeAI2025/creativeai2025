@@ -2,29 +2,29 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-//using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Threading;
 
 public class ObjectEngine : MonoBehaviour
 {
-    //private List<ObjectData>[][] _eventObjects;
-    //private List<ObjectData>[][] _trapEventObjects;
+    private List<ObjectData>[][] _eventObjects;
+    private List<ObjectData>[][] _trapEventObjects;
 
-    //[SerializeField] private PlayerController player;
+    [SerializeField] private PlayerMove player;
     //[SerializeField] private ItemInventory inventory;
     //[SerializeField] private ItemDatabase itemDatabase;
     //[SerializeField] private Pause pause;
 
     [SerializeField] private MapEngine mapEngine;
     [SerializeField] private MapDataController mapDataController;
-    //private static Vector2Int changedPos = new Vector2Int(4, 2);
+    private static Vector2Int changedPos = new Vector2Int(4, 2);
     private string _mapName;
-    //private Vector2Int _pastGridPosition = new Vector2Int(-1, -1);
-    //private bool conversationFlag = false;
-    //private bool changeSceneFlag = false;
-    //private bool runFlag = false;
+    private Vector2Int _pastGridPosition = new Vector2Int(-1, -1);
+    private bool conversationFlag = false;
+    private bool changeSceneFlag = false;
+    private bool runFlag = false;
     private InputSetting _inputSetting;
     private void Start()
     {
@@ -41,7 +41,7 @@ public class ObjectEngine : MonoBehaviour
         //ConversationTextManager.Instance.OnConversationEnd += () => conversationFlag = false;
         mapDataController.SetChange(ResetAction);
         ResetAction();
-        //PlayerMove(changedPos);
+        PlayerMove(changedPos);
     }
 
     private void ResetAction()
@@ -53,20 +53,20 @@ public class ObjectEngine : MonoBehaviour
     // Start is called before the first frame update
     private void Initialize(string mapName, int width, int height)
     {
-        //_eventObjects = new List<ObjectData>[width][];
-        //_trapEventObjects = new List<ObjectData>[width][];
+        _eventObjects = new List<ObjectData>[width][];
+        _trapEventObjects = new List<ObjectData>[width][];
         for (int i = 0; i < width; i++)
         {
-            //_eventObjects[i] = new List<ObjectData>[height];
-            //_trapEventObjects[i] = new List<ObjectData>[height];
+            _eventObjects[i] = new List<ObjectData>[height];
+            _trapEventObjects[i] = new List<ObjectData>[height];
             for (int j = 0; j < height; j++)
             {
-               // _eventObjects[i][j] = new List<ObjectData>(4);
-                //_trapEventObjects[i][j] = new List<ObjectData>(4);
+                _eventObjects[i][j] = new List<ObjectData>(4);
+                _trapEventObjects[i][j] = new List<ObjectData>(4);
             }
         }
         IFileAssetLoader loader = SaveUtility.FileAssetLoaderFactory(); //
-        /*string path = loader.GetPath("ObjectData");
+        string path = loader.GetPath("ObjectData");
         foreach (string objectFilePath in loader.GetPathDirectory(path))
         {
             if (objectFilePath.EndsWith(".meta")) continue;
@@ -98,10 +98,10 @@ public class ObjectEngine : MonoBehaviour
                 else
                 {
                     _eventObjects[location.Position.x][location.Position.y].Add(objectData);
-                    PutMiniGameTwinkle(objectData);
+                    //PutMiniGameTwinkle(objectData);
                 }
             }
-        }*/
+        }
     }
 
     /*
@@ -132,9 +132,9 @@ public class ObjectEngine : MonoBehaviour
         Gizmos.DrawWireCube(new Vector3(rect.center.x, rect.center.y, 0.01f), new Vector3(rect.size.x, rect.size.y, 0.01f));
     }
     */
-    private /*async*/ void Update()
+    private async void Update()
     {
-        /*if (conversationFlag || changeSceneFlag) return;
+        if (conversationFlag || changeSceneFlag) return;
         if (_inputSetting.GetDecideInputDown())
         {
             Vector2Int frontPosition = new Vector2Int(player.GetGridPosition().x + player.Direction.x, player.GetGridPosition().y + player.Direction.y);
@@ -144,7 +144,7 @@ public class ObjectEngine : MonoBehaviour
                 runFlag = false;
                 foreach (ObjectData aroundObjectData in aroundObjectDatas)
                 {
-                    if (aroundObjectData.EventName.Contains("Conversation") && !ConversationTextManager.Instance.IsAllowCall)
+                    if (aroundObjectData.EventName.Contains("Conversation") /*&& !ConversationTextManager.Instance.IsAllowCall*/)
                     {
                         continue;
                     }
@@ -166,12 +166,12 @@ public class ObjectEngine : MonoBehaviour
         _pastGridPosition = player.GetGridPosition();
         foreach (ObjectData trapObjectData in trapObjectDatas)
         {
-            if (trapObjectData.EventName.Contains("Conversation") && !ConversationTextManager.Instance.IsAllowCall)
+            if (trapObjectData.EventName.Contains("Conversation") /*&& !ConversationTextManager.Instance.IsAllowCall*/)
             {
                 continue;
             }
             await Call(trapObjectData, 0, 4);
-        }*/
+        }
     }
 
     /*private void Pause()
@@ -186,7 +186,7 @@ public class ObjectEngine : MonoBehaviour
         pause.UnPauseAll();
     }*/
 
-    /*private async UniTask Call(ObjectData objectData, params int[] triggerType)
+    private async UniTask Call(ObjectData objectData, params int[] triggerType)
     {
         if (objectData is null) return;
         if (!triggerType.Contains(objectData.TriggerType)) return;
@@ -248,22 +248,6 @@ public class ObjectEngine : MonoBehaviour
                 GetItem(eventArgs[1]);
                 await UniTask.WaitUntil(() => !conversationFlag);
                 break;
-            case "PaperGame":
-                DebugLogger.Log("PaperGame", DebugLogger.Colors.Green);
-                changedPos = new Vector2Int(player.GetGridPosition().x, player.GetGridPosition().y);
-                await SceneChange("PaperGame");
-                break;
-            case "SearchGame":
-                DebugLogger.Log("SearchGame", DebugLogger.Colors.Green);
-                changedPos = new Vector2Int(player.GetGridPosition().x, player.GetGridPosition().y);
-                await SceneChange("SearchGame");
-                break;
-            case "TimingGame":
-                DebugLogger.Log("TimingGame", DebugLogger.Colors.Green);
-                ConversationTextManager.Instance.OnConversationStart -= Pause;
-                changedPos = new Vector2Int(player.GetGridPosition().x, player.GetGridPosition().y);
-                await SceneChange("TimingGame");
-                break;
             case "TileModify":
                 DebugLogger.Log("TileModify", DebugLogger.Colors.Green);
                 string[] positionStr = eventArgs[3].Split(',');
@@ -273,12 +257,12 @@ public class ObjectEngine : MonoBehaviour
                 break;
             default: throw new NotImplementedException();
         }
-    }*/
+    }
 
-    /*private bool IsFlagsInsufficient(ObjectData objectData)
+    private bool IsFlagsInsufficient(ObjectData objectData)
     {
         return objectData.FlagCondition.Flag is not null && objectData.FlagCondition.Flag.Any(x => FlagManager.Instance.HasFlag(x.Key) != x.Value);
-    }*/
+    }
 
     private void SetNextFlag(KeyValuePair<string, bool>[] nextFlags)
     {
