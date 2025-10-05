@@ -88,6 +88,7 @@ public class DataSetting : MonoBehaviour
 
 
     Dictionary<int, int> nodeLimit = new Dictionary<int, int>();//階層によるノード数の制限
+    Dictionary<string, float> nodePer = new Dictionary<string, float>();//段階ごとの割合
     Dictionary<string, float[]> nodeLimitPerRow = new Dictionary<string, float[]>();//段階ごとのノード数の確率
     Dictionary<int, float[]> linelimitPerRow = new Dictionary<int, float[]>();//遷移による枝数の制限
     Dictionary<string, float[]> skill_or_statusPerRow = new Dictionary<string, float[]>();//スキル・ステータスの変移確率(スキル、ステータス、初期状態)
@@ -167,6 +168,11 @@ public class DataSetting : MonoBehaviour
             skill_or_statusPerRow.Add(data.category, data.transition_probability);
         }
         //Debug.Log(skill_or_statusPerRow["スキル"].Length);
+
+        foreach (var data in nodeDataEntryList.stepNodePer)
+        {
+            nodePer.Add(data.step, data.nodePer);
+        }
     }
 
     /// <summary>
@@ -178,7 +184,7 @@ public class DataSetting : MonoBehaviour
         int skillSum = SkillStatusLoader.instance.GetSkillSum(characterName);
         int statusSum = (int)(skillSum * statusRate / skillRate);
         int nodeSum = skillSum + statusSum;
-        float[] stepNodeSum = { nodeSum * 0.24f, nodeSum * 0.56f, nodeSum * 0.21f };//序盤中盤終盤ごとのノード総数を記録
+        float[] stepNodeSum = { nodeSum * nodePer["序盤"], nodeSum * nodePer["中盤"], nodeSum * nodePer["終盤"] };//序盤中盤終盤ごとのノード総数を記録
         bool[] stepCheck = { false, false, false };//全段階やったかの確認
         int rowCount = 1;
         int nodeCount = 0;

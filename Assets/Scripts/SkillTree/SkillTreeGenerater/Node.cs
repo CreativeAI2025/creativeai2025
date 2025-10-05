@@ -5,9 +5,18 @@ using System.Collections.Generic;
 [System.Serializable]
 public class NodeDataEntryList
 {
+    public StepNodePerEntry[] stepNodePer;
     public NodeLimitDataEntry[] nodeLimitData;
     public LineLimitDataEntry[] lineLimitData;
     public SkillOrStatusDataEntry[] skillOrStatusData;
+}
+
+// JSONデータのためのクラス
+[System.Serializable]
+public class StepNodePerEntry
+{
+    public string step;
+    public float nodePer;
 }
 
 // JSONデータのためのクラス
