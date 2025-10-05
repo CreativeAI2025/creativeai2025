@@ -88,11 +88,11 @@ public class SkillTreeManager : MonoBehaviour
                         if (skillEntry != null) skillEntry.mp = d.GetMp();//取得状況の変更
                     }
                 }
-
-                SkillStatusLoader.instance.SaveSkillData();// スキルのJSONに保存
-                Debug.Log("保存先: " + Application.persistentDataPath);
-                onceAction = false;
             }
+
+            SkillStatusLoader.instance.SaveSkillData();// スキルのJSONに保存
+            Debug.Log("保存先: " + Application.persistentDataPath);
+            onceAction = false;
         }
     }
 

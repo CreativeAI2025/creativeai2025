@@ -66,6 +66,8 @@ public class DataSetting : MonoBehaviour
     [Header("発動確率の重み"), SerializeField] float probabilityValue = 1f;
     [Header("効果時間（ターン数）の重み"), SerializeField] float durationValue = 1f;
     [Header("攻撃対象の重み"), SerializeField] float subjectValue = 1f;
+    [Header("スキルの割合"), SerializeField] float skillRate = 1.0f;
+    [Header("ステータスの割合"), SerializeField] float statusRate = 1.0f;
     int nodeSum = -1;//ノードの数のカウント
     int skillCount = 0;
     int statusCount = 0;
@@ -85,7 +87,8 @@ public class DataSetting : MonoBehaviour
     }
 
 
-    Dictionary<int, int> nodelimitPerRow = new Dictionary<int, int>();//階層によるノード数の制限
+    Dictionary<int, int> nodeLimit = new Dictionary<int, int>();//階層によるノード数の制限
+    Dictionary<string, float[]> nodeLimitPerRow = new Dictionary<string, float[]>();//段階ごとのノード数の確率
     Dictionary<int, float[]> linelimitPerRow = new Dictionary<int, float[]>();//遷移による枝数の制限
     Dictionary<string, float[]> skill_or_statusPerRow = new Dictionary<string, float[]>();//スキル・ステータスの変移確率(スキル、ステータス、初期状態)
     Dictionary<int, string[]> skillData = new Dictionary<int, string[]>();// スキル名とスキルの説明のデータ
@@ -106,6 +109,7 @@ public class DataSetting : MonoBehaviour
     public void Set()
     {
         Reset();
+        if (!selfTree) AutoNodeLimitData();
         NodeDataSet();
         if (!selfTree) generateRandomConnections();
         if (selfTree) SelfConnections();
@@ -149,7 +153,7 @@ public class DataSetting : MonoBehaviour
         // Dictionaryに変換
         foreach (var data in nodeDataEntryList.nodeLimitData)
         {
-            if (!selfTree) nodelimitPerRow.Add(data.row, data.nodeNum);
+            if (!selfTree) nodeLimitPerRow.Add(data.step, data.nodePerRow);
         }
 
         foreach (var data in nodeDataEntryList.lineLimitData)
@@ -160,39 +164,121 @@ public class DataSetting : MonoBehaviour
 
         foreach (var data in nodeDataEntryList.skillOrStatusData)
         {
-            Debug.Log(data.transition_probability.Length);
             skill_or_statusPerRow.Add(data.category, data.transition_probability);
         }
         //Debug.Log(skill_or_statusPerRow["スキル"].Length);
     }
 
-    public void NodeLimitData()
-    {//各階層でノードの個数の制限(階層,ノード数)(自作)
-        nodelimitPerRow.Add(0, 1);
-        nodelimitPerRow.Add(1, 2);
-        nodelimitPerRow.Add(2, 4);
-        nodelimitPerRow.Add(3, 2);
-        nodelimitPerRow.Add(4, 7);
-        nodelimitPerRow.Add(5, 5);
-        nodelimitPerRow.Add(6, 7);
-        nodelimitPerRow.Add(7, 3);
-        nodelimitPerRow.Add(8, 1);
-        nodelimitPerRow.Add(9, 2);
-        nodelimitPerRow.Add(10, 1);
+    /// <summary>
+    /// 分析に基づいて各階層でノードの個数を決める
+    /// </summary>
+    public void AutoNodeLimitData()
+    {
+        nodeLimit.Clear();
+        int skillSum = SkillStatusLoader.instance.GetSkillSum(characterName);
+        int statusSum = (int)(skillSum * statusRate / skillRate);
+        int nodeSum = skillSum + statusSum;
+        float[] stepNodeSum = { nodeSum * 0.24f, nodeSum * 0.56f, nodeSum * 0.21f };//序盤中盤終盤ごとのノード総数を記録
+        bool[] stepCheck = { false, false, false };//全段階やったかの確認
+        int rowCount = 1;
+        int nodeCount = 0;
+        string step = "序盤";
+
+        int retry = 0;
+
+        nodeLimit.Add(0, 1);
+        do
+        {
+            if (nodeSum < nodeCount)
+            {
+                rowCount = 1;
+                nodeCount = 0;
+                for (int i = 0; i < stepCheck.Length; i++)
+                {
+                    stepCheck[i] = false;
+                }
+                nodeLimit.Clear();
+                nodeLimit.Add(0, 1);
+            }
+
+            if (nodeCount < stepNodeSum[0])
+            {
+                step = "序盤";
+                stepCheck[0] = true;
+            }
+            else if (nodeCount < stepNodeSum[0] + stepNodeSum[1])
+            {
+                step = "中盤";
+                stepCheck[1] = true;
+            }
+            else
+            {
+                step = "終盤";
+                stepCheck[2] = true;
+            }
+
+            int nodeNum = getNodeCountFromDistribution(step);
+            nodeLimit.Add(rowCount++, nodeNum);
+            nodeCount += nodeNum;
+
+            retry++;
+            if (retry > 100)
+            {
+                Debug.LogError("適切なノード数にできませんでした");
+                break;
+            }
+
+        } while (nodeCount != nodeSum || !stepCheck[0] || !stepCheck[1] || !stepCheck[2]);//繰り返し条件
+        //Debug.Log("適切なノード数は" + nodeSum + "最終カウント：" + nodeCount + stepCheck[0] + stepCheck[1] + stepCheck[2]);
     }
 
-    public void lineLimitData()
-    {//階層のノード数に対して枝数の確率(最高枝数６)
-        // 階層のノード数が2個のとき → 枝1: 50%, 枝2: 30%, 枝3: 20%
-        linelimitPerRow.Add(0, new float[] { 0, 0, 0, 0, 0, 0, 0 });
-        linelimitPerRow.Add(1, new float[] { 0, 0, 0, 0, 1, 0, 0 });
-        linelimitPerRow.Add(2, new float[] { 0, 0.05f, 0.05f, 0, 0, 0, 0.9f });
-        linelimitPerRow.Add(3, new float[] { 0, 0, 0, 0, 1, 0, 0 });
-        linelimitPerRow.Add(4, new float[] { 0, 0, 1, 0, 0, 0, 0 });
-        linelimitPerRow.Add(5, new float[] { 0, 0, 0, 0.6f, 0, 0, 0.4f });
-        linelimitPerRow.Add(6, new float[] { 0, 0, 0, 0, 0, 0, 0 });
-        linelimitPerRow.Add(7, new float[] { 0, 0, 1, 0, 0, 0, 0 });
+    /// <summary>
+    /// 段階を基にその階層でのノード数を返す
+    /// </summary>
+    /// <param name="step"></param>
+    /// <returns></returns>
+    public int getNodeCountFromDistribution(string step)
+    {
+        float[] probs = nodeLimitPerRow[step];// その階層での枝数の確率分布を入れる
+        float r = Random.Range(0f, 1f);//0~0.9999..までの乱数
+        float sum = 0f;//確率の和
+
+        for (int i = 0; i < probs.Length; i++)
+        {
+            sum += probs[i];
+            if (r < sum) return i;//ノードの数を返す
+        }
+
+        return probs.Length - 1;//ノードの本数を返す
     }
+
+    public void NodeLimitData()
+    {//各階層でノードの個数の制限(階層,ノード数)(自作)
+        nodeLimit.Add(0, 1);
+        nodeLimit.Add(1, 2);
+        nodeLimit.Add(2, 4);
+        nodeLimit.Add(3, 2);
+        nodeLimit.Add(4, 7);
+        nodeLimit.Add(5, 5);
+        nodeLimit.Add(6, 7);
+        nodeLimit.Add(7, 3);
+        nodeLimit.Add(8, 1);
+        nodeLimit.Add(9, 2);
+        nodeLimit.Add(10, 1);
+    }
+
+    // public void lineLimitData()
+    // {//階層のノード数に対して枝数の確率(最高枝数６)
+    //     // 階層のノード数が2個のとき → 枝1: 50%, 枝2: 30%, 枝3: 20%
+    //     linelimitPerRow.Add(0, new float[] { 0, 0, 0, 0, 0, 0, 0 });
+    //     linelimitPerRow.Add(1, new float[] { 0, 0, 0, 0, 1, 0, 0 });
+    //     linelimitPerRow.Add(2, new float[] { 0, 0.05f, 0.05f, 0, 0, 0, 0.9f });
+    //     linelimitPerRow.Add(3, new float[] { 0, 0, 0, 0, 1, 0, 0 });
+    //     linelimitPerRow.Add(4, new float[] { 0, 0, 1, 0, 0, 0, 0 });
+    //     linelimitPerRow.Add(5, new float[] { 0, 0, 0, 0.6f, 0, 0, 0.4f });
+    //     linelimitPerRow.Add(6, new float[] { 0, 0, 0, 0, 0, 0, 0 });
+    //     linelimitPerRow.Add(7, new float[] { 0, 0, 1, 0, 0, 0, 0 });
+    // }
 
     // public void SkillOrStatusData()
     // {//入力に対して次がスキルまたステータスの確率(スキル、ステータス、初期状態)
@@ -280,14 +366,14 @@ public class DataSetting : MonoBehaviour
     public void NodeDataSet()
     {
         int id = 0;
-        for (int x = 0; x < nodelimitPerRow.Count; x++)
+        for (int x = 0; x < nodeLimit.Count; x++)
         {
             rows++;
         }
 
         for (int y = 0; y < rows; y++)
         {
-            for (int x = 0; x < nodelimitPerRow[y]; x++)
+            for (int x = 0; x < nodeLimit[y]; x++)
             {
                 nodeSum++;
             }
@@ -297,9 +383,9 @@ public class DataSetting : MonoBehaviour
         {
             for (int y = 0; y < rows; y++)
             {
-                for (int x = 0; x < nodelimitPerRow[y]; x++)
+                for (int x = 0; x < nodeLimit[y]; x++)
                 {
-                    float drawPosX = x * cellSizeY - nodelimitPerRow[y] * cellSizeY / 2 - positionY;//x座標
+                    float drawPosX = x * cellSizeY - nodeLimit[y] * cellSizeY / 2 - positionY;//x座標
                     float drawPosY = y * cellSizeX - ((cellSizeX * ((float)rows)) / 2.0f) + cellSizeX / 2.0f + positionX;//y座標
                     nodeData.Add(new Node(id, x, y, drawPosX, drawPosY));
                     id++;
@@ -343,7 +429,7 @@ public class DataSetting : MonoBehaviour
 
 
     /// <summary>
-    /// 今の枝数を受け取り、確率に基づいて次の枝数を決める関数
+    /// 今の枝数を受け取り、確率に基づいて次の枝数を決める関数(引数：ある階層でのノード数の合計)
     /// </summary>
     /// <param name="nodeSum"></param>
     /// <returns></returns>
@@ -497,10 +583,10 @@ public class DataSetting : MonoBehaviour
         int id = 0;
         for (int i = 0; i < rows; i++)
         {
-            for (int n = 0; n < nodelimitPerRow[i]; n++)
+            for (int n = 0; n < nodeLimit[i]; n++)
             {
                 if (i <= 0) lineData.Add(new Node(id, 2));//初期状態
-                if (0 < i) lineData.Add(new Node(id, getBranchCountFromDistribution(nodelimitPerRow[i])));
+                if (0 < i) lineData.Add(new Node(id, getBranchCountFromDistribution(nodeLimit[i])));
                 //println(id, nodelimitPerRow[i]);
                 id++;
             }
@@ -525,9 +611,9 @@ public class DataSetting : MonoBehaviour
         for (int y = rows - 1; y > 0; y--)
         {
             //if (y > 0) println(nodesum - nodelimitPerRow[y] + 1, nodesum, nodesum - nodelimitPerRow[y] - nodelimitPerRow[y-1] + 1, nodesum - nodelimitPerRow[y]);
-            if (y > 0) firstconnectRange(nodesum - nodelimitPerRow[y] + 1, nodesum, nodesum - nodelimitPerRow[y] - nodelimitPerRow[y - 1] + 1, nodesum - nodelimitPerRow[y]);
+            if (y > 0) firstconnectRange(nodesum - nodeLimit[y] + 1, nodesum, nodesum - nodeLimit[y] - nodeLimit[y - 1] + 1, nodesum - nodeLimit[y]);
             bsum = nodesum;
-            nodesum -= nodelimitPerRow[y];
+            nodesum -= nodeLimit[y];
         }
 
         branchNumCheck();
@@ -538,9 +624,9 @@ public class DataSetting : MonoBehaviour
         for (int y = rows - 1; y > 0; y--)
         {
             //if (y > 0) println(nodesum - nodelimitPerRow[y] + 1, nodesum, nodesum - nodelimitPerRow[y] - nodelimitPerRow[y-1] + 1, nodesum - nodelimitPerRow[y]);
-            if (y > 0) secondconnectRange(nodesum - nodelimitPerRow[y] + 1, nodesum, nodesum - nodelimitPerRow[y] - nodelimitPerRow[y - 1] + 1, nodesum - nodelimitPerRow[y]);
+            if (y > 0) secondconnectRange(nodesum - nodeLimit[y] + 1, nodesum, nodesum - nodeLimit[y] - nodeLimit[y - 1] + 1, nodesum - nodeLimit[y]);
             bsum = nodesum;
-            nodesum -= nodelimitPerRow[y];
+            nodesum -= nodeLimit[y];
         }
 
         //for (int y = 0; y < rows; y++) {
@@ -570,7 +656,7 @@ public class DataSetting : MonoBehaviour
 
         foreach (var l in list1.nodeLimitData)
         {
-            nodelimitPerRow[l.row] = l.nodeNum;
+            nodeLimit[l.row] = l.nodeNum;
             //nodelimitPerRow.Add(l.row, l.nodeNum);
         }
         Debug.Log("自作の接続を作成");
@@ -998,7 +1084,7 @@ public class DataSetting : MonoBehaviour
             }
 
             SScount();
-            Debug.Log(skillData.Count + "," + skillCount);
+            //Debug.Log(skillData.Count + "," + skillCount);
         } while (skillData.Count > skillCount);
 
         nodeData = setTagDataForNodeData();
@@ -1053,12 +1139,12 @@ public class DataSetting : MonoBehaviour
         float r = UnityEngine.Random.value; // 0.0 ~ 1.0 未満
         float sum = 0f;
 
-        for (int i = 0; i < probs.Length; i++)
+        for (int i = 0; i < 2; i++)
         {
             if (division == "序盤") sum += probs[i];
             if (division == "中盤") sum += probs[i + 1];
             if (division == "終盤") sum += probs[i + 3];
-            if (r < sum)
+            if (r < sum || sum > 1.0f)
             {
                 tagNum = i;
                 break;
@@ -1067,14 +1153,17 @@ public class DataSetting : MonoBehaviour
 
         if (r >= sum) tagNum = probs.Length - 1;
 
-        if (tagNum == 0)
+        if (tagNum % 2 == 0)
         {
+            //Debug.Log("スキルを返した");
             return "スキル";
         }
-        else if (tagNum == 1)
+        else if (tagNum % 2 == 1)
         {
+            //Debug.Log("ステータスを返した");
             return "ステータス";
         }
+        //Debug.Log("nullを返した");
         return null;
     }
 
@@ -1098,7 +1187,7 @@ public class DataSetting : MonoBehaviour
             }
         }
 
-        Debug.Log($"Skill={skillCount}, Status={statusCount}");//スキル・ステータスの数
+        //Debug.Log($"Skill={skillCount}, Status={statusCount}");//スキル・ステータスの数
         if (skillData.Count < skillCount) Debug.Log("データを持たないアイコンがあります");
     }
 
@@ -1172,7 +1261,7 @@ public class DataSetting : MonoBehaviour
         int[] id = getSkillIdArray(nodeList);
         nodeSkillData.Sort((a, b) => a.GetEvaluationValue().CompareTo(b.GetEvaluationValue()));//評価値の小さい順にソート
 
-        Debug.Log(nodeSkillData.Count + "," + id.Length);
+        //Debug.Log(nodeSkillData.Count + "," + id.Length);
 
         for (int i = 0; i < nodeSkillData.Count; i++)
         {

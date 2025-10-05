@@ -14,8 +14,8 @@ public class NodeDataEntryList
 [System.Serializable]
 public class NodeLimitDataEntry
 {
-    public int row;
-    public int nodeNum;
+    public string step;
+    public float[] nodePerRow;
 }
 
 [System.Serializable]
@@ -44,7 +44,7 @@ public class SelfNodeLimitDataEntry
 [System.Serializable]
 public class SelfNodeLimitDataEntryList
 {
-    public NodeLimitDataEntry[] nodeLimitData;
+    public SelfNodeLimitDataEntry[] nodeLimitData;
 }
 [System.Serializable]
 public class SelfConnectionDataEntry
