@@ -29,7 +29,7 @@ public class LineLimitDataEntry
 public class SkillOrStatusDataEntry
 {
     public string category;
-    public List<List<float>> transition_probability;
+    public float[] transition_probability;
 }
 
 // JSONデータのためのクラス
