@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using System.IO;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 /// <summary>
 /// 序盤中盤終盤でIDを入れる配列リストのクラス
@@ -141,7 +142,7 @@ public class DataSetting : MonoBehaviour
         // SkillOrStatusData();
         NodeDataLoader();
         //SkillData();
-        SkillJsonLoader();
+        SkillJsonLoader(characterName);
         //StatusData();
         StatusJsonLoader();
     }
@@ -296,26 +297,37 @@ public class DataSetting : MonoBehaviour
     /// <summary>
     /// スキルのJsonファイルの読み込み
     /// </summary>
-    public void SkillJsonLoader()
+    public Dictionary<int, string[]> SkillJsonLoader(string characterName = "", TextAsset textAsset = null)//(または、Dictionary<int, string[]>を返す)
     {
+        Dictionary<int, string[]> newSkillData = new Dictionary<int, string[]>();
+
         if (characterName == "") Debug.LogError("キャラクター名がないです（DataSetting）");
 
         if (SkillStatusLoader.instance.GetSkillJsonFile(characterName) == null) Debug.LogError("スキルのJsonファイルがセットされていません");
 
         int id = 0;
+        SkillEntryList list = null;
         // JSONをSkillEntryListに変換
-        SkillEntryList list = JsonUtility.FromJson<SkillEntryList>(SkillStatusLoader.instance.GetSkillJsonFile(characterName).text);
-
-
+        if (textAsset == null)
+        {
+            list = JsonUtility.FromJson<SkillEntryList>(SkillStatusLoader.instance.GetSkillJsonFile(characterName).text);
+        }
+        else
+        {
+            list = JsonUtility.FromJson<SkillEntryList>(textAsset.text);
+        }
 
         // Dictionaryに変換
         foreach (var skill in list.skills)
         {
             skillData[id] = new string[] { skill.name, skill.explain };
+            newSkillData[id] = new string[] { skill.name, skill.explain };
             id++;
         }
 
         //Debug.Log(characterName + "のスキルデータをロードしました: " + skillData.Count + "件");
+
+        return skillData;
     }
 
     public void SkillData()
@@ -407,11 +419,12 @@ public class DataSetting : MonoBehaviour
     {
         for (int i = 0; i < skillData.Count; i++)
         {
-            serchSkillDescription(skillData[i]);
+            // データ格納
+            nodeSkillData.Add(SerchSkillDescription(skillData[i]));
         }
 
         // 評価値を計算する
-        SetEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue);
+        this.nodeSkillData = SetEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, this.nodeSkillData);
 
         //putIdForNodeSkillDataListRandom(nodeData);
 
@@ -669,11 +682,13 @@ public class DataSetting : MonoBehaviour
     }
 
     /// <summary>
-    /// nodeSkillDataへのスキルデータの格納
+    /// skillDataで得たスキルの名前と説明を基にSkillclassを返す
     /// </summary>
     /// <param name="skillData"></param>  
-    void serchSkillDescription(string[] skillData)
+    public Skill SerchSkillDescription(string[] skillData)
     {
+        Skill skill = null;
+
         string name = skillData[0];//スキル名
         string explain = skillData[1];//説明文
 
@@ -720,11 +735,11 @@ public class DataSetting : MonoBehaviour
         }
 
         // 攻撃
-        result = Regex.Match(explain, @"(\d+)[^0-9]*(物理|特殊)攻撃");
+        result = Regex.Match(explain, @"(\d+)[^0-9]*(物理|特殊|魔法)攻撃");
         if (result.Success)
         {
             power = int.Parse(result.Groups[1].Value);
-            action = "攻撃";
+            action = result.Groups[2].Value + "攻撃";
             type = result.Groups[2].Value + "攻撃";
         }
 
@@ -768,40 +783,54 @@ public class DataSetting : MonoBehaviour
         }
 
         // 追加効果
-        if (explain.Contains("毒")) extra = "毒";
-        if (explain.Contains("麻痺")) extra = "麻痺";
-        if (explain.Contains("睡眠")) extra = "睡眠";
+        if (explain.Contains("毒"))
+        {
+            action = "特殊攻撃";
+            extra = "毒";
+        }
+        if (explain.Contains("麻痺"))
+        {
+            action = "特殊攻撃";
+            extra = "麻痺";
+        }
+        if (explain.Contains("睡眠"))
+        {
+            action = "特殊攻撃";
+            extra = "睡眠";
+        }
 
-        // データ格納
-        nodeSkillData.Add(new Skill(name, explain, subject, action, probability, power, type, status, extra, duration));
+        skill = new Skill(name, explain, subject, action, probability, power, type, status, extra, duration);
+
+        return skill;
     }
 
     /// <summary>
-    /// nodeSkillDataに評価値をセットする
+    /// nodeSkillDataに評価値,MP,SPをセットする
     /// </summary>
-    void SetEvaluationValue(float powerValue, float probabilityValue, float durationValue, float subjectValue)
+    public List<Skill> SetEvaluationValue(float powerValue, float probabilityValue, float durationValue, float subjectValue, List<Skill> list)
     {
+        List<Skill> newlist = list;
         float evaluationValue = 0f;
-        int maxPower = GetMaxValue("power");
-        int maxProbability = GetMaxValue("probability");
-        int maxDuration = GetMaxValue("duration");
-        int maxSubjectNum = GetMaxValue("subject");
-        int minPower = GetMinValue("power");
-        int minProbability = GetMinValue("probability");
-        int minDuration = GetMinValue("duration");
-        int minSubjectNum = GetMinValue("subject");
+        int maxPower = GetMaxValue("power", list);
+        int maxProbability = GetMaxValue("probability", list);
+        int maxDuration = GetMaxValue("duration", list);
+        int maxSubjectNum = GetMaxValue("subject", list);
+        int minPower = GetMinValue("power", list);
+        int minProbability = GetMinValue("probability", list);
+        int minDuration = GetMinValue("duration", list);
+        int minSubjectNum = GetMinValue("subject", list);
 
-        for (int i = 0; i < nodeSkillData.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
-            int power = nodeSkillData[i].GetPower();
-            int probability = nodeSkillData[i].GetProbability();
-            int duration = nodeSkillData[i].GetDuration();
-            string subject = nodeSkillData[i].GetSubject();
+            int power = list[i].GetPower();
+            int probability = list[i].GetProbability();
+            int duration = list[i].GetDuration();
+            string subject = list[i].GetSubject();
             int subjectNum = 1;
 
             if (powerValue == 0f || probabilityValue == 0 || durationValue == 0 || subjectValue == 0)
             {
-                nodeSkillData[i].SetEvaluationValue(0f); // 評価できないので0点
+                list[i].SetEvaluationValue(0f); // 評価できないので0点
             }
 
             if (subject == "相手" || subject == "自分")
@@ -833,19 +862,21 @@ public class DataSetting : MonoBehaviour
             + (subjectNum * (subjectNum - minSubjectNum) / (maxSubjectNum - minSubjectNum))
             );
 
-            nodeSkillData[i].SetEvaluationValue(evaluationValue);
-            nodeSkillData[i].SetMp(MpCalculate(evaluationValue));
-            nodeSkillData[i].SetSp(SpCalculatie(evaluationValue));
+            newlist[i].SetEvaluationValue(evaluationValue);
+            newlist[i].SetMp(MpCalculate(evaluationValue));
+            newlist[i].SetSp(SpCalculatie(evaluationValue));
         }
+
+        return newlist;
     }
 
     /// <summary>
     /// 引数に関しての最大の値を返す
     /// </summary>
-    int GetMaxValue(string name)
+    int GetMaxValue(string name, List<Skill> list)
     {
         int max = 0;
-        foreach (var n in nodeSkillData)
+        foreach (var n in list)
         {
             switch (name)
             {
@@ -897,7 +928,7 @@ public class DataSetting : MonoBehaviour
     /// <summary>
     /// 引数に関しての最小の値を返す
     /// </summary>
-    int GetMinValue(string name)
+    int GetMinValue(string name, List<Skill> list)
     {
         int min = -1;
         foreach (var n in nodeSkillData)

@@ -96,6 +96,5 @@ public class SkillBlocks : MonoBehaviour
     {
 
         skillTreeManager.UpdateSkillInfoText(id, true);
-
     }
 }

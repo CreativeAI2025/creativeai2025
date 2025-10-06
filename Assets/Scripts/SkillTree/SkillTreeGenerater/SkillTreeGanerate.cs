@@ -4,9 +4,13 @@ using Unity.VisualScripting;
 
 public class SkillTreeGanerate : MonoBehaviour
 {
-    [SerializeField] GameObject skillIocn;
-    [SerializeField] GameObject statusIcon;
-    [SerializeField] GameObject startIcon;
+    [Header("物理スキルのアイコン"), SerializeField] GameObject physicsIocn;
+    [Header("魔法スキルのアイコン"), SerializeField] GameObject magicIcon;
+    [Header("回復スキルのアイコン"), SerializeField] GameObject healIocn;
+    [Header("デデバフスキルのアイコン"), SerializeField] GameObject buffIcon;
+    [Header("デバフスキルのアイコン"), SerializeField] GameObject debuffIocn;
+    [Header("ステータスアップのアイコン"), SerializeField] GameObject statusIcon;
+    [Header("はじめのアイコン"), SerializeField] GameObject startIcon;
     [SerializeField] GameObject line;
     [SerializeField] DataSetting dataSetting;
 
@@ -77,11 +81,38 @@ public class SkillTreeGanerate : MonoBehaviour
 
         foreach (Node n in dataSetting.nodeData)
         {
-            GameObject prefab;
+            GameObject prefab = startIcon;
+
 
             if (tagData[n.getId()] == "スキル")
             {
-                prefab = skillIocn;
+                foreach (var data in dataSetting.nodeSkillData)
+                {
+                    if (n.getId().Equals(data.GetId()))
+                    {
+                        Debug.Log($"{n.getId()},{data.GetId()},{data.GetAction()}");
+                        if (data.GetAction().Equals("物理攻撃"))
+                        {
+                            prefab = physicsIocn;
+                        }
+                        else if (data.GetAction().Equals("特殊攻撃") || data.GetAction().Equals("魔法攻撃"))
+                        {
+                            prefab = magicIcon;
+                        }
+                        else if (data.GetAction().Equals("回復") || data.GetAction().Equals("復活"))
+                        {
+                            prefab = healIocn;
+                        }
+                        else if (data.GetAction().Equals("強化"))
+                        {
+                            prefab = buffIcon;
+                        }
+                        else if (data.GetAction().Equals("弱体"))
+                        {
+                            prefab = debuffIocn;
+                        }
+                    }
+                }
             }
             else if (tagData[n.getId()] == "ステータス")
             {
