@@ -6,12 +6,12 @@ public class MainTextDrawer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _mainTextObject;
 
-    [SerializeField] Animator animator;
-    [SerializeField] GameObject nextPageIcon;
+    //[SerializeField] Animator animator;   //「次へ」を示すアイコンのアニメーションだが、アニメーションがあるのか？
+    //[SerializeField] GameObject nextPageIcon;
 
     private int _displayedSentenceLength;
 
-    [SerializeField] RectTransform iconObject;
+    //[SerializeField] RectTransform iconObject;
 
     public void Initialize()
     {
@@ -87,8 +87,8 @@ public class MainTextDrawer : MonoBehaviour
     {
         if (!AllowChangeLine())
         {
-            nextPageIcon.SetActive(false);
-            animator.enabled = false;
+            //nextPageIcon.SetActive(false);
+            //animator.enabled = false;
         }
         else if (AllowChangeLine())
         {
@@ -98,16 +98,16 @@ public class MainTextDrawer : MonoBehaviour
                 if (textPosition == Vector2.zero) return;
                 textPosition.x += 25f;
 
-                iconObject.anchoredPosition = textPosition;
+                //iconObject.anchoredPosition = textPosition;
             }
-            nextPageIcon.SetActive(true);
-            animator.enabled = true;
+            //nextPageIcon.SetActive(true);
+            //animator.enabled = true;
         }
     }
 
     public void DisableNextLineIcon()
     {
-        nextPageIcon.SetActive(false);
+        //nextPageIcon.SetActive(false);
     }
 
     private Vector2 LastTextPosition()
