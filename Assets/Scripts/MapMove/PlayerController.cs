@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]//これがないとOnCollisionEnter2Dが動作しません。
 
-public class PlayerMove : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] private MapDataController mapDataController;
     public float moveSpeed = 3f;//移動速度

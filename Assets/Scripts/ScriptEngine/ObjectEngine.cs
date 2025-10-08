@@ -12,7 +12,7 @@ public class ObjectEngine : MonoBehaviour
     private List<ObjectData>[][] _eventObjects;
     private List<ObjectData>[][] _trapEventObjects;
 
-    [SerializeField] private PlayerMove player;
+    [SerializeField] private PlayerController player;
     //[SerializeField] private ItemInventory inventory;
     //[SerializeField] private ItemDatabase itemDatabase;
     //[SerializeField] private Pause pause;
@@ -29,7 +29,7 @@ public class ObjectEngine : MonoBehaviour
     private void Start()
     {
         _inputSetting = InputSetting.Load();
-        _mapName = "Mura";
+        _mapName = SceneManager.GetActiveScene().name;
         if (_mapName == null)
         {
             print("Map name is null, using default map name.");
@@ -41,7 +41,7 @@ public class ObjectEngine : MonoBehaviour
         //ConversationTextManager.Instance.OnConversationEnd += () => conversationFlag = false;
         mapDataController.SetChange(ResetAction);
         ResetAction();
-        PlayerMove(changedPos);
+        //PlayerMove(changedPos);
     }
 
     private void ResetAction()
@@ -195,7 +195,7 @@ public class ObjectEngine : MonoBehaviour
         {
             foreach (var x in objectData.FlagCondition.Flag)
             {
-                DebugLogger.Log(x.Key + " : expected: " + x.Value + " : actual:" + FlagManager.Instance.HasFlag(x.Key), DebugLogger.Colors.Blue);
+                //DebugLogger.Log(x.Key + " : expected: " + x.Value + " : actual:" + FlagManager.Instance.HasFlag(x.Key), DebugLogger.Colors.Blue);
             }
             if (IsFlagsInsufficient(objectData))
             {
@@ -210,7 +210,7 @@ public class ObjectEngine : MonoBehaviour
         }
         if (changeSceneFlag) return;
         List<ObjectData> trapObjectDatas = _trapEventObjects[player.GetGridPosition().x][player.GetGridPosition().y];
-        DebugLogger.Log("end");
+        //DebugLogger.Log("end");
         foreach (ObjectData trapObjectData in trapObjectDatas)
         {
             await Call(trapObjectData, 0, 4);// フラグで制御されてるとはいえ再帰的になっているので要注意
@@ -224,32 +224,32 @@ public class ObjectEngine : MonoBehaviour
         switch (eventKey)
         {
             case "PlayerMove":
-                DebugLogger.Log("PlayerMove", DebugLogger.Colors.Green);
+                //DebugLogger.Log("PlayerMove", DebugLogger.Colors.Green);
                 string[] pos = eventArgs[1].Split(',');
                 Vector2Int moved = new Vector2Int(int.Parse(pos[0]), int.Parse(pos[1]));
                 PlayerMove(moved);
                 break;
             case "ChangeScene":
-                SoundManager.Instance.PlaySE(6, 5f); //ドアくぐる
-                DebugLogger.Log("ChangeScene", DebugLogger.Colors.Green);
+                //SoundManager.Instance.PlaySE(6, 5f); //ドアくぐる
+                //DebugLogger.Log("ChangeScene", DebugLogger.Colors.Green);
                 string[] args = eventArgs[1].Split(',');
                 changedPos = new Vector2Int(int.Parse(args[1]), int.Parse(args[2]));
                 await SceneChange(args[0]);
                 break;
             case "Conversation":
-                DebugLogger.Log("Conversation", DebugLogger.Colors.Green);
+                //DebugLogger.Log("Conversation", DebugLogger.Colors.Green);
                 conversationFlag = true;
                 Conversation(eventArgs[1]);
                 await UniTask.WaitUntil(() => !conversationFlag);
                 break;
             case "GetItem":
-                DebugLogger.Log("GetItem", DebugLogger.Colors.Green);
+                //DebugLogger.Log("GetItem", DebugLogger.Colors.Green);
                 conversationFlag = true;
                 GetItem(eventArgs[1]);
                 await UniTask.WaitUntil(() => !conversationFlag);
                 break;
             case "TileModify":
-                DebugLogger.Log("TileModify", DebugLogger.Colors.Green);
+                //DebugLogger.Log("TileModify", DebugLogger.Colors.Green);
                 string[] positionStr = eventArgs[3].Split(',');
                 Vector2Int position = new Vector2Int(int.Parse(positionStr[0]), int.Parse(positionStr[1]));
                 TileModify(eventArgs[1], Enum.Parse<MapDataController.TileLayer>(eventArgs[2]), position,
@@ -279,42 +279,42 @@ public class ObjectEngine : MonoBehaviour
         }
     }
 
-    /*private async UniTask SceneChange(string sceneName)
+    private async UniTask SceneChange(string sceneName)
     {
         changeSceneFlag = true;
-        ConversationTextManager.Instance.OnConversationStart -= Pause;
-        ConversationTextManager.Instance.OnConversationEnd -= UnPause;
+        //ConversationTextManager.Instance.OnConversationStart -= Pause;
+        //ConversationTextManager.Instance.OnConversationEnd -= UnPause;
         await SceneManager.LoadSceneAsync(sceneName).ToUniTask();
         PlayerPrefs.SetString("SceneName", sceneName);
-    }*/
+    }
 
-    /*private void PlayerMove(Vector2Int moved)
+    private void PlayerMove(Vector2Int moved)
     {
         player.transform.position = new Vector3(moved.x, moved.y, 0);
     }
 
     private void Conversation(string fileName)
     {
-        ConversationTextManager.Instance.InitializeFromJson(fileName);
+        //ConversationTextManager.Instance.InitializeFromJson(fileName);
     }
 
     private void GetItem(string itemName)
     {
-        Item item = itemDatabase.GetItem(itemName);
-        if (inventory.IsContains(item)) return;
+        //Item item = itemDatabase.GetItem(itemName);
+        /*if (inventory.IsContains(item)) return;
 
         SoundManager.Instance.PlaySE(9, 5f); //アイテム拾う
         inventory.Add(item);
-        CombineItem(item);
+        CombineItem(item);*/
         
-        if (item.HasContentText())
+        /*if (item.HasContentText())
         {
-            ConversationTextManager.Instance.InitializeFromJson($"{itemName}_get");
+            //ConversationTextManager.Instance.InitializeFromJson($"{itemName}_get");
         }
         else
         {
-            ConversationTextManager.Instance.InitializeFromString($"{item.ItemName}を手に入れた。");
-        }
+            //ConversationTextManager.Instance.InitializeFromString($"{item.ItemName}を手に入れた。");
+        }*/
     }
 
     /*private void CombineItem(Item item)
