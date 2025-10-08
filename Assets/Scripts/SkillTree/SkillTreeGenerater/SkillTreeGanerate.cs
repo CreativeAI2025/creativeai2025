@@ -4,11 +4,11 @@ using Unity.VisualScripting;
 
 public class SkillTreeGanerate : MonoBehaviour
 {
-    [Header("物理スキルのアイコン"), SerializeField] GameObject physicsIocn;
-    [Header("魔法スキルのアイコン"), SerializeField] GameObject magicIcon;
-    [Header("回復スキルのアイコン"), SerializeField] GameObject healIocn;
-    [Header("デデバフスキルのアイコン"), SerializeField] GameObject buffIcon;
-    [Header("デバフスキルのアイコン"), SerializeField] GameObject debuffIocn;
+    [Header("物理スキルのアイコン"), SerializeField] public GameObject physicsIocn;
+    [Header("魔法スキルのアイコン"), SerializeField] public GameObject magicIcon;
+    [Header("回復スキルのアイコン"), SerializeField] public GameObject healIocn;
+    [Header("デデバフスキルのアイコン"), SerializeField] public GameObject buffIcon;
+    [Header("デバフスキルのアイコン"), SerializeField] public GameObject debuffIocn;
     [Header("ステータスアップのアイコン"), SerializeField] GameObject statusIcon;
     [Header("はじめのアイコン"), SerializeField] GameObject startIcon;
     [SerializeField] GameObject line;

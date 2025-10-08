@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
@@ -7,8 +8,8 @@ public class SkillTreeManager : MonoBehaviour
     [SerializeField] DataSetting dataSetting;
     [SerializeField] SkillTreeGanerate skillTreeGanerate;
 
-    [SerializeField] Text skillPointText;//SPのテキスト
-    [SerializeField] Text skillInfoText;//スキルの表示
+    [SerializeField] TextMeshProUGUI skillPointText;//SPのテキスト
+    [SerializeField] TextMeshProUGUI skillInfoText;//スキルの表示
     [SerializeField] GameObject skillBlockPanel;
     [SerializeField] int skillPoint = 1000;
 

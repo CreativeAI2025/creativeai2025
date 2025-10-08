@@ -53,7 +53,7 @@ public class SkillBlocks : MonoBehaviour
             // 習得可能なら習得する
             skillTreeManager.LearnSkill(cost, id);
             //bug.Log("ID:" + id + "習得");
-            CangeLearnBlock(Color.blue);
+            //CangeLearnBlock(Color.blue);
         }
         else
         {
@@ -67,17 +67,18 @@ public class SkillBlocks : MonoBehaviour
     /// </summary>
     public void CheckActiveBlock()
     {
-
         // 習得可能？
-        if (skillTreeManager.CanLearnSkill(cost, id) || skillTreeManager.HasSkill(id))
+        if (skillTreeManager.CanLearnSkill(cost, id))
         {
             //Debug.Log("ID:" + id + "はFALSE");
-            hidePanel.SetActive(false);
+            //hidePanel.SetActive(false);
+            CangeLearnBlock(Color.white);
         }
         else
         {
             //Debug.Log("ID:" + id + "はTRUE");
-            hidePanel.SetActive(true);
+            //hidePanel.SetActive(true);
+            CangeLearnBlock(Color.gray);
         }
 
     }
