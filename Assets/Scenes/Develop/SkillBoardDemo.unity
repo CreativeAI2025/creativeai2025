@@ -505,7 +505,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 607d64def56ea264eb8cac96cb4a8a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillIocn: {fileID: 1447738714311606801, guid: d8fa84e10ac57024d95be4a531289da4, type: 3}
+  physicsIocn: {fileID: 1447738714311606801, guid: 541fc9d20738d024c80dcbfbfa38fe41, type: 3}
+  magicIcon: {fileID: 1447738714311606801, guid: af95e5182d98dec4db1a3effc1031d9e, type: 3}
+  healIocn: {fileID: 1447738714311606801, guid: d783394c9b373ea488eca5e6a5374cea, type: 3}
+  buffIcon: {fileID: 1447738714311606801, guid: cc073e3be1fb87749a25ca2c7218be71, type: 3}
+  debuffIocn: {fileID: 1447738714311606801, guid: 02938d33e7a81cf4abea28d450d1e651, type: 3}
   statusIcon: {fileID: 8927151294216243759, guid: 2c7c681fc6e83834e88593990081e626, type: 3}
   startIcon: {fileID: 236245430332037112, guid: 748bc428255eae34bbe29ce325557aff, type: 3}
   line: {fileID: 6748225024623132174, guid: 2f821c1d09e1e8840bcfc84b1a46d156, type: 3}
@@ -564,7 +568,7 @@ GameObject:
   - component: {fileID: 569576358031199808}
   - component: {fileID: 7397335658442406374}
   m_Layer: 5
-  m_Name: SkillTreePanel (1)
+  m_Name: SkillTreePanel (Noa)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1060,7 +1064,7 @@ GameObject:
   - component: {fileID: 2194248532441738894}
   - component: {fileID: 9168377018662754600}
   m_Layer: 5
-  m_Name: SkillTreePanel (2)
+  m_Name: SkillTreePanel (Rina)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1440,7 +1444,7 @@ MonoBehaviour:
   nodeDataJson: {fileID: 4900000, guid: a87d82062fd0058488131e85d7ed914f, type: 3}
   selfSkillTree: {fileID: 0}
   selfTree: 0
-  characterName: "\u30B5\u30D6\u30AD\u30E3\u30E92"
+  characterName: "\u30EA\u30CA"
   cellSizeX: 80
   cellSizeY: 55
   positionX: 5
@@ -1449,6 +1453,8 @@ MonoBehaviour:
   probabilityValue: 1
   durationValue: 1
   subjectValue: 1
+  skillRate: 1
+  statusRate: 1
 --- !u!1001 &2606719647085573788
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2255,7 +2261,7 @@ MonoBehaviour:
   nodeDataJson: {fileID: 4900000, guid: a87d82062fd0058488131e85d7ed914f, type: 3}
   selfSkillTree: {fileID: 0}
   selfTree: 0
-  characterName: "\u30B5\u30D6\u30AD\u30E3\u30E91"
+  characterName: "\u30CE\u30A2"
   cellSizeX: 80
   cellSizeY: 55
   positionX: 5
@@ -2264,6 +2270,8 @@ MonoBehaviour:
   probabilityValue: 1
   durationValue: 1
   subjectValue: 1
+  skillRate: 1
+  statusRate: 1
 --- !u!1001 &4391918896562823525
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2663,7 +2671,7 @@ MonoBehaviour:
   nodeDataJson: {fileID: 4900000, guid: a87d82062fd0058488131e85d7ed914f, type: 3}
   selfSkillTree: {fileID: 4900000, guid: 566bb663e5494d743ac08696fabded95, type: 3}
   selfTree: 0
-  characterName: "\u52C7\u8005"
+  characterName: "\u30BE\u30D5\u30A3\u30FC"
   cellSizeX: 80
   cellSizeY: 55
   positionX: 5
@@ -2672,6 +2680,8 @@ MonoBehaviour:
   probabilityValue: 1
   durationValue: 1
   subjectValue: 1
+  skillRate: 1
+  statusRate: 1
 --- !u!224 &5046841618827885961
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3123,6 +3133,82 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: dataSetting
+      value: 
+      objectReference: {fileID: 4990303905762704141}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: skillStatusLoader
+      value: 
+      objectReference: {fileID: 6366187794288363692}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: scriptableObjects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[0].textAsset
+      value: 
+      objectReference: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[1].textAsset
+      value: 
+      objectReference: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[2].textAsset
+      value: 
+      objectReference: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[0].dataSetting
+      value: 
+      objectReference: {fileID: 4990303905762704141}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[1].dataSetting
+      value: 
+      objectReference: {fileID: 4276959645102801292}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[2].dataSetting
+      value: 
+      objectReference: {fileID: 2508175032203419970}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[0].defaultAsset
+      value: 
+      objectReference: {fileID: 102900000, guid: d61e9ef169736ae4e83402583ec4aad6, type: 3}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[0].targetFolder
+      value: 
+      objectReference: {fileID: 102900000, guid: d61e9ef169736ae4e83402583ec4aad6, type: 3}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[1].defaultAsset
+      value: 
+      objectReference: {fileID: 102900000, guid: 616a19cdc3873824f8f77dd459c6a69a, type: 3}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[1].targetFolder
+      value: 
+      objectReference: {fileID: 102900000, guid: 616a19cdc3873824f8f77dd459c6a69a, type: 3}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[2].defaultAsset
+      value: 
+      objectReference: {fileID: 102900000, guid: 9d6d9786056b08f4a817537218e1a9b1, type: 3}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[2].targetFolder
+      value: 
+      objectReference: {fileID: 102900000, guid: 9d6d9786056b08f4a817537218e1a9b1, type: 3}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[0].characterName
+      value: "\u30BE\u30D5\u30A3\u30FC"
+      objectReference: {fileID: 0}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[1].characterName
+      value: "\u30CE\u30A2"
+      objectReference: {fileID: 0}
+    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: creatSetting.Array.data[2].characterName
+      value: "\u30EA\u30CA"
+      objectReference: {fileID: 0}
     - target: {fileID: 1164445987174898392, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.27375042
@@ -3167,11 +3253,70 @@ PrefabInstance:
       propertyPath: m_Name
       value: SkillStatusLoader
       objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: skillJsonFiles.Array.data[0].saveFileName
+      value: Zophie-skill
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: skillJsonFiles.Array.data[1].saveFileName
+      value: Noa-skill
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: skillJsonFiles.Array.data[2].saveFileName
+      value: Rina-skill
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: skillJsonFiles.Array.data[0].characterName
+      value: "\u30BE\u30D5\u30A3\u30FC"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: skillJsonFiles.Array.data[1].characterName
+      value: "\u30CE\u30A2"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: skillJsonFiles.Array.data[2].characterName
+      value: "\u30EA\u30CA"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: statusJsonFiles.Array.data[0].saveFileName
+      value: Zophie-status
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: statusJsonFiles.Array.data[1].saveFileName
+      value: Noa-status
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: statusJsonFiles.Array.data[2].saveFileName
+      value: Rina-status
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: statusJsonFiles.Array.data[0].characterName
+      value: "\u30BE\u30D5\u30A3\u30FC"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: statusJsonFiles.Array.data[1].characterName
+      value: "\u30CE\u30A2"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: statusJsonFiles.Array.data[2].characterName
+      value: "\u30EA\u30CA"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+--- !u!114 &6366187794288363692 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+  m_PrefabInstance: {fileID: 6366187794288363689}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c6d7bf2f98671b46b0efa1a393a08ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!222 &6369119475191109272
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3721,7 +3866,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 607d64def56ea264eb8cac96cb4a8a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillIocn: {fileID: 1447738714311606801, guid: d8fa84e10ac57024d95be4a531289da4, type: 3}
+  physicsIocn: {fileID: 1447738714311606801, guid: 541fc9d20738d024c80dcbfbfa38fe41, type: 3}
+  magicIcon: {fileID: 1447738714311606801, guid: af95e5182d98dec4db1a3effc1031d9e, type: 3}
+  healIocn: {fileID: 1447738714311606801, guid: d783394c9b373ea488eca5e6a5374cea, type: 3}
+  buffIcon: {fileID: 1447738714311606801, guid: cc073e3be1fb87749a25ca2c7218be71, type: 3}
+  debuffIocn: {fileID: 1447738714311606801, guid: 02938d33e7a81cf4abea28d450d1e651, type: 3}
   statusIcon: {fileID: 8927151294216243759, guid: 2c7c681fc6e83834e88593990081e626, type: 3}
   startIcon: {fileID: 236245430332037112, guid: 748bc428255eae34bbe29ce325557aff, type: 3}
   line: {fileID: 6748225024623132174, guid: 2f821c1d09e1e8840bcfc84b1a46d156, type: 3}
@@ -3897,7 +4046,7 @@ GameObject:
   - component: {fileID: 8789975869568021697}
   - component: {fileID: 1779857828341105511}
   m_Layer: 5
-  m_Name: SkillTreePanel
+  m_Name: "SkillTreePanel\uFF08Zophie\uFF09"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4081,7 +4230,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 607d64def56ea264eb8cac96cb4a8a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillIocn: {fileID: 1447738714311606801, guid: d8fa84e10ac57024d95be4a531289da4, type: 3}
+  physicsIocn: {fileID: 1447738714311606801, guid: 541fc9d20738d024c80dcbfbfa38fe41, type: 3}
+  magicIcon: {fileID: 1447738714311606801, guid: af95e5182d98dec4db1a3effc1031d9e, type: 3}
+  healIocn: {fileID: 1447738714311606801, guid: d783394c9b373ea488eca5e6a5374cea, type: 3}
+  buffIcon: {fileID: 1447738714311606801, guid: cc073e3be1fb87749a25ca2c7218be71, type: 3}
+  debuffIocn: {fileID: 1447738714311606801, guid: 02938d33e7a81cf4abea28d450d1e651, type: 3}
   statusIcon: {fileID: 8927151294216243759, guid: 2c7c681fc6e83834e88593990081e626, type: 3}
   startIcon: {fileID: 236245430332037112, guid: 748bc428255eae34bbe29ce325557aff, type: 3}
   line: {fileID: 6748225024623132174, guid: 2f821c1d09e1e8840bcfc84b1a46d156, type: 3}
