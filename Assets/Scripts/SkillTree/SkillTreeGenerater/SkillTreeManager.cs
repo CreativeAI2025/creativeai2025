@@ -10,7 +10,7 @@ public class SkillTreeManager : MonoBehaviour
     [SerializeField] Text skillPointText;//SPのテキスト
     [SerializeField] Text skillInfoText;//スキルの表示
     [SerializeField] GameObject skillBlockPanel;
-    [SerializeField] int skillPoint = 100;
+    [SerializeField] int skillPoint = 1000;
 
     List<Node> skillList = new List<Node>();//取得済みのものを格納
     List<Skill> nodeSkillList = new List<Skill>();
@@ -127,7 +127,7 @@ public class SkillTreeManager : MonoBehaviour
             {
                 if (n.GetId().Equals(id))
                 {
-                    text = n.toSkillstring(n.GetTypeName());
+                    text = n.GetExplain();
                 }
             }
 

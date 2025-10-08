@@ -195,6 +195,7 @@ public class DataSetting : MonoBehaviour
         skillData.Add(10, new string[] { "シャドウステップ", "自分の回避率を2ターン上昇させる" });
         skillData.Add(11, new string[] { "ギガインパクト", "相手に300ダメージの物理攻撃" });
         skillData.Add(12, new string[] { "ウィンドカッター", "相手に130ダメージの特殊攻撃" });
+        skillData.Add(13, new string[] { "スラッシュ", "相手に1.5倍の特殊攻撃" });
     }
 
     /// <summary>
