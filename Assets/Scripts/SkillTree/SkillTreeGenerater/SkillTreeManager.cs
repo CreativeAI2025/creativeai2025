@@ -10,7 +10,7 @@ public class SkillTreeManager : MonoBehaviour
     [SerializeField] Text skillPointText;//SPのテキスト
     [SerializeField] Text skillInfoText;//スキルの表示
     [SerializeField] GameObject skillBlockPanel;
-    [SerializeField] int skillPoint = 100;
+    [SerializeField] int skillPoint = 1000;
 
     List<Node> skillList = new List<Node>();//取得済みのものを格納
     List<Skill> nodeSkillList = new List<Skill>();
@@ -60,6 +60,38 @@ public class SkillTreeManager : MonoBehaviour
             {
                 nodeStatusList.Add(n);
             }
+
+            foreach (Skill n in dataSetting.nodeSkillData)
+            {
+                SkillStatusLoader.instance.LoadSkills();
+                SkillStatusLoader.instance.LoadStatuses();
+                SkillEntry skillEntry = null;
+                Skill skill = null;
+
+                //Jsonファイルのスキル所得状況の更新
+                foreach (Skill d in nodeSkillList)
+                {
+                    if (d.GetId().Equals(n.GetId()))
+                    {
+                        skill = d;
+                    }
+                }
+
+
+                if (skill != null) skillEntry = System.Array.Find(SkillStatusLoader.instance.GetSkillEntryList().skills, s => s.name == skill.GetName());
+
+                // 獲得したステータスアップをカウント
+                foreach (Skill d in nodeSkillList)
+                {
+                    if (d.GetId() == n.GetId())
+                    {
+                        if (skillEntry != null) skillEntry.mp = d.GetMp();//取得状況の変更
+                    }
+                }
+            }
+
+            SkillStatusLoader.instance.SaveSkillData();// スキルのJSONに保存
+            Debug.Log("保存先: " + Application.persistentDataPath);
             onceAction = false;
         }
     }
@@ -95,7 +127,7 @@ public class SkillTreeManager : MonoBehaviour
             {
                 if (n.GetId().Equals(id))
                 {
-                    text = n.toSkillstring(n.GetTypeName());
+                    text = n.GetExplain();
                 }
             }
 
