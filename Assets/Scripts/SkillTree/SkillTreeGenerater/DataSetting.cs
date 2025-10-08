@@ -694,7 +694,7 @@ public class DataSetting : MonoBehaviour
         string explain = skillData[1];//説明文
 
         string subject = null;//対象
-        string action = null;//行動(攻撃、回復など)
+        string action = "";//行動(攻撃、回復など)
         int probability = -1;//発動確率
         int power = -1;//効果量
         string type = null;//種類（物理攻撃、特殊攻撃など）
