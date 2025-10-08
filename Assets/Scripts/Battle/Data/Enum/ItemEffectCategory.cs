@@ -1,10 +1,15 @@
 using UnityEngine;
 
 public enum ItemEffectCategory
-    {
-        None,
-        Recovery,
-        Damage,
-        Support,
-        Movement,
+{
+    HPheal,
+    Mpheal,
+    CureStatusAilment,
+    Revive,
+    Buff,
+    Debuff,
+    CashExchange,
+    KeyItem,
+    Other,
+    None
     }
