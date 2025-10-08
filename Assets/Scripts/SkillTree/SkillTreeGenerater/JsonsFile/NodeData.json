@@ -1,48 +1,30 @@
 {
+  "stepNodePer": [
+    {
+      "step": "序盤",
+      "nodePer": 0.24
+    },
+    {
+      "step": "中盤",
+      "nodePer": 0.56
+    },
+    {
+      "step": "終盤",
+      "nodePer": 0.21
+    }
+  ],
   "nodeLimitData": [
     {
-      "row": 0,
-      "nodeNum": 1
+      "step": "序盤",
+      "nodePerRow": [0, 0, 0.8, 0, 0.2, 0, 0, 0]
     },
     {
-      "row": 1,
-      "nodeNum": 2
+      "step": "中盤",
+      "nodePerRow": [0, 0, 0, 0, 0, 0, 0.34, 0.66]
     },
     {
-      "row": 2,
-      "nodeNum": 4
-    },
-    {
-      "row": 3,
-      "nodeNum": 2
-    },
-    {
-      "row": 4,
-      "nodeNum": 7
-    },
-    {
-      "row": 5,
-      "nodeNum": 5
-    },
-    {
-      "row": 6,
-      "nodeNum": 7
-    },
-    {
-      "row": 7,
-      "nodeNum": 3
-    },
-    {
-      "row": 8,
-      "nodeNum": 1
-    },
-    {
-      "row": 9,
-      "nodeNum": 2
-    },
-    {
-      "row": 10,
-      "nodeNum": 1
+      "step": "終盤",
+      "nodePerRow": [0, 0.5, 0.25, 0.25, 0, 0, 0, 0]
     }
   ],
   "lineLimitData": [
@@ -82,15 +64,15 @@
   "skillOrStatusData": [
     {
       "category": "スキル",
-      "transition_probability": [0.518, 0.482]
+      "transition_probability": [0.0542, 0.3253, 0.1769, 0.285, 0.1134, 0.1134]
     },
     {
       "category": "ステータス",
-      "transition_probability": [0.435, 0.565]
+      "transition_probability": [0.3976, 0.2229, 0.3587, 0.1794, 0.6392, 0.134]
     },
     {
       "category": "初期状態",
-      "transition_probability": [0.857, 0.143]
+      "transition_probability": [1.0, 0.0, 1.0, 0.0, 1.0, 0.0]
     }
   ]
 }

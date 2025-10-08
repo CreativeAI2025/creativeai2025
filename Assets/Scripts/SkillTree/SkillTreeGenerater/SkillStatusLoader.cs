@@ -88,8 +88,9 @@ public class SkillStatusLoader : MonoBehaviour
 {
     public static SkillStatusLoader instance;
     //[SerializeField] public TextAsset skillDataJson;//Json読み込み専用
-    [SerializeField] List<SkillJsonFile> skillJsonFiles = new List<SkillJsonFile>();
-    [SerializeField] List<StatusJsonFile> statusJsonFiles = new List<StatusJsonFile>();
+    [SerializeField] List<SkillJsonFile> skillJsonFiles = new List<SkillJsonFile>();//インスペクターでセッティング
+    [SerializeField] List<StatusJsonFile> statusJsonFiles = new List<StatusJsonFile>();//インスペクターでセッティング
+
     private SkillEntryList skillEntryList;//Json読み込み用リスト
     private StatusEntryList statusEntryList;//Json読み込み用リスト
     private string savePath;
@@ -134,13 +135,13 @@ public class SkillStatusLoader : MonoBehaviour
                 // 保存済みデータを読む
                 string json = System.IO.File.ReadAllText(savePath);
                 skillEntryList = JsonUtility.FromJson<SkillEntryList>(json);
-                Debug.Log("保存済みスキルデータをロードしました");
+                //Debug.Log("保存済みスキルデータをロードしました");
             }
             else
             {
                 // 初回は TextAsset から読む
                 skillEntryList = JsonUtility.FromJson<SkillEntryList>(file.GetTextAsset().text);
-                Debug.Log("初期スキルデータをロードしました");
+                //Debug.Log("初期スキルデータをロードしました");
             }
         }
     }
@@ -199,6 +200,24 @@ public class SkillStatusLoader : MonoBehaviour
         return textAsset;
     }
 
+    /// <summary>
+    /// 引数で指定したキャラクターのSkillの個数を返す
+    /// </summary>
+    /// <param name="characterName"></param>
+    /// <returns></returns>
+    public int GetSkillSum(string characterName)
+    {
+        int count = 0;
+        TextAsset textAsset = GetSkillJsonFile(characterName);
+        SkillEntryList skillEntryList = JsonUtility.FromJson<SkillEntryList>(textAsset.text);
+
+        foreach (var skill in skillEntryList.skills)
+        {
+            count++;
+        }
+        return count;
+    }
+
 
     /// <summary>
     /// ステータスのJsonファイルの読み込み
@@ -213,12 +232,12 @@ public class SkillStatusLoader : MonoBehaviour
             {
                 string json = System.IO.File.ReadAllText(savePath);
                 statusEntryList = JsonUtility.FromJson<StatusEntryList>(json);
-                Debug.Log("保存済みステータスデータをロードしました");
+                //Debug.Log("保存済みステータスデータをロードしました");
             }
             else
             {
                 statusEntryList = JsonUtility.FromJson<StatusEntryList>(file.GetTextAsset().text);
-                Debug.Log("初期ステータスデータをロードしました");
+                //Debug.Log("初期ステータスデータをロードしました");
             }
         }
     }

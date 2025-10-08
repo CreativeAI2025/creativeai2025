@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1164445987174898392}
   - component: {fileID: 4243941131320334130}
+  - component: {fileID: -841139126875265673}
   m_Layer: 0
   m_Name: SkillStatusLoader
   m_TagString: Untagged
@@ -64,3 +65,19 @@ MonoBehaviour:
   - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E92"
     textAsset: {fileID: 4900000, guid: 9b8e526f4d5e7ff4ab2bed9234939c96, type: 3}
     saveFileName: sub-character2-status
+--- !u!114 &-841139126875265673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2216531346154647281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 261a1749be8864c4a94b78f4f31e7599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  creatSetting:
+  - characterName: "\u30BE\u30D5\u30A3\u30FC"
+    defaultAsset: {fileID: 102900000, guid: d61e9ef169736ae4e83402583ec4aad6, type: 3}
+    dataSetting: {fileID: 0}
