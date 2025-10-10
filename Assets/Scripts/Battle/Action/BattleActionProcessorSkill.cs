@@ -60,11 +60,46 @@ public class BattleActionProcessorSkill : MonoBehaviour
             // ダメージ系
             if (skillEffect.skillCategory == SkillCategory.Damage)
             {
-                int damageValue = DamageFormula.CalculateSkillDamage(actorParam.MagicAttack, targetParam.MagicDefence, skillEffect.value);
+                int damageValue = 0;
+                if (action.isTargetFriend)
+                {
+                    var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.targetId);
+                    var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.actorId);
+
+                    if (characterStatus == null)
+                    {
+                        Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {action.targetId}");
+                    }
+                    if (enemyStatus == null)
+                    {
+                        Logger.Instance.LogWarning($"敵キャラクターのステータスが見つかりませんでした。 戦闘中ID : {action.actorId}");
+                    }
+                    damageValue = DamageFormula.CalculateSkillDamage(actorParam.Attack, targetParam.Defence, enemyStatus.attackBuffMultiplier, characterStatus.attackBuffMultiplier, skillEffect.value);
+                }
+
+                else
+                {
+                    var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
+                    var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.targetId);
+
+                    if (characterStatus == null)
+                    {
+                        Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {action.actorId}");
+
+                    }
+                    if (enemyStatus == null)
+                    {
+                        Logger.Instance.LogWarning($"敵キャラクターのステータスが見つかりませんでした。 戦闘中ID : {action.targetId}");
+                    }
+
+                    damageValue = DamageFormula.CalculateSkillDamage(actorParam.Attack, targetParam.Defence, characterStatus.attackBuffMultiplier, enemyStatus.attackBuffMultiplier, skillEffect.value);
+
+                }
+                bool isSkillTargetFriend = IsSkillTargetFriend(skillEffect);
+
                 int hpDelta = -damageValue;
                 int mpDelta = 0;
 
-                bool isSkillTargetFriend = IsSkillTargetFriend(skillEffect);
                 // var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
                 // if (charaStatus != null && charaStatus.Confusion && Random.value < 0.5f)
                 // {
@@ -76,6 +111,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 //     action.targetId = action.actorId;
 
                 // }
+
                 if (isSkillTargetFriend)
                 {
                     messageAction.targetId = action.actorId;
@@ -119,6 +155,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                     }
                 }
 
+
                 _pauseSkillEffect = true;
                 StartCoroutine(ShowSkillDamageMessage(messageAction, skillData.skillName, damageValue, isTargetDefeated, appliedEffectCategory));
             }
@@ -148,6 +185,37 @@ public class BattleActionProcessorSkill : MonoBehaviour
 
                 _pauseSkillEffect = true;
                 StartCoroutine(ShowSkillHealMessage(messageAction, skillData.skillName, hpDelta));
+            }
+            else if (skillEffect.skillCategory == SkillCategory.Support)
+            {
+                bool isSkillTargetFriend = IsSkillTargetFriend(skillEffect);
+
+                if (isSkillTargetFriend)
+                {
+                    messageAction.targetId = action.actorId;
+                    messageAction.isTargetFriend = action.isActorFriend;
+                }
+                else
+                {
+                    messageAction.targetId = action.targetId;
+                    messageAction.isTargetFriend = !action.isActorFriend;
+                }                              //バフデバフ付与
+                if (skillEffect.StatusEffectEnable && skillEffect.Buff != null)
+                {
+                    foreach (var buff in skillEffect.Buff)
+                    {
+                        
+                        Logger.Instance.Log("バフデバフ付与");
+                        if (isSkillTargetFriend)
+                        {
+                            statusEffectManager.PlayerApplyBuff(messageAction.targetId, buff);
+                        }
+                        else
+                        {
+                            statusEffectManager.EnemyApplyBuff(messageAction.targetId, buff);
+                        }
+                    }
+                }
             }
             else
             {

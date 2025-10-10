@@ -17,11 +17,15 @@ MonoBehaviour:
   skillDesc: eqeqeq
   cost: 5
   skillEffects:
-  - skillCategory: 2
-    EffectTarget: 3
-    value: 30
-    StatusEffectEnable: 0
+  - skillCategory: 3
+    EffectTarget: 1
+    value: 0
+    StatusEffectEnable: 1
     StatusEffect:
-    - EffectCategory: 0
-      Duration: 0
+    - EffectCategory: 1
+      Duration: 1
       Power: 0
+    Buff:
+    - BuffCategory: 0
+      Duration: 5
+      Power: 1000

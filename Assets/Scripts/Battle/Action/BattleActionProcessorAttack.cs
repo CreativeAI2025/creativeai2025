@@ -46,7 +46,41 @@ public class BattleActionProcessorAttack : MonoBehaviour
     {
         var actorParam = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
         var targetParam = _actionProcessor.GetCharacterParameter(action.targetId, action.isTargetFriend);
-        int damage = DamageFormula.CalculateDamage(actorParam.Attack, targetParam.Defence);
+        int damage = 0;
+        if (action.isTargetFriend)
+        {
+            var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.targetId);
+            var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.actorId);
+
+            if (characterStatus == null)
+            {
+                Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {action.targetId}");
+            }
+            if (enemyStatus == null)
+            {
+                Logger.Instance.LogWarning($"敵キャラクターのステータスが見つかりませんでした。 戦闘中ID : {action.actorId}");
+            }
+            damage = DamageFormula.CalculateDamage(actorParam.Attack, targetParam.Defence, enemyStatus.attackBuffMultiplier, characterStatus.attackBuffMultiplier);
+        }
+
+        else
+        {
+            var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
+            var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.targetId);
+
+            if (characterStatus == null)
+            {
+                Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {action.actorId}");
+
+            }
+            if (enemyStatus == null)
+            {
+                Logger.Instance.LogWarning($"敵キャラクターのステータスが見つかりませんでした。 戦闘中ID : {action.targetId}");
+            }
+
+            damage = DamageFormula.CalculateDamage(actorParam.Attack, targetParam.Defence, characterStatus.attackBuffMultiplier, enemyStatus.attackBuffMultiplier);
+
+        }
         int hpDelta = damage * -1;
         int mpDelta = 0;
         bool isTargetDefeated = false;

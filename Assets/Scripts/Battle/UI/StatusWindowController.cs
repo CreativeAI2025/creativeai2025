@@ -10,6 +10,10 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     [SerializeField]
     StatusUIController _uiController;
+        [SerializeField]
+    StatusUIController _uiController1;
+        [SerializeField]
+    StatusUIController _uiController2;
 
     /// <summary>
     /// コントローラの状態をセットアップします。
@@ -19,6 +23,7 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
     {
 
     }
+
 
     /// <summary>
     /// キャラクターのステータスを全てセットします。

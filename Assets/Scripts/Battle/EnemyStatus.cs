@@ -59,4 +59,22 @@ public class EnemyStatus
     /// 行動できないかどうかのフラグです。
     /// </summary>
     public bool IsEnemyStop;
+        // --- バフ・デバフ倍率 + 残りターン ---
+    public float attackBuffMultiplier = 1.0f;
+    public int attackBuffDuration = 0;
+
+    public float defenceBuffMultiplier = 1.0f;
+    public int defenceBuffDuration = 0;
+
+    public float magicAttackBuffMultiplier = 1.0f;
+    public int magicAttackBuffDuration = 0;
+
+    public float magicDefenceBuffMultiplier = 1.0f;
+    public int magicDefenceBuffDuration = 0;
+
+    public float speedBuffMultiplier = 1.0f;
+    public int speedBuffDuration = 0;
+
+    public float evasionBuffMultiplier = 1.0f;
+    public int evasionBuffDuration = 0;
 }

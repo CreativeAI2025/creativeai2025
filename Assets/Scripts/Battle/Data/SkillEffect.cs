@@ -20,8 +20,12 @@ public class SkillEffect
     public float value;
 
     public bool StatusEffectEnable;
-     /// <summary>
+    /// <summary>
     /// 状態異常のリストです
     /// </summary>
     public List<StatusEffect> StatusEffect;
+    /// <summary>
+    /// バフのリストです
+    /// </summary>
+    public List<Buff> Buff;
     }

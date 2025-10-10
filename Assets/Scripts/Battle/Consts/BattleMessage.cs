@@ -61,6 +61,28 @@ public class BattleMessage
     public static readonly string RecoverStatusSuffix = "の状態異常が治った！";
 
     /// <summary>
+    /// バフ用のメッセージ
+    /// </summary>
+    public static readonly string FewStatusUpSuffix = "が少し上がった";
+    public static readonly string StatusUpSuffix = "が上がった";
+    public static readonly string VeryStatusUpSuffix = "がとても上がった";
+    /// <summary>
+    /// デバフ用のメッセージ
+    /// </summary>
+    public static readonly string FewStatusDownSuffix = "が少し下がった";
+    public static readonly string StatusDownSuffix = "が下がった";
+    public static readonly string VeryStatusDownSuffix = "がとても下がった";
+    /// <summary>
+    /// ステータス変化用のメッセージ
+    /// </summary>
+    public static readonly string AttackStatusSuffix = "の攻撃力";
+    public static readonly string DefenceStatusSuffix = "の防御力";
+    public static readonly string MagicAttackStatusSuffix = "のスキル攻撃力";
+    public static readonly string MagicDefenceStatusSuffix = "のスキル防御力";
+    public static readonly string SpeedStatusSuffix = "の素早さ";
+    public static readonly string EvasionStatusSuffix = "の回避率";
+
+    /// <summary>
     /// アイテム使用時の使用者のメッセージのフォーマットです。
     /// </summary>
     public static readonly string ItemUserSuffix = "は";

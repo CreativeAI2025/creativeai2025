@@ -112,6 +112,7 @@ public class StatusEffectManager : MonoBehaviour
             int actorId = kvp.Key;
             var effects = kvp.Value;
             ProcessEffectsForActor(actorId, effects, isPlayer: true);
+            UpdateBuffs(actorId, isPlayer: true);
         }
 
         // 敵の状態異常処理
@@ -120,6 +121,7 @@ public class StatusEffectManager : MonoBehaviour
             int enemyId = kvp.Key;
             var effects = kvp.Value;
             ProcessEffectsForActor(enemyId, effects, isPlayer: false);
+            UpdateBuffs(enemyId, isPlayer: false);
         }
     }
     /// <summary>
@@ -275,64 +277,158 @@ public class StatusEffectManager : MonoBehaviour
         }
         return false;
     }
-    // public void ApplyBuff(CharacterStatus target, string type, float multiplier, int duration)
-    // {
-    //     switch (type)
-    //     {
-    //         case "Attack":
-    //             target.attackBuffMultiplier = multiplier;
-    //             target.attackBuffDuration = duration;
-    //             break;
+    /// <summary>
+    /// 味方にバフを付与
+    /// </summary>
+    public void PlayerApplyBuff(int actorId, Buff buff)
+    {
+        var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(actorId);
+        if (characterStatus == null)
+        {
+            Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {actorId}");
+            return;
+        }
+        switch (buff.BuffCategory)
+        {
+            case BuffStatusCategory.Attack:
+                characterStatus.attackBuffMultiplier = buff.Power;
+                characterStatus.attackBuffDuration = buff.Duration;
+                break;
 
-    //         case "Defence":
-    //             target.defenceBuffMultiplier = multiplier;
-    //             target.defenceBuffDuration = duration;
-    //             break;
+            case BuffStatusCategory.Defence:
+                characterStatus.defenceBuffMultiplier = buff.Power;
+                characterStatus.defenceBuffDuration = buff.Duration;
+                break;
 
-    //         case "MagicAttack":
-    //             target.magicAttackBuffMultiplier = multiplier;
-    //             target.magicAttackBuffDuration = duration;
-    //             break;
+            case BuffStatusCategory.MagicAttack:
+                characterStatus.magicAttackBuffMultiplier = buff.Power;
+                characterStatus.magicAttackBuffDuration = buff.Duration;
+                break;
 
-    //         case "MagicDefence":
-    //             target.magicDefenceBuffMultiplier = multiplier;
-    //             target.magicDefenceBuffDuration = duration;
-    //             break;
+            case BuffStatusCategory.MagicDefence:
+                characterStatus.magicDefenceBuffMultiplier = buff.Power;
+                characterStatus.magicDefenceBuffDuration = buff.Duration;
+                break;
 
-    //         case "Speed":
-    //             target.speedBuffMultiplier = multiplier;
-    //             target.speedBuffDuration = duration;
-    //             break;
+            case BuffStatusCategory.Speed:
+                characterStatus.speedBuffMultiplier = buff.Power;
+                characterStatus.speedBuffDuration = buff.Duration;
+                break;
 
-    //         case "Evasion":
-    //             target.evasionBuffMultiplier = multiplier;
-    //             target.evasionBuffDuration = duration;
-    //             break;
-    //     }
+            case BuffStatusCategory.Evasion:
+                characterStatus.evasionBuffMultiplier = buff.Power;
+                characterStatus.evasionBuffDuration = buff.Duration;
+                break;
+        }
 
-    //     Debug.Log($"{type} に {multiplier} 倍のバフを付与！（{duration}ターン）");
-    // }
-    // public void UpdateBuffs(CharacterStatus status)
-    // {
-    //     if (status.attackBuffDuration > 0 && --status.attackBuffDuration == 0)
-    //         status.attackBuffMultiplier = 1.0f;
+        Debug.Log($"{buff.BuffCategory} に {buff.Power} 倍のバフを付与！（{buff.Duration}ターン）");
+    }
+    /// <summary>
+    /// バフのターン経過
+    /// </summary>
+    public void UpdateBuffs(int actorId, bool isPlayer)
+    {
+        if (isPlayer)
+        {
+            var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(actorId);
+            if (characterStatus == null)
+            {
+                Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {actorId}");
+                return;
+            }
+            if (characterStatus.attackBuffDuration > 0 && --characterStatus.attackBuffDuration == 0)
+                characterStatus.attackBuffMultiplier = 1.0f;
 
-    //     if (status.defenceBuffDuration > 0 && --status.defenceBuffDuration == 0)
-    //         status.defenceBuffMultiplier = 1.0f;
+            if (characterStatus.defenceBuffDuration > 0 && --characterStatus.defenceBuffDuration == 0)
+                characterStatus.defenceBuffMultiplier = 1.0f;
 
-    //     if (status.magicAttackBuffDuration > 0 && --status.magicAttackBuffDuration == 0)
-    //         status.magicAttackBuffMultiplier = 1.0f;
+            if (characterStatus.magicAttackBuffDuration > 0 && --characterStatus.magicAttackBuffDuration == 0)
+                characterStatus.magicAttackBuffMultiplier = 1.0f;
 
-    //     if (status.magicDefenceBuffDuration > 0 && --status.magicDefenceBuffDuration == 0)
-    //         status.magicDefenceBuffMultiplier = 1.0f;
+            if (characterStatus.magicDefenceBuffDuration > 0 && --characterStatus.magicDefenceBuffDuration == 0)
+                characterStatus.magicDefenceBuffMultiplier = 1.0f;
 
-    //     if (status.speedBuffDuration > 0 && --status.speedBuffDuration == 0)
-    //         status.speedBuffMultiplier = 1.0f;
+            if (characterStatus.speedBuffDuration > 0 && --characterStatus.speedBuffDuration == 0)
+                characterStatus.speedBuffMultiplier = 1.0f;
 
-    //     if (status.evasionBuffDuration > 0 && --status.evasionBuffDuration == 0)
-    //         status.evasionBuffMultiplier = 1.0f;
-    // }
+            if (characterStatus.evasionBuffDuration > 0 && --characterStatus.evasionBuffDuration == 0)
+                characterStatus.evasionBuffMultiplier = 1.0f;
+        }
+        else
+        {
 
+            var characterStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(actorId);
+            if (characterStatus == null)
+            {
+                Logger.Instance.LogWarning($"敵キャラクターのステータスが見つかりませんでした。 戦闘中ID : {actorId}");
+                return;
+            }
+            if (characterStatus.attackBuffDuration > 0 && --characterStatus.attackBuffDuration == 0)
+                characterStatus.attackBuffMultiplier = 1.0f;
+
+            if (characterStatus.defenceBuffDuration > 0 && --characterStatus.defenceBuffDuration == 0)
+                characterStatus.defenceBuffMultiplier = 1.0f;
+
+            if (characterStatus.magicAttackBuffDuration > 0 && --characterStatus.magicAttackBuffDuration == 0)
+                characterStatus.magicAttackBuffMultiplier = 1.0f;
+
+            if (characterStatus.magicDefenceBuffDuration > 0 && --characterStatus.magicDefenceBuffDuration == 0)
+                characterStatus.magicDefenceBuffMultiplier = 1.0f;
+
+            if (characterStatus.speedBuffDuration > 0 && --characterStatus.speedBuffDuration == 0)
+                characterStatus.speedBuffMultiplier = 1.0f;
+
+            if (characterStatus.evasionBuffDuration > 0 && --characterStatus.evasionBuffDuration == 0)
+                characterStatus.evasionBuffMultiplier = 1.0f;
+        }
+
+    }
+    /// <summary>
+    /// 敵にバフを付与
+    /// </summary>
+    public void EnemyApplyBuff(int enemyId, Buff buff)
+    {
+        var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(enemyId);
+        if (enemyStatus == null)
+        {
+            Logger.Instance.LogWarning($"敵キャラクターのステータスが見つかりませんでした。 戦闘中ID : {enemyId}");
+            return;
+        }
+        switch (buff.BuffCategory)
+        {
+            case BuffStatusCategory.Attack:
+                enemyStatus.attackBuffMultiplier = buff.Power;
+                enemyStatus.attackBuffDuration = buff.Duration;
+                break;
+
+            case BuffStatusCategory.Defence:
+                enemyStatus.defenceBuffMultiplier = buff.Power;
+                enemyStatus.defenceBuffDuration = buff.Duration;
+                break;
+
+            case BuffStatusCategory.MagicAttack:
+                enemyStatus.magicAttackBuffMultiplier = buff.Power;
+                enemyStatus.magicAttackBuffDuration = buff.Duration;
+                break;
+
+            case BuffStatusCategory.MagicDefence:
+                enemyStatus.magicDefenceBuffMultiplier = buff.Power;
+                enemyStatus.magicDefenceBuffDuration = buff.Duration;
+                break;
+
+            case BuffStatusCategory.Speed:
+                enemyStatus.speedBuffMultiplier = buff.Power;
+                enemyStatus.speedBuffDuration = buff.Duration;
+                break;
+
+            case BuffStatusCategory.Evasion:
+                enemyStatus.evasionBuffMultiplier = buff.Power;
+                enemyStatus.evasionBuffDuration = buff.Duration;
+                break;
+        }
+
+        Debug.Log($"{buff.BuffCategory} に {buff.Power} 倍のバフを付与！（{buff.Duration}ターン）");
+    }
     /// <summary>
     /// クリア処理（戦闘終了時など）
     /// </summary>

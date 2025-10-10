@@ -6,11 +6,11 @@ using UnityEngine;
 /// </summary>
 public class BattleStarter : MonoBehaviour
 {
-          /// <summary>
-        /// 戦闘開始メッセージを表示する時間です。
-        /// </summary>
-        [SerializeField]
-        float _startMessageTime = 1.5f;
+    /// <summary>
+    /// 戦闘開始メッセージを表示する時間です。
+    /// </summary>
+    [SerializeField]
+    float _startMessageTime = 1.5f;
     /// <summary>
     /// 戦闘の管理を行うクラスへの参照です。
     /// </summary>
@@ -37,13 +37,13 @@ public class BattleStarter : MonoBehaviour
 
         // 敵の名前ウィンドウを表示します。
         ShowEnemyNameWindow();
- // 敵の名前ウィンドウを表示します。
-            ShowEnemyNameWindow();
+        // 敵の名前ウィンドウを表示します。
+        ShowEnemyNameWindow();
         // 敵出現のメッセージを表示します。
         ShowEnemyAppearMessage();
 
         // テスト用機能
-            _battleManager.StartInputCommandPhase();
+        _battleManager.StartInputCommandPhase();
     }
 
     /// <summary>
@@ -70,17 +70,18 @@ public class BattleStarter : MonoBehaviour
     /// </summary>
     void ShowStatus()
     {
-int characterId = 1;
-            var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(characterId);
-            if (characterStatus == null)
-            {
-                Logger.Instance.LogWarning($"キャラクターステータスが取得できませんでした。 ID : {characterId}");
-                return;
-            }
+      
+        int characterId = 1;
+        var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(characterId);
+        if (characterStatus == null)
+        {
+            Logger.Instance.LogWarning($"キャラクターステータスが取得できませんでした。 ID : {characterId}");
+            return;
+        }
 
-            var controller = _battleManager.GetWindowManager().GetStatusWindowController();
-            controller.SetCharacterStatus(characterStatus);
-            controller.ShowWindow();
+        var controller = _battleManager.GetWindowManager().GetStatusWindowController();
+        controller.SetCharacterStatus(characterStatus);
+        controller.ShowWindow();
     }
 
     /// <summary>
@@ -88,9 +89,9 @@ int characterId = 1;
     /// </summary>
     void ShowCommand()
     {
-         var controller = _battleManager.GetWindowManager().GetCommandWindowController();
-            controller.ShowWindow();
-            controller.InitializeCommand();
+        var controller = _battleManager.GetWindowManager().GetCommandWindowController();
+        controller.ShowWindow();
+        controller.InitializeCommand();
     }
 
     /// <summary>
@@ -111,17 +112,17 @@ int characterId = 1;
     /// </summary>
     void ShowEnemyAppearMessage()
     {
- int enemyId = _battleManager.EnemyId;
-            var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
-            if (enemyData == null)
-            {
-                Logger.Instance.LogWarning($"敵データが取得できませんでした。 ID : {enemyId}");
-                return;
-            }
+        int enemyId = _battleManager.EnemyId;
+        var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
+        if (enemyData == null)
+        {
+            Logger.Instance.LogWarning($"敵データが取得できませんでした。 ID : {enemyId}");
+            return;
+        }
 
-            // メッセージ表示後、BattleManagerに制御が戻ります。
-            var controller = _battleManager.GetWindowManager().GetMessageWindowController();
-            controller.ShowWindow();
-            controller.GenerateEnemyAppearMessage(enemyData.enemyName, _startMessageTime);
+        // メッセージ表示後、BattleManagerに制御が戻ります。
+        var controller = _battleManager.GetWindowManager().GetMessageWindowController();
+        controller.ShowWindow();
+        controller.GenerateEnemyAppearMessage(enemyData.enemyName, _startMessageTime);
     }
 }

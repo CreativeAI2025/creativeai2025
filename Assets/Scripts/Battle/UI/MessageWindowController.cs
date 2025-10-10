@@ -124,6 +124,28 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
         string message = $"{targetName}{BattleMessage.MagicUserSuffix}{BattleMessage.RecoverStatusSuffix}";
         StartCoroutine(ShowMessageAutoProcess(message));
     }
+
+    /// <summary>
+    ///バフデバフを受けたときのメッセージを表示します。
+    /// </summary>
+    public void GenerateRecoverStatusMessage(string targetName, string buffMessage, int buffValue)
+    {
+        string message = "";
+        if (buffValue < 1.2)
+        {
+            message = $"{targetName}{buffMessage}{BattleMessage.FewStatusUpSuffix}";
+        }
+        else if (buffValue < 1.7)
+        {
+            message = $"{targetName}{buffMessage}{BattleMessage.StatusUpSuffix}";
+        }
+        else if (buffValue > 1.7)
+        {
+            message = $"{targetName}{buffMessage}{BattleMessage.VeryStatusUpSuffix}";
+        }
+        StartCoroutine(ShowMessageAutoProcess(message));
+    }
+
     /// <summary>
     /// HPが回復する時のメッセージを生成します。
     /// </summary>
