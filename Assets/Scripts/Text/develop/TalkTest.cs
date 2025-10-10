@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 public class TalkTest : MonoBehaviour
 {
-    private string fileName = "TextDataSample1";
+    [SerializeField] private string fileName;
     private bool _conversationFlag = false;
     private InputSetting _inputSetting;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
