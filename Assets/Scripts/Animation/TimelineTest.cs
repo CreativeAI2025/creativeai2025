@@ -52,10 +52,11 @@ public class TimelineTest : MonoBehaviour
 
     private async UniTask CallEvent()
     {
-        Debug.Log("タイムライン開始");
+        Debug.Log($"タイムライン開始{_timelineName}");
         _timelineIsPlaying = true;
         PlayTimeline(_timelineName);
         await UniTask.WaitUntil(() => !_timelineIsPlaying);
+        Debug.Log($"タイムライン終了{_timelineName}");
     }
 
     private void PlayTimeline(string timelineName)
@@ -106,7 +107,6 @@ public class TimelineTest : MonoBehaviour
 
             //  NotifierがアタッチされているGameObject（＝TimelineControllerと同じGameObject）を非アクティブにする
             notifier.gameObject.SetActive(false);
-            Debug.Log("アニメーション終了");
         }
     }
 }
