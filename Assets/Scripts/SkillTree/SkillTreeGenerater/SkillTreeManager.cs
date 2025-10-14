@@ -138,6 +138,7 @@ public class SkillTreeManager : MonoBehaviour
                 if (n.getId().Equals(id))
                 {
                     text = n.getExplain() + newInfo + "\n必要SP:" + n.GetSp();
+                    Debug.Log(n.ToString());
                 }
             }
         }

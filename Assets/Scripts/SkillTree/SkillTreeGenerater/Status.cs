@@ -59,6 +59,14 @@ public class Status : IComparable<Status>
         this.explain = explain;
     }
 
+    public string ToString()
+    {
+        return "名前：" + this.name
+        + ", 種類：" + type
+        + ", 強さ：" + power + "%"
+        + ", SP：" + sp;
+    }
+
     /// <summary>
     /// ソート用
     /// </summary>
