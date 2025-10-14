@@ -78,22 +78,18 @@ public class TimelineTest : MonoBehaviour
             return;
         }
 
+        if (!controller.PlayableIsSet())
+        {
+            Debug.Log("タイムラインの Playable Asset が設定されていません。");
+            _timelineIsPlaying = false;
+            return;
+        }
+
         //  TimelineControllerがアタッチされているGameObhectをアクティブにする
         controller.gameObject.SetActive(true);
 
-        PlayableAsset timelineAsset = Resources.Load<PlayableAsset>($"Animations/Timeline/{timelineName}");
-
-        if (timelineAsset != null)
-        {
-            controller.StartTimeline(timelineAsset);
-        }
-        else
-        {
-            Debug.Log($"Timeline Assetが見つかりません: Timelines/{timelineName}");
-            _timelineIsPlaying = false;
-        }
         notifier.OnTimelineEnd += () => OnTimelineFinished(notifier);
-        controller.StartTimeline(timelineAsset);
+        controller.StartTimeline();
     }
 
     private void OnTimelineFinished(TimelineFinishedNotifier notifier)

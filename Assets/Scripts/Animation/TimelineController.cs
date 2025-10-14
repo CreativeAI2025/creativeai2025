@@ -12,7 +12,7 @@ public class TimelineController : MonoBehaviour
     /// タイムラインの再生を開始する
     /// </summary>
     /// <param name="timelineAsset">再生するTimelineアセット</param>
-    public void StartTimeline(PlayableAsset timelineAsset)
+    public void StartTimeline()
     {
         if (_playableDirector == null)
         {
@@ -26,7 +26,7 @@ public class TimelineController : MonoBehaviour
         }
 
         //  Timelineアセットを設定し、再生する
-        _playableDirector.playableAsset = timelineAsset;
+        //_playableDirector.playableAsset = timelineAsset;
         _playableDirector.Play();
 
         //  Notifierに現在のDirectorを渡し、監視を開始させる
@@ -42,5 +42,10 @@ public class TimelineController : MonoBehaviour
         {
             _playableDirector.Stop();
         }
+    }
+
+    public bool PlayableIsSet()
+    {
+        return _playableDirector.playableAsset;
     }
 }
