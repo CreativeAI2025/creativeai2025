@@ -9,11 +9,6 @@ public class BattleResultManager : MonoBehaviour
     BattleManager _battleManager;
 
     /// <summary>
-    /// 戦闘中の敵キャラクターのデータを管理するクラスへの参照です。
-    /// </summary>
-    EnemyStatusManager _enemyStatusManager;
-
-    /// <summary>
     /// メッセージウィンドウを制御するクラスへの参照です。
     /// </summary>
     MessageWindowController _messageWindowController;
@@ -35,7 +30,6 @@ public class BattleResultManager : MonoBehaviour
     public void SetReferences(BattleManager battleManager)
     {
         _battleManager = battleManager;
-        _enemyStatusManager = _battleManager.GetEnemyStatusManager();
         _messageWindowController = _battleManager.GetWindowManager().GetMessageWindowController();
     }
 
@@ -52,7 +46,7 @@ public class BattleResultManager : MonoBehaviour
         // 倒した敵の経験値とゴールドを集計します。
         int totalExp = 0;
         int gold = 0;
-        foreach (var enemyStatus in _enemyStatusManager.GetEnemyStatusList())
+        foreach (var enemyStatus in EnemyStatusManager.Instance.GetEnemyStatusList())
         {
             totalExp += enemyStatus.enemyData.exp;
             gold += enemyStatus.enemyData.gold;

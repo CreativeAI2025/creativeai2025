@@ -21,10 +21,6 @@ public class BattleActionProcessor : MonoBehaviour
     BattleManager _battleManager;
 
     /// <summary>
-    /// 戦闘中の敵キャラクターの管理を行うクラスへの参照です。
-    /// </summary>
-    EnemyStatusManager _enemyStatusManager;
-    /// <summary>
     /// 戦闘中の味方キャラクターの管理を行うクラスへの参照です。
     /// </summary>
     CharacterStatusManager _characterStatusManager;
@@ -78,7 +74,6 @@ public class BattleActionProcessor : MonoBehaviour
     public void InitializeProcessor(BattleManager battleManager)
     {
         _battleManager = battleManager;
-        _enemyStatusManager = _battleManager.GetEnemyStatusManager();
 
         _battleActionProcessorAttack.SetReferences(_battleManager, this);
         _battleActionProcessorSkill.SetReferences(_battleManager, this);
@@ -168,7 +163,7 @@ public class BattleActionProcessor : MonoBehaviour
             }
             else
             {
-                var enemyStatus = _enemyStatusManager.GetEnemyStatusByBattleId(action.actorId);
+                var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.actorId);
                 if (enemyStatus != null && enemyStatus.IsEnemyStop)
                 {
                     Logger.Instance.Log($"敵 {action.actorId} は行動不能で動けなかった！");
@@ -232,7 +227,7 @@ public class BattleActionProcessor : MonoBehaviour
         }
         else
         {
-            var enemyStatus = _enemyStatusManager.GetEnemyStatusByBattleId(charcterId);
+            var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(charcterId);
             var enemyData = enemyStatus.enemyData;
             battleParameter.Attack = enemyData.Attack;
             battleParameter.Defence = enemyData.Defence;
@@ -260,7 +255,7 @@ public class BattleActionProcessor : MonoBehaviour
         }
         else
         {
-            var enemyStatus = _enemyStatusManager.GetEnemyStatusByBattleId(charcterId);
+            var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(charcterId);
             name = enemyStatus.enemyData.enemyName;
         }
         return name;

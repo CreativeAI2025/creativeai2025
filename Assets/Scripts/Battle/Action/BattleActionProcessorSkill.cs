@@ -6,7 +6,6 @@ public class BattleActionProcessorSkill : MonoBehaviour
     BattleActionProcessor _actionProcessor;
     BattleManager _battleManager;
     MessageWindowController _messageWindowController;
-    EnemyStatusManager _enemyStatusManager;
     BattleSpriteController _battleSpriteController;
 
     // 追加: 状態異常マネージャー
@@ -19,7 +18,6 @@ public class BattleActionProcessorSkill : MonoBehaviour
         _battleManager = battleManager;
         _actionProcessor = actionProcessor;
         _messageWindowController = _battleManager.GetWindowManager().GetMessageWindowController();
-        _enemyStatusManager = _battleManager.GetEnemyStatusManager();
         _battleSpriteController = _battleManager.GetBattleSpriteController();
         statusEffectManager = _battleManager.GetStatusEffectManager();
     }
@@ -34,7 +32,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
         if (action.isActorFriend)
             CharacterStatusManager.Instance.ChangeCharacterStatus(action.actorId, hpDelta, mpDelta);
         else
-            _enemyStatusManager.ChangeEnemyStatus(action.actorId, hpDelta, mpDelta);
+            EnemyStatusManager.Instance.ChangeEnemyStatus(action.actorId, hpDelta, mpDelta);
 
         _actionProcessor.SetPauseProcess(true);
         StartCoroutine(ProcessSkillActionCoroutine(action, skillData));
@@ -105,7 +103,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 // {
                 //     action.targetId = action.actorId;
                 // }
-                // var enemyStatus = _enemyStatusManager.GetEnemyStatusByBattleId(action.actorId);
+                // var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.actorId);
                 // if (enemyStatus != null && enemyStatus.Confusion && Random.value < 0.5f)
                 // {
                 //     action.targetId = action.actorId;
@@ -129,11 +127,11 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 }
                 else
                 {
-                    _enemyStatusManager.ChangeEnemyStatus(messageAction.targetId, hpDelta, mpDelta);
-                    isTargetDefeated = _enemyStatusManager.IsEnemyDefeated(action.targetId);
+                    EnemyStatusManager.Instance.ChangeEnemyStatus(messageAction.targetId, hpDelta, mpDelta);
+                    isTargetDefeated = EnemyStatusManager.Instance.IsEnemyDefeated(action.targetId);
 
                     if (isTargetDefeated)
-                        _enemyStatusManager.OnDefeatEnemy(action.targetId);
+                        EnemyStatusManager.Instance.OnDefeatEnemy(action.targetId);
                 }
 
                 // 状態異常付与
@@ -181,7 +179,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 if (messageAction.isTargetFriend)
                     CharacterStatusManager.Instance.ChangeCharacterStatus(messageAction.targetId, hpDelta, mpDelta);
                 else
-                    _enemyStatusManager.ChangeEnemyStatus(messageAction.targetId, hpDelta, mpDelta);
+                    EnemyStatusManager.Instance.ChangeEnemyStatus(messageAction.targetId, hpDelta, mpDelta);
 
                 _pauseSkillEffect = true;
                 StartCoroutine(ShowSkillHealMessage(messageAction, skillData.skillName, hpDelta));
@@ -204,7 +202,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 {
                     foreach (var buff in skillEffect.Buff)
                     {
-                        
+
                         Logger.Instance.Log("バフデバフ付与");
                         if (isSkillTargetFriend)
                         {
@@ -286,7 +284,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 _messageWindowController.GenerateDefeateEnemyMessage(targetName);
                 while (_actionProcessor.IsPausedMessage) yield return null;
 
-                if (_enemyStatusManager.IsAllEnemyDefeated())
+                if (EnemyStatusManager.Instance.IsAllEnemyDefeated())
                     _battleManager.OnEnemyDefeated();
             }
         }

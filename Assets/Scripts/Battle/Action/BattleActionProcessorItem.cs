@@ -18,11 +18,6 @@ public class BattleActionProcessorItem : MonoBehaviour
     MessageWindowController _messageWindowController;
 
     /// <summary>
-    /// 戦闘中の敵キャラクターの管理を行うクラスへの参照です。
-    /// </summary>
-    EnemyStatusManager _enemyStatusManager;
-
-    /// <summary>
     /// 参照をセットします。
     /// </summary>
     public void SetReferences(BattleManager battleManager, BattleActionProcessor actionProcessor)
@@ -30,7 +25,6 @@ public class BattleActionProcessorItem : MonoBehaviour
         _battleManager = battleManager;
         _actionProcessor = actionProcessor;
         _messageWindowController = _battleManager.GetWindowManager().GetMessageWindowController();
-        _enemyStatusManager = _battleManager.GetEnemyStatusManager();
     }
 
     /// <summary>
@@ -63,7 +57,7 @@ public class BattleActionProcessorItem : MonoBehaviour
             }
             else
             {
-                _enemyStatusManager.ChangeEnemyStatus(action.targetId, hpDelta, mpDelta);
+                EnemyStatusManager.Instance.ChangeEnemyStatus(action.targetId, hpDelta, mpDelta);
             }
 
             StartCoroutine(ShowItemHealMessage(action, itemData.itemName, hpDelta));
@@ -79,7 +73,7 @@ public class BattleActionProcessorItem : MonoBehaviour
             }
             else
             {
-                _enemyStatusManager.ChangeEnemyStatus(action.targetId, hpDelta, mpDelta);
+                EnemyStatusManager.Instance.ChangeEnemyStatus(action.targetId, hpDelta, mpDelta);
             }
 
             StartCoroutine(ShowItemMpHealMessage(action, itemData.itemName, mpDelta));
@@ -101,11 +95,11 @@ public class BattleActionProcessorItem : MonoBehaviour
             }
             else
             {
-                var status = _enemyStatusManager.GetEnemyStatusByBattleId(action.targetId);
+                var status = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.targetId);
                 if (status != null && status.isDefeated)
                 {
                     status.isDefeated = false; // 蘇生！
-                    _enemyStatusManager.ChangeEnemyStatus(action.targetId, reviveHp, mpDelta);
+                    EnemyStatusManager.Instance.ChangeEnemyStatus(action.targetId, reviveHp, mpDelta);
                 }
             }
 

@@ -18,11 +18,6 @@ public class BattleActionProcessorAttack : MonoBehaviour
     MessageWindowController _messageWindowController;
 
     /// <summary>
-    /// 戦闘中の敵キャラクターの管理を行うクラスへの参照です。
-    /// </summary>
-    EnemyStatusManager _enemyStatusManager;
-
-    /// <summary>
     /// 戦闘関連のスプライトを制御するクラスへの参照です。
     /// </summary>
     BattleSpriteController _battleSpriteController;
@@ -35,7 +30,6 @@ public class BattleActionProcessorAttack : MonoBehaviour
         _battleManager = battleManager;
         _actionProcessor = actionProcessor;
         _messageWindowController = _battleManager.GetWindowManager().GetMessageWindowController();
-        _enemyStatusManager = _battleManager.GetEnemyStatusManager();
         _battleSpriteController = _battleManager.GetBattleSpriteController();
     }
 
@@ -102,11 +96,11 @@ public class BattleActionProcessorAttack : MonoBehaviour
         }
         else
         {
-            _enemyStatusManager.ChangeEnemyStatus(action.targetId, hpDelta, mpDelta);
-            isTargetDefeated = _enemyStatusManager.IsEnemyDefeated(action.targetId);
+            EnemyStatusManager.Instance.ChangeEnemyStatus(action.targetId, hpDelta, mpDelta);
+            isTargetDefeated = EnemyStatusManager.Instance.IsEnemyDefeated(action.targetId);
             if (isTargetDefeated)
             {
-                _enemyStatusManager.OnDefeatEnemy(action.targetId);
+                EnemyStatusManager.Instance.OnDefeatEnemy(action.targetId);
             }
         }
 
@@ -167,7 +161,7 @@ public class BattleActionProcessorAttack : MonoBehaviour
                 yield return null;
             }
 
-            if (_enemyStatusManager.IsAllEnemyDefeated())
+            if (EnemyStatusManager.Instance.IsAllEnemyDefeated())
             {
                 _battleManager.OnEnemyDefeated();
             }

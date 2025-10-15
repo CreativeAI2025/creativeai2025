@@ -19,11 +19,6 @@ public class BattleActionProcessorRun : MonoBehaviour, IBattleActionProcessor
     MessageWindowController _messageWindowController;
 
     /// <summary>
-    /// 戦闘中の敵キャラクターの管理を行うクラスへの参照です。
-    /// </summary>
-    EnemyStatusManager _enemyStatusManager;
-
-    /// <summary>
     /// 戦闘関連のスプライトを制御するクラスへの参照です。
     /// </summary>
     BattleSpriteController _battleSpriteController;
@@ -36,7 +31,6 @@ public class BattleActionProcessorRun : MonoBehaviour, IBattleActionProcessor
         _battleManager = battleManager;
         _actionProcessor = actionProcessor;
         _messageWindowController = _battleManager.GetWindowManager().GetMessageWindowController();
-        _enemyStatusManager = _battleManager.GetEnemyStatusManager();
         _battleSpriteController = _battleManager.GetBattleSpriteController();
     }
 
@@ -80,7 +74,7 @@ public class BattleActionProcessorRun : MonoBehaviour, IBattleActionProcessor
             else
             {
                 _battleSpriteController.HideEnemy();
-                _enemyStatusManager.OnRunEnemy(action.actorId);
+                EnemyStatusManager.Instance.OnRunEnemy(action.actorId);
                 _battleManager.OnEnemyRunaway();
             }
         }

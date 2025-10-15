@@ -32,11 +32,6 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     // CharacterMoverManager _characterMoverManager;
 
     /// <summary>
-    /// 戦闘中の敵キャラクターの管理を行うクラスへの参照です。
-    /// </summary>
-    [SerializeField]
-    EnemyStatusManager _enemyStatusManager;
-    /// <summary>
     /// 敵キャラクターのコマンドを選択するクラスへの参照です。
     /// </summary>
     [SerializeField]
@@ -96,7 +91,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     public void SetUpEnemyStatus(int enemyId)
     {
         EnemyId = enemyId;
-        _enemyStatusManager.SetUpEnemyStatus(enemyId);
+        EnemyStatusManager.Instance.SetUpEnemyStatus(enemyId);
     }
 
     /// <summary>
@@ -136,13 +131,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         return _battleSpriteController;
     }
-    /// <summary>
-    /// 戦闘中の敵キャラクターの管理を行うクラスへの参照を取得します。
-    /// </summary>
-    public EnemyStatusManager GetEnemyStatusManager()
-    {
-        return _enemyStatusManager;
-    }
+
     /// <summary>
     /// 状態異常の処理を行うクラスへの参照を取得します。
     /// </summary>
@@ -238,7 +227,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         // 1対1の戦闘のため、最初のキャラクターのIDを取得します。
         int actorId = CharacterStatusManager.Instance.partyCharacter[0];
-        int targetId = _enemyStatusManager.GetEnemyStatusList()[0].enemyBattleId;
+        int targetId = EnemyStatusManager.Instance.GetEnemyStatusList()[0].enemyBattleId;
         _battleActionRegister.SetFriendAttackAction(actorId, targetId);
 
         Logger.Instance.Log($"攻撃するキャラクターのID: {actorId} || 攻撃対象のキャラクターのID: {targetId}");
@@ -253,7 +242,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     void SetSkillCommandAction(int itemId)
     {
         int actorId = CharacterStatusManager.Instance.partyCharacter[0];
-        int targetId = _enemyStatusManager.GetEnemyStatusList()[0].enemyBattleId;
+        int targetId = EnemyStatusManager.Instance.GetEnemyStatusList()[0].enemyBattleId;
         _battleActionRegister.SetFriendSkillAction(actorId, targetId, itemId);
 
         PostCommandSelect();
@@ -274,7 +263,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
             return;
         }
 
-        int targetId = _enemyStatusManager.GetEnemyStatusList()[0].enemyBattleId;
+        int targetId = EnemyStatusManager.Instance.GetEnemyStatusList()[0].enemyBattleId;
         _battleActionRegister.SetFriendItemAction(actorId, targetId, itemId);
 
         PostCommandSelect();
@@ -330,8 +319,8 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         }
 
         Logger.Instance.Log("ターン内の行動が完了しました。");
-            // ここで状態異常処理をまとめて実行
-    statusEffectManager.ProcessTurnEffects();
+        // ここで状態異常処理をまとめて実行
+        statusEffectManager.ProcessTurnEffects();
         TurnCount++;
         StartInputCommandPhase();
     }
@@ -423,7 +412,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         _battleWindowManager.HideAllWindow();
         _battleSpriteController.HideBackground();
         _battleSpriteController.HideEnemy();
-        _enemyStatusManager.InitializeEnemyStatusList();
+        EnemyStatusManager.Instance.InitializeEnemyStatusList();
         _battleActionProcessor.InitializeActions();
         _battleActionProcessor.StopActions();
 
@@ -440,7 +429,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         _battleWindowManager.HideAllWindow();
         _battleSpriteController.HideBackground();
         _battleSpriteController.HideEnemy();
-        _enemyStatusManager.InitializeEnemyStatusList();
+        EnemyStatusManager.Instance.InitializeEnemyStatusList();
         _battleActionProcessor.InitializeActions();
         _battleActionProcessor.StopActions();
 

@@ -164,7 +164,7 @@ public class StatusEffectManager : MonoBehaviour
                     }
                     else
                     {
-                        _battleManager.GetEnemyStatusManager().ChangeEnemyStatus(id, -poisonDamage, 0);
+                        EnemyStatusManager.Instance.ChangeEnemyStatus(id, -poisonDamage, 0);
                         Logger.Instance.Log($"敵 {id} は毒で {poisonDamage} ダメージを受けた！");
                     }
                     break;
