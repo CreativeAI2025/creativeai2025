@@ -1,0 +1,67 @@
+{
+  "Content": [
+    {
+      "Speaker": "ゾフィ",
+      "Text": "（潮の匂い……はしないな）",
+      "ChangeImage": [
+                {
+                    "ImageName": "RightPanel",
+                    "SpriteName": "zofy"
+                }
+            ]
+    },
+    {
+      "Speaker": "ゾフィ",
+      "Text": "（今の音はなんだ？）"
+    },
+    {
+      "Speaker": "？？？",
+      "Text": "くそっ！\n　これでも倒せないか……。",
+      "ChangeImage": [
+                {
+                    "ImageName": "LeftPanel",
+                    "SpriteName": "noa"
+                }
+            ]
+    },
+    {
+      "Speaker": "ゾフィ",
+      "Text": "この声……。"
+    },
+    {
+      "Speaker": "？？？",
+      "Text": "グギャアアア！",
+      "ChangeImage": [
+                {
+                    "ImageName": "LeftPanel",
+                    "SpriteName": "mb2"
+                }
+            ]
+    },
+    {
+      "Speaker": "？？？",
+      "Text": "くっ！ここまでか...。",
+      "ChangeImage": [
+                {
+                    "ImageName": "RightPanel",
+                    "SpriteName": "rina"
+                }
+            ]
+    },
+    {
+      "Speaker": "ゾフィ",
+      "Text": "（…今度こそ、助けるべきか？）",
+      "QuestionData": [
+        {
+          "Answer": "戦う",
+          "NextFlag": [
+            ["noa_friend", true]
+          ]
+        },
+        {
+          "Answer": "様子を見る"
+        }
+      ]
+    }
+  ]
+}

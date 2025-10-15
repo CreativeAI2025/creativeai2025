@@ -1,0 +1,76 @@
+{
+  "Content": [
+    {
+      "Speaker": "ゾフィ",
+      "Text": "なんだ！？",
+      "ChangeImage": [
+                {
+                    "ImageName": "RightPanel",
+                    "SpriteName": "zofy"
+                }
+            ]
+    },
+    {
+      "Speaker": "リナ",
+      "Text": "あ、あれ！",
+      "ChangeImage": [
+                {
+                    "ImageName": "RightPanel",
+                    "SpriteName": "rina"
+                }
+            ]
+    },
+    {
+      "Speaker": "？？？",
+      "Text": "くそっ！\n　これでも倒せないか……。",
+      "ChangeImage": [
+                {
+                    "ImageName": "RightPanel",
+                    "SpriteName": "noa"
+                }
+            ]
+    },
+    {
+      "Speaker": "ゾフィ",
+      "Text": "今の声……！"
+    },
+    {
+      "Speaker": "？？？",
+      "Text": "グギャアアア！",
+      "ChangeImage": [
+                {
+                    "ImageName": "LeftPanel",
+                    "SpriteName": "mb2"
+                }
+            ]
+    },
+    {
+      "Speaker": "？？？",
+      "Text": "くっ！\n　ここまでか"
+    },
+    {
+      "Speaker": "リナ",
+      "Text": "あの人、一人で戦ってる……。",
+      "ChangeImage": [
+                {
+                    "ImageName": "RightPanel",
+                    "SpriteName": "rina"
+                }
+            ]
+    },
+    {
+      "Speaker": "ゾフィ",
+      "QuestionData": [
+        {
+          "Answer": "戦う",
+          "NextFlag": [
+            ["noa_friend", true]
+          ]
+        },
+        {
+          "Answer": "様子を見る"
+        }
+      ]
+    }
+  ]
+}
