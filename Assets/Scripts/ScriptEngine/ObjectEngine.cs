@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Threading;
+using System.Diagnostics;
 
 public class ObjectEngine : MonoBehaviour
 {
@@ -104,7 +105,7 @@ public class ObjectEngine : MonoBehaviour
         }
     }
 
-    /*
+    
     [Conditional("UNITY_EDITOR")]
     private void OnDrawGizmos()
     {
@@ -131,7 +132,7 @@ public class ObjectEngine : MonoBehaviour
     {
         Gizmos.DrawWireCube(new Vector3(rect.center.x, rect.center.y, 0.01f), new Vector3(rect.size.x, rect.size.y, 0.01f));
     }
-    */
+    
     private async void Update()
     {
         if (conversationFlag || changeSceneFlag) return;
@@ -295,7 +296,7 @@ public class ObjectEngine : MonoBehaviour
 
     private void Conversation(string fileName)
     {
-        //ConversationTextManager.Instance.InitializeFromJson(fileName);
+        ConversationTextManager.Instance.InitializeFromJson(fileName);
     }
 
     private void GetItem(string itemName)
