@@ -1,168 +1,177 @@
-// using System.Collections.Generic;
-// using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine;
 
-// public class BattleTester : MonoBehaviour
-// {
-//     /// <summary>
-//     /// 戦闘機能を管理するクラスへの参照です。
-//     /// </summary>
-//     [SerializeField]
-//     BattleManager _battleManager;
+    /// <summary>
+    /// 戦闘機能のテストを行うためのクラスです。
+    /// </summary>
+    public class BattleTester : MonoBehaviour
+    {
+        /// <summary>
+        /// 戦闘機能を管理するクラスへの参照です。
+        /// </summary>
+        [SerializeField]
+        BattleManager _battleManager;
 
-//     [Header("テスト用の設定")]
-//     /// <summary>
-//     /// 戦う対象の敵キャラクターのIDです。
-//     /// </summary>
-//     [SerializeField]
-//     int _enemyId;
+        [Header("テスト用の設定")]
+        /// <summary>
+        /// 戦う対象の敵キャラクターのIDです。
+        /// </summary>
+        [SerializeField]
+        int _enemyId1;
+            //  [SerializeField]
+        // int _enemyId2;
+        //      [SerializeField]
+        // int _enemyId3;
+        //      [SerializeField]
+        // int _enemyId4;
+        //      [SerializeField]
+        // int _enemyId5;
 
-//     /// <summary>
-//     /// 味方キャラクターのレベルです。
-//     /// </summary>
-//     [SerializeField]
-//     int _playerLevel;
 
-//     /// <summary>
-//     /// 装備中の武器のIDです。
-//     /// </summary>
-//     [SerializeField]
-//     int _weaponId;
+        /// <summary>
+    /// 味方キャラクターのレベルです。
+    /// </summary>
+    [SerializeField]
+        int _playerLevel;
 
-//     /// <summary>
-//     /// 装備中の防具のIDです。
-//     /// </summary>
-//     [SerializeField]
-//     int _armorId;
 
-//     /// <summary>
-//     /// アイテム所持数の設定です。
-//     /// </summary>
-//     [SerializeField]
-//     List<PartyItemInfo> _partyItemInfoList = new();
 
-//     [Header("戦闘機能をテストする")]
-//     /// <summary>
-//     /// 戦闘機能をテストするフラグです。
-//     /// Inspectorウィンドウからチェックを入れると、戦闘機能をテストします。
-//     /// </summary>
-//     [SerializeField]
-//     bool _executeBattle;
+        /// <summary>
+        /// アイテム所持数の設定です。
+        /// </summary>
+        [SerializeField]
+        List<PartyItemInfo> _partyItemInfoList = new();
 
-//     // Update is called once per frame
-//     void Update()
-//     {
-//         CheckStartFlag();
-//     }
-//      void CheckStartFlag()
-//         {
-//             // 定義データのロードを待つため、最初の5フレームは処理を抜けます。
-//             if (Time.frameCount < 5)
-//             {
-//                 return;
-//             }
+        [Header("戦闘機能をテストする")]
+        /// <summary>
+        /// 戦闘機能をテストするフラグです。
+        /// Inspectorウィンドウからチェックを入れると、戦闘機能をテストします。
+        /// </summary>
+        [SerializeField]
+        bool _executeBattle;
 
-//             if (!_executeBattle)
-//             {
-//                 return;
-//             }
+        void Update()
+        {
+            CheckStartFlag();
+        }
 
-//             _executeBattle = false;
+        /// <summary>
+        /// 戦闘機能をテストするフラグの状態をチェックします。
+        /// </summary>
+        void CheckStartFlag()
+        {
+            // 定義データのロードを待つため、最初の5フレームは処理を抜けます。
+            if (Time.frameCount < 5)
+            {
+                return;
+            }
 
-//             // 戦闘中でない場合のみ、戦闘を開始します。
-//             if (_battleManager.BattlePhase != BattlePhase.NotInBattle)
-//             {
-//                 SimpleLogger.Instance.Log("戦闘中のためBattleTesterの処理を抜けます。");
-//                 return;
-//             }
+            if (!_executeBattle)
+            {
+                return;
+            }
 
-//             ReadyForBattle();
-//         }
+            _executeBattle = false;
 
-//         /// <summary>
-//         /// 戦闘を開始する準備を行います。
-//         /// </summary>
-//         void ReadyForBattle()
-//         {
-//             SetPlayerStatus();
-//             SetEnemyId();
-//             StartBattle();
-//         }
+            // 戦闘中でない場合のみ、戦闘を開始します。
+            if (_battleManager.BattlePhase != BattlePhase.NotInBattle)
+            {
+                Logger.Instance.Log("戦闘中のためBattleTesterの処理を抜けます。");
+                return;
+            }
 
-//         /// <summary>
-//         /// 味方キャラクターのステータスをセットします。
-//         /// </summary>
-//         void SetPlayerStatus()
-//         {
-//             // 経験値表を使って、レベルから経験値を取得します。
-//             var expTable = CharacterDataManager.GetExpTable();
-//             var expRecord = expTable.expRecords.Find(record => record.level == _playerLevel);
-//             var exp = expRecord.exp;
+            ReadyForBattle();
+        }
 
-//             // レベルに対応するパラメータデータを取得します。
-//             int charcterId = 1;
-//             var parameterTable = CharacterDataManager.GetParameterTable(charcterId);
-//             var parameterRecord = parameterTable.parameterRecords.Find(record => record.level == _playerLevel);
+        /// <summary>
+        /// 戦闘を開始する準備を行います。
+        /// </summary>
+        void ReadyForBattle()
+        {
+            SetPlayerStatus();
+            SetEnemyId();
+            StartBattle();
+        }
 
-//             // 指定したレベルまでに覚えている魔法のIDをリスト化します。
-//             var magicList = GetMagicIdList(charcterId, _playerLevel);
+        /// <summary>
+        /// 味方キャラクターのステータスをセットします。
+        /// </summary>
+        void SetPlayerStatus()
+        {
+            // 経験値表を使って、レベルから経験値を取得します。
+            var expTable = CharacterDataManager.Instance.GetExpTable();
+            var expRecord = expTable.expRecords.Find(record => record.Level == _playerLevel);
+            var exp = expRecord.Exp;
 
-//             // キャラクターのステータスを設定します。
-//             CharacterStatus status = new()
-//             {
-//                 characterId = charcterId,
-//                 level = _playerLevel,
-//                 exp = exp,
-//                 currentHp = parameterRecord.hp,
-//                 currentMp = parameterRecord.mp,
-//                 equipWeaponId = _weaponId,
-//                 equipArmorId = _armorId,
-//                 magicList = magicList,
-//             };
+            // レベルに対応するパラメータデータを取得します。
+            int charcterId = 1;
+            var parameterTable = CharacterDataManager.Instance.GetParameterTable(charcterId);
+            var parameterRecord = parameterTable.parameterRecords.Find(record => record.Level == _playerLevel);
 
-//             CharacterStatusManager.characterStatuses = new()
-//             {
-//                 status
-//             };
+            // 指定したレベルまでに覚えている魔法のIDをリスト化します。
+            var skillList = GetSkillIdList(charcterId, _playerLevel);
 
-//             // パーティにいるキャラクターのIDをセットします。
-//             CharacterStatusManager.partyCharacter = new()
-//             {
-//                 charcterId
-//             };
+            // キャラクターのステータスを設定します。
+            CharacterStatus status = new()
+            {
+                characterId = charcterId,
+                level = _playerLevel,
+                exp = exp,
+                currentHp = parameterRecord.HP,
+                currentMp = parameterRecord.MP,
 
-//             // 所持アイテムをセットします。
-//             CharacterStatusManager.partyItemInfoList = _partyItemInfoList;
-//         }
+                skillList = skillList,
+            };
 
-//         /// <summary>
-//         /// キャラクターが覚えている魔法のIDリストを返します。
-//         /// </summary>
-//         /// <param name="characterId">キャラクターID</param>
-//         /// <param name="level">キャラクターのレベル</param>
-//         List<int> GetMagicIdList(int characterId, int level)
-//         {
-//             var learnableMagic = CharacterDataManager.GetLearnableMagic(characterId, level);
-//             List<int> magicList = new();
-//             foreach (var record in learnableMagic)
-//             {
-//                 magicList.Add(record.magicId);
-//             }
-//             return magicList;
-//         }
+            CharacterStatusManager.Instance.characterStatuses = new()
+            {
+                status
+            };
 
-//         /// <summary>
-//         /// 敵キャラクターのIDをセットします。
-//         /// </summary>
-//         void SetEnemyId()
-//         {
-//             _battleManager.SetUpEnemyStatus(_enemyId);
-//         }
+            // パーティにいるキャラクターのIDをセットします。
+            CharacterStatusManager.Instance.partyCharacter = new()
+            {
+                charcterId
+            };
 
-//         /// <summary>
-//         /// 戦闘を開始します。
-//         /// </summary>
-//         void StartBattle()
-//         {
-//             _battleManager.StartBattle();
-//         }
-// }
+            // 所持アイテムをセットします。
+            CharacterStatusManager.Instance.partyItemInfoList = _partyItemInfoList;
+        }
+
+        /// <summary>
+        /// キャラクターが覚えている魔法のIDリストを返します。
+        /// </summary>
+        /// <param name="characterId">キャラクターID</param>
+        /// <param name="level">キャラクターのレベル</param>
+        List<int> GetSkillIdList(int characterId, int level)
+        {
+            var learnableSkill = CharacterDataManager.Instance.GetLearnableSkill(characterId, level);
+            List<int> skillList = new();
+            foreach (var record in learnableSkill)
+            {
+                skillList.Add(record.skillId);
+            }
+            return skillList;
+        }
+
+    /// <summary>
+    /// 敵キャラクターのIDをセットします。
+    /// </summary>
+    void SetEnemyId()
+    {
+        _battleManager.SetUpEnemyStatus(_enemyId1);
+        // _battleManager.SetUpEnemyStatus(_enemyId2);
+        // _battleManager.SetUpEnemyStatus(_enemyId3);
+        // _battleManager.SetUpEnemyStatus(_enemyId4);
+        // _battleManager.SetUpEnemyStatus(_enemyId5);
+                                                        
+        }
+
+        /// <summary>
+        /// 戦闘を開始します。
+        /// </summary>
+        void StartBattle()
+        {
+            _battleManager.StartBattle();
+        }
+    }
