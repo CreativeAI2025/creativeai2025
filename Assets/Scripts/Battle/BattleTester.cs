@@ -17,25 +17,24 @@ using UnityEngine;
         /// 戦う対象の敵キャラクターのIDです。
         /// </summary>
         [SerializeField]
-        int _enemyId;
+        int _enemyId1;
+            //  [SerializeField]
+        // int _enemyId2;
+        //      [SerializeField]
+        // int _enemyId3;
+        //      [SerializeField]
+        // int _enemyId4;
+        //      [SerializeField]
+        // int _enemyId5;
+
 
         /// <summary>
-        /// 味方キャラクターのレベルです。
-        /// </summary>
-        [SerializeField]
+    /// 味方キャラクターのレベルです。
+    /// </summary>
+    [SerializeField]
         int _playerLevel;
 
-        /// <summary>
-        /// 装備中の武器のIDです。
-        /// </summary>
-        [SerializeField]
-        int _weaponId;
 
-        /// <summary>
-        /// 装備中の防具のIDです。
-        /// </summary>
-        [SerializeField]
-        int _armorId;
 
         /// <summary>
         /// アイテム所持数の設定です。
@@ -120,8 +119,7 @@ using UnityEngine;
                 exp = exp,
                 currentHp = parameterRecord.HP,
                 currentMp = parameterRecord.MP,
-                equipWeaponId = _weaponId,
-                equipArmorId = _armorId,
+
                 skillList = skillList,
             };
 
@@ -156,12 +154,17 @@ using UnityEngine;
             return skillList;
         }
 
-        /// <summary>
-        /// 敵キャラクターのIDをセットします。
-        /// </summary>
-        void SetEnemyId()
-        {
-            _battleManager.SetUpEnemyStatus(_enemyId);
+    /// <summary>
+    /// 敵キャラクターのIDをセットします。
+    /// </summary>
+    void SetEnemyId()
+    {
+        _battleManager.SetUpEnemyStatus(_enemyId1);
+        // _battleManager.SetUpEnemyStatus(_enemyId2);
+        // _battleManager.SetUpEnemyStatus(_enemyId3);
+        // _battleManager.SetUpEnemyStatus(_enemyId4);
+        // _battleManager.SetUpEnemyStatus(_enemyId5);
+                                                        
         }
 
         /// <summary>
