@@ -29,8 +29,12 @@ public class Status : IComparable<Status>
     {
         return this.name;
     }
+    public int GetPower()
+    {
+        return this.power;
+    }
 
-    public string getType()
+    public string GetType()
     {
         return this.type;
     }
