@@ -18,10 +18,11 @@ public class ChangeBackground : MonoBehaviour
     private float listenerBrightness = 0.5f;
     private Dictionary<string, string> speakerToSpriteDict = new Dictionary<string, string>
     {
-        {"ゾフィ", "zofy"},
-        {"リナ", "rina"},
-        {"ノア", "noa"},
-        {"ゼバス", "zevas"}
+        {"レイ", "Rei"},
+        {"ヒカル", "Hikaru"},
+        {"アザミ", "Azami"},
+        {"？？？", "Azami"},
+        {"テッセン", "Tessen"}
     };
 
     public void Initialize()
@@ -39,7 +40,7 @@ public class ChangeBackground : MonoBehaviour
                 spritesDict.Add(sprites[i].name, sprites[i]);
             }
         }
-
+        
         for (int i = 0; i < images.Length; i++)
         {
             images[i].sprite = voidImage;
@@ -50,7 +51,7 @@ public class ChangeBackground : MonoBehaviour
     public void ChangeImages(ChangeImage[] changeImages)
     {
         // 各スプライトと画像の名前を初期化
-        foreach (var changeImage in changeImages)
+        foreach(var changeImage in changeImages) 
         {
             string imageName = changeImage.ImageName;
             string spriteName = changeImage.SpriteName;
@@ -61,8 +62,7 @@ public class ChangeBackground : MonoBehaviour
                 {
                     ChangeSprite(imageName, $"{spriteName}_0");
                     // ChangeSprite(imageName, $"{spriteName}_{FlagManager.Instance.ReiStatus}");
-                }
-                else if (spritesDict.ContainsKey(spriteName))
+                }else if (spritesDict.ContainsKey(spriteName))
                 {
                     ChangeSprite(imageName, spriteName);
                 }
@@ -70,7 +70,7 @@ public class ChangeBackground : MonoBehaviour
         }
     }
 
-    private void ChangeSprite(string image, string sprite)
+    private void ChangeSprite(string image,string sprite)
     {
         imagesDict[image].sprite = spritesDict[sprite];
         UnityEngine.ColorUtility.TryParseHtmlString("#FFFFFFFF", out Color color);
@@ -79,7 +79,7 @@ public class ChangeBackground : MonoBehaviour
 
     public void HighlightSpeakerSprite(string speaker)
     {
-        foreach (Image image in images)
+        foreach(Image image in images)
         {
             string imageName = image.name;
             string spriteName = image.sprite.name;

@@ -1,5 +1,4 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
@@ -8,8 +7,8 @@ public class SkillTreeManager : MonoBehaviour
     [SerializeField] DataSetting dataSetting;
     [SerializeField] SkillTreeGanerate skillTreeGanerate;
 
-    [SerializeField] TextMeshProUGUI skillPointText;//SPのテキスト
-    [SerializeField] TextMeshProUGUI skillInfoText;//スキルの表示
+    [SerializeField] Text skillPointText;//SPのテキスト
+    [SerializeField] Text skillInfoText;//スキルの表示
     [SerializeField] GameObject skillBlockPanel;
     [SerializeField] int skillPoint = 1000;
 
@@ -111,10 +110,10 @@ public class SkillTreeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// スキル・ステータスの説明をテキストに代入(id,説明を表示するかしないか)
+    /// スキル・ステータスの説明をテキストに代入
     /// </summary>
     /// <param name="id"></param>
-    public void UpdateSkillInfoText(int id, bool canLearned, string newInfo = null)
+    public void UpdateSkillInfoText(int id, bool canLearned)
     {
         string text = "データがありません";
         if (canLearned)
@@ -128,16 +127,15 @@ public class SkillTreeManager : MonoBehaviour
             {
                 if (n.GetId().Equals(id))
                 {
-                    text = "スキル:" + n.GetName() + newInfo + "\n" + n.GetExplain() + "\n必要SP:" + n.GetSp() + " 必要MP:" + n.GetMp();
+                    text = n.GetExplain();
                 }
             }
-
 
             foreach (var n in dataSetting.nodeStatusData)
             {
                 if (n.getId().Equals(id))
                 {
-                    text = n.getExplain() + newInfo + "\n必要SP:" + n.GetSp();
+                    text = n.getExplain();
                 }
             }
         }
@@ -174,7 +172,6 @@ public class SkillTreeManager : MonoBehaviour
     /// <returns></returns>
     public bool CanLearnSkill(int cost, int id)
     {
-        //Debug.Log($"{skillPoint},{cost}");
         if (id == 0) return true;
         if (skillPoint < cost)
         {
@@ -274,9 +271,10 @@ public class SkillTreeManager : MonoBehaviour
             }
         }
 
+        ChechActiveBlocks();
+
         skillPoint -= cost;
 
-        ChechActiveBlocks();
         UpdateSkillPointText();
         SkillStatusLoader.instance.SaveSkillData();// スキルのJSONに保存
         SkillStatusLoader.instance.SaveStatusData();// ステータスのJSONに保存

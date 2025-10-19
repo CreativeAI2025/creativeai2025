@@ -427,11 +427,6 @@ public class DataSetting : MonoBehaviour
         // 評価値を計算する
         this.nodeSkillData = SetEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, this.nodeSkillData);
 
-        // foreach (var n in nodeSkillData)
-        // {
-        //     Debug.Log(n.toString());
-        // }
-
         //putIdForNodeSkillDataListRandom(nodeData);
 
         PutForNodeSkillDataListEvaluationValue(nodeData);
@@ -700,12 +695,12 @@ public class DataSetting : MonoBehaviour
 
         string subject = null;//対象
         string action = "";//行動(攻撃、回復など)
-        int probability = 0;//発動確率
-        int power = 0;//効果量
+        int probability = -1;//発動確率
+        int power = -1;//効果量
         string type = null;//種類（物理攻撃、特殊攻撃など）
         string status = null;//対象ステータス
         string extra = null;//追加効果
-        int duration = 0;//持続ターン
+        int duration = -1;//持続ターン
 
         // 対象の抽出
         if (explain.Contains("相手に") || explain.Contains("相手を") || explain.Contains("敵に") || explain.Contains("敵を"))
