@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 /// <summary>
 /// 戦闘に関する機能を管理するクラスです。
 /// </summary>
@@ -76,6 +78,11 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     public bool IsBattleFinished { get; private set; }
 
+    public event Action OnBattleStart { add => _onBattleStart += value; remove => _onBattleStart -= value; }
+    private Action _onBattleStart;
+    public event Action OnBattleEnd { add => _onBattleEnd += value; remove => _onBattleEnd -= value; }
+    private Action _onBattleEnd;
+
     /// <summary>
     /// 戦闘のフェーズを変更します。
     /// </summary>
@@ -95,11 +102,16 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     }
 
     /// <summary>
-    /// 戦闘の開始処理を行います。
+    /// 戦闘の開始処理の一部
+    /// StartBattle()関数で、実際に戦闘開始処理を行う。
+    /// StartBattle関数に引数がある場合は、敵のIDを入れることで、任意の敵との戦闘が始まる。
+    /// 引数がない場合は、今いるシーンに適した敵がランダムに出現する。
     /// </summary>
-    public void StartBattle()
+    private void SetUpBattle()
     {
+        SetPlayerStatus();  // プレイヤー周りの情報をセットする
         Logger.Instance.Log("戦闘を開始します。");
+        _onBattleStart?.Invoke();
         //  GameStateManager.ChangeToBattle();
         SetBattlePhase(BattlePhase.ShowEnemy);
         TurnCount = 1;
@@ -117,6 +129,70 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         // _characterMoverManager.StopCharacterMover();
         _battleStarter.StartBattle(this);
     }
+
+    /// <summary>
+    /// 引数なしでのバトル（＝ランダムエンカウント）開始処理
+    /// </summary>
+    public void StartBattle()
+    {
+        // SetUpEnemyStatus()の引数は適当に入力したため、要改善
+        SetUpEnemyStatus(1);
+        SetUpBattle();
+    }
+
+    public void StartBattle(int enemyId)
+    {
+        SetUpEnemyStatus(enemyId);
+        Debug.Log("敵IDのセット完了");
+        SetUpBattle();
+    }
+
+    /// <summary>
+    /// 味方キャラクターのステータスをセットします。
+    /// </summary>
+    private void SetPlayerStatus()
+    {
+        int _playerLevel = 1;
+        // 経験値表を使って、レベルから経験値を取得します。
+        var expTable = CharacterDataManager.Instance.GetExpTable();
+        var expRecord = expTable.expRecords.Find(record => record.Level == _playerLevel);
+        var exp = expRecord.Exp;
+
+        // レベルに対応するパラメータデータを取得します。
+        int charcterId = 1;
+        var parameterTable = CharacterDataManager.Instance.GetParameterTable(charcterId);
+        var parameterRecord = parameterTable.parameterRecords.Find(record => record.Level == _playerLevel);
+
+        // 指定したレベルまでに覚えている魔法のIDをリスト化します。（要改善）
+        List<int> skillList = new List<int>() { 1, 2, 3 };
+
+        // キャラクターのステータスを設定します。
+        CharacterStatus status = new()
+        {
+            characterId = charcterId,
+            level = _playerLevel,
+            exp = exp,
+            currentHp = parameterRecord.HP,
+            currentMp = parameterRecord.MP,
+
+            skillList = skillList,
+        };
+
+        CharacterStatusManager.Instance.characterStatuses = new()
+            {
+                status
+            };
+
+        // パーティにいるキャラクターのIDをセットします。
+        CharacterStatusManager.Instance.partyCharacter = new()
+            {
+                charcterId
+            };
+
+        // 所持アイテムをセットします。
+        CharacterStatusManager.Instance.partyItemInfoList = new();
+    }
+
     /// <summary>
     /// ウィンドウの管理を行うクラスへの参照を取得します。
     /// </summary>
@@ -408,6 +484,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     public void OnFinishBattle()
     {
         Logger.Instance.Log("戦闘に勝利して終了します。");
+        _onBattleEnd?.Invoke();
 
         _battleWindowManager.HideAllWindow();
         _battleSpriteController.HideBackground();

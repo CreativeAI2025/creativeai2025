@@ -17,6 +17,7 @@ public class BattleTest : MonoBehaviour
     void Start()
     {
         _inputSetting = InputSetting.Load();
+        BattleManager.Instance.OnBattleEnd += () => _battleFlag = false;
     }
 
     // Update is called once per frame
@@ -38,11 +39,12 @@ public class BattleTest : MonoBehaviour
         _battleFlag = true;
         Battle(_enemyId);
         await UniTask.WaitUntil(() => !_battleFlag);
+        Debug.Log("戦闘イベント終了");
     }
 
     private void Battle(int enemyId)
     {
-        //ここにBattleManagerをIDで開始
+        BattleManager.Instance.StartBattle(enemyId);
     }
 
     private void Battle()
