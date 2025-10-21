@@ -48,7 +48,7 @@ public class MoveSkillTreePanel : MonoBehaviour
             float scaleFactor = rectTransform.localScale.y;
 
             // スケールに応じて移動範囲を拡大/縮小
-            Vector2 minPos = baseMinPosition * Mathf.Pow(scaleFactor, 1.5f);
+            Vector2 minPos = baseMinPosition * Mathf.Pow(scaleFactor, 4.0f);
             Vector2 maxPos = baseMaxPosition * Mathf.Pow(scaleFactor, 4.0f);
 
 
