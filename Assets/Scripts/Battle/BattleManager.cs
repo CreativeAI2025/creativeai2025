@@ -303,7 +303,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     void SetAttackCommandAction()
     {
-        // 1対1の戦闘のため、最初のキャラクターのIDを取得します。
+        // 1対1の戦闘のため、最初のキャラクターのIDを取得します。←改善します
         int actorId = CharacterStatusManager.Instance.partyCharacter[0];
         int targetId = EnemyStatusManager.Instance.GetEnemyStatusList()[0].enemyBattleId;
         _battleActionRegister.SetFriendAttackAction(actorId, targetId);
