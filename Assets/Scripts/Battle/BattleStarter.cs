@@ -10,7 +10,7 @@ public class BattleStarter : MonoBehaviour
     /// 戦闘開始メッセージを表示する時間です。
     /// </summary>
     [SerializeField]
-    float _startMessageTime = 1.5f;
+    float _startMessageTime = 10.0f;
     /// <summary>
     /// 戦闘の管理を行うクラスへの参照です。
     /// </summary>
@@ -37,13 +37,11 @@ public class BattleStarter : MonoBehaviour
 
         // 敵の名前ウィンドウを表示します。
         ShowEnemyNameWindow();
-        // 敵の名前ウィンドウを表示します。
-        ShowEnemyNameWindow();
         // 敵出現のメッセージを表示します。
         ShowEnemyAppearMessage();
 
         // テスト用機能
-        _battleManager.StartInputCommandPhase();
+        //BattleManager.Instance.StartInputCommandPhase();
     }
 
     /// <summary>
@@ -51,7 +49,7 @@ public class BattleStarter : MonoBehaviour
     /// </summary>
     void HideAllUI()
     {
-        _battleManager.GetWindowManager().HideAllWindow();
+        BattleManager.Instance.GetWindowManager().HideAllWindow();
     }
 
     /// <summary>
@@ -59,10 +57,10 @@ public class BattleStarter : MonoBehaviour
     /// </summary>
     void ShowSprites()
     {
-        var battleSpriteController = _battleManager.GetBattleSpriteController();
+        var battleSpriteController = BattleManager.Instance.GetBattleSpriteController();
         battleSpriteController.SetSpritePosition();
         battleSpriteController.ShowBackground();
-        battleSpriteController.ShowEnemy(_battleManager.EnemyId);
+        battleSpriteController.ShowEnemy(BattleManager.Instance.EnemyIds);
     }
 
     /// <summary>
@@ -70,7 +68,7 @@ public class BattleStarter : MonoBehaviour
     /// </summary>
     void ShowStatus()
     {
-      
+        // ここは将来いらない
         int characterId = 1;
         var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(characterId);
         if (characterStatus == null)
@@ -79,7 +77,7 @@ public class BattleStarter : MonoBehaviour
             return;
         }
 
-        var controller = _battleManager.GetWindowManager().GetStatusWindowController();
+        var controller = BattleManager.Instance.GetWindowManager().GetStatusWindowController();
         controller.SetCharacterStatus(characterStatus);
         controller.ShowWindow();
     }
@@ -89,7 +87,7 @@ public class BattleStarter : MonoBehaviour
     /// </summary>
     void ShowCommand()
     {
-        var controller = _battleManager.GetWindowManager().GetCommandWindowController();
+        var controller = BattleManager.Instance.GetWindowManager().GetCommandWindowController();
         controller.ShowWindow();
         controller.InitializeCommand();
     }
@@ -99,11 +97,11 @@ public class BattleStarter : MonoBehaviour
     /// </summary>
     void ShowEnemyNameWindow()
     {
-        var controller = _battleManager.GetWindowManager().GetEnemyNameWindowController();
+        var controller = BattleManager.Instance.GetWindowManager().GetEnemyNameWindowController();
         controller.ShowWindow();
 
-        int enemyId = _battleManager.EnemyId;
-        var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
+        var enemyIds = BattleManager.Instance.EnemyIds;
+        var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyIds[0]);
         controller.SetEnemyName(enemyData.enemyName);
     }
 
@@ -112,7 +110,7 @@ public class BattleStarter : MonoBehaviour
     /// </summary>
     void ShowEnemyAppearMessage()
     {
-        int enemyId = _battleManager.EnemyId;
+        int enemyId = BattleManager.Instance.EnemyIds[0];
         var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
         if (enemyData == null)
         {
@@ -121,7 +119,7 @@ public class BattleStarter : MonoBehaviour
         }
 
         // メッセージ表示後、BattleManagerに制御が戻ります。
-        var controller = _battleManager.GetWindowManager().GetMessageWindowController();
+        var controller = BattleManager.Instance.GetWindowManager().GetMessageWindowController();
         controller.ShowWindow();
         controller.GenerateEnemyAppearMessage(enemyData.enemyName, _startMessageTime);
     }

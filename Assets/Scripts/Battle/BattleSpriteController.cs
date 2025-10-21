@@ -1,5 +1,6 @@
 using UnityEngine;
-
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 /// <summary>
 /// 戦闘関連のスプライトを制御するクラスです。
@@ -13,10 +14,14 @@ public class BattleSpriteController : MonoBehaviour
     SpriteRenderer _backgroundRenderer;
 
     /// <summary>
+    /// 透明画像
+    /// </summary>
+    [SerializeField] private Sprite voidSprite;
+
+    /// <summary>
     /// 敵キャラクターの表示用Spriteです。
     /// </summary>
-    [SerializeField]
-    SpriteRenderer _enenyRenderer;
+    [SerializeField] private Image[] enemySprites;
 
     /// <summary>
     /// カメラへの参照です。
@@ -63,20 +68,36 @@ public class BattleSpriteController : MonoBehaviour
     /// 敵キャラクターを表示します。
     /// </summary>
     /// <param name="enemyId">敵キャラクターのID</param>
-    public void ShowEnemy(int enemyId)
+    public void ShowEnemy(List<int> enemyIds)
     {
-        Sprite enemySprite = null;
-        var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
-        if (enemyData == null)
+        const int EncountMax = 5;
+        for (int i = 0; i < EncountMax; i++)
         {
-            Logger.Instance.LogWarning($"敵キャラクターの画像が取得できませんでした。 ID: {enemyId}");
+            Sprite enemySprite = voidSprite;
+            if (i < enemyIds.Count)
+            {
+                // 適切な画像を入れる
+                int enemyId = enemyIds[i];
+                var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
+                if (enemyData == null)
+                {
+                    Logger.Instance.LogWarning($"敵キャラクターの画像が取得できませんでした。 ID: {enemyId}");
+                }
+                else
+                {
+                    enemySprite = enemyData.sprite;
+                }
+                enemySprites[i].sprite = enemySprite;
+                enemySprites[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                // 透明の画像を入れる
+                enemySprites[i].sprite = enemySprite;
+                enemySprites[i].gameObject.SetActive(false);
+            }
         }
-        else
-        {
-            enemySprite = enemyData.sprite;
-        }
-        _enenyRenderer.sprite = enemySprite;
-        _enenyRenderer.gameObject.SetActive(true);
+
     }
 
     /// <summary>
@@ -84,6 +105,9 @@ public class BattleSpriteController : MonoBehaviour
     /// </summary>
     public void HideEnemy()
     {
-        _enenyRenderer.gameObject.SetActive(false);
+        foreach (var image in enemySprites)
+        {
+            image.gameObject.SetActive(false);
+        }
     }
 }

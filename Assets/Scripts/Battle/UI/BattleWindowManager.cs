@@ -56,8 +56,8 @@ public class BattleWindowManager : MonoBehaviour
                 _statusWindowController,
                 _enemyNameWindowController,
                 _commandWindowController,
-                  _selectItemWindowController,
-                   _messageWindowController,
+                _selectItemWindowController,
+                _messageWindowController,
             };
     }
 
@@ -112,11 +112,11 @@ public class BattleWindowManager : MonoBehaviour
     {
         return _selectItemWindowController;
     }
-         /// <summary>
-        /// メッセージウィンドウの動作を制御するクラスへの参照を取得します。
-        /// </summary>
-        public MessageWindowController GetMessageWindowController()
-        {
-            return _messageWindowController;
-        }
+    /// <summary>
+    /// メッセージウィンドウの動作を制御するクラスへの参照を取得します。
+    /// </summary>
+    public MessageWindowController GetMessageWindowController()
+    {
+        return _messageWindowController;
+    }
 }

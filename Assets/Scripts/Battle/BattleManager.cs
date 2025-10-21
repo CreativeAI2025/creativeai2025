@@ -60,14 +60,15 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     public BattlePhase BattlePhase { get; private set; }
 
     /// <summary>
+    /// 戦闘を行う敵のIDのリスト
+    /// </summary>
+    /// <value></value>
+    public List<int> EnemyIds { get; private set; }
+
+    /// <summary>
     /// 選択されたコマンドです。
     /// </summary>
     public BattleCommand SelectedCommand { get; private set; }
-
-    /// <summary>
-    /// エンカウントした敵キャラクターのIDです。
-    /// </summary>
-    public int EnemyId { get; private set; }
 
     /// <summary>
     /// 戦闘開始からのターン数です。
@@ -95,10 +96,10 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// 敵キャラクターのステータスをセットします。
     /// </summary>
     /// <param name="enemyId">敵キャラクターのID</param>
-    public void SetUpEnemyStatus(int enemyId)
+    public void SetUpEnemyStatus(List<int> ids)
     {
-        EnemyId = enemyId;
-        EnemyStatusManager.Instance.SetUpEnemyStatus(enemyId);
+        EnemyIds = ids;
+        EnemyStatusManager.Instance.SetUpEnemyStatus(ids);
     }
 
     /// <summary>
@@ -135,16 +136,14 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     public void StartBattle(List<int> enemyIds)
     {
-        foreach (var enemyId in enemyIds)
-        {
-            SetUpEnemyStatus(enemyId);
-        }
+        SetUpEnemyStatus(enemyIds);
         SetUpBattle();
     }
 
     public void StartBattle(int enemyId)
     {
-        SetUpEnemyStatus(enemyId);
+        List<int> ids = new List<int>() { enemyId };
+        SetUpEnemyStatus(ids);
         Debug.Log("敵IDのセット完了");
         SetUpBattle();
     }
@@ -217,8 +216,9 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         return statusEffectManager;
     }
+
     /// <summary>
-    /// コマンド入力を開始します。
+    /// コマンド入力を開始（敵が現れたあとや、ターンが終わったあとに呼ばれる）
     /// </summary>
     public void StartInputCommandPhase()
     {

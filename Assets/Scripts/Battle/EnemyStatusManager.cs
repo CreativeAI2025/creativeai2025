@@ -48,21 +48,24 @@ public class EnemyStatusManager : DontDestroySingleton<EnemyStatusManager>
     /// <summary>
     /// 敵キャラクターのステータスをセットします。
     /// </summary>
-    /// <param name="enemyId">敵キャラクターの定義データのID</param>
-    public void SetUpEnemyStatus(int enemyId)
+    /// <param name="ids">敵キャラクターの定義データのIDのリスト</param>
+    public void SetUpEnemyStatus(List<int> ids)
     {
         _enemyStatuses = new List<EnemyStatus>();
-        int battleId = GetMaxBattleId() + 1;
-        var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
-        EnemyStatus enemyStatus = new EnemyStatus
+        foreach (var enemyId in ids)
         {
-            enemyId = enemyId,
-            enemyBattleId = battleId,
-            enemyData = enemyData,
-            currentHp = enemyData.HP,
-            currentMp = enemyData.MP
-        };
-        _enemyStatuses.Add(enemyStatus);
+            int battleId = GetMaxBattleId() + 1;
+            var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
+            EnemyStatus enemyStatus = new EnemyStatus
+            {
+                enemyId = enemyId,
+                enemyBattleId = battleId,
+                enemyData = enemyData,
+                currentHp = enemyData.HP,
+                currentMp = enemyData.MP
+            };
+            _enemyStatuses.Add(enemyStatus);
+        }
     }
 
     /// <summary>

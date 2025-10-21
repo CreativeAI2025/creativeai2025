@@ -29,7 +29,7 @@ public class BattleTest : MonoBehaviour
         }
         if (_inputSetting.GetDecideInputDown())
         {
-            await CallEvent();
+            //await CallEvent();    // 戦闘が開始したら、戦闘が終了するまで待つ
         }
     }
 

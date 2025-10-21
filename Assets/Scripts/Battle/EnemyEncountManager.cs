@@ -148,7 +148,8 @@ public class EnemyEncountManager : MonoBehaviour
         {
             // エンカウントでの戦闘を呼び起こす
             Debug.Log("エンカウントした！");
-            GiveEnemyId(encounterData);
+            List<int> enemyIds = GiveEnemyId(encounterData);
+            BattleManager.Instance.StartBattle(enemyIds);
         }
         else
         {
