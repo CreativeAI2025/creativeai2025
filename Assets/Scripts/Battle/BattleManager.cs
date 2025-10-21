@@ -133,10 +133,12 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// <summary>
     /// 引数なしでのバトル（＝ランダムエンカウント）開始処理
     /// </summary>
-    public void StartBattle()
+    public void StartBattle(List<int> enemyIds)
     {
-        // SetUpEnemyStatus()の引数は適当に入力したため、要改善
-        SetUpEnemyStatus(1);
+        foreach (var enemyId in enemyIds)
+        {
+            SetUpEnemyStatus(enemyId);
+        }
         SetUpBattle();
     }
 

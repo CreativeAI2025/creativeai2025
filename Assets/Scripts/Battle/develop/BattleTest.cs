@@ -46,9 +46,4 @@ public class BattleTest : MonoBehaviour
     {
         BattleManager.Instance.StartBattle(enemyId);
     }
-
-    private void Battle()
-    {
-        BattleManager.Instance.StartBattle();
-    }
 }

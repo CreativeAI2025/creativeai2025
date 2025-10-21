@@ -172,6 +172,6 @@ public class BattleTester : MonoBehaviour
     /// </summary>
     void StartBattle()
     {
-        _battleManager.StartBattle();
+        //_battleManager.StartBattle();
     }
 }
