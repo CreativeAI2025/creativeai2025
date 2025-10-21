@@ -1,29 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SimpleRpg
+/// <summary>
+/// 敵キャラクターの出現率を定義するクラスです。
+/// </summary>
+[CreateAssetMenu(fileName = "EncounterData", menuName = "Scriptable Objects/EncounterData")]
+public class EncounterData : ScriptableObject
 {
     /// <summary>
-    /// 敵キャラクターの出現率を定義するクラスです。
+    /// 敵キャラクターが出現するかどうかのフラグです。
+    /// Trueで出現します。
     /// </summary>
-    [CreateAssetMenu(fileName = "EncounterData", menuName = "Scriptable Objects/SimpleRpg/EncounterData")]
-    public class EncounterData : ScriptableObject
-    {
-        /// <summary>
-        /// 敵キャラクターが出現するかどうかのフラグです。
-        /// Trueで出現します。
-        /// </summary>
-        public bool hasEncounter;
+    public bool hasEncounter;
 
-        /// <summary>
-        /// 敵キャラクターの出現率です。
-        /// </summary>
-        [Range(0, 100)]
-        public float rate;
+    /// <summary>
+    /// このエンカウントを実際に行うマップ名
+    /// </summary>
+    public string mapName;
 
-        /// <summary>
-        /// 敵キャラクターの出現率リストです。
-        /// </summary>
-        public List<EnemyRate> enemyRates;
-    }
+    /// <summary>
+    /// 敵キャラクター全体の出現率です。
+    /// </summary>
+    [Range(0, 100)]
+    public float rate;
+
+    /// <summary>
+    /// 敵キャラクターの出現率リストです。
+    /// </summary>
+    public List<EnemyRate> enemyRates;
 }

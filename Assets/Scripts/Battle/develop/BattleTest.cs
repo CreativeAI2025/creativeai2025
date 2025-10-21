@@ -49,6 +49,6 @@ public class BattleTest : MonoBehaviour
 
     private void Battle()
     {
-        //ここにBattleManagerをマップの場所で開始（エンカウント）
+        BattleManager.Instance.StartBattle();
     }
 }

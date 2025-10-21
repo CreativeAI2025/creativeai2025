@@ -32,6 +32,15 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     }
 
     /// <summary>
+    /// パーティメンバーの初期化
+    /// 最初はゾフィ一人なので、partyCharacterのリストに、ゾフィIDである「１」を入れる。
+    /// </summary>
+    private void Initialize()
+    {
+        partyCharacter = new List<int>() { 1 };
+    }
+
+    /// <summary>
     /// パーティ内のキャラクターのステータスをIDで取得します。
     /// </summary>
     /// <param name="characterId">キャラクターのID</param>
@@ -51,12 +60,12 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         var parameterRecord = parameterTable.parameterRecords.Find(p => p.Level == characterStatus.level);
         BattleParameter baseParameter = new()
         {
-            Attack= parameterRecord.Attack,
-            Defence= parameterRecord.Defence,
-            MagicAttack= parameterRecord.MagicAttack,
-            MagicDefence= parameterRecord.MagicDefence,
-            Speed= parameterRecord.Speed,
-            Evasion= parameterRecord.Evasion,
+            Attack = parameterRecord.Attack,
+            Defence = parameterRecord.Defence,
+            MagicAttack = parameterRecord.MagicAttack,
+            MagicDefence = parameterRecord.MagicDefence,
+            Speed = parameterRecord.Speed,
+            Evasion = parameterRecord.Evasion,
         };
 
         return baseParameter;
@@ -116,7 +125,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         var characterStatus = GetCharacterStatusById(characterId);
         return characterStatus.isDefeated;
     }
-        /// <summary>
+    /// <summary>
     /// 対象のキャラクターが動けるかどうかを取得します。
     /// </summary>
     /// <param name="characterId">キャラクターのID</param>

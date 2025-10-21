@@ -51,6 +51,7 @@ public class EnemyStatusManager : DontDestroySingleton<EnemyStatusManager>
     /// <param name="enemyId">敵キャラクターの定義データのID</param>
     public void SetUpEnemyStatus(int enemyId)
     {
+        _enemyStatuses = new List<EnemyStatus>();
         int battleId = GetMaxBattleId() + 1;
         var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
         EnemyStatus enemyStatus = new EnemyStatus
