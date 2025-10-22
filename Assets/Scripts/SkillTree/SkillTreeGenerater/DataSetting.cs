@@ -69,6 +69,7 @@ public class DataSetting : MonoBehaviour
     [Header("攻撃対象の重み"), SerializeField] float subjectValue = 1f;
     [Header("スキルの割合"), SerializeField] float skillRate = 1.0f;
     [Header("ステータスの割合"), SerializeField] float statusRate = 1.0f;
+    [Header("ステータスのSP"), SerializeField] int statusSp = 20;
     int nodeSum = -1;//ノードの数のカウント
     int skillCount = 0;
     int statusCount = 0;
@@ -441,7 +442,7 @@ public class DataSetting : MonoBehaviour
         for (int i = 0; i < statusCount; i++)
         {
             rnd = Random.Range(0, statusData.Count);
-            serchStatusDescription(statusData[rnd]);
+            SerchStatusDescription(statusData[rnd]);
         }
 
         putIdForNodeStatusDataListRandom(nodeData);
@@ -981,16 +982,60 @@ public class DataSetting : MonoBehaviour
         return min;
     }
 
-    void serchStatusDescription(string[] statusData)
+    /// <summary>
+    /// statusDataで得た名前と説明を基にnodeStatusDataに格納。
+    /// </summary>
+    /// <param name="skillData"></param> 
+    public void SerchStatusDescription(string[] statusData)
     {
-        string name = statusData[0];//スキル名
-        string explain = statusData[1];//説明文
+        string name = statusData[0];   // スキル名
+        string explain = statusData[1]; // 説明文
 
-        int power = -1;//効果量
-        string type = null;//種類（攻撃上昇、HP上昇など）
-        int sp = 20;
+        int power = 0;                  // 効果量 (%)
+        string type = null;             // 種類（攻撃力、HPなど）
+        int sp = statusSp;                    // コスト
 
-        //データの格納
+        // ▼ 効果量（%数値）を抽出
+        Match m = Regex.Match(explain, @"(\d+)%");
+        if (m.Success)
+        {
+            power = int.Parse(m.Groups[1].Value);
+        }
+
+        // ▼ 種類を抽出
+        if (explain.Contains("攻撃力"))
+        {
+            type = "攻撃力";
+        }
+        else if (explain.Contains("防御力"))
+        {
+            type = "防御力";
+        }
+        else if (explain.Contains("魔法攻撃力"))
+        {
+            type = "魔法攻撃力";
+        }
+        else if (explain.Contains("魔法防御力"))
+        {
+            type = "魔法防御力";
+        }
+        else if (explain.Contains("素早さ"))
+        {
+            type = "素早さ";
+        }
+        else if (explain.Contains("回避率"))
+        {
+            type = "回避率";
+        }
+        else if (explain.Contains("最大HP"))
+        {
+            type = "最大HP";
+        }
+        else if (explain.Contains("最大MP"))
+        {
+            type = "最大MP";
+        }
+
         nodeStatusData.Add(new Status(name, power, type, explain, sp));
     }
 
