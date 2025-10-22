@@ -29,8 +29,12 @@ public class Status : IComparable<Status>
     {
         return this.name;
     }
+    public int GetPower()
+    {
+        return this.power;
+    }
 
-    public string getType()
+    public string GetType()
     {
         return this.type;
     }
@@ -57,6 +61,14 @@ public class Status : IComparable<Status>
     public void setExplain(string explain)
     {
         this.explain = explain;
+    }
+
+    public string ToString()
+    {
+        return "名前：" + this.name
+        + ", 種類：" + type
+        + ", 強さ：" + power + "%"
+        + ", SP：" + sp;
     }
 
     /// <summary>

@@ -45,11 +45,12 @@ public class MoveSkillTreePanel : MonoBehaviour
                              sensitivity / rectTransform.lossyScale.x;
 
             // 現在のスケールを取得
-            float scaleFactor = rectTransform.localScale.x;
+            float scaleFactor = rectTransform.localScale.y;
 
             // スケールに応じて移動範囲を拡大/縮小
-            Vector2 minPos = baseMinPosition * scaleFactor;
-            Vector2 maxPos = baseMaxPosition * scaleFactor;
+            Vector2 minPos = baseMinPosition * Mathf.Pow(scaleFactor, 4.0f);
+            Vector2 maxPos = baseMaxPosition * Mathf.Pow(scaleFactor, 4.0f);
+
 
             newPos.x = Mathf.Clamp(newPos.x, minPos.x, maxPos.x);
             newPos.y = Mathf.Clamp(newPos.y, minPos.y, maxPos.y);
