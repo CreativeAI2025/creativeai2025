@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// 戦闘中のアクションを表すクラスです。
@@ -17,13 +18,13 @@ public class BattleAction
     public bool isActorFriend;
 
     /// <summary>
-    /// アクションの対象となるキャラクターのIDです。
-    /// 敵キャラクターの場合は戦闘中IDです。
+    /// アクションの対象となるキャラクターのIDのリストです。
+    /// 変更: 単一IDからリストへ変更
     /// </summary>
-    public int targetId;
+    public List<int> targetIds = new List<int>();
 
     /// <summary>
-    /// アクションの対象となるキャラクターが味方かどうかのフラグです。
+    /// アクションの対象となるキャラクターが味方かどうかのフラグです。（リスト内の全ターゲットが同じ属性の場合に使用）
     /// </summary>
     public bool isTargetFriend;
 

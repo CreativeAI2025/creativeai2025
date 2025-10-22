@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// 敵キャラクターのコマンドを選択するクラスです。
@@ -40,34 +41,34 @@ public class EnemyCommandSelector : MonoBehaviour
                 continue;
             }
 
-            // 先頭のパーティキャラクターをターゲットにします。
-            int targetId = CharacterStatusManager.Instance.partyCharacter[0];
+            // パーティメンバーへの攻撃対象（ここ改善必要かも？）
+            List<int> targetIds = new List<int>() { CharacterStatusManager.Instance.partyCharacter[0] };
 
             // 行動パターンに応じて敵キャラクターのコマンドを選択します。
             EnemyActionRecord record = SelectActionFromRecords(enemyStatus.enemyData, enemyStatus.enemyBattleId);
             if (record == null)
             {
-                _battleActionRegister.SetEnemyAttackAction(enemyStatus.enemyBattleId, targetId, enemyStatus.enemyData);
+                _battleActionRegister.SetEnemyAttackAction(enemyStatus.enemyBattleId, targetIds, enemyStatus.enemyData);
                 continue;
             }
 
             switch (record.enemyActionCategory)
             {
                 case EnemyActionCategory.Attack:
-                    _battleActionRegister.SetEnemyAttackAction(enemyStatus.enemyBattleId, targetId, enemyStatus.enemyData);
+                    _battleActionRegister.SetEnemyAttackAction(enemyStatus.enemyBattleId, targetIds, enemyStatus.enemyData);
                     break;
                 case EnemyActionCategory.Magic:
                     if (CanUseMagic(record, enemyStatus.enemyBattleId))
                     {
-                        _battleActionRegister.SetEnemySkillAction(enemyStatus.enemyBattleId, targetId, record.skillData.skillId, enemyStatus.enemyData);
+                        _battleActionRegister.SetEnemySkillAction(enemyStatus.enemyBattleId, targetIds, record.skillData.skillId, enemyStatus.enemyData);
                     }
                     else
                     {
-                        _battleActionRegister.SetEnemyAttackAction(enemyStatus.enemyBattleId, targetId, enemyStatus.enemyData);
+                        _battleActionRegister.SetEnemyAttackAction(enemyStatus.enemyBattleId, targetIds, enemyStatus.enemyData);
                     }
                     break;
                 default:
-                    _battleActionRegister.SetEnemyAttackAction(enemyStatus.enemyBattleId, targetId, enemyStatus.enemyData);
+                    _battleActionRegister.SetEnemyAttackAction(enemyStatus.enemyBattleId, targetIds, enemyStatus.enemyData);
                     break;
             }
         }

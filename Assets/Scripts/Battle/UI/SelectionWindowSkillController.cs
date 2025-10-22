@@ -66,7 +66,7 @@ public class SelectionWindowSkillController : MonoBehaviour
         _characterSkillList.Clear();
 
         // 指定したキャラクターのステータスを取得します。
-        var currentSelectingCharacter = CharacterStatusManager.Instance.partyCharacter[0];
+        var currentSelectingCharacter = CharacterStatusManager.Instance.partyCharacter[BattleManager.Instance.CharacterCursor];
         var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(currentSelectingCharacter);
         foreach (var skillId in characterStatus.skillList)
         {

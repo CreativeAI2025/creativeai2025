@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 /// <summary>
 /// 戦闘に関する機能を管理するクラスです。
 /// </summary>
@@ -79,6 +80,12 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     public bool IsBattleFinished { get; private set; }
 
+    /// <summary>
+    /// 現在コマンドを選択しているキャラクターのリストのn番目
+    /// </summary>
+    /// <value></value>
+    public int CharacterCursor { get; private set; }
+
     public event Action OnBattleStart { add => _onBattleStart += value; remove => _onBattleStart -= value; }
     private Action _onBattleStart;
     public event Action OnBattleEnd { add => _onBattleEnd += value; remove => _onBattleEnd -= value; }
@@ -117,7 +124,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         SetBattlePhase(BattlePhase.ShowEnemy);
         TurnCount = 1;
         IsBattleFinished = false;
-
+        CharacterCursor = 0;    // キャラクターメンバーのリストの添え字を「０」にする
         _battleWindowManager.SetUpWindowControllers(this);
         var messageWindowController = _battleWindowManager.GetMessageWindowController();
         messageWindowController.HidePager();
@@ -195,6 +202,26 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     }
 
     /// <summary>
+    /// 追記: 次の行動可能な味方キャラクターのインデックスを取得します。
+    /// -1 は全員行動済み、または次にアクティブなキャラクターが見つからないことを示します。
+    /// </summary>
+    private int GetNextActiveCharacterIndex(int startIndex)
+    {
+        for (int i = startIndex; i < CharacterStatusManager.Instance.partyCharacter.Count; i++)
+        {
+            int charaId = CharacterStatusManager.Instance.partyCharacter[i];
+
+            // 行動不能（Defeated または Stop）ではないことを確認
+            if (!CharacterStatusManager.Instance.IsCharacterDefeated(charaId) &&
+                !CharacterStatusManager.Instance.IsCharacterStop(charaId))
+            {
+                return i; // 次の行動可能なキャラクターのインデックス
+            }
+        }
+        return -1; // 全員行動済み
+    }
+
+    /// <summary>
     /// ウィンドウの管理を行うクラスへの参照を取得します。
     /// </summary>
     public BattleWindowManager GetWindowManager()
@@ -223,10 +250,23 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     public void StartInputCommandPhase()
     {
         Logger.Instance.Log($"コマンド入力のフェーズを開始します。現在のターン数: {TurnCount}");
+        // 最初の行動可能なキャラクターのカーソル位置を設定
+        CharacterCursor = GetNextActiveCharacterIndex(0);
+        if (CharacterCursor == -1)
+        {
+            Logger.Instance.LogWarning("味方全員が行動不能です。即座に敵フェーズへ移行します。");
+            // 全員行動不能の場合、敵の行動をスキップしてターン終了しても良いが、ここではPostCommandSelectに任せる
+            PostCommandSelect();
+            return;
+        }
         var messageWindowController = _battleWindowManager.GetMessageWindowController();
         messageWindowController.HideWindow();
         BattlePhase = BattlePhase.InputCommand;
         _battleActionProcessor.InitializeActions();
+
+        // コマンドウィンドウを現在のアクターに合わせて再表示・初期化
+        _battleWindowManager.GetCommandWindowController().ShowWindow();
+        _battleWindowManager.GetCommandWindowController().InitializeCommand();
     }
 
     /// <summary>
@@ -303,12 +343,15 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     void SetAttackCommandAction()
     {
-        // 1対1の戦闘のため、最初のキャラクターのIDを取得します。←改善します
-        int actorId = CharacterStatusManager.Instance.partyCharacter[0];
-        int targetId = EnemyStatusManager.Instance.GetEnemyStatusList()[0].enemyBattleId;
-        _battleActionRegister.SetFriendAttackAction(actorId, targetId);
+        // 修正: 現在選択中のキャラクターIDを使用
+        int actorId = CharacterStatusManager.Instance.partyCharacter[CharacterCursor];
 
-        Logger.Instance.Log($"攻撃するキャラクターのID: {actorId} || 攻撃対象のキャラクターのID: {targetId}");
+        // MvM対応の暫定ターゲット: 敵全体をターゲットとすると仮定（ターゲット選択UI未実装のため）
+        List<int> targetIds = EnemyStatusManager.Instance.GetEnemyStatusList()
+            .Where(status => !status.isDefeated && !status.isRunaway)
+            .Select(status => status.enemyBattleId).ToList();
+
+        _battleActionRegister.SetFriendAttackAction(actorId, targetIds); // Registerの引数を変更
 
         PostCommandSelect();
     }
@@ -317,11 +360,16 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// 魔法コマンドを選択した際の処理です。
     /// </summary>
     /// <param name="itemId">魔法のID</param>
-    void SetSkillCommandAction(int itemId)
+    void SetSkillCommandAction(int skillId)
     {
-        int actorId = CharacterStatusManager.Instance.partyCharacter[0];
+        int actorId = CharacterStatusManager.Instance.partyCharacter[CharacterCursor];
         int targetId = EnemyStatusManager.Instance.GetEnemyStatusList()[0].enemyBattleId;
-        _battleActionRegister.SetFriendSkillAction(actorId, targetId, itemId);
+        // MvM対応の暫定ターゲット: 敵全体をターゲットとすると仮定（ターゲット選択UI未実装のため）
+        List<int> targetIds = EnemyStatusManager.Instance.GetEnemyStatusList()
+            .Where(status => !status.isDefeated && !status.isRunaway)
+            .Select(status => status.enemyBattleId).ToList();
+
+        _battleActionRegister.SetFriendSkillAction(actorId, targetIds, skillId); // Registerの引数を変更
 
         PostCommandSelect();
     }
@@ -341,8 +389,8 @@ public class BattleManager : DontDestroySingleton<BattleManager>
             return;
         }
 
-        int targetId = EnemyStatusManager.Instance.GetEnemyStatusList()[0].enemyBattleId;
-        _battleActionRegister.SetFriendItemAction(actorId, targetId, itemId);
+        List<int> targetIds = new List<int>() { EnemyStatusManager.Instance.GetEnemyStatusList()[0].enemyBattleId };
+        _battleActionRegister.SetFriendItemAction(actorId, targetIds, itemId);
 
         PostCommandSelect();
     }
@@ -407,8 +455,26 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     void PostCommandSelect()
     {
-        Logger.Instance.Log("敵のコマンド入力を行います。");
-        _enemyCommandSelector.SelectEnemyCommand();
+        // 修正: 次のキャラクターへカーソルを移動させるか、敵フェーズへ移行
+        int nextIndex = GetNextActiveCharacterIndex(CharacterCursor + 1);
+
+        if (nextIndex != -1)
+        {
+            // 次のキャラクターへ入力を移行
+            CharacterCursor = nextIndex;
+            Logger.Instance.Log($"次のキャラクターの入力へ移行します。Cursor: {CharacterCursor}");
+
+            // UIの再表示 (次のキャラクターのステータスやコマンドUIへ切り替える処理が別途必要)
+            _battleWindowManager.GetCommandWindowController().ShowWindow();
+            _battleWindowManager.GetCommandWindowController().InitializeCommand();
+        }
+        else
+        {
+            // 味方全員の入力が完了
+            Logger.Instance.Log("味方全員のコマンド入力が完了しました。敵のコマンド入力を行います。");
+            _battleWindowManager.GetCommandWindowController().HideWindow(); // コマンドウィンドウを非表示
+            _enemyCommandSelector.SelectEnemyCommand();
+        }
     }
 
     /// <summary>
@@ -486,7 +552,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     public void OnFinishBattle()
     {
         Logger.Instance.Log("戦闘に勝利して終了します。");
-        _onBattleEnd?.Invoke();
+        _onBattleEnd?.Invoke(); // 戦闘が終了したことを伝える
 
         _battleWindowManager.HideAllWindow();
         _battleSpriteController.HideBackground();

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 public class BattleActionProcessorRun : MonoBehaviour, IBattleActionProcessor
 {
 
@@ -40,12 +41,21 @@ public class BattleActionProcessorRun : MonoBehaviour, IBattleActionProcessor
     public void ProcessAction(BattleAction action)
     {
         var actorStatus = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
-        var targetStatus = _actionProcessor.GetCharacterParameter(action.targetId, action.isTargetFriend);
 
         _actionProcessor.SetPauseProcess(true);
 
         // 逃走が成功したかどうかを判定します。
-        bool isRunSuccess = DamageFormula.CalculateCanRun(actorStatus.Speed, targetStatus.Speed);
+        bool isRunSuccess = true;
+        foreach (var targetId in action.targetIds)
+        {
+            var targetStatus = _actionProcessor.GetCharacterParameter(targetId, action.isTargetFriend);
+            // 敵それぞれに逃げる判定を行い、１体でも逃げられなかったら闘争失敗
+            if (!DamageFormula.CalculateCanRun(actorStatus.Speed, targetStatus.Speed))
+            {
+                isRunSuccess = false;
+                break;
+            }
+        }
         StartCoroutine(ShowRunMessage(action, isRunSuccess));
     }
 
