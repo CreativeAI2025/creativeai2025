@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class PlayerControllerWithCollider : PlayerMove
+public class PlayerControllerWithCollider : PlayerController
 {
     private BoxCollider2D _boxCollider;
     private void Start()
