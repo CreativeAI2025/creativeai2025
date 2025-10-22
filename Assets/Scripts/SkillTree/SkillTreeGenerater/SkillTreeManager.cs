@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
@@ -8,8 +9,8 @@ public class SkillTreeManager : MonoBehaviour
     [SerializeField] SkillTreeGanerate skillTreeGanerate;
     [SerializeField] ParameterTable parameterTable;
 
-    [SerializeField] Text skillPointText;//SPのテキスト
-    [SerializeField] Text skillInfoText;//スキルの表示
+    [SerializeField] TextMeshProUGUI skillPointText;//SPのテキスト
+    [SerializeField] TextMeshProUGUI skillInfoText;//スキルの表示
     [SerializeField] GameObject skillBlockPanel;
     [SerializeField] int skillPoint = 1000;
 
@@ -114,10 +115,10 @@ public class SkillTreeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// スキル・ステータスの説明をテキストに代入
+    /// スキル・ステータスの説明をテキストに代入(id,説明を表示するかしないか)
     /// </summary>
     /// <param name="id"></param>
-    public void UpdateSkillInfoText(int id, bool canLearned)
+    public void UpdateSkillInfoText(int id, bool canLearned, string newInfo = null)
     {
         string text = "データがありません";
         if (canLearned)
@@ -131,9 +132,10 @@ public class SkillTreeManager : MonoBehaviour
             {
                 if (n.GetId().Equals(id))
                 {
-                    text = n.GetExplain();
+                    text = "スキル:" + n.GetName() + newInfo + "\n" + n.GetExplain() + "\n必要SP:" + n.GetSp() + " 必要MP:" + n.GetMp();
                 }
             }
+
 
             foreach (var n in dataSetting.nodeStatusData)
             {
@@ -177,6 +179,7 @@ public class SkillTreeManager : MonoBehaviour
     /// <returns></returns>
     public bool CanLearnSkill(int cost, int id)
     {
+        //Debug.Log($"{skillPoint},{cost}");
         if (id == 0) return true;
         if (skillPoint < cost)
         {
@@ -308,10 +311,9 @@ public class SkillTreeManager : MonoBehaviour
             }
         }
 
-        ChechActiveBlocks();
-
         skillPoint -= cost;
 
+        ChechActiveBlocks();
         UpdateSkillPointText();
         SkillStatusLoader.instance.SaveSkillData();// スキルのJSONに保存
         SkillStatusLoader.instance.SaveStatusData();// ステータスのJSONに保存
