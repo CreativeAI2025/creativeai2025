@@ -7,11 +7,6 @@ using UnityEngine;
 public class MessageWindowController : MonoBehaviour, IBattleWindowController
 {
     /// <summary>
-    /// 戦闘に関する機能を管理するクラスへの参照です。
-    /// </summary>
-    BattleManager _battleManager;
-
-    /// <summary>
     /// メッセージウィンドウのUIを制御するクラスへの参照です。
     /// </summary>
     [SerializeField]
@@ -22,15 +17,6 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     [SerializeField]
     float _messageInterval = 1.0f;
-
-    /// <summary>
-    /// コントローラの状態をセットアップします。
-    /// </summary>
-    /// <param name="battleManager">戦闘に関する機能を管理するクラス</param>
-    public void SetUpController(BattleManager battleManager)
-    {
-        _battleManager = battleManager;
-    }
 
     /// <summary>
     /// ウィンドウを表示します。
@@ -267,7 +253,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     {
         uiController.AppendMessage(message);
         yield return new WaitForSeconds(_messageInterval);
-        _battleManager.OnFinishedShowMessage();
+        BattleManager.Instance.OnFinishedShowMessage();
     }
 
     /// <summary>
@@ -279,6 +265,6 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     {
         uiController.AppendMessage(message);
         yield return new WaitForSeconds(interval);
-        _battleManager.OnFinishedShowMessage();
+        BattleManager.Instance.OnFinishedShowMessage();
     }
 }

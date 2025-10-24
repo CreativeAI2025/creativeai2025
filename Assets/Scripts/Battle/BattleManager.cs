@@ -198,7 +198,16 @@ public class BattleManager : DontDestroySingleton<BattleManager>
             };
 
         // 所持アイテムをセットします。
-        CharacterStatusManager.Instance.partyItemInfoList = new();
+        PartyItemInfo item = new()
+        {
+            itemId = 1,
+            itemNum = 5,
+            usedNum = 1
+        };
+        CharacterStatusManager.Instance.partyItemInfoList = new()
+        {
+            item
+        };
     }
 
     /// <summary>
@@ -288,7 +297,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         switch (SelectedCommand)
         {
             case BattleCommand.Attack:
-                SetAttackCommandAction();
+                StartTargetSelection(BattleCommand.Attack, 0);
                 break;
             case BattleCommand.Run:
                 SetRunCommandAction();
@@ -326,73 +335,104 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// <summary>
     /// 選択ウィンドウで項目が選択された時のコールバックです。
     /// </summary>
-    public void OnItemSelected(int itemId)
+    public void OnItemSelected(int selectedItemId)
     {
+        Logger.Instance.Log($"項目が選択されました: ItemID/SkillID = {selectedItemId}");
+
+        // 選択ウィンドウ（アイテム/スキルリスト）を閉じる
+        _battleWindowManager.GetSelectionWindowController().HideWindow();
+
+        // ターゲット選択へ移行
+        StartTargetSelection(SelectedCommand, selectedItemId);
+    }
+    /// <summary>
+    /// 💡 新規: ターゲット選択フェーズを開始します。
+    /// </summary>
+    void StartTargetSelection(BattleCommand command, int itemId)
+    {
+        Logger.Instance.Log($"ターゲット選択フェーズを開始します。コマンド: {command}");
+
+        // ターゲット選択フェーズへ移行
+        SetBattlePhase(BattlePhase.SelectTarget);
+
+        var targetSelectionController = _battleWindowManager.GetTargetSelectionWindowController(); // 仮の新規コントローラー
+
+        // ターゲット選択に必要な情報（アクションの種類、ID）を渡す
+        targetSelectionController.SetUpTargets(command, itemId, CharacterCursor);
+        targetSelectionController.ShowWindow();
+    }
+
+    /// <summary>
+    /// 💡 新規: ターゲット選択ウィンドウでターゲットが決定された時のコールバックです。
+    /// </summary>
+    public void OnTargetSelected(List<int> targetIds, bool isTargetFriend, int itemId)
+    {
+        Logger.Instance.Log($"ターゲットが決定されました。ターゲット数: {targetIds.Count}");
+
+        // ターゲット選択ウィンドウを非表示にする（ここではTargetSelectionControllerが実行すると仮定）
+
+        // 選択されたコマンドに応じてアクションを登録
         switch (SelectedCommand)
         {
+            case BattleCommand.Attack:
+                SetAttackCommandAction(targetIds);
+                break;
             case BattleCommand.Skill:
-                SetSkillCommandAction(itemId);
+                SetSkillCommandAction(targetIds, isTargetFriend, itemId);
                 break;
             case BattleCommand.Item:
-                SetItemCommandAction(itemId);
+                SetItemCommandAction(targetIds, isTargetFriend, itemId);
                 break;
         }
-    }
-    /// <summary>
-    /// 攻撃コマンドを選択した際の処理です。
-    /// </summary>
-    void SetAttackCommandAction()
-    {
-        // 修正: 現在選択中のキャラクターIDを使用
-        int actorId = CharacterStatusManager.Instance.partyCharacter[CharacterCursor];
-
-        // MvM対応の暫定ターゲット: 敵全体をターゲットとすると仮定（ターゲット選択UI未実装のため）
-        List<int> targetIds = EnemyStatusManager.Instance.GetEnemyStatusList()
-            .Where(status => !status.isDefeated && !status.isRunaway)
-            .Select(status => status.enemyBattleId).ToList();
-
-        _battleActionRegister.SetFriendAttackAction(actorId, targetIds); // Registerの引数を変更
 
         PostCommandSelect();
     }
 
     /// <summary>
-    /// 魔法コマンドを選択した際の処理です。
+    /// 攻撃コマンドを選択した際の処理です。（ターゲット選択後の最終登録）
     /// </summary>
-    /// <param name="itemId">魔法のID</param>
-    void SetSkillCommandAction(int skillId)
+    /// <param name="targetIds">ターゲットのIDリスト</param>
+    void SetAttackCommandAction(List<int> targetIds)
     {
         int actorId = CharacterStatusManager.Instance.partyCharacter[CharacterCursor];
-        int targetId = EnemyStatusManager.Instance.GetEnemyStatusList()[0].enemyBattleId;
-        // MvM対応の暫定ターゲット: 敵全体をターゲットとすると仮定（ターゲット選択UI未実装のため）
-        List<int> targetIds = EnemyStatusManager.Instance.GetEnemyStatusList()
-            .Where(status => !status.isDefeated && !status.isRunaway)
-            .Select(status => status.enemyBattleId).ToList();
 
-        _battleActionRegister.SetFriendSkillAction(actorId, targetIds, skillId); // Registerの引数を変更
+        // 💡 修正: 複数ターゲットに対応したRegisterActionを呼び出す
+        _battleActionRegister.SetFriendAttackAction(actorId, targetIds);
 
-        PostCommandSelect();
+        Logger.Instance.Log($"攻撃するキャラクターのID: {actorId} || 攻撃対象のキャラクターの数: {targetIds.Count}");
     }
 
     /// <summary>
-    /// アイテムコマンドを選択した際の処理です。
+    /// 魔法コマンドを選択した際の処理です。（ターゲット選択後の最終登録）
     /// </summary>
+    /// <param name="targetIds">ターゲットのIDリスト</param>
+    /// <param name="isTargetFriend">ターゲットが味方か</param>
+    /// <param name="skillId">魔法のID</param>
+    void SetSkillCommandAction(List<int> targetIds, bool isTargetFriend, int skillId)
+    {
+        int actorId = CharacterStatusManager.Instance.partyCharacter[CharacterCursor];
+
+        // 💡 修正: 複数ターゲットに対応したRegisterActionを呼び出す
+        _battleActionRegister.SetFriendSkillAction(actorId, targetIds, isTargetFriend, skillId);
+
+        Logger.Instance.Log($"攻撃するキャラクターのID: {actorId} || 攻撃対象のキャラクターの数: {targetIds.Count}");
+    }
+
+    /// <summary>
+    /// アイテムコマンドを選択した際の処理です。（ターゲット選択後の最終登録）
+    /// </summary>
+    /// <param name="targetIds">ターゲットのIDリスト</param>
+    /// <param name="isTargetFriend">ターゲットが味方か</param>
     /// <param name="itemId">アイテムのID</param>
-    void SetItemCommandAction(int itemId)
+    void SetItemCommandAction(List<int> targetIds, bool isTargetFriend, int itemId)
     {
         Logger.Instance.Log($"SetItemCommandAction()が呼ばれました。選択されたアイテムのID : {itemId}");
-        int actorId = CharacterStatusManager.Instance.partyCharacter[0];
-        var itemData = ItemDataManager.Instance.GetItemDataById(itemId);
-        if (itemData == null)
-        {
-            Logger.Instance.LogError($"選択されたIDのアイテムは見つかりませんでした。ID : {itemId}");
-            return;
-        }
+        int actorId = CharacterStatusManager.Instance.partyCharacter[CharacterCursor];
 
-        List<int> targetIds = new List<int>() { EnemyStatusManager.Instance.GetEnemyStatusList()[0].enemyBattleId };
-        _battleActionRegister.SetFriendItemAction(actorId, targetIds, itemId);
+        // 💡 修正: 複数ターゲットに対応したRegisterActionを呼び出す
+        _battleActionRegister.SetFriendItemAction(actorId, targetIds, isTargetFriend, itemId);
 
-        PostCommandSelect();
+        // ... (Logger)
     }
 
     /// <summary>

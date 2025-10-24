@@ -49,25 +49,20 @@ public class EnemyEncountManager : MonoBehaviour
     private const int EncountMin = 1;
     private bool IsEncounted;
     // エンカウント情報があるかどうかの判別
-    private InputSetting _inputSetting;
     async void Awake()
     {
         _encounterDataBase = new();
         _encounterDataBase.Initialize();
     }
 
-    public void Start()
-    {
-        _inputSetting = InputSetting.Load();
-    }
-
     public void Update()
     {
-        if (_inputSetting.GetRightKeyDown())
+        // デバッグ用
+        if (Input.GetKeyDown(KeyCode.I))
         {
             IncreaseEncountProbability();
         }
-        else if (_inputSetting.GetLeftKeyDown())
+        else if (Input.GetKeyDown(KeyCode.O))
         {
             Initialize();
         }

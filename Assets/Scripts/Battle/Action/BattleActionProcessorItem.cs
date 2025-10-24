@@ -46,14 +46,49 @@ public class BattleActionProcessorItem : MonoBehaviour
         }
 
         _actionProcessor.SetPauseProcess(true);
+        StartCoroutine(ProcessItemActionCoroutine(action));
+    }
+
+    // 💡 ProcessAction から呼ばれるコルーチンのラッパーを定義
+    IEnumerator ProcessItemActionCoroutine(BattleAction action)
+    {
+        var itemData = ItemDataManager.Instance.GetItemDataById(action.itemId);
+        if (itemData == null)
+        {
+            Logger.Instance.LogWarning($"アイテムデータが見つかりませんでした。 ID: {action.itemId}");
+            _actionProcessor.SetPauseProcess(false);
+            yield break;
+        }
+
+        // 消費アイテムの場合、所持数を減らします。（ループ前に一度だけ実行）
+        if (action.isActorFriend && itemData.itemCategory == ItemCategory.ConsumableItem)
+        {
+            CharacterStatusManager.Instance.UseItem(action.itemId);
+        }
+
+        string actorName = _actionProcessor.GetCharacterName(action.actorId, action.isActorFriend);
+
+        // ----------------------------------------------------
+        // 💡 アイテム使用メッセージを一度だけ表示
+        // ----------------------------------------------------
+        _actionProcessor.SetPauseMessage(true);
+        _messageWindowController.GenerateUseItemMessage(actorName, itemData.itemName);
+        while (_actionProcessor.IsPausedMessage) yield return null;
+
+        // ----------------------------------------------------
+        // 💡 複数ターゲットへの効果適用ループ
+        // ----------------------------------------------------
         foreach (var targetId in action.targetIds)
         {
+            // ... (既存のアイテム効果処理をループ内に配置) ...
+
             if (itemData.itemEffect.itemEffectCategory == ItemEffectCategory.HPRecovery)
             {
                 int hpDelta = DamageFormula.CalculateHealValue(itemData.itemEffect.value);
                 int mpDelta = 0;
 
-                if (action.isActorFriend)
+                // ステータス変更
+                if (action.isTargetFriend)
                 {
                     CharacterStatusManager.Instance.ChangeCharacterStatus(targetId, hpDelta, mpDelta);
                 }
@@ -62,111 +97,72 @@ public class BattleActionProcessorItem : MonoBehaviour
                     EnemyStatusManager.Instance.ChangeEnemyStatus(targetId, hpDelta, mpDelta);
                 }
 
-                StartCoroutine(ShowItemHealMessage(action, itemData.itemName, hpDelta));
+                // メッセージ表示コルーチンを呼び出し
+                yield return StartCoroutine(ShowItemHealMessage(targetId, hpDelta, action.isTargetFriend));
             }
             else if (itemData.itemEffect.itemEffectCategory == ItemEffectCategory.MPRecovery)
             {
-                int hpDelta = 0;
-                int mpDelta = DamageFormula.CalculateHealValue(itemData.itemEffect.value); // MP回復用の計算
+                int mpDelta = DamageFormula.CalculateHealValue(itemData.itemEffect.value);
+                int mpConsume = 0;
 
-                if (action.isActorFriend)
+                // ステータス変更
+                if (action.isTargetFriend)
                 {
-                    CharacterStatusManager.Instance.ChangeCharacterStatus(targetId, hpDelta, mpDelta);
+                    CharacterStatusManager.Instance.ChangeCharacterStatus(targetId, mpDelta, mpConsume);
                 }
                 else
                 {
-                    EnemyStatusManager.Instance.ChangeEnemyStatus(targetId, hpDelta, mpDelta);
+                    EnemyStatusManager.Instance.ChangeEnemyStatus(targetId, mpDelta, mpConsume);
                 }
 
-                StartCoroutine(ShowItemMpHealMessage(action, itemData.itemName, mpDelta));
+                // メッセージ表示コルーチンを呼び出し
+                yield return StartCoroutine(ShowItemMpHealMessage(targetId, mpDelta, action.isTargetFriend));
             }
-            else if (itemData.itemEffect.itemEffectCategory == ItemEffectCategory.Revive)
-            {
-                // 蘇生時の回復HP（例: アイテム効果値の50%回復など）
-                int reviveHp = DamageFormula.CalculateHealValue(itemData.itemEffect.value);
-                int mpDelta = 0;
+            // ... (他の効果も同様に ShowItem...Message を呼ぶ) ...
 
-                if (action.isActorFriend)
-                {
-                    var status = CharacterStatusManager.Instance.GetCharacterStatusById(targetId);
-                    if (status != null && status.isDefeated)
-                    {
-                        status.isDefeated = false; // 蘇生！
-                        CharacterStatusManager.Instance.ChangeCharacterStatus(targetId, reviveHp, mpDelta);
-                    }
-                }
-                else
-                {
-                    var status = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(targetId);
-                    if (status != null && status.isDefeated)
-                    {
-                        status.isDefeated = false; // 蘇生！
-                        EnemyStatusManager.Instance.ChangeEnemyStatus(targetId, reviveHp, mpDelta);
-                    }
-                }
+        } // 💡 foreach (var targetId in action.targetIds) の終了
 
-                StartCoroutine(ShowItemReviveMessage(action, itemData.itemName, reviveHp));
-
-            }
-            {
-                Debug.LogWarning($"未定義のアイテム効果です。 ID: {itemData.itemId}");
-            }
+        // 💡 修正: ループがすべて完了した後、戦闘が終了していない場合にのみプロセスを再開
+        if (!_battleManager.IsBattleFinished)
+        {
+            _actionProcessor.SetPauseProcess(false);
         }
     }
 
     /// <summary>
-    /// HP回復アイテムのメッセージを表示します。
+    /// HP回復アイテムのメッセージを表示します。（ターゲットごとのメッセージ表示）
     /// </summary>
-    IEnumerator ShowItemHealMessage(BattleAction action, string itemName, int healValue)
+    IEnumerator ShowItemHealMessage(int targetId, int healValue, bool isTargetFriend)
     {
-        string actorName = _actionProcessor.GetCharacterName(action.actorId, action.isActorFriend);
-        foreach (var targetId in action.targetIds)
+        string targetName = _actionProcessor.GetCharacterName(targetId, isTargetFriend);
+
+        // 💡 メッセージ表示（UseItemMessageはループ前に移動したため削除）
+
+        _actionProcessor.SetPauseMessage(true);
+        _messageWindowController.GenerateHpHealMessage(targetName, healValue);
+        _battleManager.OnUpdateStatus();
+        while (_actionProcessor.IsPausedMessage)
         {
-            string targetName = _actionProcessor.GetCharacterName(targetId, action.isTargetFriend);
-            _actionProcessor.SetPauseMessage(true);
-            _messageWindowController.GenerateUseItemMessage(actorName, itemName);
-            while (_actionProcessor.IsPausedMessage)
-            {
-                yield return null;
-            }
-
-            _actionProcessor.SetPauseMessage(true);
-            _messageWindowController.GenerateHpHealMessage(targetName, healValue);
-            _battleManager.OnUpdateStatus();
-            while (_actionProcessor.IsPausedMessage)
-            {
-                yield return null;
-            }
+            yield return null;
         }
-
-        _actionProcessor.SetPauseProcess(false);
     }
+
     /// <summary>
     /// MP回復アイテムのメッセージを表示します。
     /// </summary>
-    IEnumerator ShowItemMpHealMessage(BattleAction action, string itemName, int healValue)
+    IEnumerator ShowItemMpHealMessage(int targetId, int healValue, bool isTargetFriend)
     {
-        string actorName = _actionProcessor.GetCharacterName(action.actorId, action.isActorFriend);
-        foreach (var targetId in action.targetIds)
+        string targetName = _actionProcessor.GetCharacterName(targetId, isTargetFriend);
+
+        // 💡 メッセージ表示（UseItemMessageはループ前に移動したため削除）
+
+        _actionProcessor.SetPauseMessage(true);
+        _messageWindowController.GenerateMpHealMessage(targetName, healValue);
+        _battleManager.OnUpdateStatus();
+        while (_actionProcessor.IsPausedMessage)
         {
-            string targetName = _actionProcessor.GetCharacterName(targetId, action.isTargetFriend);
-
-            _actionProcessor.SetPauseMessage(true);
-            _messageWindowController.GenerateUseItemMessage(actorName, itemName);
-            while (_actionProcessor.IsPausedMessage)
-            {
-                yield return null;
-            }
-
-            _actionProcessor.SetPauseMessage(true);
-            _messageWindowController.GenerateMpHealMessage(targetName, healValue);
-            _battleManager.OnUpdateStatus();
-            while (_actionProcessor.IsPausedMessage)
-            {
-                yield return null;
-            }
+            yield return null;
         }
-        _actionProcessor.SetPauseProcess(false);
     }
     /// <summary>
     /// 蘇生アイテムのメッセージを表示します。

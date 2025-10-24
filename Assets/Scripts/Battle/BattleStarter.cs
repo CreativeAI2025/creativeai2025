@@ -58,8 +58,8 @@ public class BattleStarter : MonoBehaviour
     void ShowSprites()
     {
         var battleSpriteController = BattleManager.Instance.GetBattleSpriteController();
-        battleSpriteController.SetSpritePosition();
-        battleSpriteController.ShowBackground();
+        //battleSpriteController.SetSpritePosition();
+        //battleSpriteController.ShowBackground();
         battleSpriteController.ShowEnemy(BattleManager.Instance.EnemyIds);
     }
 

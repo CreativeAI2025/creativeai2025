@@ -79,8 +79,8 @@ public class BattleActionRegister : MonoBehaviour
     /// </summary>
     /// <param name="actorId">アクションを行うキャラクターのID</param>
     /// <param name="targetId">攻撃対象のキャラクターのID</param>
-    /// <param name="magicId">魔法のID</param>
-    public void SetFriendSkillAction(int actorId, List<int> targetIds, int magicId)
+    /// <param name="skillId">魔法のID</param>
+    public void SetFriendSkillAction(int actorId, List<int> targetIds, bool isTargetFriend, int skillId)
     {
         var characterParam = GetCharacterParameterRecord(actorId);
         BattleAction action = new()
@@ -88,11 +88,11 @@ public class BattleActionRegister : MonoBehaviour
             actorId = actorId,
             isActorFriend = true,
             targetIds = targetIds,
+            isTargetFriend = isTargetFriend,
             battleCommand = BattleCommand.Skill,
-            itemId = magicId,
+            itemId = skillId,
             actorSpeed = characterParam.Speed,
         };
-
         _actionProcessor.RegisterAction(action);
     }
 
@@ -120,11 +120,15 @@ public class BattleActionRegister : MonoBehaviour
 
     /// <summary>
     /// アイテムコマンドのアクションをセットします。
+    /// <summary>
+    /// アイテムコマンドのアクションをセットします。
+    /// 💡 修正: 引数を List<int> targetIds と bool isTargetFriend に変更
     /// </summary>
     /// <param name="actorId">アクションを行うキャラクターのID</param>
-    /// <param name="enemyBattleId">攻撃対象のキャラクターの戦闘中ID</param>
+    /// <param name="targetIds">攻撃対象のキャラクターIDまたは戦闘中IDのリスト</param>
+    /// <param name="isTargetFriend">ターゲットが味方かどうかのフラグ</param>
     /// <param name="itemId">アイテムのID</param>
-    public void SetFriendItemAction(int actorId, List<int> enemyBattleIds, int itemId)
+    public void SetFriendItemAction(int actorId, List<int> targetIds, bool isTargetFriend, int itemId)
     {
         var characterParam = GetCharacterParameterRecord(actorId);
 
@@ -135,21 +139,15 @@ public class BattleActionRegister : MonoBehaviour
             return;
         }
 
-        List<int> targetIds = enemyBattleIds;
-        bool isTargetFriend = false;
-        if (itemData.itemEffect.effectTarget == EffectTarget.Own
-            || itemData.itemEffect.effectTarget == EffectTarget.FriendAll
-            || itemData.itemEffect.effectTarget == EffectTarget.FriendSolo)
-        {
-            isTargetFriend = true;
-            targetIds = new List<int>() { actorId };
-        }
+        // 💡 修正点: UI（BattleManager）から渡されたターゲットリストと属性をそのままアクションに登録します。
+        // 以前のロジック（EffectTargetをチェックしてtargetId/isTargetFriendを計算する部分）は、
+        // ターゲット選択ウィンドウ側で処理されるため、ここで削除されます。
 
         BattleAction action = new()
         {
             actorId = actorId,
             isActorFriend = true,
-            targetIds = targetIds,
+            targetIds = targetIds, // 💡 List<int>を代入
             isTargetFriend = isTargetFriend,
             battleCommand = BattleCommand.Item,
             itemId = itemId,

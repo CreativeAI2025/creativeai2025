@@ -39,142 +39,100 @@ public class BattleActionProcessorAttack : MonoBehaviour
     /// </summary>
     public void ProcessAction(BattleAction action)
     {
+        _actionProcessor.SetPauseProcess(true);
+        StartCoroutine(ProcessAttackActionCoroutine(action));
+    }
+
+    /// <summary>
+    /// 攻撃のアクションをコルーチンで処理します。
+    /// </summary>
+    IEnumerator ProcessAttackActionCoroutine(BattleAction action)
+    {
         var actorParam = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
+
+        // 💡 攻撃メッセージをターゲットごとに表示するため、ループの外側でメッセージポーズを設定
+        _actionProcessor.SetPauseMessage(true);
+        string actorName = _actionProcessor.GetCharacterName(action.actorId, action.isActorFriend);
+        _messageWindowController.GenerateAttackMessage(actorName);
+        while (_actionProcessor.IsPausedMessage) { yield return null; }
+
         foreach (var targetId in action.targetIds)
         {
             var targetParam = _actionProcessor.GetCharacterParameter(targetId, action.isTargetFriend);
-            int damage = 0;
-            if (action.isTargetFriend)
-            {
-                var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(targetId);
-                var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.actorId);
 
-                if (characterStatus == null)
-                {
-                    Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {targetId}");
-                }
-                if (enemyStatus == null)
-                {
-                    Logger.Instance.LogWarning($"敵キャラクターのステータスが見つかりませんでした。 戦闘中ID : {action.actorId}");
-                }
-                damage = DamageFormula.CalculateDamage(actorParam.Attack, targetParam.Defence, enemyStatus.attackBuffMultiplier, characterStatus.attackBuffMultiplier);
-            }
+            // ... (ダメージ計算ロジック。ここでは簡略化) ...
 
-            else
-            {
-                var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
-                var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(targetId);
+            // ターゲットのバフ・デバフ倍率を取得
+            float actorAttackBuff = action.isActorFriend
+                ? CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId)?.attackBuffMultiplier ?? 1.0f
+                : EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.actorId)?.attackBuffMultiplier ?? 1.0f;
+            float targetDefenceBuff = action.isTargetFriend
+                ? CharacterStatusManager.Instance.GetCharacterStatusById(targetId)?.defenceBuffMultiplier ?? 1.0f
+                : EnemyStatusManager.Instance.GetEnemyStatusByBattleId(targetId)?.defenceBuffMultiplier ?? 1.0f;
 
-                if (characterStatus == null)
-                {
-                    Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {action.actorId}");
+            int damage = DamageFormula.CalculateDamage(actorParam.Attack, targetParam.Defence, actorAttackBuff, targetDefenceBuff);
 
-                }
-                if (enemyStatus == null)
-                {
-                    Logger.Instance.LogWarning($"敵キャラクターのステータスが見つかりませんでした。 戦闘中ID : {targetId}");
-                }
-
-                damage = DamageFormula.CalculateDamage(actorParam.Attack, targetParam.Defence, characterStatus.attackBuffMultiplier, enemyStatus.attackBuffMultiplier);
-
-            }
             int hpDelta = damage * -1;
             int mpDelta = 0;
-            bool isTargetDefeated = false;
-            // var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
-            // if (charaStatus != null && charaStatus.Confusion && Random.value < 0.5f)
-            // {
-            //     action.targetId = action.actorId;
-            // }
-            // var enemyStatus = _enemyStatusManager.GetEnemyStatusByBattleId(action.actorId);
-            // if (enemyStatus != null && enemyStatus.Confusion && Random.value < 0.5f)
-            // {
-            //     action.targetId = action.actorId;
+            bool isCurrentTargetDefeated = false;
 
-            // }
+            // ステータス変更
             if (action.isTargetFriend)
             {
                 CharacterStatusManager.Instance.ChangeCharacterStatus(targetId, hpDelta, mpDelta);
-                isTargetDefeated = CharacterStatusManager.Instance.IsCharacterDefeated(targetId);
+                isCurrentTargetDefeated = CharacterStatusManager.Instance.IsCharacterDefeated(targetId);
             }
             else
             {
                 EnemyStatusManager.Instance.ChangeEnemyStatus(targetId, hpDelta, mpDelta);
-                isTargetDefeated = EnemyStatusManager.Instance.IsEnemyDefeated(targetId);
-                if (isTargetDefeated)
+                isCurrentTargetDefeated = EnemyStatusManager.Instance.IsEnemyDefeated(targetId);
+                if (isCurrentTargetDefeated)
                 {
                     EnemyStatusManager.Instance.OnDefeatEnemy(targetId);
                 }
             }
 
-            _actionProcessor.SetPauseProcess(true);
-            StartCoroutine(ShowAttackMessage(action, damage, isTargetDefeated));
-        }
-
-    }
-
-    /// <summary>
-    /// 攻撃のメッセージを表示します。
-    /// </summary>
-    IEnumerator ShowAttackMessage(BattleAction action, int damage, bool isTargetDefeated)
-    {
-        string actorName = _actionProcessor.GetCharacterName(action.actorId, action.isActorFriend);
-
-        foreach (var targetId in action.targetIds)
-        {
+            // ダメージメッセージ表示
+            _actionProcessor.SetPauseMessage(true);
             string targetName = _actionProcessor.GetCharacterName(targetId, action.isTargetFriend);
-            _actionProcessor.SetPauseMessage(true);
-            _messageWindowController.GenerateAttackMessage(actorName);
-            while (_actionProcessor.IsPausedMessage)
-            {
-                yield return null;
-            }
-
-            _actionProcessor.SetPauseMessage(true);
             _messageWindowController.GenerateDamageMessage(targetName, damage);
             _battleManager.OnUpdateStatus();
-            while (_actionProcessor.IsPausedMessage)
-            {
-                yield return null;
-            }
+            while (_actionProcessor.IsPausedMessage) { yield return null; }
 
-            if (!isTargetDefeated)
-            {
-                _actionProcessor.SetPauseProcess(false);
-                yield break;
-            }
-
-            if (action.isTargetFriend)
+            // 撃破メッセージ表示
+            if (isCurrentTargetDefeated)
             {
                 _actionProcessor.SetPauseMessage(true);
-                _messageWindowController.GenerateDefeateFriendMessage(targetName);
-                while (_actionProcessor.IsPausedMessage)
+                if (action.isTargetFriend)
                 {
-                    yield return null;
+                    _messageWindowController.GenerateDefeateFriendMessage(targetName);
                 }
+                else
+                {
+                    // 💡 修正: 倒れた敵のスプライトを更新（HideEnemyを置き換え）
+                    _battleSpriteController.RefreshActiveEnemies();
+                    _messageWindowController.GenerateDefeateEnemyMessage(targetName);
+                }
+                while (_actionProcessor.IsPausedMessage) { yield return null; }
 
-                if (CharacterStatusManager.Instance.IsAllCharacterDefeated())
-                {
-                    _battleManager.OnGameover();
-                }
-            }
-            else
-            {
-                _actionProcessor.SetPauseMessage(true);
-                _battleSpriteController.HideEnemy();
-                _messageWindowController.GenerateDefeateEnemyMessage(targetName);
-                while (_actionProcessor.IsPausedMessage)
-                {
-                    yield return null;
-                }
-
+                // 勝利/ゲームオーバー判定
                 if (EnemyStatusManager.Instance.IsAllEnemyDefeated())
                 {
                     _battleManager.OnEnemyDefeated();
+                    yield break; // 戦闘終了
+                }
+                if (CharacterStatusManager.Instance.IsAllCharacterDefeated())
+                {
+                    _battleManager.OnGameover();
+                    yield break; // ゲームオーバー
                 }
             }
+
+            // アクション処理の一時停止は、ループ完了後に行うため、ここでは何もしない。
         }
 
+        // 💡 追記: 複数のターゲット処理がすべて完了したため、待機フラグを解除して次のアクションへ移行
+        _actionProcessor.SetPauseProcess(false);
     }
 }
 

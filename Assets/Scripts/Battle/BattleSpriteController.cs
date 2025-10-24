@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// 戦闘関連のスプライトを制御するクラスです。
@@ -47,6 +48,7 @@ public class BattleSpriteController : MonoBehaviour
     /// <summary>
     /// 背景と敵キャラクターの位置をカメラに合わせて設定します。
     /// </summary>
+    /*
     public void SetSpritePosition()
     {
         if (_mainCamera == null)
@@ -63,6 +65,7 @@ public class BattleSpriteController : MonoBehaviour
         var enemyPosOffset = new Vector3(0, -0.5f, 0);
         _backgroundRenderer.transform.position = newPosition + enemyPosOffset;
     }
+    */
 
     /// <summary>
     /// 敵キャラクターを表示します。
@@ -97,7 +100,6 @@ public class BattleSpriteController : MonoBehaviour
                 enemySprites[i].gameObject.SetActive(false);
             }
         }
-
     }
 
     /// <summary>
@@ -108,6 +110,34 @@ public class BattleSpriteController : MonoBehaviour
         foreach (var image in enemySprites)
         {
             image.gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 💡 追記: 敵の生存状況に基づいて、アクティブな敵スプライトを更新します。
+    /// </summary>
+    public void RefreshActiveEnemies()
+    {
+        const int EncountMax = 5;
+        var activeEnemies = EnemyStatusManager.Instance.GetEnemyStatusList()
+            .Where(status => !status.isDefeated && !status.isRunaway)
+            .ToList();
+
+        // 敵のスロット全体をクリアし、生存している敵のみ再表示
+        for (int i = 0; i < EncountMax; i++)
+        {
+            if (i < activeEnemies.Count)
+            {
+                // 生存している敵を、配置スロット i に表示する（ここではインデックス順に表示すると仮定）
+                var enemyStatus = activeEnemies[i];
+                enemySprites[i].sprite = enemyStatus.enemyData.sprite;
+                enemySprites[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                // 生存していないスロットは非表示
+                enemySprites[i].gameObject.SetActive(false);
+            }
         }
     }
 }

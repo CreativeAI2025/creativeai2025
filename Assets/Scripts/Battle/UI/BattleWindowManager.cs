@@ -37,6 +37,11 @@ public class BattleWindowManager : MonoBehaviour
     MessageWindowController _messageWindowController;
 
     /// <summary>
+    /// 追記：ターゲット選択ウィンドウを制御するクラスへの参照
+    /// </summary>
+    [SerializeField] TargetSelectionWindowController _targetSelectionWindowController;
+
+    /// <summary>
     /// ウィンドウのコントローラのリストです。
     /// </summary>
     List<IBattleWindowController> _battleWindowControllers = new();
@@ -58,6 +63,7 @@ public class BattleWindowManager : MonoBehaviour
                 _commandWindowController,
                 _selectItemWindowController,
                 _messageWindowController,
+                _targetSelectionWindowController,
             };
     }
 
@@ -111,6 +117,13 @@ public class BattleWindowManager : MonoBehaviour
     public SelectionWindowController GetSelectionWindowController()
     {
         return _selectItemWindowController;
+    }
+    /// <summary>
+    /// ターゲット選択ウィンドウを制御するクラスへの参照を取得します。
+    /// </summary>
+    public TargetSelectionWindowController GetTargetSelectionWindowController()
+    {
+        return _targetSelectionWindowController;
     }
     /// <summary>
     /// メッセージウィンドウの動作を制御するクラスへの参照を取得します。
