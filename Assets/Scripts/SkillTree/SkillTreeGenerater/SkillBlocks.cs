@@ -4,13 +4,13 @@ using System.Text.RegularExpressions;
 
 public class SkillBlocks : MonoBehaviour
 {
-    [SerializeField] GameObject parent;
-    [Header("アイコンフレーム(取得済み)"), SerializeField] GameObject hidePanel;
-    [Header("アイコンフレーム(未取得(習得可能))"), SerializeField] GameObject hidePanel1;
+    [SerializeField] GameObject hidePanel;
+
     private SkillTreeManager skillTreeManager;
 
-    string my_parent_name;//親の名前
+    string this_name;//自分自身の名前
     int id;//自分自身のID
+    string info = "説明";
     int cost;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -18,8 +18,8 @@ public class SkillBlocks : MonoBehaviour
     {
         // 親から SkillTreeManager を探す
         skillTreeManager = GetComponentInParent<SkillTreeManager>();
-        my_parent_name = parent.gameObject.name;
-        id = int.Parse(Regex.Replace(my_parent_name, @"[^0-9]", ""));
+        this_name = this.gameObject.name;
+        id = int.Parse(Regex.Replace(this_name, @"[^0-9]", ""));
         CheckActiveBlock();
     }
 
@@ -29,7 +29,7 @@ public class SkillBlocks : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             //Debug.Log(this_name + "が消えました");
-            Destroy(parent.gameObject);
+            Destroy(this.gameObject);
         }
     }
 
@@ -43,8 +43,7 @@ public class SkillBlocks : MonoBehaviour
         //　習得済なら何もしない
         if (skillTreeManager.HasSkill(id))
         {
-            skillTreeManager.UpdateSkillInfoText(id, true, "(習得済み)");
-            Debug.Log("ID:" + id + "習得済");
+            //bug.Log("ID:" + id + "習得済");
             return;
         }
 
@@ -53,16 +52,13 @@ public class SkillBlocks : MonoBehaviour
         {
             // 習得可能なら習得する
             skillTreeManager.LearnSkill(cost, id);
-            skillTreeManager.UpdateSkillInfoText(id, true, "(習得済み)");
-            hidePanel.SetActive(true);
-            hidePanel1.SetActive(false);
-            Debug.Log("ID:" + id + "習得");
-            //CangeLearnBlock(Color.blue);
+            //bug.Log("ID:" + id + "習得");
+            CangeLearnBlock(Color.blue);
         }
         else
         {
             // 習得不可能ならログを出す
-            Debug.Log("ID:" + id + "習得できません");
+            //bug.Log("ID:" + id + "習得できません");
         }
     }
 
@@ -71,28 +67,19 @@ public class SkillBlocks : MonoBehaviour
     /// </summary>
     public void CheckActiveBlock()
     {
-        cost = skillTreeManager.GetMySp(id);
 
-        if (skillTreeManager.HasSkill(id))
-        {
-            hidePanel.SetActive(true);
-            hidePanel1.SetActive(false);
-            CangeLearnBlock(Color.white);
-        }
         // 習得可能？
-        if (skillTreeManager.CanLearnSkill(cost, id) && !skillTreeManager.HasSkill(id))
+        if (skillTreeManager.CanLearnSkill(cost, id) || skillTreeManager.HasSkill(id))
         {
             //Debug.Log("ID:" + id + "はFALSE");
-            hidePanel1.SetActive(true);
-            CangeLearnBlock(Color.white);
+            hidePanel.SetActive(false);
         }
-        else if (!skillTreeManager.HasSkill(id))
+        else
         {
             //Debug.Log("ID:" + id + "はTRUE");
-            //hidePanel.SetActive(true);
-            CangeLearnBlock(Color.gray);
-            hidePanel1.SetActive(false);
+            hidePanel.SetActive(true);
         }
+
     }
 
     /// <summary>
@@ -107,15 +94,7 @@ public class SkillBlocks : MonoBehaviour
 
     public void OnCursor()
     {
-        skillTreeManager.UpdateSkillInfoText(id, true);
-        if (skillTreeManager.HasSkill(id))
-        {
-            skillTreeManager.UpdateSkillInfoText(id, true, "(習得済み)");
-        }
-    }
 
-    public void OnCursorExsist()
-    {
-        skillTreeManager.UpdateSkillInfoText(id, false);
+        skillTreeManager.UpdateSkillInfoText(id, true);
     }
 }
