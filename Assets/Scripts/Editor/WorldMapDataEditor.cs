@@ -12,7 +12,6 @@ public class WorldMapDataEditor : Editor
         EditorGUILayout.LabelField("ワールドマップ設定", EditorStyles.boldLabel);
         
         // 基本情報
-        worldMap.worldName = EditorGUILayout.TextField("ワールド名", worldMap.worldName);
         worldMap.backgroundImage = (Sprite)EditorGUILayout.ObjectField("背景画像", worldMap.backgroundImage, typeof(Sprite), false);
         worldMap.startingPointIndex = EditorGUILayout.IntField("開始ポイントインデックス", worldMap.startingPointIndex);
         
@@ -69,7 +68,6 @@ public class WorldMapDataEditor : Editor
         point.sceneName = EditorGUILayout.TextField("シーン名", point.sceneName);
         point.position = EditorGUILayout.Vector2Field("位置", point.position);
         point.unlockedByDefault = EditorGUILayout.Toggle("初期解放", point.unlockedByDefault);
-        point.description = EditorGUILayout.TextField("説明", point.description);
         
         // 隣接エリア設定
         EditorGUILayout.LabelField("隣接エリア:");

@@ -19,12 +19,26 @@ public class WorldMapController : MonoBehaviour
 
     void Start()
     {
+        // ここを変更
+
+        if (PlayerPrefs.HasKey("LastWorldMapIndex"))
+        {
+            currentIndex = PlayerPrefs.GetInt("LastWorldMapIndex");
+        }
+        else
+        {
+            currentIndex = worldMapData.startingPointIndex;
+        }
         // ワールドマップデータが設定されていない場合はエラー
         if (worldMapData == null || worldMapData.mapPoints == null || worldMapData.mapPoints.Length == 0)
         {
             Debug.LogError("WorldMapData が設定されていないか、マップポイントが空です");
             return;
         }
+
+        // マップアイコンを UI に反映
+        ApplyIconsToMapPoints();
+
         
         // 開始ポイントを設定
         currentIndex = worldMapData.startingPointIndex;
@@ -42,6 +56,18 @@ public class WorldMapController : MonoBehaviour
     void Update()
     {
         HandleInput();
+    }
+
+    void ApplyIconsToMapPoints()
+    {
+        for (int i = 0; i < mapPointObjects.Length; i++)
+        {
+            var image = mapPointObjects[i].GetComponent<UnityEngine.UI.Image>();
+            if (image != null && worldMapData.mapPoints[i].icon != null)
+            {
+                image.sprite = worldMapData.mapPoints[i].icon;
+            }
+        }
     }
 
     void HandleInput()
@@ -66,6 +92,9 @@ public class WorldMapController : MonoBehaviour
         {
             if (worldMapData.IsAreaUnlocked(currentIndex))
             {
+                // ★選択位置を保存
+                PlayerPrefs.SetInt("LastWorldMapIndex", currentIndex);
+                PlayerPrefs.Save();
                 SceneManager.LoadScene(worldMapData.mapPoints[currentIndex].sceneName);
             }
             else

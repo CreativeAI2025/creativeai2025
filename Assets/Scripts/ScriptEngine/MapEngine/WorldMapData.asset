@@ -12,15 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c7565ae220b80a4f9879696791546a7, type: 3}
   m_Name: WorldMapData
   m_EditorClassIdentifier: 
-  worldName: "\u30EF\u30FC\u30EB\u30C9\u540D"
-  backgroundImage: {fileID: 0}
+  backgroundImage: {fileID: 21300000, guid: 4029a9cfeb86f134c9c5af05993eaac8, type: 3}
   mapPoints:
-  - pointName: "\u68EE"
-    sceneName: "\u68EE"
-    areaId: stage1_forest_unlocked
-    position: {x: 10, y: 10}
+  - pointName: "\u6751"
+    sceneName: Village
+    areaId: 
+    position: {x: 10, y: 5}
     unlockedByDefault: 1
     neighborIndices: 
-    icon: {fileID: -2018358652, guid: c9435e49481fd4a46bf8d773bcd8d3e6, type: 3}
-    description: "\u68EE"
+    icon: {fileID: 0}
   startingPointIndex: 0
