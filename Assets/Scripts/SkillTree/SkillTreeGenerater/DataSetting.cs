@@ -702,7 +702,7 @@ public class DataSetting : MonoBehaviour
         string subject = null;//対象
         string action = "";//行動(攻撃、回復など)
         int probability = 0;//発動確率
-        int power = 0;//効果量
+        float power = 0;//効果量
         string type = null;//種類（物理攻撃、特殊攻撃など）
         string status = null;//対象ステータス
         string extra = null;//追加効果
@@ -742,10 +742,10 @@ public class DataSetting : MonoBehaviour
         }
 
         // 攻撃
-        result = Regex.Match(explain, @"(\d+)[^0-9]*(物理|特殊|魔法)攻撃");
+        result = Regex.Match(explain, @"(-?\d+(?:\.\d+)?)[^\d]*(物理|特殊|魔法)攻撃");
         if (result.Success)
         {
-            power = int.Parse(result.Groups[1].Value);
+            power = float.Parse(result.Groups[1].Value);
             action = result.Groups[2].Value + "攻撃";
             type = result.Groups[2].Value + "攻撃";
         }
@@ -787,6 +787,8 @@ public class DataSetting : MonoBehaviour
             if (explain.Contains("回避率")) status = "回避率";
             if (explain.Contains("魔法防御率")) status = "魔法防御";
             if (explain.Contains("防御力")) status = "防御力";
+            if (explain.Contains("攻撃力")) status = "攻撃力";
+            if (explain.Contains("魔力")) status = "魔力";
         }
 
         // 追加効果
@@ -818,18 +820,18 @@ public class DataSetting : MonoBehaviour
     {
         List<Skill> newlist = list;
         float evaluationValue = 0f;
-        int maxPower = GetMaxValue("power", list);
-        int maxProbability = GetMaxValue("probability", list);
-        int maxDuration = GetMaxValue("duration", list);
-        int maxSubjectNum = GetMaxValue("subject", list);
-        int minPower = GetMinValue("power", list);
-        int minProbability = GetMinValue("probability", list);
-        int minDuration = GetMinValue("duration", list);
-        int minSubjectNum = GetMinValue("subject", list);
+        float maxPower = GetMaxValue("power", list);
+        float maxProbability = GetMaxValue("probability", list);
+        float maxDuration = GetMaxValue("duration", list);
+        float maxSubjectNum = GetMaxValue("subject", list);
+        float minPower = GetMinValue("power", list);
+        float minProbability = GetMinValue("probability", list);
+        float minDuration = GetMinValue("duration", list);
+        float minSubjectNum = GetMinValue("subject", list);
 
         for (int i = 0; i < list.Count; i++)
         {
-            int power = list[i].GetPower();
+            float power = list[i].GetPower();
             int probability = list[i].GetProbability();
             int duration = list[i].GetDuration();
             string subject = list[i].GetSubject();
@@ -880,9 +882,9 @@ public class DataSetting : MonoBehaviour
     /// <summary>
     /// 引数に関しての最大の値を返す
     /// </summary>
-    int GetMaxValue(string name, List<Skill> list)
+    float GetMaxValue(string name, List<Skill> list)
     {
-        int max = 0;
+        float max = 0;
         foreach (var n in list)
         {
             switch (name)
@@ -935,9 +937,9 @@ public class DataSetting : MonoBehaviour
     /// <summary>
     /// 引数に関しての最小の値を返す
     /// </summary>
-    int GetMinValue(string name, List<Skill> list)
+    float GetMinValue(string name, List<Skill> list)
     {
-        int min = -1;
+        float min = -1;
         foreach (var n in nodeSkillData)
         {
             switch (name)
