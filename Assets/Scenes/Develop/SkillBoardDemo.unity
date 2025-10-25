@@ -3434,7 +3434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d89011abe22ca340a30c3a8faaa807a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: 0.01
+  sensitivity: 1
   scaleSpeed: 0.1
   minScale: 0.5
   maxScale: 2
@@ -3481,69 +3481,33 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3355104442248727469}
     - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: skillStatusLoader
-      value: 
-      objectReference: {fileID: 6366187794288363692}
-    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: creatSetting.Array.size
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: scriptableObjects.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: creatSetting.Array.data[0].textAsset
       value: 
-      objectReference: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+      objectReference: {fileID: 4900000, guid: 872e7bf133051a949a602f9d387ca198, type: 3}
     - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: creatSetting.Array.data[1].textAsset
       value: 
-      objectReference: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+      objectReference: {fileID: 4900000, guid: d65bdde3d65435e4da258741fec40659, type: 3}
     - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: creatSetting.Array.data[2].textAsset
       value: 
-      objectReference: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
-    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: creatSetting.Array.data[0].dataSetting
-      value: 
-      objectReference: {fileID: 3355104442248727469}
-    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: creatSetting.Array.data[1].dataSetting
-      value: 
-      objectReference: {fileID: 4229170906398237941}
-    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: creatSetting.Array.data[2].dataSetting
-      value: 
-      objectReference: {fileID: 5368174510845965075}
-    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: creatSetting.Array.data[0].defaultAsset
-      value: 
-      objectReference: {fileID: 102900000, guid: d61e9ef169736ae4e83402583ec4aad6, type: 3}
+      objectReference: {fileID: 4900000, guid: 7ae48ff97b9c8a846ab039251d37da7b, type: 3}
     - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: creatSetting.Array.data[0].targetFolder
       value: 
       objectReference: {fileID: 102900000, guid: d61e9ef169736ae4e83402583ec4aad6, type: 3}
     - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: creatSetting.Array.data[1].defaultAsset
-      value: 
-      objectReference: {fileID: 102900000, guid: 616a19cdc3873824f8f77dd459c6a69a, type: 3}
-    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: creatSetting.Array.data[1].targetFolder
       value: 
       objectReference: {fileID: 102900000, guid: 616a19cdc3873824f8f77dd459c6a69a, type: 3}
     - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: creatSetting.Array.data[2].defaultAsset
-      value: 
-      objectReference: {fileID: 102900000, guid: 9d6d9786056b08f4a817537218e1a9b1, type: 3}
-    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: creatSetting.Array.data[2].targetFolder
       value: 
       objectReference: {fileID: 102900000, guid: 9d6d9786056b08f4a817537218e1a9b1, type: 3}
-    - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: creatSetting.Array.data[0].characterName
-      value: "\u30BE\u30D5\u30A3\u30FC"
-      objectReference: {fileID: 0}
     - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: creatSetting.Array.data[1].characterName
       value: "\u30CE\u30A2"
@@ -3597,10 +3561,6 @@ PrefabInstance:
       value: SkillStatusLoader
       objectReference: {fileID: 0}
     - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: skillJsonFiles.Array.data[0].textAsset
-      value: 
-      objectReference: {fileID: 4900000, guid: 872e7bf133051a949a602f9d387ca198, type: 3}
-    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: skillJsonFiles.Array.data[0].saveFileName
       value: Zophie-skill
       objectReference: {fileID: 0}
@@ -3611,18 +3571,6 @@ PrefabInstance:
     - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: skillJsonFiles.Array.data[2].saveFileName
       value: Rina-skill
-      objectReference: {fileID: 0}
-    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: skillJsonFiles.Array.data[0].characterName
-      value: "\u30BE\u30D5\u30A3\u30FC"
-      objectReference: {fileID: 0}
-    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: skillJsonFiles.Array.data[1].characterName
-      value: "\u30CE\u30A2"
-      objectReference: {fileID: 0}
-    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-      propertyPath: skillJsonFiles.Array.data[2].characterName
-      value: "\u30EA\u30CA"
       objectReference: {fileID: 0}
     - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: statusJsonFiles.Array.data[0].saveFileName
@@ -3653,17 +3601,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
---- !u!114 &6366187794288363692 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
-  m_PrefabInstance: {fileID: 6366187794288363689}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c6d7bf2f98671b46b0efa1a393a08ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6451945041598467792
 MonoBehaviour:
   m_ObjectHideFlags: 0
