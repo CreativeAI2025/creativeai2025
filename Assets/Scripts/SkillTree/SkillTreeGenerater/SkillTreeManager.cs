@@ -39,7 +39,7 @@ public class SkillTreeManager : MonoBehaviour
         UpdateSkillInfoText(0, true);
         skillList = new List<Node>();
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks>();
-        startStatus = parameterTable.parameterRecords[0];
+        if (parameterTable != null) startStatus = parameterTable.parameterRecords[0];
     }
 
     // Update is called once per frame
@@ -142,7 +142,7 @@ public class SkillTreeManager : MonoBehaviour
                 if (n.getId().Equals(id))
                 {
                     text = n.getExplain() + newInfo + "\n必要SP:" + n.GetSp();
-                    Debug.Log(n.ToString());
+                    //Debug.Log(n.ToString());
                 }
             }
         }

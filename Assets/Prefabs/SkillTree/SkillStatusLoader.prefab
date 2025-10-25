@@ -46,14 +46,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillJsonFiles:
-  - characterName: "\u52C7\u8005"
-    textAsset: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+  - characterName: "\u30BE\u30D5\u30A3\u30FC"
+    textAsset: {fileID: 4900000, guid: 872e7bf133051a949a602f9d387ca198, type: 3}
     saveFileName: yuusya-skill
-  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E91"
-    textAsset: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+  - characterName: "\u30CE\u30A2"
+    textAsset: {fileID: 4900000, guid: d65bdde3d65435e4da258741fec40659, type: 3}
     saveFileName: sub-charcter1-skill
-  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E92"
-    textAsset: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
+  - characterName: "\u30EA\u30CA"
+    textAsset: {fileID: 4900000, guid: 7ae48ff97b9c8a846ab039251d37da7b, type: 3}
     saveFileName: sub-charcter2-skill
   statusJsonFiles:
   - characterName: "\u52C7\u8005"
@@ -79,5 +79,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   creatSetting:
   - characterName: "\u30BE\u30D5\u30A3\u30FC"
-    defaultAsset: {fileID: 102900000, guid: d61e9ef169736ae4e83402583ec4aad6, type: 3}
-    dataSetting: {fileID: 0}
+    targetFolder: {fileID: 0}
+    textAsset: {fileID: 0}
+  powerValue: 1
+  probabilityValue: 1
+  durationValue: 1
+  subjectValue: 1
+  dataSetting: {fileID: 0}
