@@ -42,7 +42,7 @@ public class ObjectEngine : MonoBehaviour
         ConversationTextManager.Instance.OnConversationEnd += () => conversationFlag = false;
         mapDataController.SetChange(ResetAction);
         ResetAction();
-        //PlayerMove(changedPos);
+        PlayerMove(changedPos);
     }
 
     private void ResetAction()
