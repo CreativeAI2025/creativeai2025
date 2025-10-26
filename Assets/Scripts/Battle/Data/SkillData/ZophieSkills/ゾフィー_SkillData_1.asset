@@ -15,5 +15,11 @@ MonoBehaviour:
   skillId: 1
   skillName: "\u30B9\u30E9\u30C3\u30B7\u30E5"
   skillDesc: "\u6575\u4E00\u4F53\u306B\u653B\u6483\u529B\u306E1.5\u500D\u306E\u7269\u7406\u653B\u6483"
-  cost: 7
-  skillEffects: []
+  cost: 10
+  skillEffect:
+    skillCategory: 2
+    EffectTarget: 3
+    value: 1.5
+    probability: 0
+    status: 
+    duration: 0

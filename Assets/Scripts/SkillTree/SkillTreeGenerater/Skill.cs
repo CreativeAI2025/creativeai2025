@@ -10,7 +10,7 @@ public class Skill
     private string subject;//対象
     private string action;//行動(攻撃、回復など)
     private int probability;//確率
-    private int power;//効果量
+    private float power;//効果量
     private string type;//種類（物理攻撃、特殊攻撃など）
     private string status;//バフ・デバフ（ステータス）
     private string extra;//追加効果
@@ -19,7 +19,7 @@ public class Skill
     private int sp;//　SP（スキル獲得ポイント）
     private float evaluationValue;//評価値
 
-    public Skill(string name, string explain, string subject, string action, int probability, int power, string type, string status, string extra, int duration)
+    public Skill(string name, string explain, string subject, string action, int probability, float power, string type, string status, string extra, int duration)
     {//コンストラクタ（スキル用（詳細情報））
         this.id = 0;//ID
         this.explain = explain;
@@ -45,7 +45,7 @@ public class Skill
     public string GetSubject() { return subject; }
     public string GetAction() { return action; }
     public int GetProbability() { return probability; }
-    public int GetPower() { return power; }
+    public float GetPower() { return power; }
     public string GetTypeName() { return type; }
     public string GetStatus() { return status; }
     public string GetExtra() { return extra; }

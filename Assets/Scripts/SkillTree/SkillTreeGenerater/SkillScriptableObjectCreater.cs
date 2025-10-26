@@ -39,7 +39,7 @@ public class SkillScriptableObjectCreater : MonoBehaviour
 
             if (list.targetFolder == null)
             {
-                Debug.LogError($"❌ {list.characterName} の targetFolder が設定されていません。");
+                Debug.LogError($"{list.characterName} の targetFolder が設定されていません。");
                 continue;
             }
 
@@ -49,7 +49,7 @@ public class SkillScriptableObjectCreater : MonoBehaviour
 
             if (!Directory.Exists(folderPath))
             {
-                Debug.LogError($"❌ フォルダが存在しません: {folderPath}");
+                Debug.LogError($"フォルダが存在しません: {folderPath}");
                 continue;
             }
 
@@ -64,6 +64,73 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                 asset.skillName = skill.GetName();
                 asset.cost = skill.GetMp();
                 asset.skillDesc = skill.GetExplain();
+
+                SkillCategory skillCategory = SkillCategory.None;
+
+                switch (skill.GetAction())
+                {
+                    case "物理攻撃":
+                        skillCategory = SkillCategory.Damage;
+                        break;
+                    case "魔法攻撃":
+                        skillCategory = SkillCategory.Damage;
+                        break;
+                    case "特殊攻撃":
+                        skillCategory = SkillCategory.Damage;
+                        break;
+                    case "回復":
+                        skillCategory = SkillCategory.Recovery;
+                        break;
+                    case "復活":
+                        skillCategory = SkillCategory.None;
+                        break;
+                    case "強化":
+                        skillCategory = SkillCategory.Support;
+                        break;
+                    case "弱体":
+                        skillCategory = SkillCategory.None;
+                        break;
+                    case "":
+                        break;
+                    default:
+                        break;
+                }
+
+
+                EffectTarget effectTarget = EffectTarget.EnemySolo;
+
+                switch (skill.GetSubject())
+                {
+                    case "相手":
+                        effectTarget = EffectTarget.EnemySolo;
+                        break;
+                    case "相手全体":
+                        effectTarget = EffectTarget.EnemyAll;
+                        break;
+                    case "味方1人":
+                        effectTarget = EffectTarget.FriendSolo;
+                        break;
+                    case "味方全体":
+                        effectTarget = EffectTarget.FriendAll;
+                        break;
+                    case "自分":
+                        effectTarget = EffectTarget.Own;
+                        break;
+                    case "不明":
+                        break;
+                    default:
+                        break;
+                }
+
+
+                asset.skillEffect = new SkillEffect(
+                        skillCategory,
+                        effectTarget,
+                        skill.GetPower(),
+                        skill.GetProbability(),
+                        skill.GetStatus(),
+                        skill.GetDuration()
+                    );
 
                 // アセット作成
                 AssetDatabase.CreateAsset(asset, assetPath);
@@ -96,6 +163,6 @@ public class SkillScriptableObjectCreater : MonoBehaviour
         }
 
         AssetDatabase.Refresh();
-        Debug.Log($"🧹 フォルダをクリーンアップしました: {folderPath}");
+        Debug.Log($"フォルダをクリーンアップしました: {folderPath}");
     }
 }

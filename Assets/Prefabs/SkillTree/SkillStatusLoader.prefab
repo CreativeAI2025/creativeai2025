@@ -46,25 +46,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillJsonFiles:
-  - characterName: "\u52C7\u8005"
-    textAsset: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
-    saveFileName: yuusya-skill
-  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E91"
-    textAsset: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
-    saveFileName: sub-charcter1-skill
-  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E92"
-    textAsset: {fileID: 4900000, guid: 61625589eb239444591788dce4ef63e2, type: 3}
-    saveFileName: sub-charcter2-skill
+  - characterName: "\u30BE\u30D5\u30A3\u30FC"
+    textAsset: {fileID: 4900000, guid: 872e7bf133051a949a602f9d387ca198, type: 3}
+    saveFileName: Zophie-skill
+  - characterName: "\u30CE\u30A2"
+    textAsset: {fileID: 4900000, guid: d65bdde3d65435e4da258741fec40659, type: 3}
+    saveFileName: Noa-skill
+  - characterName: "\u30EA\u30CA"
+    textAsset: {fileID: 4900000, guid: 7ae48ff97b9c8a846ab039251d37da7b, type: 3}
+    saveFileName: Rina-skill
   statusJsonFiles:
-  - characterName: "\u52C7\u8005"
+  - characterName: "\u30BE\u30D5\u30A3\u30FC"
     textAsset: {fileID: 4900000, guid: 9b8e526f4d5e7ff4ab2bed9234939c96, type: 3}
-    saveFileName: yuusya-status
-  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E91"
+    saveFileName: Zophie-status
+  - characterName: "\u30CE\u30A2"
     textAsset: {fileID: 4900000, guid: 9b8e526f4d5e7ff4ab2bed9234939c96, type: 3}
-    saveFileName: sub-character1-status
-  - characterName: "\u30B5\u30D6\u30AD\u30E3\u30E92"
+    saveFileName: Noa-status
+  - characterName: "\u30EA\u30CA"
     textAsset: {fileID: 4900000, guid: 9b8e526f4d5e7ff4ab2bed9234939c96, type: 3}
-    saveFileName: sub-character2-status
+    saveFileName: Rina-status
 --- !u!114 &-841139126875265673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,5 +79,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   creatSetting:
   - characterName: "\u30BE\u30D5\u30A3\u30FC"
-    defaultAsset: {fileID: 102900000, guid: d61e9ef169736ae4e83402583ec4aad6, type: 3}
-    dataSetting: {fileID: 0}
+    targetFolder: {fileID: 102900000, guid: d61e9ef169736ae4e83402583ec4aad6, type: 3}
+    textAsset: {fileID: 4900000, guid: 872e7bf133051a949a602f9d387ca198, type: 3}
+  - characterName: "\u30CE\u30A2"
+    targetFolder: {fileID: 102900000, guid: 616a19cdc3873824f8f77dd459c6a69a, type: 3}
+    textAsset: {fileID: 4900000, guid: d65bdde3d65435e4da258741fec40659, type: 3}
+  - characterName: "\u30EA\u30CA"
+    targetFolder: {fileID: 102900000, guid: 9d6d9786056b08f4a817537218e1a9b1, type: 3}
+    textAsset: {fileID: 4900000, guid: 7ae48ff97b9c8a846ab039251d37da7b, type: 3}
+  powerValue: 1
+  probabilityValue: 1
+  durationValue: 1
+  subjectValue: 1
+  dataSetting: {fileID: 0}
