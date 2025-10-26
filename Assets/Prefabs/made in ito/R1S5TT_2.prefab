@@ -5738,6 +5738,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0336eab6ce614884bbcf46b1bd1f55b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shakeDuration: 0.1
+  shakeCount: 3
+  shakeAmplitudeX: 0.3
+  shakeAmplitudeY: 0
+  shakeDirection: 1
 --- !u!114 &8239912942671590505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12730,7 +12735,7 @@ GameObject:
   - component: {fileID: 4072284188599833326}
   - component: {fileID: 4598297164001798246}
   m_Layer: 0
-  m_Name: R1S5TT_firsthalf_Timeline
+  m_Name: R1S5TT_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13332,12 +13337,12 @@ GameObject:
   m_Component:
   - component: {fileID: 423975132650755575}
   m_Layer: 0
-  m_Name: R1S5TT_secondhalf
+  m_Name: R1S5TT_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &423975132650755575
 Transform:
   m_ObjectHideFlags: 0
