@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 public class BattleActionProcessorAttack : MonoBehaviour
 {
     /// <summary>
@@ -49,6 +51,14 @@ public class BattleActionProcessorAttack : MonoBehaviour
     IEnumerator ProcessAttackActionCoroutine(BattleAction action)
     {
         var actorParam = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
+        List<int> validTargetIds = _actionProcessor.GetValidTargets(action.targetIds, action.isTargetFriend);
+
+        if (!validTargetIds.Any())
+        {
+            Logger.Instance.Log($"アクションの実行前にターゲットがいなくなったため、{action.battleCommand}をキャンセルします。");
+            _actionProcessor.SetPauseProcess(false);
+            yield break; // ターゲットがいなければキャンセルし、次の行動へ
+        }
 
         // 💡 攻撃メッセージをターゲットごとに表示するため、ループの外側でメッセージポーズを設定
         _actionProcessor.SetPauseMessage(true);
@@ -56,7 +66,7 @@ public class BattleActionProcessorAttack : MonoBehaviour
         _messageWindowController.GenerateAttackMessage(actorName);
         while (_actionProcessor.IsPausedMessage) { yield return null; }
 
-        foreach (var targetId in action.targetIds)
+        foreach (var targetId in validTargetIds)
         {
             var targetParam = _actionProcessor.GetCharacterParameter(targetId, action.isTargetFriend);
 

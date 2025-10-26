@@ -70,22 +70,35 @@ public class BattleActionProcessorSkill : MonoBehaviour
 
     IEnumerator ProcessSkillActionCoroutine(BattleAction action, SkillData skillData)
     {
-        // ... (既存の消費MP処理) ...
+        // ... (MP消費処理) ...
 
         _actionProcessor.SetPauseProcess(true);
-        List<int> effectiveTargetIds = GetEffectiveTargetIds(action, skillData);
 
-        // 魔法詠唱メッセージを一度だけ表示
+        // 修正: 有効なターゲットのみでリストを再構築（他のアクションで倒された敵を除外）
+        List<int> effectiveTargetIds = _actionProcessor.GetValidTargets(action.targetIds, action.isTargetFriend);
+
+
+        // 魔法詠唱メッセージを一度だけ表示（ここは変更なし）
         string actorName = _actionProcessor.GetCharacterName(action.actorId, action.isActorFriend);
         _actionProcessor.SetPauseMessage(true);
         _messageWindowController.GenerateSkillCastMessage(actorName, skillData.skillName);
         while (_actionProcessor.IsPausedMessage) yield return null;
+
+        // 追記: 詠唱メッセージの後に、メッセージウィンドウをクリアして次のメッセージに備えます
+        // これにより、詠唱メッセージとダメージメッセージが混ざるのを防ぎます
+        //_messageWindowController.GetMessageUIController().ClearMessage();
 
         // ----------------------------------------------------
         // 💡 複数ターゲットへの効果適用ループ
         // ----------------------------------------------------
         foreach (int currentTargetId in effectiveTargetIds)
         {
+            // 💡 実行直前チェック: 既に戦闘終了している場合は、即座に中断
+            if (_battleManager.IsBattleFinished)
+            {
+                yield break;
+            }
+
             Logger.Instance.Log($"ターゲット ID:{currentTargetId} への処理を開始。");
 
             foreach (var skillEffect in skillData.skillEffects)
@@ -95,65 +108,65 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 // --- ダメージ計算と適用 ---
                 if (skillEffect.skillCategory == SkillCategory.Damage)
                 {
-                    int damageValue = 100; // ダメージ計算式を適用してください
+                    // ... (ダメージ計算とステータス変更のロジックはそのまま) ...
+                    int damageValue = 100;
                     int hpDelta = -damageValue;
-                    int mpDelta = 0;
                     bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
                     bool isTargetDefeated = false;
 
                     // ステータス変更
                     if (isTargetFriend)
                     {
-                        CharacterStatusManager.Instance.ChangeCharacterStatus(currentTargetId, hpDelta, mpDelta);
+                        CharacterStatusManager.Instance.ChangeCharacterStatus(currentTargetId, hpDelta, 0);
                         isTargetDefeated = CharacterStatusManager.Instance.IsCharacterDefeated(currentTargetId);
                     }
                     else
                     {
-                        EnemyStatusManager.Instance.ChangeEnemyStatus(currentTargetId, hpDelta, mpDelta);
+                        EnemyStatusManager.Instance.ChangeEnemyStatus(currentTargetId, hpDelta, 0);
                         isTargetDefeated = EnemyStatusManager.Instance.IsEnemyDefeated(currentTargetId);
 
                         if (isTargetDefeated)
                             EnemyStatusManager.Instance.OnDefeatEnemy(currentTargetId);
                     }
 
-                    // ダメージメッセージ表示
-                    _actionProcessor.SetPauseMessage(true); // 修正: メッセージポーズをセット
+                    // 1. ダメージメッセージ表示と待機
+                    _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
                     string targetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
                     _messageWindowController.GenerateDamageMessage(targetName, damageValue);
                     _battleManager.OnUpdateStatus();
-                    while (_actionProcessor.IsPausedMessage) yield return null;
+                    while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
 
-                    // 撃破メッセージ表示
+                    // 2. 撃破メッセージ表示と待機
                     if (isTargetDefeated)
                     {
-                        _actionProcessor.SetPauseMessage(true);
+                        _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
                         if (isTargetFriend)
                         {
                             _messageWindowController.GenerateDefeateFriendMessage(targetName);
                         }
                         else
                         {
-                            // 💡 修正: 敵スプライトの更新
                             _battleSpriteController.RefreshActiveEnemies();
                             _messageWindowController.GenerateDefeateEnemyMessage(targetName);
                         }
-                        while (_actionProcessor.IsPausedMessage) yield return null;
+                        while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
 
-                        // 戦闘終了判定
+                        // 勝利/ゲームオーバー判定
                         if (EnemyStatusManager.Instance.IsAllEnemyDefeated())
                             _battleManager.OnEnemyDefeated();
                         if (CharacterStatusManager.Instance.IsAllCharacterDefeated())
                             _battleManager.OnGameover();
-                        if (!_battleManager.IsBattleFinished)
+
+                        // 💡 修正: 戦闘が終了したら、即座にコルーチンを終了
+                        if (_battleManager.IsBattleFinished)
                         {
-                            _actionProcessor.SetPauseProcess(false);
+                            yield break;
                         }
                     }
                 }
                 // --- 回復計算と適用 ---
                 else if (skillEffect.skillCategory == SkillCategory.Recovery)
                 {
-                    // ... (回復ロジック、メッセージ表示はそのまま) ...
                     int healValue = DamageFormula.CalculateHealValue(skillEffect.value);
                     bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
 
@@ -163,24 +176,49 @@ public class BattleActionProcessorSkill : MonoBehaviour
                     else
                         EnemyStatusManager.Instance.ChangeEnemyStatus(currentTargetId, healValue, 0);
 
-                    // 回復メッセージ表示
-                    _pauseSkillEffect = true;
+                    // 回復メッセージ表示と待機
+                    _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
                     string targetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
                     _messageWindowController.GenerateHpHealMessage(targetName, healValue);
                     _battleManager.OnUpdateStatus();
-                    while (_pauseSkillEffect) yield return null;
+                    while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
                 }
-                // ... （他の効果も同様）
-            }
-            // ❌ 削除: _actionProcessor.SetPauseProcess(false);
-            // ❌ 削除: yield break; 
-        }
 
-        // 💡 修正: ループがすべて完了した後、戦闘が終了していない場合にのみプロセスを再開
+                // 修正: ターゲットの処理が終わったら、次のターゲットに進む前にユーザー入力待ちを挟む
+                if (!_battleManager.IsBattleFinished)
+                {
+                    yield return StartCoroutine(WaitForUserInput());
+                }
+            }
+        } // ターゲットループ終了
+
+        // 全てのターゲット処理が完了し、戦闘が終了していない場合にのみプロセスを再開
         if (!_battleManager.IsBattleFinished)
         {
             _actionProcessor.SetPauseProcess(false);
         }
+    }
+
+    /// <summary>
+    ///💡 新規コルーチン: ターゲット処理の区切りとして、ユーザー入力によるメッセージクリアと待機を行います。
+    /// </summary>
+    IEnumerator WaitForUserInput()
+    {
+        // 1. ページャーを表示してキー入力を促す
+        _messageWindowController.ShowPager();
+
+        // 2. メッセージの待機フラグをセット
+        _actionProcessor.SetPauseMessage(true);
+
+        // 3. ユーザーがキーを押すのを待つ
+        while (_messageWindowController._waitKeyInput)
+        {
+            yield return null;
+        }
+
+        // 4. ページャーを非表示にし、メッセージをクリアして次のターゲットに備える
+        _messageWindowController.HidePager();
+        _messageWindowController.ClearMessage();
     }
 
     public void SetReferences(BattleManager battleManager, BattleActionProcessor actionProcessor)

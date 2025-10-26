@@ -19,6 +19,18 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     float _messageInterval = 1.0f;
 
     /// <summary>
+    /// キー入力状態を保存するフラグ
+    /// </summary>
+    public bool _waitKeyInput;
+
+    private InputSetting _inputSetting;
+
+    void Start()
+    {
+        _inputSetting = InputSetting.Load();
+    }
+
+    /// <summary>
     /// ウィンドウを表示します。
     /// </summary>
     public void ShowWindow()
@@ -62,7 +74,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     public void GenerateDamageMessage(string targetName, int damage)
     {
         string message = $"{targetName}{BattleMessage.DefendSuffix} {damage} {BattleMessage.DamageSuffix}";
-        StartCoroutine(ShowMessageAutoProcess(message));
+        StartCoroutine(ShowMessageWaitInputProcess(message));
     }
 
     /// <summary>
@@ -71,7 +83,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     public void GenerateDefeateEnemyMessage(string targetName)
     {
         string message = $"{targetName}{BattleMessage.DefeatEnemySuffix}";
-        StartCoroutine(ShowMessageAutoProcess(message));
+        StartCoroutine(ShowMessageWaitInputProcess(message));
     }
 
     /// <summary>
@@ -80,7 +92,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     public void GenerateDefeateFriendMessage(string targetName)
     {
         string message = $"{targetName}{BattleMessage.DefeatFriendSuffix}";
-        StartCoroutine(ShowMessageAutoProcess(message));
+        StartCoroutine(ShowMessageWaitInputProcess(message));
     }
 
     /// <summary>
@@ -138,7 +150,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     public void GenerateHpHealMessage(string targetName, int healNum)
     {
         string message = $"{targetName}{BattleMessage.HealTargetSuffix} {healNum} {BattleMessage.HealNumSuffix}";
-        StartCoroutine(ShowMessageAutoProcess(message));
+        StartCoroutine(ShowMessageWaitInputProcess(message));
     }
     /// <summary>
     /// MPが回復する時のメッセージを生成します。
@@ -146,12 +158,18 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     public void GenerateMpHealMessage(string targetName, int healNum)
     {
         string message = $"{targetName}{BattleMessage.HealTargetSuffix} {healNum} {BattleMessage.HealNumSuffix}";
-        StartCoroutine(ShowMessageAutoProcess(message));
+        StartCoroutine(ShowMessageWaitInputProcess(message));
     }
+
+    /// <summary>
+    /// 生き返ったときのメッセージを表示
+    /// </summary>
+    /// <param name="targetName"></param>
+    /// <param name="hpValue"></param>
     public void GenerateReviveMessage(string targetName, int hpValue)
     {
         string message = $"{targetName} は蘇生した！ HPが {hpValue} 回復した！";
-        StartCoroutine(ShowMessageAutoProcess(message));
+        StartCoroutine(ShowMessageWaitInputProcess(message));
     }
     /// <summary>
     /// アイテムを使用した時のメッセージを生成します。
@@ -170,7 +188,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     {
         uiController.ClearMessage();
         string message = $"{characterName}{BattleMessage.RunnerSuffix}";
-        StartCoroutine(ShowMessageAutoProcess(message));
+        StartCoroutine(ShowMessageWaitInputProcess(message));
     }
 
     /// <summary>
@@ -179,7 +197,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     public void GenerateRunFailedMessage()
     {
         string message = BattleMessage.RunFailed;
-        StartCoroutine(ShowMessageAutoProcess(message));
+        StartCoroutine(ShowMessageWaitInputProcess(message));
     }
 
     /// <summary>
@@ -189,7 +207,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     {
         uiController.ClearMessage();
         string message = $"{characterName}{BattleMessage.GameoverSuffix}";
-        StartCoroutine(ShowMessageAutoProcess(message));
+        StartCoroutine(ShowMessageWaitInputProcess(message));
     }
 
     /// <summary>
@@ -199,7 +217,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     {
         uiController.ClearMessage();
         string message = $"{characterName}{BattleMessage.WinSuffix}";
-        StartCoroutine(ShowMessageAutoProcess(message));
+        StartCoroutine(ShowMessageWaitInputProcess(message));
     }
 
     /// <summary>
@@ -246,6 +264,11 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
         uiController.HideCursor();
     }
 
+    public void ClearMessage()
+    {
+        uiController.ClearMessage();
+    }
+
     /// <summary>
     /// メッセージを順番に表示するコルーチンです。
     /// </summary>
@@ -265,6 +288,40 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     {
         uiController.AppendMessage(message);
         yield return new WaitForSeconds(interval);
+        BattleManager.Instance.OnFinishedShowMessage();
+    }
+
+    /// <summary>
+    /// 決定キーを入力するまで、次のメッセージを表示しないコルーチン
+    /// </summary>
+    /// <param name="message"></param>
+    /// <returns></returns>
+    IEnumerator ShowMessageWaitInputProcess(string message)
+    {
+        // メッセージの追記
+        uiController.AppendMessage(message);
+
+        yield return new WaitForSeconds(_messageInterval);
+
+        // 1. ページャーを表示してキー入力を促す
+        ShowPager();
+
+        // 2. ユーザー入力を待つ
+        _waitKeyInput = true;
+        while (_waitKeyInput)
+        {
+            // InputGameKey.cs を利用して決定ボタンが押されたかチェック
+            if (_inputSetting.GetDecideInputDown())
+            {
+                _waitKeyInput = false; // 待機状態を解除
+            }
+            yield return null; // 毎フレーム待機
+        }
+
+        // 3. 待機解除後、クリーンアップ
+        HidePager();
+
+        // 4. BattleManagerに処理完了を通知（BattleActionProcessor.SetPauseMessage(false)へ繋がる）
         BattleManager.Instance.OnFinishedShowMessage();
     }
 }

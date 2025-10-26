@@ -116,6 +116,12 @@ public class EnemyStatusManager : DontDestroySingleton<EnemyStatusManager>
         return enemyStatus.currentHp <= 0;
     }
 
+    public bool IsEnemyRunaway(int battleId)
+    {
+        var enemyStatus = GetEnemyStatusByBattleId(battleId);
+        return enemyStatus.isRunaway;
+    }
+
     /// <summary>
     /// 引数の敵キャラクターが倒れたフラグをセットします。
     /// </summary>

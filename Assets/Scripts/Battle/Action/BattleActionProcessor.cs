@@ -155,18 +155,18 @@ public class BattleActionProcessor : MonoBehaviour
             if (action.isActorFriend)
             {
                 var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
-                if (charaStatus != null && charaStatus.IsCharaStop)
+                if (charaStatus != null && (charaStatus.IsCharaStop || charaStatus.isDefeated))
                 {
-                    Logger.Instance.Log($"味方 {action.actorId} は行動不能で動けなかった！");
+                    Logger.Instance.Log($"味方 {action.actorId} は行動不能（倒された/状態異常）で動けなかった！");
                     continue;
                 }
             }
             else
             {
                 var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.actorId);
-                if (enemyStatus != null && enemyStatus.IsEnemyStop)
+                if (enemyStatus != null && (enemyStatus.IsEnemyStop || enemyStatus.isDefeated))
                 {
-                    Logger.Instance.Log($"敵 {action.actorId} は行動不能で動けなかった！");
+                    Logger.Instance.Log($"敵 {action.actorId} は行動不能（倒された/状態異常）で動けなかった！");
                     continue;
                 }
             }
@@ -301,6 +301,28 @@ public class BattleActionProcessor : MonoBehaviour
         foreach (var action in query)
         {
             Logger.Instance.Log($"キャラクターID : {action.actorId}, 味方かどうか : {action.isActorFriend}, Priority : {action.priority}, Command : {action.battleCommand}");
+        }
+    }
+
+    /// <summary>
+    /// アクション実行前に、ターゲットリストから倒れているキャラクターを除外します。
+    /// </summary>
+    /// <param name="targetIds">ターゲットのIDリスト</param>
+    /// <param name="isTargetFriend">ターゲットが味方かどうか</param>
+    /// <returns>有効なターゲットIDのみを含む新しいリスト</returns>
+    public List<int> GetValidTargets(List<int> targetIds, bool isTargetFriend)
+    {
+        if (isTargetFriend)
+        {
+            // 味方リストから、倒れていないキャラクターのみを抽出
+            return targetIds.Where(id => !CharacterStatusManager.Instance.IsCharacterDefeated(id)).ToList();
+        }
+        else
+        {
+            // 敵リストから、倒れていない（isDefeated/isRunawayではない）敵のみを抽出
+            return targetIds.Where(id =>
+                !EnemyStatusManager.Instance.IsEnemyDefeated(id) &&
+                !EnemyStatusManager.Instance.IsEnemyRunaway(id)).ToList();
         }
     }
 }
