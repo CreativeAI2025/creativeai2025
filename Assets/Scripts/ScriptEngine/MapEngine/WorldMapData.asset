@@ -12,13 +12,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c7565ae220b80a4f9879696791546a7, type: 3}
   m_Name: WorldMapData
   m_EditorClassIdentifier: 
-  backgroundImage: {fileID: 21300000, guid: 4029a9cfeb86f134c9c5af05993eaac8, type: 3}
+  backgroundImage: {fileID: 0}
   mapPoints:
   - pointName: "\u6751"
     sceneName: Village
     areaId: 
-    position: {x: 10, y: 5}
+    position: {x: 0, y: 0}
     unlockedByDefault: 1
-    neighborIndices: 
+    neighborIndices: 01000000
+    icon: {fileID: 0}
+  - pointName: "\u68EE"
+    sceneName: Forest
+    areaId: 
+    position: {x: 9, y: 3}
+    unlockedByDefault: 1
+    neighborIndices: 0000000002000000
+    icon: {fileID: 0}
+  - pointName: "\u6D77"
+    sceneName: Sea
+    areaId: 
+    position: {x: 5, y: 5}
+    unlockedByDefault: 1
+    neighborIndices: 0100000003000000
+    icon: {fileID: 0}
+  - pointName: "\u6D1E\u7A9F"
+    sceneName: Cave
+    areaId: 
+    position: {x: 4, y: 4}
+    unlockedByDefault: 1
+    neighborIndices: 0200000004000000
+    icon: {fileID: 0}
+  - pointName: "\u738B\u56FD"
+    sceneName: Town
+    areaId: 
+    position: {x: 6, y: 7}
+    unlockedByDefault: 0
+    neighborIndices: 03000000
     icon: {fileID: 0}
   startingPointIndex: 0
