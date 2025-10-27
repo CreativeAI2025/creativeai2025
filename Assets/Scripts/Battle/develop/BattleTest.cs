@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 public class BattleTest : MonoBehaviour
 {
-    [SerializeField] private int _enemyId;
+    [SerializeField] private List<int> _enemyIds;
     private bool _battleFlag = false;
     private InputSetting _inputSetting;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -37,13 +37,13 @@ public class BattleTest : MonoBehaviour
     {
         Debug.Log("バトル開始");
         _battleFlag = true;
-        Battle(_enemyId);
+        Battle(_enemyIds);
         await UniTask.WaitUntil(() => !_battleFlag);
         Debug.Log("戦闘イベント終了");
     }
 
-    private void Battle(int enemyId)
+    private void Battle(List<int> enemyId)
     {
-        BattleManager.Instance.StartBattle(enemyId);
+        BattleManager.Instance.InitializeFromIds(enemyId);
     }
 }

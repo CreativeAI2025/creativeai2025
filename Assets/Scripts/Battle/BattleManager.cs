@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 /// <summary>
 /// 戦闘に関する機能を管理するクラスです。
 /// </summary>
@@ -90,6 +91,56 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     private Action _onBattleStart;
     public event Action OnBattleEnd { add => _onBattleEnd += value; remove => _onBattleEnd -= value; }
     private Action _onBattleEnd;
+    // 戦闘データ
+    BattleData battleData;
+
+    /// <summary>
+    /// jsonファイルを指定して、戦闘を開始する
+    /// </summary>
+    /// <param name="filename"></param> <summary>
+    /// jsonファイル名（拡張子.jsonは不要）
+    /// </summary>
+    /// <param name="filename"></param>
+    public void InitializeFromJson(string fileName)
+    {
+        string filePath = string.Join('/', "BattleData", fileName + ".json");
+        IFileAssetLoader loader = SaveUtility.FileAssetLoaderFactory();
+        string assetsPath = loader.GetPath(filePath);
+        battleData = SaveUtility.JsonToData<BattleData>(assetsPath);
+        Initialize();
+    }
+
+    /// <summary>
+    /// 直接IDを指定して戦闘を開始する
+    /// </summary>
+    /// <param name="enemyIds"></param>
+    public void InitializeFromIds(List<int> enemyIds)
+    {
+        battleData = new BattleData();
+        battleData.EnemyIds = enemyIds.ToArray();
+        //battleData.BGM = "";    // BGMの設定（エンカウントなので、基本的には雑魚戦）
+        int enemyId = enemyIds[0];
+        var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
+        // エンカウントした敵の数に応じて、敵出現メッセージを変える
+        if (enemyIds.Count == 1)
+        {
+            StringBuilder sb = new StringBuilder(enemyData.enemyName);
+            sb.Append(BattleMessage.EnemyAppearSuffix);
+            battleData.EncounterMessage = sb.ToString();
+        }
+        else if (enemyIds.Count <= 4)
+        {
+            StringBuilder sb = new StringBuilder(enemyData.enemyName);
+            sb.Append(BattleMessage.EnemiesAppearSuffix);
+            battleData.EncounterMessage = sb.ToString();
+        }
+        else
+        {
+            battleData.EncounterMessage = BattleMessage.EnemyMaxAppearText;
+        }
+        SetUpEnemyStatus(enemyIds);
+        Initialize();
+    }
 
     /// <summary>
     /// 戦闘のフェーズを変更します。
@@ -99,6 +150,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         BattlePhase = battlePhase;
     }
+
     /// <summary>
     /// 敵キャラクターのステータスをセットします。
     /// </summary>
@@ -110,12 +162,9 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     }
 
     /// <summary>
-    /// 戦闘の開始処理の一部
-    /// StartBattle()関数で、実際に戦闘開始処理を行う。
-    /// StartBattle関数に引数がある場合は、敵のIDを入れることで、任意の敵との戦闘が始まる。
-    /// 引数がない場合は、今いるシーンに適した敵がランダムに出現する。
+    /// 戦闘の開始処理
     /// </summary>
-    private void SetUpBattle()
+    private void Initialize()
     {
         SetPlayerStatus();  // プレイヤー周りの情報をセットする
         Logger.Instance.Log("戦闘を開始します。");
@@ -136,27 +185,23 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         statusEffectManager.SetBattleManager(this);
         // _characterMoverManager.StopCharacterMover();
         _battleStarter.StartBattle(this);
+        ShowEnemyAppearMessage(battleData.EncounterMessage);
     }
 
     /// <summary>
-    /// 引数なしでのバトル（＝ランダムエンカウント）開始処理
+    /// エンカウント時のテキストメッセージを表示する
     /// </summary>
-    public void StartBattle(List<int> enemyIds)
+    /// <param name="message"></param>
+    private void ShowEnemyAppearMessage(string message)
     {
-        SetUpEnemyStatus(enemyIds);
-        SetUpBattle();
-    }
-
-    public void StartBattle(int enemyId)
-    {
-        List<int> ids = new List<int>() { enemyId };
-        SetUpEnemyStatus(ids);
-        Debug.Log("敵IDのセット完了");
-        SetUpBattle();
+        var controller = GetWindowManager().GetMessageWindowController();
+        controller.ShowWindow();
+        controller.GenerateEnemyAppearMessageDirect(message, 2.0f);
     }
 
     /// <summary>
     /// 味方キャラクターのステータスをセットします。
+    /// 多分、ここはいらない（デバッグ用）
     /// </summary>
     private void SetPlayerStatus()
     {
@@ -620,5 +665,28 @@ public class BattleManager : DontDestroySingleton<BattleManager>
 
         // _characterMoverManager.ResumeCharacterMover();
         BattlePhase = BattlePhase.NotInBattle;
+    }
+
+    /// <summary>
+    /// 引数で与えられたフラグ名を、
+    /// 同じく引数で与えられた状態（true/false）に変える関数
+    /// </summary>
+    /// <param name="nextFlag"></param>
+    private void ChangeFlag(KeyValuePair<string, bool>[] nextFlags)
+    {
+        foreach (KeyValuePair<string, bool> flag in nextFlags)
+        {
+            string flagName = flag.Key;
+            bool flagValue = flag.Value;
+            Debug.Log(flagName + ":" + flagValue);
+            if (flagValue)
+            {
+                FlagManager.Instance.AddFlag(flagName);
+            }
+            else
+            {
+                FlagManager.Instance.DeleteFlag(flagName);
+            }
+        }
     }
 }

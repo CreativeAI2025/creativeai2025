@@ -49,12 +49,23 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     }
 
     /// <summary>
-    /// 攻撃時のメッセージを生成します。
+    /// 敵出現時のメッセージを生成します。
     /// </summary>
     public void GenerateEnemyAppearMessage(string enemyName, float appearInterval)
     {
         uiController.ClearMessage();
         string message = $"{enemyName}{BattleMessage.EnemyAppearSuffix}";
+        StartCoroutine(ShowMessageAutoProcess(message, appearInterval));
+    }
+
+    /// <summary>
+    /// 敵出現時のメッセージを、引数で与えられたメッセージをそのまま表示する。
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="appearInterval"></param>
+    public void GenerateEnemyAppearMessageDirect(string message, float appearInterval)
+    {
+        uiController.ClearMessage();
         StartCoroutine(ShowMessageAutoProcess(message, appearInterval));
     }
 

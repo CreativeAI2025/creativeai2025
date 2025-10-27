@@ -38,7 +38,7 @@ public class BattleStarter : MonoBehaviour
         // 敵の名前ウィンドウを表示します。
         ShowEnemyNameWindow();
         // 敵出現のメッセージを表示します。
-        ShowEnemyAppearMessage();
+        //ShowEnemyAppearMessage();
 
         // テスト用機能
         //BattleManager.Instance.StartInputCommandPhase();

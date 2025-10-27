@@ -144,7 +144,7 @@ public class EnemyEncountManager : MonoBehaviour
             // エンカウントでの戦闘を呼び起こす
             Debug.Log("エンカウントした！");
             List<int> enemyIds = GiveEnemyId(encounterData);
-            BattleManager.Instance.StartBattle(enemyIds);
+            BattleManager.Instance.InitializeFromIds(enemyIds);
         }
         else
         {

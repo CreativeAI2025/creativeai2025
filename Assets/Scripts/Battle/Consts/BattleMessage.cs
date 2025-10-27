@@ -10,6 +10,16 @@ public class BattleMessage
     public static readonly string EnemyAppearSuffix = "があらわれた！";
 
     /// <summary>
+    /// 敵が複数出てきた際の出現メッセージのフォーマット
+    /// </summary>
+    public static readonly string EnemiesAppearSuffix = "たちが行く手を阻む！";
+
+    /// <summary>
+    /// 敵が出現数Maxの５体出てきたときの、特別メッセージのフォーマット
+    /// </summary>
+    public static readonly string EnemyMaxAppearText = "これは悪夢だ...！";
+
+    /// <summary>
     /// 攻撃時のメッセージのフォーマットです。
     /// </summary>
     public static readonly string AttackSuffix = "の攻撃！";
