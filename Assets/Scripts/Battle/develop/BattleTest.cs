@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 public class BattleTest : MonoBehaviour
 {
-    [SerializeField] private List<int> _enemyIds;
+    [SerializeField] string filename;
     private bool _battleFlag = false;
     private InputSetting _inputSetting;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -27,9 +27,9 @@ public class BattleTest : MonoBehaviour
         {
             return;
         }
-        if (_inputSetting.GetDecideInputDown())
+        if (Input.GetKey(KeyCode.B))
         {
-            //await CallEvent();    // 戦闘が開始したら、戦闘が終了するまで待つ
+            await CallEvent();    // 戦闘が開始したら、戦闘が終了するまで待つ
         }
     }
 
@@ -37,13 +37,13 @@ public class BattleTest : MonoBehaviour
     {
         Debug.Log("バトル開始");
         _battleFlag = true;
-        Battle(_enemyIds);
+        Battle(filename);
         await UniTask.WaitUntil(() => !_battleFlag);
         Debug.Log("戦闘イベント終了");
     }
 
-    private void Battle(List<int> enemyId)
+    private void Battle(string filename)
     {
-        BattleManager.Instance.InitializeFromIds(enemyId);
+        BattleManager.Instance.InitializeFromJson(filename);
     }
 }

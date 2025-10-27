@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections.Generic;
 
 /// <summary>
 /// 戦闘の開始処理を行うクラスです。
@@ -60,7 +60,7 @@ public class BattleStarter : MonoBehaviour
         var battleSpriteController = BattleManager.Instance.GetBattleSpriteController();
         //battleSpriteController.SetSpritePosition();
         //battleSpriteController.ShowBackground();
-        battleSpriteController.ShowEnemy(BattleManager.Instance.EnemyIds);
+        battleSpriteController.ShowEnemy(new List<int>(BattleManager.Instance.BattleData.EnemyIds));
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ public class BattleStarter : MonoBehaviour
         var controller = BattleManager.Instance.GetWindowManager().GetEnemyNameWindowController();
         controller.ShowWindow();
 
-        var enemyIds = BattleManager.Instance.EnemyIds;
+        var enemyIds = new List<int>(BattleManager.Instance.BattleData.EnemyIds);
         var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyIds[0]);
         controller.SetEnemyName(enemyData.enemyName);
     }
@@ -110,7 +110,7 @@ public class BattleStarter : MonoBehaviour
     /// </summary>
     void ShowEnemyAppearMessage()
     {
-        int enemyId = BattleManager.Instance.EnemyIds[0];
+        int enemyId = new List<int>(BattleManager.Instance.BattleData.EnemyIds)[0];
         var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
         if (enemyData == null)
         {

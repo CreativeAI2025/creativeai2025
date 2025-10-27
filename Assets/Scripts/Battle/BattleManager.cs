@@ -62,12 +62,6 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     public BattlePhase BattlePhase { get; private set; }
 
     /// <summary>
-    /// 戦闘を行う敵のIDのリスト
-    /// </summary>
-    /// <value></value>
-    public List<int> EnemyIds { get; private set; }
-
-    /// <summary>
     /// 選択されたコマンドです。
     /// </summary>
     public BattleCommand SelectedCommand { get; private set; }
@@ -92,7 +86,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     public event Action OnBattleEnd { add => _onBattleEnd += value; remove => _onBattleEnd -= value; }
     private Action _onBattleEnd;
     // 戦闘データ
-    BattleData battleData;
+    public BattleData BattleData { get; private set; }
 
     /// <summary>
     /// jsonファイルを指定して、戦闘を開始する
@@ -106,7 +100,8 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         string filePath = string.Join('/', "BattleData", fileName + ".json");
         IFileAssetLoader loader = SaveUtility.FileAssetLoaderFactory();
         string assetsPath = loader.GetPath(filePath);
-        battleData = SaveUtility.JsonToData<BattleData>(assetsPath);
+        BattleData = SaveUtility.JsonToData<BattleData>(assetsPath);
+        SetUpEnemyStatus(new List<int>(BattleData.EnemyIds));
         Initialize();
     }
 
@@ -116,9 +111,9 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// <param name="enemyIds"></param>
     public void InitializeFromIds(List<int> enemyIds)
     {
-        battleData = new BattleData();
-        battleData.EnemyIds = enemyIds.ToArray();
-        //battleData.BGM = "";    // BGMの設定（エンカウントなので、基本的には雑魚戦）
+        BattleData = new BattleData();
+        BattleData.EnemyIds = enemyIds.ToArray();
+        //BattleData.BGM = "";    // BGMの設定（エンカウントなので、基本的には雑魚戦）
         int enemyId = enemyIds[0];
         var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
         // エンカウントした敵の数に応じて、敵出現メッセージを変える
@@ -126,17 +121,17 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         {
             StringBuilder sb = new StringBuilder(enemyData.enemyName);
             sb.Append(BattleMessage.EnemyAppearSuffix);
-            battleData.EncounterMessage = sb.ToString();
+            BattleData.EncounterMessage = sb.ToString();
         }
         else if (enemyIds.Count <= 4)
         {
             StringBuilder sb = new StringBuilder(enemyData.enemyName);
             sb.Append(BattleMessage.EnemiesAppearSuffix);
-            battleData.EncounterMessage = sb.ToString();
+            BattleData.EncounterMessage = sb.ToString();
         }
         else
         {
-            battleData.EncounterMessage = BattleMessage.EnemyMaxAppearText;
+            BattleData.EncounterMessage = BattleMessage.EnemyMaxAppearText;
         }
         SetUpEnemyStatus(enemyIds);
         Initialize();
@@ -157,7 +152,6 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// <param name="enemyId">敵キャラクターのID</param>
     public void SetUpEnemyStatus(List<int> ids)
     {
-        EnemyIds = ids;
         EnemyStatusManager.Instance.SetUpEnemyStatus(ids);
     }
 
@@ -185,7 +179,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         statusEffectManager.SetBattleManager(this);
         // _characterMoverManager.StopCharacterMover();
         _battleStarter.StartBattle(this);
-        ShowEnemyAppearMessage(battleData.EncounterMessage);
+        ShowEnemyAppearMessage(BattleData.EncounterMessage);
     }
 
     /// <summary>
