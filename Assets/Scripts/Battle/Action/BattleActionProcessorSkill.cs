@@ -77,8 +77,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
         // 修正: 有効なターゲットのみでリストを再構築（他のアクションで倒された敵を除外）
         List<int> effectiveTargetIds = _actionProcessor.GetValidTargets(action.targetIds, action.isTargetFriend);
 
-
-        // 魔法詠唱メッセージを一度だけ表示（ここは変更なし）
+        // 魔法詠唱メッセージを一度だけ表示
         string actorName = _actionProcessor.GetCharacterName(action.actorId, action.isActorFriend);
         _actionProcessor.SetPauseMessage(true);
         _messageWindowController.GenerateSkillCastMessage(actorName, skillData.skillName);
@@ -114,9 +113,22 @@ public class BattleActionProcessorSkill : MonoBehaviour
                     bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
                     bool isTargetDefeated = false;
 
+                    // 基本パラメータの取得
+                    var actorParam = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
+                    var targetParam = _actionProcessor.GetCharacterParameter(currentTargetId, isTargetFriend);
+
+                    // バフ/デバフ倍率の取得
+                    float actorAttackBuff = 1.0f;
+                    float targetDefenceBuff = 1.0f;
+
                     // ステータス変更
                     if (isTargetFriend)
                     {
+                        var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
+                        var targetStatus = isTargetFriend
+                            ? (object)charaStatus
+                            : EnemyStatusManager.Instance.GetEnemyStatusByBattleId(currentTargetId);
+
                         CharacterStatusManager.Instance.ChangeCharacterStatus(currentTargetId, hpDelta, 0);
                         isTargetDefeated = CharacterStatusManager.Instance.IsCharacterDefeated(currentTargetId);
                     }
@@ -182,6 +194,11 @@ public class BattleActionProcessorSkill : MonoBehaviour
                     _messageWindowController.GenerateHpHealMessage(targetName, healValue);
                     _battleManager.OnUpdateStatus();
                     while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+                }
+                // バフの付与と状態異常の回復
+                else if (skillEffect.skillCategory == SkillCategory.Support)
+                {
+
                 }
 
                 // 修正: ターゲットの処理が終わったら、次のターゲットに進む前にユーザー入力待ちを挟む

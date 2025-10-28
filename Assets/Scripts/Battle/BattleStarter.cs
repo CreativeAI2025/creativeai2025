@@ -36,7 +36,6 @@ public class BattleStarter : MonoBehaviour
         ShowCommand();
 
         // 敵の名前ウィンドウを表示します。
-        ShowEnemyNameWindow();
         // 敵出現のメッセージを表示します。
         //ShowEnemyAppearMessage();
 
@@ -90,19 +89,6 @@ public class BattleStarter : MonoBehaviour
         var controller = BattleManager.Instance.GetWindowManager().GetCommandWindowController();
         controller.ShowWindow();
         controller.InitializeCommand();
-    }
-
-    /// <summary>
-    /// 敵キャラクターの名前表示ウィンドウを表示します。
-    /// </summary>
-    void ShowEnemyNameWindow()
-    {
-        var controller = BattleManager.Instance.GetWindowManager().GetEnemyNameWindowController();
-        controller.ShowWindow();
-
-        var enemyIds = new List<int>(BattleManager.Instance.BattleData.EnemyIds);
-        var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyIds[0]);
-        controller.SetEnemyName(enemyData.enemyName);
     }
 
     /// <summary>

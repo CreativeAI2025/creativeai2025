@@ -14,11 +14,6 @@ public class BattleWindowManager : MonoBehaviour
     StatusWindowController _statusWindowController;
 
     /// <summary>
-    /// 敵キャラクターの名前を表示するウィンドウを制御するクラスへの参照です。
-    /// </summary>
-    [SerializeField]
-    EnemyNameWindowController _enemyNameWindowController;
-    /// <summary>
     /// コマンドウィンドウを制御するクラスへの参照です。
     /// </summary>
     [SerializeField]
@@ -59,7 +54,6 @@ public class BattleWindowManager : MonoBehaviour
         _battleWindowControllers = new()
             {
                 _statusWindowController,
-                _enemyNameWindowController,
                 _commandWindowController,
                 _selectItemWindowController,
                 _messageWindowController,
@@ -96,13 +90,6 @@ public class BattleWindowManager : MonoBehaviour
     public StatusWindowController GetStatusWindowController()
     {
         return _statusWindowController;
-    }
-    /// <summary>
-    /// 敵キャラクターの名前を表示するウィンドウを制御するクラスへの参照を取得します。
-    /// </summary>
-    public EnemyNameWindowController GetEnemyNameWindowController()
-    {
-        return _enemyNameWindowController;
     }
     /// <summary>
     /// コマンドウィンドウを制御するクラスへの参照を取得します。

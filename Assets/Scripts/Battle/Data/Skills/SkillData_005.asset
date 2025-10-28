@@ -13,10 +13,16 @@ MonoBehaviour:
   m_Name: SkillData_005
   m_EditorClassIdentifier: 
   skillId: 5
-  skillName: Heal Wind
-  skillDesc: Slightly recovers HP for all allies.
+  skillName: Poison
+  skillDesc: "\u76F8\u624B\uFF11\u4F53\u3092\u3000\u6BD2\u306B\u3059\u308B"
   cost: 10
   skillEffects:
-  - skillCategory: 1
-    EffectTarget: 2
-    value: 20
+  - skillCategory: 3
+    EffectTarget: 3
+    value: 0
+    StatusEffectEnable: 1
+    StatusEffect:
+    - EffectCategory: 0
+      Duration: 0
+      Power: 0
+    Buff: []

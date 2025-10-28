@@ -9,7 +9,7 @@ using System.Linq;
 /// </summary>
 public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowController
 {
-    [SerializeField] TargetSelectionUIController _uiController;
+    [SerializeField] private TargetSelectionUIController _uiController;
     BattleManager _battleManager;
     private InputSetting _inputSetting;
 
@@ -24,6 +24,8 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
     private EffectTarget _actionEffectTarget; // 決定されたアクションのEffectTarget
     private int _uiMarkerOffset;             // UIマーカーの開始位置オフセット (味方=0, 敵=3 など)
     private const int FRIEND_SLOT_COUNT = 3; // UIマーカーにおける味方スロットの数（マーカーリストの境界）
+                                             // ターゲット名リストを保持するフィールド
+    private List<string> _activeTargetNames;
     // -----------------------------------------------------
 
     public void SetUpController(BattleManager battleManager)
@@ -34,6 +36,7 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
     void Start()
     {
         _inputSetting = InputSetting.Load();
+        HideWindow();
     }
 
     /// <summary>
@@ -45,29 +48,38 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
         _selectedItemId = itemId;
         _actorCharacterCursor = actorCursor;
 
-        // 1. EffectTargetを取得
-        _actionEffectTarget = GetActionEffectTarget(command, itemId);
-
         // 2. ターゲットリストとUIオフセットを決定
+        _actionEffectTarget = GetActionEffectTarget(command, itemId);
         _activeTargetIds = GeneratePossibleTargetsList(_actionEffectTarget);
 
-        // 💡 修正: ターゲット属性に基づき、UIマーカーの開始インデックスを設定
+        // 3. ターゲット名リストとオフセットを設定
         if (_actionEffectTarget == EffectTarget.EnemySolo || _actionEffectTarget == EffectTarget.EnemyAll)
         {
-            _uiMarkerOffset = FRIEND_SLOT_COUNT; // 敵のマーカー開始位置
+            _uiMarkerOffset = FRIEND_SLOT_COUNT;
+            _activeTargetNames = GetEnemyNamesByIds(_activeTargetIds); // 💡 敵の名前を取得
         }
         else
         {
-            _uiMarkerOffset = 0; // 味方のマーカー開始位置
+            _uiMarkerOffset = 0;
+            _activeTargetNames = GetCharacterNamesByIds(_activeTargetIds); // 💡 味方の名前を取得
         }
 
         // UIを初期化し、ターゲットを表示
-        // targetCount には、アクティブな ID リストのサイズを渡す
-        _uiController.Initialize(targetCount: _activeTargetIds.Count);
+        // 名前リストもUIコントローラーに渡す
+        _uiController.Initialize(targetCount: _activeTargetIds.Count, targetNames: _activeTargetNames);
         _targetCursorIndex = 0;
 
-        // 💡 修正: UIに渡すインデックスにオフセットを適用
-        _uiController.ShowSelectedCursor(_targetCursorIndex + _uiMarkerOffset);
+        // 💡 修正 3: EffectTargetに応じてカーソル表示を分岐
+        if (_actionEffectTarget == EffectTarget.EnemyAll || _actionEffectTarget == EffectTarget.FriendAll)
+        {
+            // 全体対象の場合、全てのターゲットのカーソルを表示
+            _uiController.ShowAllActiveCursors(_activeTargetIds.Count);
+        }
+        else
+        {
+            // 単体対象の場合、最初のターゲットのみ表示
+            _uiController.ShowSelectedCursor(_targetCursorIndex);
+        }
     }
 
     // Update()内でキー入力を処理し、ターゲット選択を行います
@@ -85,18 +97,18 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
             BattleManager.Instance.SetBattlePhase(BattlePhase.InputCommand);
             HideWindow();
         }
-        else if (_inputSetting.GetRightKeyDown())
+        else if (_inputSetting.GetBackKeyDown())
         {
             MoveNextTarget();
         }
-        else if (_inputSetting.GetLeftKeyDown())
+        else if (_inputSetting.GetForwardKeyDown())
         {
             MovePreviousTarget();
         }
     }
 
     /// <summary>
-    /// 💡 ターゲット決定時の処理。アクションの範囲に応じて、単体または全体を決定します。
+    /// ターゲット決定時の処理。アクションの範囲に応じて、単体または全体を決定します。
     /// </summary>
     void OnPressedConfirmButton()
     {
@@ -105,20 +117,16 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
         List<int> finalTargetIds;
         bool isTargetFriend;
 
-        // 💡 修正: EffectTargetに基づいてターゲットリストと属性を決定
+        // EffectTargetに基づいてターゲットリストと属性を決定
         if (_actionEffectTarget == EffectTarget.EnemyAll || _actionEffectTarget == EffectTarget.FriendAll)
         {
-            // 全体ターゲットの場合: UIでの選択にかかわらず、全有効ターゲットを返す
             finalTargetIds = _activeTargetIds;
             isTargetFriend = (_actionEffectTarget == EffectTarget.FriendAll);
         }
-        else // EffectTarget.EnemySolo, FriendSolo, Own の場合 (単体選択)
+        else // 単体選択 (Solo, Own)
         {
-            // 単体ターゲットの場合: UIでカーソルが指しているIDのみを返す
             int finalTargetId = _activeTargetIds[_targetCursorIndex];
             finalTargetIds = new List<int> { finalTargetId };
-
-            // ターゲット属性をEffectTargetから確定
             isTargetFriend = (_actionEffectTarget == EffectTarget.FriendSolo || _actionEffectTarget == EffectTarget.Own);
         }
 
@@ -133,30 +141,34 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
     {
         if (_activeTargetIds == null || _activeTargetIds.Count <= 1) return;
 
+        if (_actionEffectTarget == EffectTarget.EnemyAll || _actionEffectTarget == EffectTarget.FriendAll) return;
+
         int size = _activeTargetIds.Count;
         _targetCursorIndex = (_targetCursorIndex + 1) % size; // 循環処理
 
-        // 💡 修正: UIに渡すインデックスにオフセットを適用
-        _uiController.ShowSelectedCursor(_targetCursorIndex + _uiMarkerOffset);
-        Logger.Instance.Log($"次のターゲットに移動。UIインデックス: {_targetCursorIndex + _uiMarkerOffset}");
+        // 💡 UIに渡すインデックスにオフセットを適用
+        _uiController.ShowSelectedCursor(_targetCursorIndex);
+        Logger.Instance.Log($"次のターゲットに移動。UIインデックス: {_targetCursorIndex}");
     }
 
     private void MovePreviousTarget()
     {
         if (_activeTargetIds == null || _activeTargetIds.Count <= 1) return;
 
+        if (_actionEffectTarget == EffectTarget.EnemyAll || _actionEffectTarget == EffectTarget.FriendAll) return;
+
         int size = _activeTargetIds.Count;
         _targetCursorIndex--;
 
-        // 💡 修正: 負になったら末尾に戻る (循環)
+        // 負になったら末尾に戻る (循環)
         if (_targetCursorIndex < 0)
         {
             _targetCursorIndex = size - 1;
         }
 
-        // 💡 修正: UIに渡すインデックスにオフセットを適用
-        _uiController.ShowSelectedCursor(_targetCursorIndex + _uiMarkerOffset);
-        Logger.Instance.Log($"前のターゲットに移動。UIインデックス: {_targetCursorIndex + _uiMarkerOffset}");
+        // 💡 UIに渡すインデックスにオフセットを適用
+        _uiController.ShowSelectedCursor(_targetCursorIndex);
+        Logger.Instance.Log($"前のターゲットに移動。UIインデックス: {_targetCursorIndex}");
     }
 
     /// <summary>
@@ -226,5 +238,42 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
     public void HideWindow()
     {
         _uiController.Hide();
+    }
+
+    private List<string> GetEnemyNamesByIds(List<int> enemyBattleIds)
+    {
+        List<string> names = new List<string>();
+        foreach (int battleId in enemyBattleIds)
+        {
+            var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(battleId);
+            if (enemyStatus != null && enemyStatus.enemyData != null)
+            {
+                names.Add(enemyStatus.enemyData.enemyName);
+            }
+            else
+            {
+                names.Add("不明な敵");
+            }
+        }
+        return names;
+    }
+
+    private List<string> GetCharacterNamesByIds(List<int> characterIds)
+    {
+        List<string> names = new List<string>();
+        foreach (int charaId in characterIds)
+        {
+            var charaData = CharacterDataManager.Instance.GetCharacterData(charaId);
+            if (charaData != null)
+            {
+                // 名前だけでなく、必要に応じてHP/MP情報などもここで取得・整形可能
+                names.Add(charaData.characterName);
+            }
+            else
+            {
+                names.Add("不明な仲間");
+            }
+        }
+        return names;
     }
 }
