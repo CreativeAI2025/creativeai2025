@@ -121,7 +121,7 @@ public class BattleResultManager : MonoBehaviour
         }
 
         // 処理の終了を通知します。
-        _battleManager.OnFinishBattle();
+        _battleManager.OnBattleWin();
     }
 
     /// <summary>
@@ -183,7 +183,7 @@ public class BattleResultManager : MonoBehaviour
         yield return StartCoroutine(KeyWaitProcess());
 
         // 処理の終了を通知します。
-        _battleManager.OnFinishBattleWithGameover();
+        _battleManager.OnBattleLose();
     }
 
     /// <summary>

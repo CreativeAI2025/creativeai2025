@@ -627,10 +627,11 @@ public class BattleManager : DontDestroySingleton<BattleManager>
 
     /// <summary>
     /// 戦闘を終了する時のコールバックです。
+    /// 絶対にこれを呼ぶこと
     /// </summary>
-    public void OnFinishBattle()
+    private void OnFinishBattle()
     {
-        Logger.Instance.Log("戦闘に勝利して終了します。");
+        Logger.Instance.Log("戦闘終了");
         _onBattleEnd?.Invoke(); // 戦闘が終了したことを伝える
 
         _battleWindowManager.HideAllWindow();
@@ -644,21 +645,24 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         BattlePhase = BattlePhase.NotInBattle;
     }
 
-    /// <summary>
-    /// 戦闘を終了する時のコールバックです。
-    /// </summary>
-    public void OnFinishBattleWithGameover()
+    public void OnBattleWin()
     {
-        Logger.Instance.Log("ゲームオーバーとして戦闘を終了します。");
-        _battleWindowManager.HideAllWindow();
-        _battleSpriteController.HideBackground();
-        _battleSpriteController.HideEnemy();
-        EnemyStatusManager.Instance.InitializeEnemyStatusList();
-        _battleActionProcessor.InitializeActions();
-        _battleActionProcessor.StopActions();
+        Debug.Log("勝利！！");
+        var nextFlags = BattleData.WinFlags;
+        if (nextFlags != null)
+            ChangeFlag(nextFlags);
 
-        // _characterMoverManager.ResumeCharacterMover();
-        BattlePhase = BattlePhase.NotInBattle;
+        OnFinishBattle();
+    }
+
+    public void OnBattleLose()
+    {
+        Debug.Log("敗北者じゃけぇ");
+        var nextFlags = BattleData.LoseFlags;
+        if (nextFlags != null)
+            ChangeFlag(nextFlags);
+
+        OnFinishBattle();
     }
 
     /// <summary>
