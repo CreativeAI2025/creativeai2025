@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class WorldMapController : MonoBehaviour
 {
+    [SerializeField] private InputSetting inputSetting;
     [Header("選択表現")]
     public GameObject[] mapPointObjects; // 各マップポイントのGameObject
     public Color selectedColor = Color.yellow; // 選択時の色
@@ -92,10 +93,11 @@ public class WorldMapController : MonoBehaviour
         int nextIndex = -1;
 
         // 上下左右入力
-        if (Input.GetKeyDown(KeyCode.W)) nextIndex = GetNeighborIndex(Direction.Up);
-        if (Input.GetKeyDown(KeyCode.S)) nextIndex = GetNeighborIndex(Direction.Down);
-        if (Input.GetKeyDown(KeyCode.A)) nextIndex = GetNeighborIndex(Direction.Left);
-        if (Input.GetKeyDown(KeyCode.D)) nextIndex = GetNeighborIndex(Direction.Right);
+        if (inputSetting.GetForwardKeyDown()) nextIndex = GetNeighborIndex(Direction.Up);
+        if (inputSetting.GetBackKeyDown()) nextIndex = GetNeighborIndex(Direction.Down);
+        if (inputSetting.GetLeftKeyDown()) nextIndex = GetNeighborIndex(Direction.Left);
+        if (inputSetting.GetRightKeyDown())   nextIndex = GetNeighborIndex(Direction.Right);
+
 
         if (nextIndex != -1 && worldMapData.IsAreaUnlocked(nextIndex))
         {
@@ -105,7 +107,7 @@ public class WorldMapController : MonoBehaviour
         }
 
         // 決定
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Z))
+        if (inputSetting.GetDecideInputDown())
         {
             if (worldMapData.IsAreaUnlocked(currentIndex))
             {
