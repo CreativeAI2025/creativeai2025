@@ -9,6 +9,7 @@ using UnityEditor.Overlays;
 [System.Serializable]
 public class SkillEntry
 {
+    public int id;
     public string name;
     public string explain;
     public bool get;
