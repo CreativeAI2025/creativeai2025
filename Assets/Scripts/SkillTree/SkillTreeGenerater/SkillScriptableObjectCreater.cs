@@ -31,6 +31,8 @@ public class SkillScriptableObjectCreater : MonoBehaviour
     [ContextMenu("Generate Skill ScriptableObject")]
     public void GenerateScriptableObject()
     {
+        int id = 0;
+
         foreach (var list in creatSetting)
         {
             skillData = dataSetting.SkillJsonLoader(list.characterName, list.textAsset);
@@ -59,7 +61,6 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                 continue;
             }
 
-            int id = 0;
             foreach (var skill in skills)
             {
                 string assetPath = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(folderPath, $"{list.characterName}_SkillData_{id}.asset"));
@@ -76,25 +77,25 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                 switch (skill.GetAction())
                 {
                     case "物理攻撃":
-                        skillCategory = SkillCategory.Damage;
+                        skillCategory = SkillCategory.PhysicalDamage;
                         break;
                     case "魔法攻撃":
-                        skillCategory = SkillCategory.Damage;
+                        skillCategory = SkillCategory.MagicDamage;
                         break;
                     case "特殊攻撃":
-                        skillCategory = SkillCategory.Damage;
+                        skillCategory = SkillCategory.MagicDamage;
                         break;
                     case "回復":
                         skillCategory = SkillCategory.Recovery;
                         break;
                     case "復活":
-                        skillCategory = SkillCategory.None;
+                        skillCategory = SkillCategory.Rivive;
                         break;
                     case "強化":
-                        skillCategory = SkillCategory.Support;
+                        skillCategory = SkillCategory.Buff;
                         break;
                     case "弱体":
-                        skillCategory = SkillCategory.None;
+                        skillCategory = SkillCategory.DeBuff;
                         break;
                     case "":
                         break;
