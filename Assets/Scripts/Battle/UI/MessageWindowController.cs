@@ -128,20 +128,32 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     /// <summary>
     ///バフデバフを受けたときのメッセージを表示します。
     /// </summary>
-    public void GenerateRecoverStatusMessage(string targetName, string buffMessage, int buffValue)
+    public void GenerateBuffStatusMessage(string targetName, string buffMessage, float buffValue)
     {
         string message = "";
-        if (buffValue < 1.2)
+        if (buffValue < 1.2 && buffValue > 1)
         {
             message = $"{targetName}{buffMessage}{BattleMessage.FewStatusUpSuffix}";
         }
-        else if (buffValue < 1.7)
+        else if (buffValue < 1.7&& buffValue >= 1.2)
         {
             message = $"{targetName}{buffMessage}{BattleMessage.StatusUpSuffix}";
         }
         else if (buffValue > 1.7)
         {
             message = $"{targetName}{buffMessage}{BattleMessage.VeryStatusUpSuffix}";
+        }
+                if (buffValue > 0.9&&buffValue < 1)
+        {
+            message = $"{targetName}{buffMessage}{BattleMessage.FewStatusDownSuffix}";
+        }
+        else if (buffValue > 0.7&&buffValue <= 0.9)
+        {
+            message = $"{targetName}{buffMessage}{BattleMessage.StatusDownSuffix}";
+        }
+        else if (buffValue < 0.7)
+        {
+            message = $"{targetName}{buffMessage}{BattleMessage.VeryStatusDownSuffix}";
         }
         StartCoroutine(ShowMessageAutoProcess(message));
     }

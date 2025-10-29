@@ -19,7 +19,11 @@ public static class DamageFormula //ダメージ計算式を書く
         float def = defense / 4.0f;
         
         float rand = UnityEngine.Random.Range(0.8f, 1.2f);
-        int damage = Mathf.Max(Mathf.CeilToInt(((atk*skillValue*atkBuff) - def*defBuff) * rand), 1);
+        int damage = Mathf.Max(Mathf.CeilToInt(((atk * skillValue * atkBuff) - def * defBuff) * rand), 1);
+        if (skillValue == 0)
+        {
+            damage = 0;
+        }
         return damage;
     }
     //回復量計算

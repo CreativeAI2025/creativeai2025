@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75fee2ab71e53c24bbd8e6a341727434, type: 3}
+  m_Name: SkillData_910
+  m_EditorClassIdentifier: 
+  skillId: 910
+  skillName: "\u9F13\u821E"
+  skillDesc: 
+  cost: 0
+  skillEffects:
+  - skillCategory: 3
+    EffectTarget: 2
+    value: 0
+    StatusEffectEnable: 1
+    buturi: 0
+    StatusEffect: []
+    Buff:
+    - BuffCategory: 0
+      EffectTarget: 2
+      Duration: 2
+      Power: 1.5
+    - BuffCategory: 2
+      EffectTarget: 2
+      Duration: 2
+      Power: 1.5

@@ -92,8 +92,11 @@ public class BattleActionProcessorSkill : MonoBehaviour
                         Logger.Instance.LogWarning($"敵キャラクターのステータスが見つかりませんでした。 戦闘中ID : {action.targetId}");
                     }
 
-                    damageValue = DamageFormula.CalculateSkillDamage(actorParam.Attack, targetParam.Defence, characterStatus.attackBuffMultiplier, enemyStatus.attackBuffMultiplier, skillEffect.value);
-
+                    damageValue = DamageFormula.CalculateSkillDamage(actorParam.MagicAttack, targetParam.MagicDefence, characterStatus.magicAttackBuffMultiplier, enemyStatus.magicDefenceBuffMultiplier, skillEffect.value);
+                    if (skillEffect.buturi)
+                    {
+                        damageValue = DamageFormula.CalculateSkillDamage(actorParam.Attack, targetParam.Defence, characterStatus.attackBuffMultiplier, enemyStatus.defenceBuffMultiplier, skillEffect.value);
+                    }
                 }
                 bool isSkillTargetFriend = IsSkillTargetFriend(skillEffect);
 
@@ -154,10 +157,28 @@ public class BattleActionProcessorSkill : MonoBehaviour
                         }
                     }
                 }
-
+                BuffStatusCategory? appliedBuffCategory = null;
+                float buffValue = 0.0f;
+                if (skillEffect.StatusEffectEnable && skillEffect.Buff != null)
+                {
+                    foreach (var buff in skillEffect.Buff)
+                    {
+                        appliedBuffCategory = buff.BuffCategory;
+                        buffValue = buff.Power;
+                        Logger.Instance.Log("バフデバフ付与");
+                        if (isSkillTargetFriend)
+                        {
+                            statusEffectManager.PlayerApplyBuff(messageAction.targetId, buff);
+                        }
+                        else
+                        {
+                            statusEffectManager.EnemyApplyBuff(messageAction.targetId, buff);
+                        }
+                    }
+                }
 
                 _pauseSkillEffect = true;
-                StartCoroutine(ShowSkillDamageMessage(messageAction, skillData.skillName, damageValue, isTargetDefeated, appliedEffectCategory));
+                StartCoroutine(ShowSkillDamageMessage(messageAction, skillData.skillName, damageValue, isTargetDefeated, appliedEffectCategory, appliedBuffCategory, buffValue));
             }
             // 回復系
             else if (skillEffect.skillCategory == SkillCategory.Recovery)
@@ -199,12 +220,15 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 {
                     messageAction.targetId = action.targetId;
                     messageAction.isTargetFriend = !action.isActorFriend;
-                }                              //バフデバフ付与
+                }
+                BuffStatusCategory? appliedBuffCategory = null;
+                float buffValue = 0.0f;                            //バフデバフ付与
                 if (skillEffect.StatusEffectEnable && skillEffect.Buff != null)
                 {
                     foreach (var buff in skillEffect.Buff)
                     {
-                        
+                        appliedBuffCategory = buff.BuffCategory;
+                        buffValue = buff.Power;
                         Logger.Instance.Log("バフデバフ付与");
                         if (isSkillTargetFriend)
                         {
@@ -216,6 +240,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                         }
                     }
                 }
+                StartCoroutine(ShowSkillSupportMessage(action, skillData.skillName, isTargetDefeated, appliedBuffCategory, buffValue));
             }
             else
             {
@@ -228,7 +253,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
         _actionProcessor.SetPauseProcess(false);
     }
 
-    IEnumerator ShowSkillDamageMessage(BattleAction action, string skillName, int damageValue, bool isTargetDefeated, StatusEffectCategory? effectCategory)
+    IEnumerator ShowSkillDamageMessage(BattleAction action, string skillName, int damageValue, bool isTargetDefeated, StatusEffectCategory? effectCategory, BuffStatusCategory? buffCategory, float buffValue)
     {
         string actorName = _actionProcessor.GetCharacterName(action.actorId, action.isActorFriend);
         string targetName = _actionProcessor.GetCharacterName(action.targetId, action.isTargetFriend);
@@ -252,6 +277,31 @@ public class BattleActionProcessorSkill : MonoBehaviour
                     break;
             }
         }
+        string buffMessage = "";
+        if (buffCategory != null)
+        {
+            switch (buffCategory)
+            {
+                case BuffStatusCategory.Attack:
+                    buffMessage = BattleMessage.AttackStatusSuffix;
+                    break;
+                case BuffStatusCategory.Defence:
+                    buffMessage = BattleMessage.DefenceStatusSuffix;
+                    break;
+                case BuffStatusCategory.MagicAttack:
+                    buffMessage = BattleMessage.MagicAttackStatusSuffix;
+                    break;
+                case BuffStatusCategory.MagicDefence:
+                    buffMessage = BattleMessage.MagicDefenceStatusSuffix;
+                    break;
+                case BuffStatusCategory.Speed:
+                    buffMessage = BattleMessage.SpeedStatusSuffix;
+                    break;
+                case BuffStatusCategory.Evasion:
+                    buffMessage = BattleMessage.EvasionStatusSuffix;
+                    break;
+            }
+        }
 
         _actionProcessor.SetPauseMessage(true);
         _messageWindowController.GenerateSkillCastMessage(actorName, skillName);
@@ -260,10 +310,16 @@ public class BattleActionProcessorSkill : MonoBehaviour
         _actionProcessor.SetPauseMessage(true);
         _messageWindowController.GenerateSkillCastMessage(actorName, skillName);
         _messageWindowController.GenerateDamageMessage(targetName, damageValue);
+        while (_actionProcessor.IsPausedMessage) yield return null;
 
+        if (!string.IsNullOrEmpty(buffMessage))
+        {
+            _messageWindowController.GenerateBuffStatusMessage(targetName, buffMessage, buffValue);
+        }
         if (!string.IsNullOrEmpty(statusMessage))
+        {
             _messageWindowController.GenerateStatusAilmentMessage(targetName, statusMessage);
-
+        }
         _battleManager.OnUpdateStatus();
         while (_actionProcessor.IsPausedMessage) yield return null;
 
@@ -310,7 +366,78 @@ public class BattleActionProcessorSkill : MonoBehaviour
 
         _pauseSkillEffect = false;
     }
+    IEnumerator ShowSkillSupportMessage(BattleAction action, string skillName, bool isTargetDefeated, BuffStatusCategory? buffCategory, float buffValue)
+    {
+        string actorName = _actionProcessor.GetCharacterName(action.actorId, action.isActorFriend);
+        string targetName = _actionProcessor.GetCharacterName(action.targetId, action.isTargetFriend);
 
+       
+        string buffMessage = "";
+        if (buffCategory != null)
+        {
+            switch (buffCategory)
+            {
+                case BuffStatusCategory.Attack:
+                    buffMessage = BattleMessage.AttackStatusSuffix;
+                    break;
+                case BuffStatusCategory.Defence:
+                    buffMessage = BattleMessage.DefenceStatusSuffix;
+                    break;
+                case BuffStatusCategory.MagicAttack:
+                    buffMessage = BattleMessage.MagicAttackStatusSuffix;
+                    break;
+                case BuffStatusCategory.MagicDefence:
+                    buffMessage = BattleMessage.MagicDefenceStatusSuffix;
+                    break;
+                case BuffStatusCategory.Speed:
+                    buffMessage = BattleMessage.SpeedStatusSuffix;
+                    break;
+                case BuffStatusCategory.Evasion:
+                    buffMessage = BattleMessage.EvasionStatusSuffix;
+                    break;
+            }
+        }
+
+        _actionProcessor.SetPauseMessage(true);
+        _messageWindowController.GenerateSkillCastMessage(actorName, skillName);
+        while (_actionProcessor.IsPausedMessage) yield return null;
+
+        _actionProcessor.SetPauseMessage(true);
+        _messageWindowController.GenerateSkillCastMessage(actorName, skillName);
+        if (!string.IsNullOrEmpty(buffMessage))
+        {
+            _messageWindowController.GenerateBuffStatusMessage(targetName, buffMessage, buffValue);
+        }
+
+        _battleManager.OnUpdateStatus();
+        while (_actionProcessor.IsPausedMessage) yield return null;
+
+        // 撃破チェック
+        if (isTargetDefeated)
+        {
+            if (action.isTargetFriend)
+            {
+                _actionProcessor.SetPauseMessage(true);
+                _messageWindowController.GenerateDefeateFriendMessage(targetName);
+                while (_actionProcessor.IsPausedMessage) yield return null;
+
+                if (CharacterStatusManager.Instance.IsAllCharacterDefeated())
+                    _battleManager.OnGameover();
+            }
+            else
+            {
+                _actionProcessor.SetPauseMessage(true);
+                _battleSpriteController.HideEnemy();
+                _messageWindowController.GenerateDefeateEnemyMessage(targetName);
+                while (_actionProcessor.IsPausedMessage) yield return null;
+
+                if (_enemyStatusManager.IsAllEnemyDefeated())
+                    _battleManager.OnEnemyDefeated();
+            }
+        }
+
+        _pauseSkillEffect = false;
+    }
     bool IsSkillTargetFriend(SkillEffect skillEffect)
     {
         return skillEffect.EffectTarget == EffectTarget.Own

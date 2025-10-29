@@ -60,7 +60,7 @@ public class BattleActionProcessorAttack : MonoBehaviour
             {
                 Logger.Instance.LogWarning($"敵キャラクターのステータスが見つかりませんでした。 戦闘中ID : {action.actorId}");
             }
-            damage = DamageFormula.CalculateDamage(actorParam.Attack, targetParam.Defence, enemyStatus.attackBuffMultiplier, characterStatus.attackBuffMultiplier);
+            damage = DamageFormula.CalculateDamage(actorParam.Attack, targetParam.Defence, enemyStatus.attackBuffMultiplier, characterStatus.defenceBuffMultiplier);
         }
 
         else
@@ -78,7 +78,7 @@ public class BattleActionProcessorAttack : MonoBehaviour
                 Logger.Instance.LogWarning($"敵キャラクターのステータスが見つかりませんでした。 戦闘中ID : {action.targetId}");
             }
 
-            damage = DamageFormula.CalculateDamage(actorParam.Attack, targetParam.Defence, characterStatus.attackBuffMultiplier, enemyStatus.attackBuffMultiplier);
+            damage = DamageFormula.CalculateDamage(actorParam.Attack, targetParam.Defence, characterStatus.attackBuffMultiplier, enemyStatus.defenceBuffMultiplier);
 
         }
         int hpDelta = damage * -1;

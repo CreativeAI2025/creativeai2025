@@ -20,6 +20,7 @@ public class SkillEffect
     public float value;
 
     public bool StatusEffectEnable;
+    public bool buturi;
     /// <summary>
     /// 状態異常のリストです
     /// </summary>

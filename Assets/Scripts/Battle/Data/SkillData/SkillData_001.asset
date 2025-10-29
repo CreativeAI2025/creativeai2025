@@ -13,19 +13,17 @@ MonoBehaviour:
   m_Name: SkillData_001
   m_EditorClassIdentifier: 
   skillId: 1
-  skillName: eeee
-  skillDesc: eqeqeq
-  cost: 5
+  skillName: "\u30DD\u30A4\u30BA\u30F3\u30B9\u30A4\u30FC\u30D7"
+  skillDesc: "\u6BD2\u306E\u65AC\u6483"
+  cost: 1
   skillEffects:
-  - skillCategory: 3
-    EffectTarget: 1
-    value: 0
+  - skillCategory: 2
+    EffectTarget: 4
+    value: 1.2
     StatusEffectEnable: 1
+    buturi: 1
     StatusEffect:
     - EffectCategory: 1
-      Duration: 1
-      Power: 0
-    Buff:
-    - BuffCategory: 0
-      Duration: 5
-      Power: 1000
+      Duration: 2
+      Power: 20
+    Buff: []

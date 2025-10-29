@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f16436ac038bdf4b92bc19360a4c5c8, type: 3}
+  m_Name: EnemyData_208
+  m_EditorClassIdentifier: 
+  enemyId: 208
+  enemyName: "\u30B2\u30E9\u30AF"
+  sprite: {fileID: 21300000, guid: 54cd4acfc080161428f8bba3f5fa4ee5, type: 3}
+  HP: 113
+  MP: 5
+  Attack: 57
+  Defence: 75
+  MagicAttack: 57
+  MagicDefence: 70
+  Speed: 55
+  Evasion: 0
+  exp: 37
+  gold: 20
+  enemyActionRecords:
+  - enemyActionCategory: 1
+    enemyConditionRecords:
+    - conditionCategory: 0
+      comparisonOperator: 0
+      turnCriteria: 0
+      hpRateCriteria: 0
+    skillData: {fileID: 11400000, guid: 3c19c4ba0fe849845910e284b5c71724, type: 2}
+    priority: 0
+  - enemyActionCategory: 1
+    enemyConditionRecords:
+    - conditionCategory: 0
+      comparisonOperator: 0
+      turnCriteria: 0
+      hpRateCriteria: 0
+    skillData: {fileID: 11400000, guid: 95ec510bad754f148aca2eab45c50fa9, type: 2}
+    priority: 0
+  - enemyActionCategory: 1
+    enemyConditionRecords:
+    - conditionCategory: 0
+      comparisonOperator: 0
+      turnCriteria: 0
+      hpRateCriteria: 0
+    skillData: {fileID: 11400000, guid: 63947f77115213c4b9c9af2dc8693049, type: 2}
+    priority: 0
