@@ -102,17 +102,10 @@ public class BattleActionProcessorSkill : MonoBehaviour
 
             foreach (var skillEffect in skillData.skillEffects)
             {
-                // ... (ターゲット判定、ダメージ計算、ステータス変更のロジックはそのまま) ...
-
                 // --- ダメージ計算と適用 ---
                 if (skillEffect.skillCategory == SkillCategory.Damage)
                 {
-                    // ... (ダメージ計算とステータス変更のロジックはそのまま) ...
-                    int damageValue = 100;
-                    int hpDelta = -damageValue;
                     bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
-                    bool isTargetDefeated = false;
-
                     // 基本パラメータの取得
                     var actorParam = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
                     var targetParam = _actionProcessor.GetCharacterParameter(currentTargetId, isTargetFriend);
@@ -121,14 +114,26 @@ public class BattleActionProcessorSkill : MonoBehaviour
                     float actorAttackBuff = 1.0f;
                     float targetDefenceBuff = 1.0f;
 
-                    // ステータス変更
                     if (isTargetFriend)
                     {
                         var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
                         var targetStatus = isTargetFriend
                             ? (object)charaStatus
                             : EnemyStatusManager.Instance.GetEnemyStatusByBattleId(currentTargetId);
+                    }
+                    else
+                    {
 
+                    }
+
+                    // ... (ダメージ計算とステータス変更のロジックはそのまま) ...
+                    int damageValue = 100;
+                    int hpDelta = -damageValue;
+                    bool isTargetDefeated = false;
+
+                    // ステータス変更
+                    if (isTargetFriend)
+                    {
                         CharacterStatusManager.Instance.ChangeCharacterStatus(currentTargetId, hpDelta, 0);
                         isTargetDefeated = CharacterStatusManager.Instance.IsCharacterDefeated(currentTargetId);
                     }
