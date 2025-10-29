@@ -17,10 +17,12 @@ public class Ending : MonoBehaviour
     [SerializeField] List<End> endList;
     [SerializeField] int end_num = 0;
     private bool isEnd;//　終了を検知したかどうか
+    InputSetting inputSetting;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        inputSetting = InputSetting.Load();
         playableDirector = this.gameObject.GetComponent<PlayableDirector>();
         isEnd = false;
         EndSelect(end_num);
@@ -29,11 +31,25 @@ public class Ending : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Timelineをスキップ
+        if (inputSetting.GetDecideInput())
+        {
+            try
+            {
+                playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(5.0f);
+            }
+            catch (System.NullReferenceException e)
+            {
+                return;
+            }
+        }
+
         //　タイムラインが終了したら次のシーンを読み込む
         if (!isEnd && playableDirector.state != PlayState.Playing)
         {
-            Debug.Log("Openingに戻る");
+            //Debug.Log("Openingに戻る");
             SoundManager.Instance.StopBGM();
+            //Titleシーンを呼び出す
         }
     }
 
