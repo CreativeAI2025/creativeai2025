@@ -3,7 +3,7 @@ using UnityEngine;
  public enum BattleCommand
     {
         Attack,
-        Magic,
+        Skill,
         Item,
         Run,
     }
