@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class WorldMapController : MonoBehaviour
 {
@@ -17,18 +18,18 @@ public class WorldMapController : MonoBehaviour
     private int currentIndex = 0;
     private int previousIndex = -1;
 
+    [Header("背景画像")]
+    public Image backgroundUIImage; // Canvas 上の Image をアサイン
+
     void Start()
     {
-        // ここを変更
+        // 背景画像を設定
+        if (backgroundUIImage != null && worldMapData != null && worldMapData.backgroundImage != null)
+        {
+            backgroundUIImage.sprite = worldMapData.backgroundImage;
+            backgroundUIImage.preserveAspect = true; // 画像の縦横比を保持
+        }
 
-        if (PlayerPrefs.HasKey("LastWorldMapIndex"))
-        {
-            currentIndex = PlayerPrefs.GetInt("LastWorldMapIndex");
-        }
-        else
-        {
-            currentIndex = worldMapData.startingPointIndex;
-        }
         // ワールドマップデータが設定されていない場合はエラー
         if (worldMapData == null || worldMapData.mapPoints == null || worldMapData.mapPoints.Length == 0)
         {
@@ -36,12 +37,15 @@ public class WorldMapController : MonoBehaviour
             return;
         }
 
-        // マップアイコンを UI に反映
-        ApplyIconsToMapPoints();
+        // UIにWorldMapData.positionを反映
+        ApplyMapPointPositions();
 
-        
         // 開始ポイントを設定
-        currentIndex = worldMapData.startingPointIndex;
+        if (PlayerPrefs.HasKey("LastWorldMapIndex"))
+            currentIndex = PlayerPrefs.GetInt("LastWorldMapIndex");
+        else
+            currentIndex = worldMapData.startingPointIndex;
+
         if (currentIndex >= worldMapData.mapPoints.Length)
             currentIndex = 0;
             
@@ -56,6 +60,19 @@ public class WorldMapController : MonoBehaviour
     void Update()
     {
         HandleInput();
+    }
+
+    void ApplyMapPointPositions()
+    {
+        for (int i = 0; i < mapPointObjects.Length; i++)
+        {
+            RectTransform rt = mapPointObjects[i].GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                rt.anchoredPosition = worldMapData.mapPoints[i].position;
+            }
+        }
+        ApplyIconsToMapPoints();
     }
 
     void ApplyIconsToMapPoints()
@@ -112,6 +129,8 @@ public class WorldMapController : MonoBehaviour
             
         WorldMapData.MapPointData current = worldMapData.mapPoints[currentIndex];
         int[] neighborIndices = worldMapData.GetNeighborIndices(currentIndex);
+
+        Debug.Log($"Current = {currentIndex}, neighbors = {string.Join(",", neighborIndices)}");
 
         int bestIndex = -1;
         float bestDistance = float.MaxValue;
