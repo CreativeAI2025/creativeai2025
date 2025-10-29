@@ -18,6 +18,12 @@ public class SkillScriptableObjectCreater : MonoBehaviour
     [Header("発動確率の重み"), SerializeField] float probabilityValue = 1f;
     [Header("効果時間（ターン数）の重み"), SerializeField] float durationValue = 1f;
     [Header("攻撃対象の重み"), SerializeField] float subjectValue = 1f;
+
+    [Header("追加効果の効果量の重み"), SerializeField] float sub_powerValue = 1f;
+    [Header("追加効果の発動確率の重み"), SerializeField] float sub_probabilityValue = 1f;
+    [Header("追加効果の効果時間（ターン数）の重み"), SerializeField] float sub_durationValue = 1f;
+    [Header("追加効果の攻撃対象の重み"), SerializeField] float sub_subjectValue = 1f;
+
     [SerializeField] DataSetting dataSetting;
     List<Skill> skills = new List<Skill>();
     Dictionary<int, string[]> skillData = new Dictionary<int, string[]>();// スキル名とスキルの説明のデータ
@@ -129,7 +135,12 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         skill.GetPower(),
                         skill.GetProbability(),
                         skill.GetStatus(),
-                        skill.GetDuration()
+                        skill.GetDuration(),
+                        skill.isSub,
+                        skill.sub_power,
+                        skill.sub_probability,
+                        skill.sub_status,
+                        skill.sub_duration
                     );
 
                 // アセット作成
