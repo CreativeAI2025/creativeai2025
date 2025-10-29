@@ -435,6 +435,12 @@ public class DataSetting : MonoBehaviour
         // 評価値を計算する
         this.nodeSkillData = SetEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, this.nodeSkillData);
 
+        //SkillListの中身の確認
+        foreach (var n in nodeSkillData)
+        {
+            Debug.Log(n.toString());
+        }
+
         //putIdForNodeSkillDataListRandom(nodeData);
 
         PutForNodeSkillDataListEvaluationValue(nodeData);
@@ -702,14 +708,30 @@ public class DataSetting : MonoBehaviour
         string main_explain = explain[0];
         Skill main_skill = CreateNewSkillClass(name, main_explain);
 
-        string subject = null;//対象
-        string action = "";//行動(攻撃、回復など)
-        int probability = -1;//発動確率
-        int power = -1;//効果量
-        string type = null;//種類（物理攻撃、特殊攻撃など）
-        string status = null;//対象ステータス
-        string extra = null;//追加効果
-        int duration = -1;//持続ターン
+        if (explain.Length > 1 && !string.IsNullOrWhiteSpace(explain[1]))
+        {
+            string sub_explain = explain[1];
+            Skill sub_skill = CreateNewSkillClass(name, sub_explain, true);
+
+            return new Skill(main_skill.GetName(), skillData[1], main_skill.GetSubject(), main_skill.GetAction(), main_skill.GetProbability(),
+            main_skill.GetPower(), main_skill.GetTypeName(), main_skill.GetStatus(), main_skill.GetExtra(), main_skill.GetDuration(),
+            true, sub_skill.GetSubject(), sub_skill.GetAction(), sub_skill.GetProbability(), sub_skill.GetPower(), sub_skill.GetTypeName(), sub_skill.GetStatus(),
+            sub_skill.GetExtra(), sub_skill.GetDuration());
+        }
+
+        return CreateNewSkillClass(name, main_explain);
+    }
+
+    Skill CreateNewSkillClass(string name, string explain, bool isSub = false)
+    {
+        string subject = null;//対象 
+        string action = "";//行動(攻撃、回復など) 
+        int probability = 0;//発動確率 
+        float power = 0;//効果量 
+        string type = null;//種類（物理攻撃、特殊攻撃など） 
+        string status = null;//対象ステータス 
+        string extra = null;//追加効果 
+        int duration = 0;//持続ターン
 
         // --- 対象の解析 ---
         if (Regex.IsMatch(explain, "(相手一体|敵一体|相手に|敵に|相手を|敵を)"))
