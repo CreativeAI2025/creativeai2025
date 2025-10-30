@@ -19,11 +19,11 @@ public class EnemyActionRecord
     /// </summary>
     public List<EnemyConditionRecord> enemyConditionRecords;
 
-    /// <summary>
-    /// 行動が魔法の場合の対象魔法データです。
-    /// </summary>
-    // [Header("行動が魔法の場合の対象魔法データを指定します。")]
-    // public MagicData magicData;
+    // / <summary>
+    // / 行動が魔法の場合の対象魔法データです。
+    // / </summary>
+    [Header("行動が魔法の場合の対象魔法データを指定します。")]
+    public SkillData skillData;
 
     /// <summary>
     /// 行動の優先度です。
