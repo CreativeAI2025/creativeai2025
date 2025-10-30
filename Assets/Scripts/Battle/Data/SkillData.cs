@@ -26,7 +26,7 @@ public class SkillData : ScriptableObject
     /// <summary>
     /// 魔法の効果リストです。
     /// </summary>
-    public SkillEffect skillEffect;
+    public SkillEffect skillEffects;
 
     public override string ToString()
     {
