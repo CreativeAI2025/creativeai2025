@@ -39,10 +39,10 @@ public class ObjectEngine : MonoBehaviour
 
         //ConversationTextManager.Instance.OnConversationStart += Pause;
         //ConversationTextManager.Instance.OnConversationEnd += UnPause;
-        //ConversationTextManager.Instance.OnConversationEnd += () => conversationFlag = false;
+        ConversationTextManager.Instance.OnConversationEnd += () => conversationFlag = false;
         mapDataController.SetChange(ResetAction);
         ResetAction();
-        //PlayerMove(changedPos);
+        PlayerMove(changedPos);
     }
 
     private void ResetAction()
@@ -145,7 +145,7 @@ public class ObjectEngine : MonoBehaviour
                 runFlag = false;
                 foreach (ObjectData aroundObjectData in aroundObjectDatas)
                 {
-                    if (aroundObjectData.EventName.Contains("Conversation") /*&& !ConversationTextManager.Instance.IsAllowCall*/)
+                    if (aroundObjectData.EventName.Contains("Conversation") && !ConversationTextManager.Instance.IsAllowCall)
                     {
                         continue;
                     }
@@ -167,7 +167,7 @@ public class ObjectEngine : MonoBehaviour
         _pastGridPosition = player.GetGridPosition();
         foreach (ObjectData trapObjectData in trapObjectDatas)
         {
-            if (trapObjectData.EventName.Contains("Conversation") /*&& !ConversationTextManager.Instance.IsAllowCall*/)
+            if (trapObjectData.EventName.Contains("Conversation") && !ConversationTextManager.Instance.IsAllowCall)
             {
                 continue;
             }

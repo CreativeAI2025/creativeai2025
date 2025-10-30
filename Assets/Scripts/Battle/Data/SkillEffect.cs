@@ -28,7 +28,7 @@ public class SkillEffect
     /// バフのリストです
     /// </summary>
     public List<Buff> Buff;
-    }
+
     /// <summary>
     /// 発動確率
     /// </summary>
