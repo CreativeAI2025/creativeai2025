@@ -37,7 +37,7 @@ public class SkillEffect
     /// <summary>
     /// 対象ステータス
     /// </summary>
-    public string status = "対象ステータスはありません";
+    [Header("対象ステータス")] public string status = "対象ステータスはありません";
 
     /// <summary>
     /// 持続ターン数
@@ -63,7 +63,7 @@ public class SkillEffect
     /// <summary>
     /// 追加効果の対象ステータス
     /// </summary>
-    public string extra_status = "対象ステータスはありません";
+    [Header("対象ステータス")] public string extra_status = "対象ステータスはありません";
 
     /// <summary>
     /// 追加効果の持続ターン数
