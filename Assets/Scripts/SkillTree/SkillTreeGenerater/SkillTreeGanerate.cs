@@ -28,6 +28,7 @@ public class SkillTreeGanerate : MonoBehaviour
         sum_sp = 0;
         dataSetting.DataSet();
         View();
+        sum_sp = SumSP();
     }
 
     // Update is called once per frame
