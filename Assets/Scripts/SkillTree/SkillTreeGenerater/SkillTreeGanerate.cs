@@ -32,6 +32,7 @@ public class SkillTreeGanerate : MonoBehaviour
         sum_sp = 0;
         dataSetting.DataSet();
         View();
+        sum_sp = SumSP();
     }
 
     // Update is called once per frame
@@ -42,6 +43,7 @@ public class SkillTreeGanerate : MonoBehaviour
             sum_sp = 0;
             dataSetting.Reset();
             View();
+            sum_sp = SumSP();
         }
     }
 
@@ -139,13 +141,12 @@ public class SkillTreeGanerate : MonoBehaviour
                             prefab = debuffIocn;
                         }
                     }
-                    sum_sp += data.GetSp();
+
                 }
             }
             else if (tagData[n.getId()] == "ステータス")
             {
                 prefab = statusIcon;
-                sum_sp += dataSetting.statusSp;
             }
             else
             {
@@ -341,5 +342,26 @@ public class SkillTreeGanerate : MonoBehaviour
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// SPの合計を返す
+    /// </summary>
+    /// <returns></returns>
+    int SumSP()
+    {
+        int sum = 0;
+        foreach (var data in dataSetting.nodeSkillData)
+        {
+            sum += data.GetSp();
+        }
+
+        foreach (var data in dataSetting.nodeStatusData)
+        {
+            sum += data.GetSp();
+        }
+
+
+        return sum;
     }
 }
