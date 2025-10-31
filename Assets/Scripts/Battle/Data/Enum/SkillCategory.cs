@@ -4,9 +4,10 @@ public enum SkillCategory
 {
     None,
     Recovery,
+    EffectRecovery,
     PhysicalDamage,
     MagicDamage,
-    Rivive,
+    Revive,
     Buff,
     DeBuff,
     Movement,
