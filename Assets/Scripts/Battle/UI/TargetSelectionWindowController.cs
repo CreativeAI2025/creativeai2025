@@ -185,10 +185,10 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
         if (command == BattleCommand.Skill)
         {
             var skillData = SkillDataManager.Instance.GetSkillDataById(itemId);
-            if (skillData?.skillEffects != null && skillData.skillEffects.Count > 0)
+            if (skillData?.skillEffect != null)
             {
                 // 最初の効果のターゲットを取得
-                return skillData.skillEffects.First().EffectTarget;
+                return skillData.skillEffect.EffectTarget;
             }
         }
 

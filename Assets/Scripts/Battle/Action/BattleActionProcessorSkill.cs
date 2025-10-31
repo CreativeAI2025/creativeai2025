@@ -18,7 +18,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
     // 追記: ターゲットIDリストを生成するヘルパーメソッド
     private List<int> GetEffectiveTargetIds(BattleAction action, SkillData skillData)
     {
-        var skillEffect = skillData.skillEffects.FirstOrDefault(); // 最初の効果の範囲を使うと仮定
+        var skillEffect = skillData.skillEffect; // 最初の効果の範囲を使うと仮定
         if (skillEffect == null) return new List<int>();
 
         // ターゲット属性を判定し、対象リストを生成
@@ -68,6 +68,13 @@ public class BattleActionProcessorSkill : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// スキルのアクションを記述していく
+    /// エフェクトテゴリーによる条件分岐で、適切な効果を付与する
+    /// </summary>
+    /// <param name="action"></param>
+    /// <param name="skillData"></param>
+    /// <returns></returns>
     IEnumerator ProcessSkillActionCoroutine(BattleAction action, SkillData skillData)
     {
         // ... (MP消費処理) ...
@@ -99,118 +106,116 @@ public class BattleActionProcessorSkill : MonoBehaviour
             }
 
             Logger.Instance.Log($"ターゲット ID:{currentTargetId} への処理を開始。");
+            var skillEffect = skillData.skillEffect;
 
-            foreach (var skillEffect in skillData.skillEffects)
+            // --- ダメージ計算と適用 ---
+            if (skillEffect.skillCategory == SkillCategory.PhysicalDamage)
             {
-                // --- ダメージ計算と適用 ---
-                if (skillEffect.skillCategory == SkillCategory.Damage)
+                bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
+                // 基本パラメータの取得
+                var actorParam = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
+                var targetParam = _actionProcessor.GetCharacterParameter(currentTargetId, isTargetFriend);
+
+                // バフ/デバフ倍率の取得
+                float actorAttackBuff = 1.0f;
+                float targetDefenceBuff = 1.0f;
+
+                if (isTargetFriend)
                 {
-                    bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
-                    // 基本パラメータの取得
-                    var actorParam = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
-                    var targetParam = _actionProcessor.GetCharacterParameter(currentTargetId, isTargetFriend);
+                    var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
+                    var targetStatus = isTargetFriend
+                        ? (object)charaStatus
+                        : EnemyStatusManager.Instance.GetEnemyStatusByBattleId(currentTargetId);
+                }
+                else
+                {
 
-                    // バフ/デバフ倍率の取得
-                    float actorAttackBuff = 1.0f;
-                    float targetDefenceBuff = 1.0f;
+                }
 
-                    if (isTargetFriend)
-                    {
-                        var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
-                        var targetStatus = isTargetFriend
-                            ? (object)charaStatus
-                            : EnemyStatusManager.Instance.GetEnemyStatusByBattleId(currentTargetId);
-                    }
-                    else
-                    {
+                // ... (ダメージ計算とステータス変更のロジックはそのまま) ...
+                int damageValue = 100;
+                int hpDelta = -damageValue;
+                bool isTargetDefeated = false;
 
-                    }
+                // ステータス変更
+                if (isTargetFriend)
+                {
+                    CharacterStatusManager.Instance.ChangeCharacterStatus(currentTargetId, hpDelta, 0);
+                    isTargetDefeated = CharacterStatusManager.Instance.IsCharacterDefeated(currentTargetId);
+                }
+                else
+                {
+                    EnemyStatusManager.Instance.ChangeEnemyStatus(currentTargetId, hpDelta, 0);
+                    isTargetDefeated = EnemyStatusManager.Instance.IsEnemyDefeated(currentTargetId);
 
-                    // ... (ダメージ計算とステータス変更のロジックはそのまま) ...
-                    int damageValue = 100;
-                    int hpDelta = -damageValue;
-                    bool isTargetDefeated = false;
-
-                    // ステータス変更
-                    if (isTargetFriend)
-                    {
-                        CharacterStatusManager.Instance.ChangeCharacterStatus(currentTargetId, hpDelta, 0);
-                        isTargetDefeated = CharacterStatusManager.Instance.IsCharacterDefeated(currentTargetId);
-                    }
-                    else
-                    {
-                        EnemyStatusManager.Instance.ChangeEnemyStatus(currentTargetId, hpDelta, 0);
-                        isTargetDefeated = EnemyStatusManager.Instance.IsEnemyDefeated(currentTargetId);
-
-                        if (isTargetDefeated)
-                            EnemyStatusManager.Instance.OnDefeatEnemy(currentTargetId);
-                    }
-
-                    // 1. ダメージメッセージ表示と待機
-                    _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
-                    string targetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
-                    _messageWindowController.GenerateDamageMessage(targetName, damageValue);
-                    _battleManager.OnUpdateStatus();
-                    while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
-
-                    // 2. 撃破メッセージ表示と待機
                     if (isTargetDefeated)
+                        EnemyStatusManager.Instance.OnDefeatEnemy(currentTargetId);
+                }
+
+                // 1. ダメージメッセージ表示と待機
+                _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                string targetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
+                _messageWindowController.GenerateDamageMessage(targetName, damageValue);
+                _battleManager.OnUpdateStatus();
+                while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+
+                // 2. 撃破メッセージ表示と待機
+                if (isTargetDefeated)
+                {
+                    _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                    if (isTargetFriend)
                     {
-                        _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
-                        if (isTargetFriend)
-                        {
-                            _messageWindowController.GenerateDefeateFriendMessage(targetName);
-                        }
-                        else
-                        {
-                            _battleSpriteController.RefreshActiveEnemies();
-                            _messageWindowController.GenerateDefeateEnemyMessage(targetName);
-                        }
-                        while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+                        _messageWindowController.GenerateDefeateFriendMessage(targetName);
+                    }
+                    else
+                    {
+                        _battleSpriteController.RefreshActiveEnemies();
+                        _messageWindowController.GenerateDefeateEnemyMessage(targetName);
+                    }
+                    while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
 
-                        // 勝利/ゲームオーバー判定
-                        if (EnemyStatusManager.Instance.IsAllEnemyDefeated())
-                            _battleManager.OnEnemyDefeated();
-                        if (CharacterStatusManager.Instance.IsAllCharacterDefeated())
-                            _battleManager.OnGameover();
+                    // 勝利/ゲームオーバー判定
+                    if (EnemyStatusManager.Instance.IsAllEnemyDefeated())
+                        _battleManager.OnEnemyDefeated();
+                    if (CharacterStatusManager.Instance.IsAllCharacterDefeated())
+                        _battleManager.OnGameover();
 
-                        // 💡 修正: 戦闘が終了したら、即座にコルーチンを終了
-                        if (_battleManager.IsBattleFinished)
-                        {
-                            yield break;
-                        }
+                    // 💡 修正: 戦闘が終了したら、即座にコルーチンを終了
+                    if (_battleManager.IsBattleFinished)
+                    {
+                        yield break;
                     }
                 }
-                // --- 回復計算と適用 ---
-                else if (skillEffect.skillCategory == SkillCategory.Recovery)
-                {
-                    int healValue = DamageFormula.CalculateHealValue(skillEffect.value);
-                    bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
+            }
+            // --- 回復計算と適用 ---
+            else if (skillEffect.skillCategory == SkillCategory.Recovery)
+            {
+                int healValue = DamageFormula.CalculateHealValue(skillEffect.value);
+                bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
 
-                    // ステータス変更
-                    if (isTargetFriend)
-                        CharacterStatusManager.Instance.ChangeCharacterStatus(currentTargetId, healValue, 0);
-                    else
-                        EnemyStatusManager.Instance.ChangeEnemyStatus(currentTargetId, healValue, 0);
+                // ステータス変更
+                if (isTargetFriend)
+                    CharacterStatusManager.Instance.ChangeCharacterStatus(currentTargetId, healValue, 0);
+                else
+                    EnemyStatusManager.Instance.ChangeEnemyStatus(currentTargetId, healValue, 0);
 
-                    // 回復メッセージ表示と待機
-                    _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
-                    string targetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
-                    _messageWindowController.GenerateHpHealMessage(targetName, healValue);
-                    _battleManager.OnUpdateStatus();
-                    while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
-                }
-                // バフの付与と状態異常の回復
-                else if (skillEffect.skillCategory == SkillCategory.Support)
-                {
+                // 回復メッセージ表示と待機
+                _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                string targetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
+                _messageWindowController.GenerateHpHealMessage(targetName, healValue);
+                _battleManager.OnUpdateStatus();
+                while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+            }
+            // 状態異常の回復
+            else if (skillEffect.skillCategory == SkillCategory.Buff)
+            {
 
-                }
+            }
 
-                // 修正: ターゲットの処理が終わったら、次のターゲットに進む前にユーザー入力待ちを挟む
-                if (!_battleManager.IsBattleFinished)
-                {
-                    yield return StartCoroutine(WaitForUserInput());
-                }
+            // 修正: ターゲットの処理が終わったら、次のターゲットに進む前にユーザー入力待ちを挟む
+            if (!_battleManager.IsBattleFinished)
+            {
+                yield return StartCoroutine(WaitForUserInput());
             }
         } // ターゲットループ終了
 

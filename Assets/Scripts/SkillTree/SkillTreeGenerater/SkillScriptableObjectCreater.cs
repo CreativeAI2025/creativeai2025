@@ -88,8 +88,11 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                     case "回復":
                         skillCategory = SkillCategory.Recovery;
                         break;
+                    case "状態異常回復":
+                        skillCategory = SkillCategory.EffectRecovery;
+                        break;
                     case "復活":
-                        skillCategory = SkillCategory.Rivive;
+                        skillCategory = SkillCategory.Revive;
                         break;
                     case "強化":
                         skillCategory = SkillCategory.Buff;
