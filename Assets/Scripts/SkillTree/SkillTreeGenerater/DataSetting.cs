@@ -67,7 +67,7 @@ public class DataSetting : MonoBehaviour
     [Header("効果量の重み"), SerializeField] float powerValue = 1f;
     [Header("発動確率の重み"), SerializeField] float probabilityValue = 1f;
     [Header("効果時間（ターン数）の重み"), SerializeField] float durationValue = 1f;
-    [Header("追加効果の攻撃対象の重み"), SerializeField] float subjectValue = 1f;
+    [Header("攻撃対象の重み"), SerializeField] float subjectValue = 1f;
 
     [Header("追加効果の効果量の重み"), SerializeField] float sub_powerValue = 1f;
     [Header("追加効果の発動確率の重み"), SerializeField] float sub_probabilityValue = 1f;
