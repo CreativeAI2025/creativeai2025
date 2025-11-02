@@ -179,6 +179,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         statusEffectManager.SetBattleManager(this);
         // _characterMoverManager.StopCharacterMover();
         _battleStarter.StartBattle(this);
+        _battleSpriteController.ShowBackground();
         ShowEnemyAppearMessage(BattleData.EncounterMessage);
     }
 

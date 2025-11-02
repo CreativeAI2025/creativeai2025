@@ -7,34 +7,10 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 public class EnemyEncountManager : MonoBehaviour
 {
-    private class EncounterDataBase
-    {
-        private List<EncounterData> _encounterDataList;
-        private Dictionary<string, EncounterData> _encounterDataDict;
-
-        public async void Initialize()
-        {
-            AsyncOperationHandle<IList<EncounterData>> handle = Addressables.LoadAssetsAsync<EncounterData>(AddressablesLabels.Encount, null);
-            await handle.Task;
-            _encounterDataList = new List<EncounterData>(handle.Result);
-            handle.Release();
-            _encounterDataDict = _encounterDataList.ToDictionary(data => data.mapName, data => data);
-            Debug.Log($"敵とのエンカウント情報の読み込み完了：{_encounterDataList.Count}");
-        }
-
-        public EncounterData getEncounterDataByMapName(string name)
-        {
-            _encounterDataDict.TryGetValue(name, out EncounterData encounterData);
-            return encounterData;
-        }
-    }
-
-    // エンカウントに関するデータベース
-    private EncounterDataBase _encounterDataBase;
-    // 上のデータベースから現在いるエンカウント情報を格納する
-    private EncounterData encounterData;
+    // 任意のシーンにおけるエンカウントデータを、シーンごとに設定する
+    [SerializeField] private EncounterData _encounterData;
     // 今いるシーン名
-    private string _mapNameNow;
+    private string _mapName;
     // 歩数を記録する
     private int walkTimes;
     // シーン移動or戦闘終了後、5歩以内はエンカウントしない。
@@ -47,25 +23,13 @@ public class EnemyEncountManager : MonoBehaviour
     private const int EncountMax = 5;
     // 同時にエンカウントする敵の最小値
     private const int EncountMin = 1;
-    private bool IsEncounted;
     // エンカウント情報があるかどうかの判別
-    async void Awake()
-    {
-        _encounterDataBase = new();
-        _encounterDataBase.Initialize();
-    }
+    private bool IsEncounted;
 
-    public void Update()
+    public void Start()
     {
-        // デバッグ用
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            IncreaseEncountProbability();
-        }
-        else if (Input.GetKeyDown(KeyCode.O))
-        {
-            Initialize();
-        }
+        Initialize();
+        BattleManager.Instance.OnBattleEnd += ResetEncount; // バトルが終わったら、歩数をリセットするように仕込む
     }
 
     /// <summary>
@@ -74,9 +38,8 @@ public class EnemyEncountManager : MonoBehaviour
     public void Initialize()
     {
         // ここでデータベースの読み込みを待つのもあり
-        _mapNameNow = SceneManager.GetActiveScene().name;   // 現在いるシーン名の取得
-        encounterData = _encounterDataBase.getEncounterDataByMapName(_mapNameNow);  // シーン名からエンカウント情報を取得
-        if (!encounterData)
+        _mapName = SceneManager.GetActiveScene().name;   // 現在いるシーン名の取得
+        if (!_encounterData)
         {
             Debug.Log("現在いるシーンに、エンカウント情報は記載されていません。");
             IsEncounted = false;
@@ -84,20 +47,20 @@ public class EnemyEncountManager : MonoBehaviour
         }
         IsEncounted = true;
         ResetEncount();
-
     }
 
     /// <summary>
-    /// 戦闘終了後にエンカウント確率をリセットする
+    /// 戦闘終了後にエンカウント確率をリセットする（＝歩数のリセット）
     /// </summary>
     public void ResetEncount()
     {
         walkTimes = 0;
+        Debug.Log("[EnemyEncountManager]戦闘終了/マップ切り替え　が発生したので、歩数をリセットします。");
     }
 
     /// <summary>
-    /// バトルが開始するエンカウント確率を上げる
-    /// マップの歩行処理を行うところで呼びたい
+    /// プレイヤーが歩く動作を感知するところにこの関数を置いてほしい
+    /// 歩数を＋１し、確率でエンカウントが発生する
     /// </summary>
     public void IncreaseEncountProbability()
     {
@@ -114,7 +77,7 @@ public class EnemyEncountManager : MonoBehaviour
             return;
         }
 
-        int probability = (int)encounterData.rate;   // 現在のシーンの確率
+        int probability = (int)_encounterData.rate;   // 現在のシーンの確率
         if (walkTimes < DoubleEncountWalkTimes)
         {
             // 特定の歩数を越えていないので、確率はそのままでエンカウントチェック
@@ -125,8 +88,6 @@ public class EnemyEncountManager : MonoBehaviour
             // 特定の歩数を越えたので、確率を上げてエンカウントチェック
             Encount(probability * DoubleEncountRate);
         }
-
-
     }
 
     /// <summary>
@@ -143,7 +104,7 @@ public class EnemyEncountManager : MonoBehaviour
         {
             // エンカウントでの戦闘を呼び起こす
             Debug.Log("エンカウントした！");
-            List<int> enemyIds = GiveEnemyId(encounterData);
+            List<int> enemyIds = GiveEnemyId(_encounterData);
             BattleManager.Instance.InitializeFromIds(enemyIds);
         }
         else
@@ -199,24 +160,21 @@ public class EnemyEncountManager : MonoBehaviour
             sum += val.rate;
         }
         int rnd = Random.Range(0, sum); // 個別の確率を足し、0~合計値までの間で乱数を作る
-        int amount = er[0].rate;
-        int times;
-        for (times = 0; amount <= rnd; times++)
+        int amount = 0;
+        int times = 0;
+        foreach (var val in er)
         {
-            amount += er[times].rate;
+            int rate = val.rate;
+            amount += rate;
+            if (amount > rnd)
+            {
+                break;
+            }
+            times++;
         }
+        //Debug.Log($"エンカウント結果を出力します\n乱数(rnd)：{rnd}\n足した結果(amount)：{amount}\n添え字(times)：{times}");
         int enemyId = er[times].enemyId;
         Debug.Log($"敵ID：{enemyId}");
         return enemyId;
-    }
-
-    /// <summary>
-    /// 現在いる場所で、敵が発生するように設定されているかの判別
-    /// 誤字にも注意
-    /// </summary>
-    /// <returns></returns>
-    private bool IsLocated(string mapName)
-    {
-        return _encounterDataBase.getEncounterDataByMapName(mapName);
     }
 }

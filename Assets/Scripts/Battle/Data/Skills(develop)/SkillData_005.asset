@@ -16,13 +16,21 @@ MonoBehaviour:
   skillName: Poison
   skillDesc: "\u76F8\u624B\uFF11\u4F53\u3092\u3000\u6BD2\u306B\u3059\u308B"
   cost: 10
-  skillEffects:
-  - skillCategory: 3
+  skillEffect:
+    skillCategory: 0
     EffectTarget: 3
     value: 0
-    StatusEffectEnable: 1
+    StatusEffectEnable: 0
     StatusEffect:
-    - EffectCategory: 0
-      Duration: 0
-      Power: 0
+    - EffectCategory: 1
+      Duration: 5
+      Power: 10
     Buff: []
+    probability: 0
+    status: 
+    duration: 0
+    isExtra: 0
+    extra_value: 0
+    extra_probability: 0
+    extra_status: 
+    extra_duration: 0

@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private MapDataController mapDataController;
+    [SerializeField] private EnemyEncountManager enemyEncountManager;
     //[SerializeField] private BattleManager battleManager;
     public float moveSpeed = 3f;//移動速度
     public float allowDistance = 0.03f;//目的地に到達したとみなす距離
@@ -79,7 +80,7 @@ public class PlayerController : MonoBehaviour
 
         _playerTransform.position = targetVector;
 
-        //battleManager.Instance.CheckBattle(); 
+        enemyEncountManager.IncreaseEncountProbability();
 
         MovePrepare();
     }
