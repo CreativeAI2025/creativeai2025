@@ -16,10 +16,18 @@ MonoBehaviour:
   skillName: ZOOM
   skillDesc: Return to the Town
   cost: 3
-  skillEffects:
-  - skillCategory: 4
+  skillEffect:
+    skillCategory: 8
     EffectTarget: 0
     value: 0
     StatusEffectEnable: 0
     StatusEffect: []
     Buff: []
+    probability: 0
+    status: 
+    duration: 0
+    isExtra: 0
+    extra_value: 0
+    extra_probability: 0
+    extra_status: 
+    extra_duration: 0
