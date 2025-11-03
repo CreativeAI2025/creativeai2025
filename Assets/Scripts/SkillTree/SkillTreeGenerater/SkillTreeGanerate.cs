@@ -24,9 +24,12 @@ public class SkillTreeGanerate : MonoBehaviour
     [SerializeField] int maxRetry = 100;
     int retry = 0;
 
+    public int sum_sp = 0;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        sum_sp = 0;
         dataSetting.DataSet();
         View();
     }
@@ -36,6 +39,7 @@ public class SkillTreeGanerate : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
+            sum_sp = 0;
             dataSetting.Reset();
             View();
         }
@@ -135,11 +139,13 @@ public class SkillTreeGanerate : MonoBehaviour
                             prefab = debuffIocn;
                         }
                     }
+                    sum_sp += data.GetSp();
                 }
             }
             else if (tagData[n.getId()] == "ステータス")
             {
                 prefab = statusIcon;
+                sum_sp += dataSetting.statusSp;
             }
             else
             {

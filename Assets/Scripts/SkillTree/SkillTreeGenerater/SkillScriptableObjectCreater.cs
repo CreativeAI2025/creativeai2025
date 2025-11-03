@@ -18,6 +18,12 @@ public class SkillScriptableObjectCreater : MonoBehaviour
     [Header("発動確率の重み"), SerializeField] float probabilityValue = 1f;
     [Header("効果時間（ターン数）の重み"), SerializeField] float durationValue = 1f;
     [Header("攻撃対象の重み"), SerializeField] float subjectValue = 1f;
+
+    [Header("追加効果の効果量の重み"), SerializeField] float sub_powerValue = 1f;
+    [Header("追加効果の発動確率の重み"), SerializeField] float sub_probabilityValue = 1f;
+    [Header("追加効果の効果時間（ターン数）の重み"), SerializeField] float sub_durationValue = 1f;
+    [Header("追加効果の攻撃対象の重み"), SerializeField] float sub_subjectValue = 1f;
+
     [SerializeField] DataSetting dataSetting;
     List<Skill> skills = new List<Skill>();
     Dictionary<int, string[]> skillData = new Dictionary<int, string[]>();// スキル名とスキルの説明のデータ
@@ -39,7 +45,7 @@ public class SkillScriptableObjectCreater : MonoBehaviour
 
             if (list.targetFolder == null)
             {
-                Debug.LogError($"❌ {list.characterName} の targetFolder が設定されていません。");
+                Debug.LogError($"{list.characterName} の targetFolder が設定されていません。");
                 continue;
             }
 
@@ -49,7 +55,7 @@ public class SkillScriptableObjectCreater : MonoBehaviour
 
             if (!Directory.Exists(folderPath))
             {
-                Debug.LogError($"❌ フォルダが存在しません: {folderPath}");
+                Debug.LogError($"フォルダが存在しません: {folderPath}");
                 continue;
             }
 
@@ -64,6 +70,78 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                 asset.skillName = skill.GetName();
                 asset.cost = skill.GetMp();
                 asset.skillDesc = skill.GetExplain();
+
+                SkillCategory skillCategory = SkillCategory.None;
+
+                switch (skill.GetAction())
+                {
+                    case "物理攻撃":
+                        skillCategory = SkillCategory.Damage;
+                        break;
+                    case "魔法攻撃":
+                        skillCategory = SkillCategory.Damage;
+                        break;
+                    case "特殊攻撃":
+                        skillCategory = SkillCategory.Damage;
+                        break;
+                    case "回復":
+                        skillCategory = SkillCategory.Recovery;
+                        break;
+                    case "復活":
+                        skillCategory = SkillCategory.None;
+                        break;
+                    case "強化":
+                        skillCategory = SkillCategory.Support;
+                        break;
+                    case "弱体":
+                        skillCategory = SkillCategory.None;
+                        break;
+                    case "":
+                        break;
+                    default:
+                        break;
+                }
+
+
+                EffectTarget effectTarget = EffectTarget.EnemySolo;
+
+                switch (skill.GetSubject())
+                {
+                    case "相手":
+                        effectTarget = EffectTarget.EnemySolo;
+                        break;
+                    case "相手全体":
+                        effectTarget = EffectTarget.EnemyAll;
+                        break;
+                    case "味方1人":
+                        effectTarget = EffectTarget.FriendSolo;
+                        break;
+                    case "味方全体":
+                        effectTarget = EffectTarget.FriendAll;
+                        break;
+                    case "自分":
+                        effectTarget = EffectTarget.Own;
+                        break;
+                    case "不明":
+                        break;
+                    default:
+                        break;
+                }
+
+
+                asset.skillEffect = new SkillEffect(
+                        skillCategory,
+                        effectTarget,
+                        skill.GetPower(),
+                        skill.GetProbability(),
+                        skill.GetStatus(),
+                        skill.GetDuration(),
+                        skill.isSub,
+                        skill.sub_power,
+                        skill.sub_probability,
+                        skill.sub_status,
+                        skill.sub_duration
+                    );
 
                 // アセット作成
                 AssetDatabase.CreateAsset(asset, assetPath);
@@ -96,6 +174,6 @@ public class SkillScriptableObjectCreater : MonoBehaviour
         }
 
         AssetDatabase.Refresh();
-        Debug.Log($"🧹 フォルダをクリーンアップしました: {folderPath}");
+        Debug.Log($"フォルダをクリーンアップしました: {folderPath}");
     }
 }

@@ -6,7 +6,7 @@ public class MoveSkillTreePanel : MonoBehaviour
     private Vector3 previousMousePos;
     private Vector3 startPos;
 
-    [SerializeField, Range(0.01f, 1f)]
+    [SerializeField, Range(0.01f, 100f)]
     private float sensitivity = 0.5f; // マウス移動の感度
 
     // スケール制御用
@@ -41,15 +41,17 @@ public class MoveSkillTreePanel : MonoBehaviour
             Vector3 mouseDelta = Input.mousePosition - previousMousePos;
 
             Vector3 newPos = rectTransform.localPosition +
-                             new Vector3(-mouseDelta.y, mouseDelta.x, 0) *
-                             sensitivity / rectTransform.lossyScale.x;
+                 new Vector3(-mouseDelta.y, mouseDelta.x, 0) *
+                 sensitivity * 10f * Time.deltaTime * 60f / rectTransform.lossyScale.x;
+
 
             // 現在のスケールを取得
-            float scaleFactor = rectTransform.localScale.x;
+            float scaleFactor = rectTransform.localScale.y;
 
             // スケールに応じて移動範囲を拡大/縮小
-            Vector2 minPos = baseMinPosition * scaleFactor;
-            Vector2 maxPos = baseMaxPosition * scaleFactor;
+            Vector2 minPos = baseMinPosition * Mathf.Pow(scaleFactor, 4.0f);
+            Vector2 maxPos = baseMaxPosition * Mathf.Pow(scaleFactor, 4.0f);
+
 
             newPos.x = Mathf.Clamp(newPos.x, minPos.x, maxPos.x);
             newPos.y = Mathf.Clamp(newPos.y, minPos.y, maxPos.y);

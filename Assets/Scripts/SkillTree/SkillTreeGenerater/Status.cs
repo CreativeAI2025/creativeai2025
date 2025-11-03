@@ -29,8 +29,12 @@ public class Status : IComparable<Status>
     {
         return this.name;
     }
+    public int GetPower()
+    {
+        return this.power;
+    }
 
-    public string getType()
+    public new string GetType()
     {
         return this.type;
     }
@@ -57,6 +61,16 @@ public class Status : IComparable<Status>
     public void setExplain(string explain)
     {
         this.explain = explain;
+    }
+
+#pragma warning disable CS0114 // メンバーは継承されたメンバーを非表示にします。override キーワードがありません
+    public string ToString()
+#pragma warning restore CS0114 // メンバーは継承されたメンバーを非表示にします。override キーワードがありません
+    {
+        return "名前：" + this.name
+        + ", 種類：" + type
+        + ", 強さ：" + power + "%"
+        + ", SP：" + sp;
     }
 
     /// <summary>
