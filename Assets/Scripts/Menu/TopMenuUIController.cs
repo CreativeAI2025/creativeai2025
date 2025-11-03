@@ -14,7 +14,9 @@ public class TopMenuUIController : MonoBehaviour, IMenuUIController
     [SerializeField] Image _cursorObjItem;
     [SerializeField] Image _cursorObjSkillBoard;
 
+    // カーソルが指されていないときの色
     private Color white = Color.white;
+    // カーソルが指されているときの色
     private Color selectedColor = Color.red;
 
     /// <summary>
