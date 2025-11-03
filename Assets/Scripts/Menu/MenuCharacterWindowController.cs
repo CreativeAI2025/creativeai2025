@@ -9,14 +9,21 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
     /// ステータス画面を閉じられるかどうかのフラグ
     /// </summary>
     bool _canClose;
+    private bool stop = false;
     private InputSetting _inputSetting;
 
     /// <summary>
     /// キャラクターのステータスを画面に表示する
     /// </summary>
-    public void SetUpCharacter()
+    private void SetUpCharacter()
     {
-
+        if (CharacterStatusManager.Instance == null)
+        {
+            Debug.Log("[Menu]CharacterStatusManager が初期化されていません。");
+            stop = true;
+            return;
+        }
+        stop = false;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -28,6 +35,8 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
     // Update is called once per frame
     void Update()
     {
+        if (stop)
+            return;
         CheckKeyInput();
     }
 
