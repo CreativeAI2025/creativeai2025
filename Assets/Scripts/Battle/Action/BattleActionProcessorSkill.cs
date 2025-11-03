@@ -133,7 +133,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 }
 
                 // ... (ダメージ計算とステータス変更のロジックはそのまま) ...
-                int damageValue = 100;
+                int damageValue = DamageFormula.CalculateSkillDamage(actorParam.Attack, targetParam.Defence,actorParam.atkBuff,targetParam.defBuff ,skillEffect.value);
                 int hpDelta = -damageValue;
                 bool isTargetDefeated = false;
 
