@@ -1188,6 +1188,11 @@ RectTransform:
   m_AnchoredPosition: {x: 480, y: -325}
   m_SizeDelta: {x: 900, y: 430}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &112293366 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7606587600885366387, guid: 506b120aecb99e4449b60dc52150d7a7, type: 3}
+  m_PrefabInstance: {fileID: 1441404807}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &173217669
 GameObject:
   m_ObjectHideFlags: 0
@@ -6682,6 +6687,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -320
       objectReference: {fileID: 0}
+    - target: {fileID: 7606587600885366387, guid: 506b120aecb99e4449b60dc52150d7a7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 851194865364353476, guid: 506b120aecb99e4449b60dc52150d7a7, type: 3}
@@ -7045,7 +7054,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4279879328b526346b3bfcaa86842f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uiController: {fileID: 0}
+  _uiController: {fileID: 112293366}
 --- !u!4 &1569393259
 Transform:
   m_ObjectHideFlags: 0
