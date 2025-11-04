@@ -92,7 +92,9 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
                     _uiController.SetCharacterStatus3(sprite, currentHp, maxHp, currentMp, maxMp);
                     break;
             }
+            _cursor++;
         }
+        _cursor = 0;
     }
 
     public void OpenMenuUseSelect()

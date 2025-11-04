@@ -61,9 +61,9 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             characterId = id,
             level = 1,
             exp = 0,
-            currentHp = 100,
+            currentHp = 90,
             maxHp = 100,
-            currentMp = 100,
+            currentMp = 50,
             maxMp = 100,
             skillList = new List<int>()
             {
