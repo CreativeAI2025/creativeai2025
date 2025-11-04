@@ -35,9 +35,9 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// パーティメンバーの初期化
     /// 最初はゾフィ一人なので、partyCharacterのリストに、ゾフィIDである「１」を入れる。
     /// </summary>
-    private void Initialize()
+    public void Initialize()
     {
-        partyCharacter = new List<int>() { 1 };
+        partyCharacter = new List<int>() { 1, 2, 3 };
     }
 
     /// <summary>
