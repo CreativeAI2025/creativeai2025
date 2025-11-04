@@ -6,6 +6,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
 {
     MenuManager _menuManager;
     [SerializeField] private MenuItemUIController _uiController;
+    [SerializeField] private MenuHeaderMiniUIController _headerUIController;
     private bool _canClose;
     private InputSetting _inputSetting;
     private int _itemClassification;    // アイテムの分類

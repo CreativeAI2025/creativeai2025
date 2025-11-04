@@ -159,6 +159,7 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
 
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex);
+        SetCharacterStatus();
     }
 
     private IEnumerator previousPage()
@@ -172,5 +173,17 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
 
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex);
+        SetCharacterStatus();
+    }
+
+    /// <summary>
+    /// 現在のキャラクターIDから、そのキャラクターのステータスをセットする
+    /// </summary>
+    private void SetCharacterStatus()
+    {
+        int currentId = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
+        var currentCharacterData = CharacterDataManager.Instance.GetCharacterData(currentId);
+        _uiController.SetCharacterNameText(currentCharacterData.characterName);
+        _uiController.SetCharacterSprite(currentCharacterData.sprite);
     }
 }

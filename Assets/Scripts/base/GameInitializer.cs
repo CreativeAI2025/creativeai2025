@@ -17,6 +17,7 @@ public class GameInitializer : MonoBehaviour
         /// パーティキャラクターの状態に関する登録（パーティメンバーの初期化（最初はゾフィのみ）、所持金の初期化など）を行うためのクラス
         /// </summary>
         CharacterStatusManager characterStatusManager = CharacterStatusManager.Instance;
+        SkillDataManager skillDataManager = SkillDataManager.Instance;
         Debug.Log("ロードを開始します。");
         try
         {
@@ -24,6 +25,7 @@ public class GameInitializer : MonoBehaviour
             Debug.Log("CharacterDataManagerのロード完了");
             characterStatusManager.Initialize();
             Debug.Log("CharacterStatusManagerの初期化完了");
+            skillDataManager.Initialize();
         }
         catch (Exception e)
         {

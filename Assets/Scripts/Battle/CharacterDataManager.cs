@@ -20,6 +20,7 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     /// 読み込んだキャラクターのパラメータ表の一覧です。
     /// </summary>
     private List<ParameterTable> _parameterTables;
+    private Dictionary<int, ParameterTable> _parameterTableDisc;
 
     /// <summary>
     /// 読み込んだキャラクターのデータの一覧です。
@@ -75,6 +76,7 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
         await handle.Task;
         _parameterTables = new List<ParameterTable>(handle.Result);
         handle.Release();
+        _parameterTableDisc = _parameterTables.ToDictionary(table => table.characterId, table => table);
     }
 
     /// <summary>
@@ -83,7 +85,7 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     /// <param name="characterId">キャラクターID</param>
     public ParameterTable GetParameterTable(int characterId)
     {
-        return _parameterTables.Find(parameterTable => parameterTable.characterId == characterId);
+        return _parameterTableDisc[characterId];
     }
 
     /// <summary>
