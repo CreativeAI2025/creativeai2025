@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 
 public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
@@ -8,6 +10,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     private InputSetting _inputSetting;
     private int _selectPhase;
     private int _cursor;
+    private int _cursorMax;
     private SkillData _skillData;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -58,6 +61,40 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
 
     }
 
+    /// <summary>
+    /// このウィンドウに来た時に、カーソルを０にするなどの初期化を行う
+    /// </summary>
+    private void SetupSelectWindow()
+    {
+        List<int> ids = CharacterStatusManager.Instance.partyCharacter;
+        _cursor = 0;
+        _cursorMax = ids.Count;
+        _uiController.HideAllCursor();  // 一度全てのキャラクターステータスウィンドウを閉じる（後から必要な箇所だけ追加する）
+        while (_cursor < _cursorMax)
+        {
+            int id = ids[_cursor];
+            var characterData = CharacterDataManager.Instance.GetCharacterData(id);
+            Sprite sprite = characterData.sprite;   // キャラクタースプライトの取得
+            var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(id);
+            int currentHp = characterStatus.currentHp;
+            int maxHp = characterStatus.maxHp;
+            int currentMp = characterStatus.currentMp;
+            int maxMp = characterStatus.maxMp;
+            switch (_cursor)
+            {
+                case 0:
+                    _uiController.SetCharacterStatus1(sprite, currentHp, maxHp, currentMp, maxMp);
+                    break;
+                case 1:
+                    _uiController.SetCharacterStatus2(sprite, currentHp, maxHp, currentMp, maxMp);
+                    break;
+                case 2:
+                    _uiController.SetCharacterStatus3(sprite, currentHp, maxHp, currentMp, maxMp);
+                    break;
+            }
+        }
+    }
+
     public void OpenMenuUseSelect()
     {
         StartCoroutine(OpenMenuUseSelectProcess());
@@ -78,6 +115,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     public void ShowWindow()
     {
         InitializeCommand();
+        SetupSelectWindow();
         _uiController.Show();
 
     }
@@ -91,25 +129,26 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     //各キーへの入力
     private void PointNext()
     {
-        int member = 3;
         _cursor++;
-        _cursor = _cursor % member;  // ここはパーティメンバーの数によって変える必要あり
+        if (_cursor >= _cursorMax)
+        {
+            _cursor = 0;
+        }
         _uiController.ShowSelectedCursor(_cursor);
     }
     private void PointPrevious()
     {
-        int member = 3;
         _cursor--;
         if (_cursor < 0)
         {
-            _cursor = member - 1;
+            _cursor = _cursorMax - 1;
         }
         _uiController.ShowSelectedCursor(_cursor);
     }
 
     private void SetPhase2Text()
     {
-        string text = "You Used Skill !!";
+        string text = "使用した！";
         _uiController.InputText(text);
         _selectPhase++;
     }

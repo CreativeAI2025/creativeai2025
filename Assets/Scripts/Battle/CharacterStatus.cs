@@ -28,9 +28,19 @@ public class CharacterStatus
     public int currentHp;
 
     /// <summary>
+    /// 現在の最大HPです。
+    /// </summary>
+    public int maxHp;
+
+    /// <summary>
     /// 現在のMPです。
     /// </summary>
     public int currentMp;
+
+    /// <summary>
+    /// 現在の最大MPです。
+    /// </summary>
+    public int maxMp;
 
     /// <summary>
     /// 装備中の武器のIDです。
