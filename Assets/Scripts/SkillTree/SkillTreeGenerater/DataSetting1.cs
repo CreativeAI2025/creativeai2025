@@ -6,51 +6,7 @@ using System.IO;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 
-/// <summary>
-/// 序盤中盤終盤でIDを入れる配列リストのクラス
-/// </summary>
-public class Step
-{
-    public string step;
-    public List<int> ids = new List<int>();
-
-    public Step(string step, int id)
-    {
-        this.step = step;
-        this.ids.Add(id);
-    }
-
-    public void AddId(int id)
-    {
-        this.ids.Add(id);
-    }
-
-    public string GetStep()
-    {
-        return this.step;
-    }
-
-    public List<int> GetIds()
-    {
-        return this.ids;
-    }
-
-    /// <summary>
-    /// リストにマッチするIDがあればtureを返す(引数：ID)
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    public bool MatchId(int id)
-    {
-        foreach (int i in this.ids)
-        {
-            if (i == id) return true;
-        }
-        return false;
-    }
-}
-
-public class DataSetting : MonoBehaviour
+public class DataSetting1 : MonoBehaviour
 {
     [Header("ノードデータのJsonFile"), SerializeField] TextAsset nodeDataJson;
     [Header("自作のスキルツリーのJsonFile"), SerializeField] TextAsset selfSkillTree;
@@ -102,6 +58,7 @@ public class DataSetting : MonoBehaviour
     Dictionary<int, float[]> linelimitPerRow = new Dictionary<int, float[]>();//遷移による枝数の制限
     Dictionary<string, float[]> skill_or_statusPerRow = new Dictionary<string, float[]>();//スキル・ステータスの変移確率(スキル、ステータス、初期状態)
     Dictionary<int, string[]> skillData = new Dictionary<int, string[]>();// スキル名とスキルの説明のデータ
+    Dictionary<int, string[]> allSkillData = new Dictionary<int, string[]>();// 全キャラクターのスキル名とスキルの説明のデータ
     Dictionary<int, string[]> statusData = new Dictionary<int, string[]>();// ステータス名とステータスの説明のデータ
     Dictionary<int, string> tagData = new Dictionary<int, string>();// IDとスキル・ステータスの格納
 
@@ -109,6 +66,7 @@ public class DataSetting : MonoBehaviour
     public List<Node> lineData = new List<Node>();//ラインデータの保存
     public List<int[]> connections = new List<int[]>();//IDの遷移を記録
     public List<Skill> nodeSkillData = new List<Skill>();//スキルをもつノードの情報の保存
+    public List<Skill> allSkillDataList = new List<Skill>();//全キャラクターの解析スキルデータを保存
     public List<Status> nodeStatusData = new List<Status>();//ステータスをもつノードの情報の保存
 
     public Dictionary<int, string> getTagData()
@@ -153,6 +111,13 @@ public class DataSetting : MonoBehaviour
         SkillJsonLoader(characterName);
         //StatusData();
         StatusJsonLoader();
+        allSkillData = SkillStatusLoader.instance.LoadAllSkill();
+        int count = 0;
+        foreach (var all in allSkillData)
+        {
+            count++;
+        }
+        Debug.Log(count);
     }
 
     void NodeDataLoader()
@@ -426,14 +391,20 @@ public class DataSetting : MonoBehaviour
     /// </summary>
     public void SkillDataSet()
     {
-        for (int i = 0; i < skillData.Count; i++)
+        for (int i = 0; i < skillData.Count; i++)//キャラクター単体
         {
             // データ格納
             nodeSkillData.Add(SerchSkillDescription(skillData[i]));
         }
 
+        for (int i = 0; i < allSkillData.Count; i++)//全体
+        {
+            // データ格納
+            allSkillDataList.Add(SerchSkillDescription(allSkillData[i]));
+        }
+
         // 評価値を計算する
-        this.nodeSkillData = SetEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, this.nodeSkillData);
+        this.nodeSkillData = SetEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, nodeSkillData);
 
         //SkillListの中身の確認
         foreach (var n in nodeSkillData)
@@ -765,7 +736,7 @@ public class DataSetting : MonoBehaviour
         {
             power = float.Parse(result.Groups[1].Value);
             action = "回復";
-            type = result.Groups[2].Success ? "%回復" : "回復";
+            type = "回復";
         }
 
         if (explain.Contains("治療")) action = "回復";
@@ -848,12 +819,12 @@ public class DataSetting : MonoBehaviour
 
 
         // --- 追加効果 ---
-        if (Regex.IsMatch(explain, "毒")) { action = "特殊攻撃"; extra = "毒"; }
-        if (Regex.IsMatch(explain, "麻痺") || Regex.IsMatch(explain, "マヒ")) { action = "特殊攻撃"; extra = "麻痺"; }
-        if (Regex.IsMatch(explain, "睡眠") || Regex.IsMatch(explain, "眠り")) { action = "特殊攻撃"; extra = "睡眠"; }
+        if (Regex.IsMatch(explain, "毒")) { action = "特殊攻撃"; extra = "毒"; type = "状態異常"; }
+        if (Regex.IsMatch(explain, "麻痺") || Regex.IsMatch(explain, "マヒ")) { action = "特殊攻撃"; extra = "麻痺"; type = "状態異常"; }
+        if (Regex.IsMatch(explain, "睡眠") || Regex.IsMatch(explain, "眠り")) { action = "特殊攻撃"; extra = "睡眠"; type = "状態異常"; }
 
-        if (!isSub) Debug.Log($"メイン効果の解析結果: [{name}] {action} / {type} / Power:{power} / P:{probability}% / D:{duration}T / 対象:{subject} / 状態異常:{extra}");
-        if (isSub) Debug.Log($"追加効果の解析結果: [{name}] {action} / {type} / Power:{power} / P:{probability}% / D:{duration}T / 対象:{subject} / 状態異常:{extra}");
+        // if (!isSub) Debug.Log($"メイン効果の解析結果: [{name}] {action} / {type} / Power:{power} / P:{probability}% / D:{duration}T / 対象:{subject} / 状態異常:{extra}");
+        // if (isSub) Debug.Log($"追加効果の解析結果: [{name}] {action} / {type} / Power:{power} / P:{probability}% / D:{duration}T / 対象:{subject} / 状態異常:{extra}");
 
         return new Skill(name, explain, subject, action, probability, power, type, status, extra, duration);
     }
@@ -863,25 +834,99 @@ public class DataSetting : MonoBehaviour
     /// </summary>
     public List<Skill> SetEvaluationValue(float powerValue, float probabilityValue, float durationValue, float subjectValue, List<Skill> list)
     {
-        List<Skill> newlist = list;
+        List<Skill> newList = list;
 
-        float maxPower = GetMaxValue("power", list);
-        float maxProbability = GetMaxValue("probability", list);
-        float maxDuration = GetMaxValue("duration", list);
-        float maxSubjectNum = GetMaxValue("subject", list);
-        float minPower = GetMinValue("power", list);
-        float minProbability = GetMinValue("probability", list);
-        float minDuration = GetMinValue("duration", list);
-        float minSubjectNum = GetMinValue("subject", list);
+        List<Skill> physicsList = new List<Skill>();
+        List<Skill> magicList = new List<Skill>();
+        List<Skill> healList = new List<Skill>();
+        List<Skill> buffList = new List<Skill>();
+        List<Skill> debuffList = new List<Skill>();
 
-        float sub_maxPower = GetMaxValue("sub_power", list);
-        float sub_maxProbability = GetMaxValue("sub_probability", list);
-        float sub_maxDuration = GetMaxValue("sub_duration", list);
-        float sub_maxSubjectNum = GetMaxValue("sub_subject", list);
-        float sub_minPower = GetMinValue("sub_power", list);
-        float sub_minProbability = GetMinValue("sub_probability", list);
-        float sub_minDuration = GetMinValue("sub_duration", list);
-        float sub_minSubjectNum = GetMinValue("sub_subject", list);
+        foreach (var skill in allSkillDataList)
+        {
+            if (skill.GetTypeName() == "物理攻撃")
+            {
+                physicsList.Add(skill);
+            }
+            else if (skill.GetTypeName() == "特殊攻撃" || skill.GetTypeName() == "魔法攻撃")
+            {
+                magicList.Add(skill);
+            }
+            if (skill.GetTypeName() == "回復")
+            {
+                healList.Add(skill);
+            }
+            if (skill.GetTypeName() == "バフ")
+            {
+                buffList.Add(skill);
+            }
+            if (skill.GetTypeName() == "デバフ")
+            {
+                debuffList.Add(skill);
+            }
+        }
+
+        Debug.Log("物理");
+        physicsList = DetailEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, physicsList);
+
+        Debug.Log("魔法");
+        magicList = DetailEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, magicList);
+
+        Debug.Log("回復");
+        healList = DetailEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, healList);
+
+        Debug.Log("バフ");
+        buffList = DetailEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, buffList);
+
+        Debug.Log("デバフ");
+        debuffList = DetailEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, debuffList);
+
+        // --- すべてのリストを1つにまとめる ---
+        List<Skill> allEvaluatedLists = new List<Skill>();
+        allEvaluatedLists.AddRange(physicsList);
+        allEvaluatedLists.AddRange(magicList);
+        allEvaluatedLists.AddRange(healList);
+        allEvaluatedLists.AddRange(buffList);
+        allEvaluatedLists.AddRange(debuffList);
+
+        // --- 名前が一致するものを nodeSkillData 内で更新 ---
+        for (int i = 0; i < newList.Count; i++)
+        {
+            foreach (var skill1 in allEvaluatedLists)
+            {
+                if (newList[i].GetName().Equals(skill1.GetName()))
+                {
+                    newList[i].SetEvaluationValue(skill1.GetEvaluationValue());
+                    newList[i].SetMp(skill1.GetMp());
+                    newList[i].SetSp(skill1.GetSp());
+                }
+            }
+        }
+
+        return newList;
+    }
+
+    List<Skill> DetailEvaluationValue(float powerValue, float probabilityValue, float durationValue, float subjectValue, List<Skill> list)
+    {
+        List<Skill> newList = list;
+
+        float maxPower = GetMaxValue("power", newList);
+        float maxProbability = GetMaxValue("probability", newList);
+        float maxDuration = GetMaxValue("duration", newList);
+        float maxSubjectNum = GetMaxValue("subject", newList);
+        float minPower = GetMinValue("power", newList);
+        float minProbability = GetMinValue("probability", newList);
+        float minDuration = GetMinValue("duration", newList);
+        float minSubjectNum = GetMinValue("subject", newList);
+
+        float sub_maxPower = GetMaxValue("sub_power", newList);
+        float sub_maxProbability = GetMaxValue("sub_probability", newList);
+        float sub_maxDuration = GetMaxValue("sub_duration", newList);
+        float sub_maxSubjectNum = GetMaxValue("sub_subject", newList);
+        float sub_minPower = GetMinValue("sub_power", newList);
+        float sub_minProbability = GetMinValue("sub_probability", newList);
+        float sub_minDuration = GetMinValue("sub_duration", newList);
+        float sub_minSubjectNum = GetMinValue("sub_subject", newList);
 
         // --- ログ出力 ---
         string logMessage = $@"
@@ -896,33 +941,33 @@ public class DataSetting : MonoBehaviour
         Sub Probability: min = {sub_minProbability}, max = {sub_maxProbability}
         Sub Duration   : min = {sub_minDuration}, max = {sub_maxDuration}
         Sub SubjectNum : min = {sub_minSubjectNum}, max = {sub_maxSubjectNum}
-        ==============================
-        ";
+        ==============================";
 
         Debug.Log(logMessage);
 
-        for (int i = 0; i < newlist.Count; i++)
+        for (int i = 0; i < newList.Count; i++)
         {
             float evaluationValue = EvaluationCalculation(
             powerValue, probabilityValue, durationValue, subjectValue,
             maxPower, maxProbability, maxDuration, maxSubjectNum,
-            minPower, minProbability, minDuration, minSubjectNum, newlist[i]);
+            minPower, minProbability, minDuration, minSubjectNum, newList[i]);
 
-            if (newlist[i].isSub)
+            if (newList[i].isSub)
             {
                 evaluationValue += EvaluationCalculation(
                 sub_powerValue, sub_probabilityValue, sub_durationValue, sub_subjectValue,
                 sub_maxPower, sub_maxProbability, sub_maxDuration, sub_maxSubjectNum,
-                sub_minPower, sub_minProbability, sub_minDuration, sub_minSubjectNum, newlist[i]);
+                sub_minPower, sub_minProbability, sub_minDuration, sub_minSubjectNum, newList[i]);
             }
 
-            newlist[i].SetEvaluationValue(evaluationValue);
-            newlist[i].SetMp(MpCalculate(evaluationValue));
-            newlist[i].SetSp(SpCalculatie(evaluationValue));
+            newList[i].SetEvaluationValue(evaluationValue);
+            newList[i].SetMp(MpCalculate(evaluationValue));
+            newList[i].SetSp(SpCalculatie(evaluationValue));
         }
 
-        return newlist;
+        return newList;
     }
+
 
     /// <summary>
     /// 評価値を返す
@@ -933,8 +978,8 @@ public class DataSetting : MonoBehaviour
     /// <param name="subject"></param>
     /// <returns></returns>
     float EvaluationCalculation(float powerValue, float probabilityValue, float durationValue, float subjectValue,
-    float maxPower, float maxProbability, float maxDuration, float maxSubjectNum,
-    float minPower, float minProbability, float minDuration, float minSubjectNum, Skill skill)
+                                float maxPower, float maxProbability, float maxDuration, float maxSubjectNum,
+                                float minPower, float minProbability, float minDuration, float minSubjectNum, Skill skill)
     {
         Skill new_skill = skill;
 
@@ -971,7 +1016,8 @@ public class DataSetting : MonoBehaviour
         float evaluationDurationValue = SafeNormalize(duration, minDuration, maxDuration, durationValue);
         float evaluationSubjectNumValue = SafeNormalize(subjectNum, minSubjectNum, maxSubjectNum, subjectNum);
 
-        float evaluationValue = 0f; evaluationValue = evaluationPowerValue + evaluationProbabilityValue + evaluationDurationValue + evaluationSubjectNumValue;
+        float evaluationValue = 0f;
+        evaluationValue = evaluationPowerValue + evaluationProbabilityValue + evaluationDurationValue + evaluationSubjectNumValue;
 
         string logMessage = $@"
         --- {new_skill.GetName()} の評価 ---
