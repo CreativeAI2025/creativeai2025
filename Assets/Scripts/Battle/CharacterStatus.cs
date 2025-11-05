@@ -28,9 +28,19 @@ public class CharacterStatus
     public int currentHp;
 
     /// <summary>
+    /// 現在の最大HPです。
+    /// </summary>
+    public int maxHp;
+
+    /// <summary>
     /// 現在のMPです。
     /// </summary>
     public int currentMp;
+
+    /// <summary>
+    /// 現在の最大MPです。
+    /// </summary>
+    public int maxMp;
 
     /// <summary>
     /// 装備中の武器のIDです。
@@ -45,17 +55,17 @@ public class CharacterStatus
     /// <summary>
     /// 覚えた魔法のIDのリストです。
     /// </summary>
-    public List<int> skillList;
+    public List<int> skillList = new();
 
     /// <summary>
     /// キャラクターが倒されたフラグです。
     /// </summary>
-    public bool isDefeated;
+    public bool isDefeated = false;
 
     ///<summary>
     /// 状態異常にかかっているかのフラグです。
     /// </summary>
-    public bool isStatusEffect;
+    public bool isStatusEffect = false;
     ///<summary>
     /// 状態異常のターン数です。
     /// </summary>
@@ -63,14 +73,14 @@ public class CharacterStatus
     ///<summary>
     /// 状態異常のどれにかかっているかのフラグです。
     /// </summary>
-    public bool Poison;
-    public bool Paralysis;
-    public bool Sleep;
-    public bool Confusion;
+    public bool Poison = false;
+    public bool Paralysis = false;
+    public bool Sleep = false;
+    public bool Confusion = false;
     ///<summary>
     /// 動けるかどうかのフラグです。
     /// </summary>
-    public bool IsCharaStop;
+    public bool IsCharaStop = false;
     // --- バフ・デバフ倍率 + 残りターン ---
     public float attackBuffMultiplier = 1.0f;
     public int attackBuffDuration = 0;

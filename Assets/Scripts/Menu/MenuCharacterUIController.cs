@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class MenuCharacterUIController : MonoBehaviour, IMenuUIController
 {
@@ -22,6 +23,7 @@ public class MenuCharacterUIController : MonoBehaviour, IMenuUIController
     [SerializeField] TextMeshProUGUI _magicDefValueText;
     [SerializeField] TextMeshProUGUI _speedValueText;
     [SerializeField] TextMeshProUGUI _dodgeValueText;
+    [SerializeField] Image _characterImage;
 
     public void SetCharacterNameText(string name)
     {
@@ -62,6 +64,10 @@ public class MenuCharacterUIController : MonoBehaviour, IMenuUIController
     public void SetDodgeValueText(int dodge)
     {
         _dodgeValueText.text = dodge.ToString();
+    }
+    public void SetCharacterSprite(Sprite sprite)
+    {
+        _characterImage.sprite = sprite;
     }
 
     /// <summary>

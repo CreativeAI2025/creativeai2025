@@ -1,8 +1,10 @@
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-
+using System.Linq;
+using System.Threading.Tasks;
 
 /// <summary>
 /// ゲーム内の味方キャラクターのデータを管理するクラスです。
@@ -18,21 +20,33 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     /// 読み込んだキャラクターのパラメータ表の一覧です。
     /// </summary>
     private List<ParameterTable> _parameterTables;
+    private Dictionary<int, ParameterTable> _parameterTableDisc;
 
     /// <summary>
     /// 読み込んだキャラクターのデータの一覧です。
     /// </summary>
     private List<CharacterData> _characterDataList;
+    private Dictionary<int, CharacterData> characterDataDict;
 
     public override void Awake()
     {
         base.Awake();
     }
 
+    public async Task Initialize()
+    {
+        await Task.WhenAll(
+            LoadExpTables(),
+            LoadParameterTables(),
+            LoadCharacterData()
+        );
+        Debug.Log("[CharacterDataManager]すべてのデータのロードが完了しました。");
+    }
+
     /// <summary>
     /// 経験値表のデータをロードします。
     /// </summary>
-    public async void LoadExpTables()
+    public async Task LoadExpTables()
     {
         AsyncOperationHandle<IList<ExpTable>> handle = Addressables.LoadAssetsAsync<ExpTable>(AddressablesLabels.ExpTable, null);
         await handle.Task;
@@ -56,12 +70,13 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     /// <summary>
     /// パラメータ表のデータをロードします。
     /// </summary>
-    public async void LoadParameterTables()
+    public async Task LoadParameterTables()
     {
         AsyncOperationHandle<IList<ParameterTable>> handle = Addressables.LoadAssetsAsync<ParameterTable>(AddressablesLabels.ParameterTable, null);
         await handle.Task;
         _parameterTables = new List<ParameterTable>(handle.Result);
         handle.Release();
+        _parameterTableDisc = _parameterTables.ToDictionary(table => table.characterId, table => table);
     }
 
     /// <summary>
@@ -70,18 +85,19 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     /// <param name="characterId">キャラクターID</param>
     public ParameterTable GetParameterTable(int characterId)
     {
-        return _parameterTables.Find(parameterTable => parameterTable.characterId == characterId);
+        return _parameterTableDisc[characterId];
     }
 
     /// <summary>
     /// キャラクターの定義データをロードします。
     /// </summary>
-    public async void LoadCharacterData()
+    public async Task LoadCharacterData()
     {
         AsyncOperationHandle<IList<CharacterData>> handle = Addressables.LoadAssetsAsync<CharacterData>(AddressablesLabels.Character, null);
         await handle.Task;
         _characterDataList = new List<CharacterData>(handle.Result);
         handle.Release();
+        characterDataDict = _characterDataList.ToDictionary(data => data.characterId, data => data);
     }
 
     /// <summary>
@@ -90,7 +106,7 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     /// <param name="characterId">キャラクターID</param>
     public CharacterData GetCharacterData(int characterId)
     {
-        return _characterDataList.Find(character => character.characterId == characterId);
+        return characterDataDict[characterId];
     }
 
     /// <summary>
@@ -101,33 +117,5 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     {
         var characterData = GetCharacterData(characterId);
         return characterData.characterName;
-    }
-
-    /// <summary>
-    /// キャラクターのIDから覚える魔法データを取得します。
-    /// </summary>
-    /// <param name="characterId">キャラクターID</param>
-    public List<CharacterSkillRecord> GetCharacterSkillList(int characterId)
-    {
-        var characterData = _characterDataList.Find(character => character.characterId == characterId);
-        return characterData.characterSkillRecords;
-    }
-
-    /// <summary>
-    /// キャラクターのIDとレベルから現在覚えられる魔法データ一覧を取得します。
-    /// </summary>
-    /// <param name="characterId">キャラクターID</param>
-    /// <param name="level">キャラクターのレベル</param>
-    public List<SkillData> GetLearnableSkill(int characterId, int level)
-    {
-        var SkillList = GetCharacterSkillList(characterId);
-        var records = SkillList.Where(x => x.level <= level);
-        List<SkillData> skillDataList = new();
-        foreach (var record in records)
-        {
-            var skillData = SkillDataManager.Instance.GetSkillDataById(record.skillId);
-            skillDataList.Add(skillData);
-        }
-        return skillDataList;
     }
 }
