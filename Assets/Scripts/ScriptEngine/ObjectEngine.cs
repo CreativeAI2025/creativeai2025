@@ -2,46 +2,53 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-//using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Threading;
+using System.Diagnostics;
 
 public class ObjectEngine : MonoBehaviour
 {
-    //private List<ObjectData>[][] _eventObjects;
-    //private List<ObjectData>[][] _trapEventObjects;
+    private List<ObjectData>[][] _eventObjects;
+    private List<ObjectData>[][] _trapEventObjects;
 
-    //[SerializeField] private PlayerController player;
+    [SerializeField] private PlayerController player;
     //[SerializeField] private ItemInventory inventory;
     //[SerializeField] private ItemDatabase itemDatabase;
-    //[SerializeField] private Pause pause;
+    [SerializeField] private Pause pause;
 
     [SerializeField] private MapEngine mapEngine;
     [SerializeField] private MapDataController mapDataController;
-    //private static Vector2Int changedPos = new Vector2Int(4, 2);
+    private static Vector2Int changedPos = new Vector2Int(4, 2);
     private string _mapName;
-    //private Vector2Int _pastGridPosition = new Vector2Int(-1, -1);
-    //private bool conversationFlag = false;
-    //private bool changeSceneFlag = false;
-    //private bool runFlag = false;
+    private Vector2Int _pastGridPosition = new Vector2Int(-1, -1);
+    private bool conversationFlag = false;
+    private bool battleFlag = false;
+    private bool changeSceneFlag = false;
+    private bool runFlag = false;
     private InputSetting _inputSetting;
     private void Start()
     {
         _inputSetting = InputSetting.Load();
-        _mapName = "Mura";
+        _mapName = SceneManager.GetActiveScene().name;
         if (_mapName == null)
         {
             print("Map name is null, using default map name.");
         }
         mapDataController.LoadMapData(_mapName);
 
-        //ConversationTextManager.Instance.OnConversationStart += Pause;
-        //ConversationTextManager.Instance.OnConversationEnd += UnPause;
-        //ConversationTextManager.Instance.OnConversationEnd += () => conversationFlag = false;
+        ConversationTextManager.Instance.OnConversationStart += Pause;
+        ConversationTextManager.Instance.OnConversationEnd += UnPause;
+        ConversationTextManager.Instance.OnConversationEnd += () => conversationFlag = false;
+
+        BattleManager.Instance.OnBattleStart += Pause;
+        BattleManager.Instance.OnBattleEnd += UnPause;
+        BattleManager.Instance.OnBattleEnd += () => battleFlag = false;
+
         mapDataController.SetChange(ResetAction);
         ResetAction();
-        //PlayerMove(changedPos);
+        PlayerMove(changedPos);
     }
 
     private void ResetAction()
@@ -53,20 +60,20 @@ public class ObjectEngine : MonoBehaviour
     // Start is called before the first frame update
     private void Initialize(string mapName, int width, int height)
     {
-        //_eventObjects = new List<ObjectData>[width][];
-        //_trapEventObjects = new List<ObjectData>[width][];
+        _eventObjects = new List<ObjectData>[width][];
+        _trapEventObjects = new List<ObjectData>[width][];
         for (int i = 0; i < width; i++)
         {
-            //_eventObjects[i] = new List<ObjectData>[height];
-            //_trapEventObjects[i] = new List<ObjectData>[height];
+            _eventObjects[i] = new List<ObjectData>[height];
+            _trapEventObjects[i] = new List<ObjectData>[height];
             for (int j = 0; j < height; j++)
             {
-               // _eventObjects[i][j] = new List<ObjectData>(4);
-                //_trapEventObjects[i][j] = new List<ObjectData>(4);
+                _eventObjects[i][j] = new List<ObjectData>(4);
+                _trapEventObjects[i][j] = new List<ObjectData>(4);
             }
         }
         IFileAssetLoader loader = SaveUtility.FileAssetLoaderFactory(); //
-        /*string path = loader.GetPath("ObjectData");
+        string path = loader.GetPath("ObjectData");
         foreach (string objectFilePath in loader.GetPathDirectory(path))
         {
             if (objectFilePath.EndsWith(".meta")) continue;
@@ -81,9 +88,9 @@ public class ObjectEngine : MonoBehaviour
                 {
                     if (location.Position.x == -1 && location.Position.y == -1)
                     {
-                        for (int i=0; i<width; i++)
+                        for (int i = 0; i < width; i++)
                         {
-                            for (int j=0; j<height; j++)
+                            for (int j = 0; j < height; j++)
                             {
                                 _trapEventObjects[i][j].Add(objectData);
                             }
@@ -93,18 +100,18 @@ public class ObjectEngine : MonoBehaviour
                     {
                         _trapEventObjects[location.Position.x][location.Position.y].Add(objectData);
                     }
-                    
+
                 }
                 else
                 {
                     _eventObjects[location.Position.x][location.Position.y].Add(objectData);
-                    PutMiniGameTwinkle(objectData);
+                    //PutMiniGameTwinkle(objectData);
                 }
             }
-        }*/
+        }
     }
 
-    /*
+
     [Conditional("UNITY_EDITOR")]
     private void OnDrawGizmos()
     {
@@ -115,26 +122,26 @@ public class ObjectEngine : MonoBehaviour
                 if (_trapEventObjects[j][i].Any())
                 {
                     Gizmos.color = Color.yellow;
-                    DrawRect(new Rect(j-0.5f, i-0.5f, 1, 1));
+                    DrawRect(new Rect(j - 0.5f, i - 0.5f, 1, 1));
                 }
                 else if (_eventObjects[j][i].Any())
                 {
                     Gizmos.color = Color.green;
-                    DrawRect(new Rect(j-0.5f, i-0.5f, 1, 1));
+                    DrawRect(new Rect(j - 0.5f, i - 0.5f, 1, 1));
                 }
             }
         }
     }
-    
+
     [Conditional("UNITY_EDITOR")]
     void DrawRect(Rect rect)
     {
         Gizmos.DrawWireCube(new Vector3(rect.center.x, rect.center.y, 0.01f), new Vector3(rect.size.x, rect.size.y, 0.01f));
     }
-    */
-    private /*async*/ void Update()
+
+    private async void Update()
     {
-        /*if (conversationFlag || changeSceneFlag) return;
+        if (conversationFlag || changeSceneFlag) return;
         if (_inputSetting.GetDecideInputDown())
         {
             Vector2Int frontPosition = new Vector2Int(player.GetGridPosition().x + player.Direction.x, player.GetGridPosition().y + player.Direction.y);
@@ -171,22 +178,22 @@ public class ObjectEngine : MonoBehaviour
                 continue;
             }
             await Call(trapObjectData, 0, 4);
-        }*/
+        }
     }
 
-    /*private void Pause()
+    private void Pause()
     {
-        DebugLogger.Log("Pause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null), DebugLogger.Colors.Magenta);
+        UnityEngine.Debug.Log("Pause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null));
         pause.PauseAll();
     }
 
     private void UnPause()
     {
-        DebugLogger.Log("UnPause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null), DebugLogger.Colors.Magenta);
+        UnityEngine.Debug.Log("UnPause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null));
         pause.UnPauseAll();
-    }*/
+    }
 
-    /*private async UniTask Call(ObjectData objectData, params int[] triggerType)
+    private async UniTask Call(ObjectData objectData, params int[] triggerType)
     {
         if (objectData is null) return;
         if (!triggerType.Contains(objectData.TriggerType)) return;
@@ -195,7 +202,7 @@ public class ObjectEngine : MonoBehaviour
         {
             foreach (var x in objectData.FlagCondition.Flag)
             {
-                DebugLogger.Log(x.Key + " : expected: " + x.Value + " : actual:" + FlagManager.Instance.HasFlag(x.Key), DebugLogger.Colors.Blue);
+                //DebugLogger.Log(x.Key + " : expected: " + x.Value + " : actual:" + FlagManager.Instance.HasFlag(x.Key), DebugLogger.Colors.Blue);
             }
             if (IsFlagsInsufficient(objectData))
             {
@@ -210,7 +217,7 @@ public class ObjectEngine : MonoBehaviour
         }
         if (changeSceneFlag) return;
         List<ObjectData> trapObjectDatas = _trapEventObjects[player.GetGridPosition().x][player.GetGridPosition().y];
-        DebugLogger.Log("end");
+        //DebugLogger.Log("end");
         foreach (ObjectData trapObjectData in trapObjectDatas)
         {
             await Call(trapObjectData, 0, 4);// フラグで制御されてるとはいえ再帰的になっているので要注意
@@ -224,61 +231,50 @@ public class ObjectEngine : MonoBehaviour
         switch (eventKey)
         {
             case "PlayerMove":
-                DebugLogger.Log("PlayerMove", DebugLogger.Colors.Green);
+                //DebugLogger.Log("PlayerMove", DebugLogger.Colors.Green);
                 string[] pos = eventArgs[1].Split(',');
                 Vector2Int moved = new Vector2Int(int.Parse(pos[0]), int.Parse(pos[1]));
                 PlayerMove(moved);
                 break;
             case "ChangeScene":
-                SoundManager.Instance.PlaySE(6, 5f); //ドアくぐる
-                DebugLogger.Log("ChangeScene", DebugLogger.Colors.Green);
+                //SoundManager.Instance.PlaySE(6, 5f); //ドアくぐる
+                //DebugLogger.Log("ChangeScene", DebugLogger.Colors.Green);
                 string[] args = eventArgs[1].Split(',');
                 changedPos = new Vector2Int(int.Parse(args[1]), int.Parse(args[2]));
                 await SceneChange(args[0]);
                 break;
             case "Conversation":
-                DebugLogger.Log("Conversation", DebugLogger.Colors.Green);
+                //DebugLogger.Log("Conversation", DebugLogger.Colors.Green);
                 conversationFlag = true;
                 Conversation(eventArgs[1]);
                 await UniTask.WaitUntil(() => !conversationFlag);
                 break;
             case "GetItem":
-                DebugLogger.Log("GetItem", DebugLogger.Colors.Green);
+                //DebugLogger.Log("GetItem", DebugLogger.Colors.Green);
                 conversationFlag = true;
                 GetItem(eventArgs[1]);
                 await UniTask.WaitUntil(() => !conversationFlag);
                 break;
-            case "PaperGame":
-                DebugLogger.Log("PaperGame", DebugLogger.Colors.Green);
-                changedPos = new Vector2Int(player.GetGridPosition().x, player.GetGridPosition().y);
-                await SceneChange("PaperGame");
-                break;
-            case "SearchGame":
-                DebugLogger.Log("SearchGame", DebugLogger.Colors.Green);
-                changedPos = new Vector2Int(player.GetGridPosition().x, player.GetGridPosition().y);
-                await SceneChange("SearchGame");
-                break;
-            case "TimingGame":
-                DebugLogger.Log("TimingGame", DebugLogger.Colors.Green);
-                ConversationTextManager.Instance.OnConversationStart -= Pause;
-                changedPos = new Vector2Int(player.GetGridPosition().x, player.GetGridPosition().y);
-                await SceneChange("TimingGame");
-                break;
             case "TileModify":
-                DebugLogger.Log("TileModify", DebugLogger.Colors.Green);
+                //DebugLogger.Log("TileModify", DebugLogger.Colors.Green);
                 string[] positionStr = eventArgs[3].Split(',');
                 Vector2Int position = new Vector2Int(int.Parse(positionStr[0]), int.Parse(positionStr[1]));
                 TileModify(eventArgs[1], Enum.Parse<MapDataController.TileLayer>(eventArgs[2]), position,
                     eventArgs[4].ToCharArray()[0]);
                 break;
+            case "Battle":
+                battleFlag = true;
+                Battle(eventArgs[1]);
+                await UniTask.WaitUntil(() => !battleFlag);
+                break;
             default: throw new NotImplementedException();
         }
-    }*/
+    }
 
-    /*private bool IsFlagsInsufficient(ObjectData objectData)
+    private bool IsFlagsInsufficient(ObjectData objectData)
     {
         return objectData.FlagCondition.Flag is not null && objectData.FlagCondition.Flag.Any(x => FlagManager.Instance.HasFlag(x.Key) != x.Value);
-    }*/
+    }
 
     private void SetNextFlag(KeyValuePair<string, bool>[] nextFlags)
     {
@@ -290,21 +286,21 @@ public class ObjectEngine : MonoBehaviour
             }
             else
             {
-               //FlagManager.Instance.DeleteFlag(nextFlag.Key);
+                //FlagManager.Instance.DeleteFlag(nextFlag.Key);
             }
         }
     }
 
-    /*private async UniTask SceneChange(string sceneName)
+    private async UniTask SceneChange(string sceneName)
     {
         changeSceneFlag = true;
         ConversationTextManager.Instance.OnConversationStart -= Pause;
         ConversationTextManager.Instance.OnConversationEnd -= UnPause;
         await SceneManager.LoadSceneAsync(sceneName).ToUniTask();
         PlayerPrefs.SetString("SceneName", sceneName);
-    }*/
+    }
 
-    /*private void PlayerMove(Vector2Int moved)
+    private void PlayerMove(Vector2Int moved)
     {
         player.transform.position = new Vector3(moved.x, moved.y, 0);
     }
@@ -314,23 +310,28 @@ public class ObjectEngine : MonoBehaviour
         ConversationTextManager.Instance.InitializeFromJson(fileName);
     }
 
+    private void Battle(string fileName)
+    {
+        BattleManager.Instance.InitializeFromJson(fileName);
+    }
+
     private void GetItem(string itemName)
     {
-        Item item = itemDatabase.GetItem(itemName);
-        if (inventory.IsContains(item)) return;
+        //Item item = itemDatabase.GetItem(itemName);
+        /*if (inventory.IsContains(item)) return;
 
         SoundManager.Instance.PlaySE(9, 5f); //アイテム拾う
         inventory.Add(item);
-        CombineItem(item);
-        
-        if (item.HasContentText())
+        CombineItem(item);*/
+
+        /*if (item.HasContentText())
         {
-            ConversationTextManager.Instance.InitializeFromJson($"{itemName}_get");
+            //ConversationTextManager.Instance.InitializeFromJson($"{itemName}_get");
         }
         else
         {
-            ConversationTextManager.Instance.InitializeFromString($"{item.ItemName}を手に入れた。");
-        }
+            //ConversationTextManager.Instance.InitializeFromString($"{item.ItemName}を手に入れた。");
+        }*/
     }
 
     /*private void CombineItem(Item item)
@@ -341,9 +342,9 @@ public class ObjectEngine : MonoBehaviour
         }
     }*/
 
-    private void TileModify(string mapName, MapDataController.TileLayer layer, Vector2Int position, char tipSign) 
+    private void TileModify(string mapName, MapDataController.TileLayer layer, Vector2Int position, char tipSign)
     {
-        mapDataController.ChangeMapTile(mapName, layer, position, tipSign); 
+        mapDataController.ChangeMapTile(mapName, layer, position, tipSign);
         mapDataController.ApplyMapChange();
     }
 

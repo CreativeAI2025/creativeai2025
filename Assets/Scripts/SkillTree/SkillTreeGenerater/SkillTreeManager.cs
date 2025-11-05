@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
@@ -6,16 +7,19 @@ public class SkillTreeManager : MonoBehaviour
 {
     [SerializeField] DataSetting dataSetting;
     [SerializeField] SkillTreeGanerate skillTreeGanerate;
+    [SerializeField] ParameterTable parameterTable;
 
-    [SerializeField] Text skillPointText;//SPのテキスト
-    [SerializeField] Text skillInfoText;//スキルの表示
+    [SerializeField] TextMeshProUGUI skillPointText;//SPのテキスト
+    [SerializeField] TextMeshProUGUI skillInfoText;//スキルの表示
     [SerializeField] GameObject skillBlockPanel;
-    [SerializeField] int skillPoint = 100;
+    [SerializeField] int skillPoint = 1000;
 
     List<Node> skillList = new List<Node>();//取得済みのものを格納
     List<Skill> nodeSkillList = new List<Skill>();
     List<Status> nodeStatusList = new List<Status>();
     SkillBlocks[] skillBlocks;//skillBlockPanelの子オブジェクトを格納
+
+    ParameterRecord startStatus;
 
     bool onceAction;
 
@@ -35,6 +39,7 @@ public class SkillTreeManager : MonoBehaviour
         UpdateSkillInfoText(0, true);
         skillList = new List<Node>();
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks>();
+        if (parameterTable != null) startStatus = parameterTable.parameterRecords[0];
     }
 
     // Update is called once per frame
@@ -60,6 +65,38 @@ public class SkillTreeManager : MonoBehaviour
             {
                 nodeStatusList.Add(n);
             }
+
+            foreach (Skill n in dataSetting.nodeSkillData)
+            {
+                SkillStatusLoader.instance.LoadSkills();
+                SkillStatusLoader.instance.LoadStatuses();
+                SkillEntry skillEntry = null;
+                Skill skill = null;
+
+                //Jsonファイルのスキル所得状況の更新
+                foreach (Skill d in nodeSkillList)
+                {
+                    if (d.GetId().Equals(n.GetId()))
+                    {
+                        skill = d;
+                    }
+                }
+
+
+                if (skill != null) skillEntry = System.Array.Find(SkillStatusLoader.instance.GetSkillEntryList(dataSetting.characterName).skills, s => s.name == skill.GetName());
+
+                // 獲得したステータスアップをカウント
+                foreach (Skill d in nodeSkillList)
+                {
+                    if (d.GetId() == n.GetId())
+                    {
+                        if (skillEntry != null) skillEntry.mp = d.GetMp();//取得状況の変更
+                    }
+                }
+            }
+
+            SkillStatusLoader.instance.SaveSkillData();// スキルのJSONに保存
+            Debug.Log("保存先: " + Application.persistentDataPath);
             onceAction = false;
         }
     }
@@ -78,10 +115,10 @@ public class SkillTreeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// スキル・ステータスの説明をテキストに代入
+    /// スキル・ステータスの説明をテキストに代入(id,説明を表示するかしないか)
     /// </summary>
     /// <param name="id"></param>
-    public void UpdateSkillInfoText(int id, bool canLearned)
+    public void UpdateSkillInfoText(int id, bool canLearned, string newInfo = null)
     {
         string text = "データがありません";
         if (canLearned)
@@ -95,15 +132,17 @@ public class SkillTreeManager : MonoBehaviour
             {
                 if (n.GetId().Equals(id))
                 {
-                    text = n.toSkillstring(n.GetTypeName());
+                    text = "スキル:" + n.GetName() + newInfo + "\n" + n.GetExplain() + "\n必要SP:" + n.GetSp() + " 必要MP:" + n.GetMp();
                 }
             }
+
 
             foreach (var n in dataSetting.nodeStatusData)
             {
                 if (n.getId().Equals(id))
                 {
-                    text = n.getExplain();
+                    text = n.getExplain() + newInfo + "\n必要SP:" + n.GetSp();
+                    //Debug.Log(n.ToString());
                 }
             }
         }
@@ -140,6 +179,7 @@ public class SkillTreeManager : MonoBehaviour
     /// <returns></returns>
     public bool CanLearnSkill(int cost, int id)
     {
+        //Debug.Log($"{skillPoint},{cost}");
         if (id == 0) return true;
         if (skillPoint < cost)
         {
@@ -205,7 +245,7 @@ public class SkillTreeManager : MonoBehaviour
         }
 
 
-        if (skill != null) skillEntry = System.Array.Find(SkillStatusLoader.instance.GetSkillEntryList().skills, s => s.name == skill.GetName());
+        if (skill != null) skillEntry = System.Array.Find(SkillStatusLoader.instance.GetSkillEntryList(dataSetting.characterName).skills, s => s.name == skill.GetName());
 
         //Jsonファイルのスキル所得状況の更新
         foreach (Status d in nodeStatusList)
@@ -218,7 +258,7 @@ public class SkillTreeManager : MonoBehaviour
 
         if (status != null)
         {
-            foreach (var s in SkillStatusLoader.instance.GetStatusEntryList().statuses)
+            foreach (var s in SkillStatusLoader.instance.GetStatusEntryList(dataSetting.characterName).statuses)
             {
                 if (s.name == status.getName())
                 {
@@ -234,19 +274,66 @@ public class SkillTreeManager : MonoBehaviour
             if (n.getId() == id)
             {
                 if (skillEntry != null) skillEntry.get = true;//取得状況の変更
-                if (statusEntry != null) statusEntry.count++;//取得状況の変更
+                if (statusEntry != null)
+                {
+                    statusEntry.count++;//取得状況の変更
+                    switch (status.GetType())//ステータス更新
+                    {
+                        case "攻撃力":
+                            parameterTable.parameterRecords[0].Attack = BeforeStatus(startStatus.Attack, status.GetPower(), statusEntry.count);
+                            break;
+                        case "防御力":
+                            parameterTable.parameterRecords[0].Defence = BeforeStatus(startStatus.Defence, status.GetPower(), statusEntry.count);
+                            break;
+                        case "魔法力":
+                            parameterTable.parameterRecords[0].MagicAttack = BeforeStatus(startStatus.MagicAttack, status.GetPower(), statusEntry.count);
+                            break;
+                        case "魔法防御力":
+                            parameterTable.parameterRecords[0].MagicDefence = BeforeStatus(startStatus.MagicDefence, status.GetPower(), statusEntry.count);
+                            break;
+                        case "素早さ":
+                            parameterTable.parameterRecords[0].Speed = BeforeStatus(startStatus.Speed, status.GetPower(), statusEntry.count);
+                            break;
+                        case "回避率":
+                            parameterTable.parameterRecords[0].Evasion = BeforeStatus(startStatus.Evasion, status.GetPower(), statusEntry.count);
+                            break;
+                        case "最大HP":
+                            parameterTable.parameterRecords[0].HP = BeforeStatus(startStatus.HP, status.GetPower(), statusEntry.count);
+                            break;
+                        case "最大MP":
+                            parameterTable.parameterRecords[0].MP = BeforeStatus(startStatus.MP, status.GetPower(), statusEntry.count);
+                            break;
+                        default:
+                            break;
+                    }
+                }
                 skillList.Add(n);
             }
         }
 
-        ChechActiveBlocks();
-
         skillPoint -= cost;
 
+        ChechActiveBlocks();
         UpdateSkillPointText();
         SkillStatusLoader.instance.SaveSkillData();// スキルのJSONに保存
         SkillStatusLoader.instance.SaveStatusData();// ステータスのJSONに保存
         Debug.Log("保存先: " + Application.persistentDataPath);
+    }
+
+    /// <summary>
+    /// ステータスアップ後のステータスを返す(引数：初めのステータス、上昇率、アップ回数)
+    /// </summary>
+    /// <returns></returns>
+    int BeforeStatus(int startStatus, int power, int count)
+    {
+        int status = 0;
+        for (int i = 0; i < count; i++)
+        {
+            if (i == 0) status = startStatus + (startStatus * (power / 100));
+            status = status + (status * (power / 100));
+        }
+
+        return status;
     }
 
     /// <summary>

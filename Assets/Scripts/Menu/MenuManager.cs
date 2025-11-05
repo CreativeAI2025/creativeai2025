@@ -6,11 +6,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class MenuManager : DontDestroySingleton<MenuManager>
 {
-    /// <summary>
-    /// キャラクターの移動を行うクラスを管理するクラスへの参照
-    /// </summary>
-    //[SerializeField] CharacterMoverManager _characterMoverManager;
-
+    [SerializeField] private Pause menuUIPause;
     /// <summary>
     /// メニューのトップ画面を制御するクラスへの参照
     /// </summary>
@@ -24,6 +20,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     [SerializeField] private MenuSkillWindowController _menuSkillWindowController;
     [SerializeField] private MenuItemWindowController _menuItemWindowController;
     [SerializeField] private MenuSelectWindowController _menuSelectWindowController;
+    [SerializeField] private MenuSkillTreeWindowController _menuSkillTreeWindowController;
 
     /// <summary>
     /// メニューのフェーズ
@@ -49,6 +46,16 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     void Start()
     {
         _inputSetting = InputSetting.Load();
+
+        // 会話中にメニューを開けなくする
+        ConversationTextManager.Instance.OnConversationStart += menuUIPause.PauseAll;
+        ConversationTextManager.Instance.OnConversationEnd += menuUIPause.UnPauseAll;
+
+        // 戦闘中にメニューを開けなくする
+        BattleManager.Instance.OnBattleStart += menuUIPause.PauseAll;
+        BattleManager.Instance.OnBattleEnd += menuUIPause.UnPauseAll;
+
+        // アニメーション中にメニューを開けなくする
     }
 
     // Update is called once per frame
@@ -59,14 +66,6 @@ public class MenuManager : DontDestroySingleton<MenuManager>
 
     private void CheckOpenMenuKey()
     {
-        /*
-        // 移動中以外の場合は、メニューを開けないようにする
-        if (GameStateManager.CurrentState != GameState.Moving)
-        {
-            return;
-        }
-        */
-
         // メニューが閉じている場合のみ、メニューを開くキーの入力を確認する
         if (MenuPhase != MenuPhase.Closed)
         {
@@ -135,6 +134,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
                 break;
             case MenuCommand.SkillTree:
                 // スキルツリーを開く処理
+                ShowSkillTreeMenu();
                 break;
         }
     }
@@ -160,6 +160,8 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     private void ShowSkillTreeMenu()
     {
         //上と似たような感じに、スキルツリーを開くコードを記入
+        MenuPhase = MenuPhase.SkillTree;
+        _menuSkillTreeWindowController.ShowWindow();
     }
 
     public void OnCharacterCanceled()
@@ -201,7 +203,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         }
         else if (m == MenuUsePhase.ItemUse)
         {
-            //
+            _menuSelectWindowController.SetItemData(_menuItemWindowController.getItemData());
         }
         _menuSelectWindowController.ShowWindow();
     }

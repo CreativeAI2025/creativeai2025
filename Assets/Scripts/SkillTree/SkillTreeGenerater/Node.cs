@@ -1,18 +1,30 @@
 using System;
+using System.Collections.Generic;
+
+// JSON全体をまとめる型
+[System.Serializable]
+public class NodeDataEntryList
+{
+    public StepNodePerEntry[] stepNodePer;
+    public NodeLimitDataEntry[] nodeLimitData;
+    public LineLimitDataEntry[] lineLimitData;
+    public SkillOrStatusDataEntry[] skillOrStatusData;
+}
+
+// JSONデータのためのクラス
+[System.Serializable]
+public class StepNodePerEntry
+{
+    public string step;
+    public float nodePer;
+}
 
 // JSONデータのためのクラス
 [System.Serializable]
 public class NodeLimitDataEntry
 {
-    public int row;
-    public int nodeNum;
-}
-
-// JSON全体をまとめる型
-[System.Serializable]
-public class NodeLimitDataEntryList
-{
-    public NodeLimitDataEntry[] nodeLimitData;
+    public string step;
+    public float[] nodePerRow;
 }
 
 [System.Serializable]
@@ -22,13 +34,6 @@ public class LineLimitDataEntry
     public float[] edge;
 }
 
-// JSON全体をまとめる型
-[System.Serializable]
-public class LineLimitDataEntryList
-{
-    public LineLimitDataEntry[] lineLimitData;
-}
-
 [System.Serializable]
 public class SkillOrStatusDataEntry
 {
@@ -36,13 +41,20 @@ public class SkillOrStatusDataEntry
     public float[] transition_probability;
 }
 
-// JSON全体をまとめる型
+// JSONデータのためのクラス
 [System.Serializable]
-public class SkillOrStatusDataEntryList
+public class SelfNodeLimitDataEntry
 {
-    public SkillOrStatusDataEntry[] skillOrStatusData;
+    public int row;
+    public int nodeNum;
 }
 
+// JSON全体をまとめる型
+[System.Serializable]
+public class SelfNodeLimitDataEntryList
+{
+    public SelfNodeLimitDataEntry[] nodeLimitData;
+}
 [System.Serializable]
 public class SelfConnectionDataEntry
 {
@@ -76,6 +88,7 @@ public class Node
         this.x = x;
         this.y = y;
         this.tag = "タグがありません";
+        this.branch = 0;
     }
 
     public Node(int id, int branch)
@@ -98,6 +111,11 @@ public class Node
     public void setId(int id)
     {
         this.id = id;
+    }
+
+    public void AddBranch(int branch)
+    {
+        this.branch += branch;
     }
 
     public int getDistX()

@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class WorldMapController : MonoBehaviour
 {
+    [SerializeField] private InputSetting inputSetting;
     [Header("選択表現")]
     public GameObject[] mapPointObjects; // 各マップポイントのGameObject
     public Color selectedColor = Color.yellow; // 選択時の色
@@ -17,17 +19,34 @@ public class WorldMapController : MonoBehaviour
     private int currentIndex = 0;
     private int previousIndex = -1;
 
+    [Header("背景画像")]
+    public Image backgroundUIImage; // Canvas 上の Image をアサイン
+
     void Start()
     {
+        // 背景画像を設定
+        if (backgroundUIImage != null && worldMapData != null && worldMapData.backgroundImage != null)
+        {
+            backgroundUIImage.sprite = worldMapData.backgroundImage;
+            backgroundUIImage.preserveAspect = true; // 画像の縦横比を保持
+        }
+
         // ワールドマップデータが設定されていない場合はエラー
         if (worldMapData == null || worldMapData.mapPoints == null || worldMapData.mapPoints.Length == 0)
         {
             Debug.LogError("WorldMapData が設定されていないか、マップポイントが空です");
             return;
         }
-        
+
+        // UIにWorldMapData.positionを反映
+        ApplyMapPointPositions();
+
         // 開始ポイントを設定
-        currentIndex = worldMapData.startingPointIndex;
+        if (PlayerPrefs.HasKey("LastWorldMapIndex"))
+            currentIndex = PlayerPrefs.GetInt("LastWorldMapIndex");
+        else
+            currentIndex = worldMapData.startingPointIndex;
+
         if (currentIndex >= worldMapData.mapPoints.Length)
             currentIndex = 0;
             
@@ -44,15 +63,41 @@ public class WorldMapController : MonoBehaviour
         HandleInput();
     }
 
+    void ApplyMapPointPositions()
+    {
+        for (int i = 0; i < mapPointObjects.Length; i++)
+        {
+            RectTransform rt = mapPointObjects[i].GetComponent<RectTransform>();
+            if (rt != null)
+            {
+                rt.anchoredPosition = worldMapData.mapPoints[i].position;
+            }
+        }
+        ApplyIconsToMapPoints();
+    }
+
+    void ApplyIconsToMapPoints()
+    {
+        for (int i = 0; i < mapPointObjects.Length; i++)
+        {
+            var image = mapPointObjects[i].GetComponent<UnityEngine.UI.Image>();
+            if (image != null && worldMapData.mapPoints[i].icon != null)
+            {
+                image.sprite = worldMapData.mapPoints[i].icon;
+            }
+        }
+    }
+
     void HandleInput()
     {
         int nextIndex = -1;
 
         // 上下左右入力
-        if (Input.GetKeyDown(KeyCode.W)) nextIndex = GetNeighborIndex(Direction.Up);
-        if (Input.GetKeyDown(KeyCode.S)) nextIndex = GetNeighborIndex(Direction.Down);
-        if (Input.GetKeyDown(KeyCode.A)) nextIndex = GetNeighborIndex(Direction.Left);
-        if (Input.GetKeyDown(KeyCode.D)) nextIndex = GetNeighborIndex(Direction.Right);
+        if (inputSetting.GetForwardKeyDown()) nextIndex = GetNeighborIndex(Direction.Up);
+        if (inputSetting.GetBackKeyDown()) nextIndex = GetNeighborIndex(Direction.Down);
+        if (inputSetting.GetLeftKeyDown()) nextIndex = GetNeighborIndex(Direction.Left);
+        if (inputSetting.GetRightKeyDown())   nextIndex = GetNeighborIndex(Direction.Right);
+
 
         if (nextIndex != -1 && worldMapData.IsAreaUnlocked(nextIndex))
         {
@@ -62,10 +107,13 @@ public class WorldMapController : MonoBehaviour
         }
 
         // 決定
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Z))
+        if (inputSetting.GetDecideInputDown())
         {
             if (worldMapData.IsAreaUnlocked(currentIndex))
             {
+                // ★選択位置を保存
+                PlayerPrefs.SetInt("LastWorldMapIndex", currentIndex);
+                PlayerPrefs.Save();
                 SceneManager.LoadScene(worldMapData.mapPoints[currentIndex].sceneName);
             }
             else
@@ -83,6 +131,8 @@ public class WorldMapController : MonoBehaviour
             
         WorldMapData.MapPointData current = worldMapData.mapPoints[currentIndex];
         int[] neighborIndices = worldMapData.GetNeighborIndices(currentIndex);
+
+        Debug.Log($"Current = {currentIndex}, neighbors = {string.Join(",", neighborIndices)}");
 
         int bestIndex = -1;
         float bestDistance = float.MaxValue;

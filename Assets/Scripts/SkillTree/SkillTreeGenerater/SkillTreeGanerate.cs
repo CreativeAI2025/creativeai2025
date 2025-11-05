@@ -1,13 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using UnityEngine.UI.Extensions;
+using System.Collections;
 
 public class SkillTreeGanerate : MonoBehaviour
 {
-    [SerializeField] GameObject skillIocn;
-    [SerializeField] GameObject statusIcon;
-    [SerializeField] GameObject startIcon;
+    [Header("物理スキルのアイコン"), SerializeField] public GameObject physicsIocn;
+    [Header("魔法スキルのアイコン"), SerializeField] public GameObject magicIcon;
+    [Header("回復スキルのアイコン"), SerializeField] public GameObject healIocn;
+    [Header("バフスキルのアイコン"), SerializeField] public GameObject buffIcon;
+    [Header("デバフスキルのアイコン"), SerializeField] public GameObject debuffIocn;
+    [Header("ステータスアップのアイコン"), SerializeField] GameObject statusIcon;
+    [Header("はじめのアイコン"), SerializeField] GameObject startIcon;
     [SerializeField] GameObject line;
+    List<UILineRenderer> lineRenderers;
+    [SerializeField] Color lineColor = Color.black;
+    [SerializeField] float lineWidth = 1.0f;
     [SerializeField] DataSetting dataSetting;
 
     [SerializeField] Transform skillBlocksPanel;
@@ -16,11 +24,15 @@ public class SkillTreeGanerate : MonoBehaviour
     [SerializeField] int maxRetry = 100;
     int retry = 0;
 
+    public int sum_sp = 0;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        sum_sp = 0;
         dataSetting.DataSet();
         View();
+        sum_sp = SumSP();
     }
 
     // Update is called once per frame
@@ -28,8 +40,10 @@ public class SkillTreeGanerate : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
+            sum_sp = 0;
             dataSetting.Reset();
             View();
+            sum_sp = SumSP();
         }
     }
 
@@ -56,7 +70,8 @@ public class SkillTreeGanerate : MonoBehaviour
         dataSetting.StatusDataSet();
 
         DrawNodes();//ノードの表示
-        DrawLines();//ノード間の線の描写
+        //DrawLines();//ノード間の線の描写
+        StartCoroutine(WaitAndDrawLines());
 
         foreach (int[] c in dataSetting.connections)
         {
@@ -66,6 +81,24 @@ public class SkillTreeGanerate : MonoBehaviour
         activeGenerate = false;
         Debug.Log($"新しいスキルツリー {retry}回再生成を行った");
     }
+
+    public IEnumerator WaitAndDrawLines()
+    {
+        yield return new WaitForEndOfFrame();
+        DrawLines2();
+    }
+
+    public void RedrawLinesSafe()
+    {
+        // パネルが非表示中なら線を生成しない
+        if (!gameObject.activeInHierarchy)
+            return;
+
+        // UI座標更新を待ってから描画（確実に位置が反映される）
+        StartCoroutine(WaitAndDrawLines());
+    }
+
+
 
     /// <summary>
     /// ノードの生成
@@ -77,11 +110,39 @@ public class SkillTreeGanerate : MonoBehaviour
 
         foreach (Node n in dataSetting.nodeData)
         {
-            GameObject prefab;
+            GameObject prefab = startIcon;
+
 
             if (tagData[n.getId()] == "スキル")
             {
-                prefab = skillIocn;
+                foreach (var data in dataSetting.nodeSkillData)
+                {
+                    if (n.getId().Equals(data.GetId()))
+                    {
+                        //Debug.Log($"{n.getId()},{data.GetId()},{data.GetAction()}");
+                        if (data.GetAction().Equals("物理攻撃"))
+                        {
+                            prefab = physicsIocn;
+                        }
+                        else if (data.GetAction().Equals("特殊攻撃") || data.GetAction().Equals("魔法攻撃"))
+                        {
+                            prefab = magicIcon;
+                        }
+                        else if (data.GetAction().Equals("回復") || data.GetAction().Equals("復活"))
+                        {
+                            prefab = healIocn;
+                        }
+                        else if (data.GetAction().Equals("強化"))
+                        {
+                            prefab = buffIcon;
+                        }
+                        else if (data.GetAction().Equals("弱体"))
+                        {
+                            prefab = debuffIocn;
+                        }
+                    }
+
+                }
             }
             else if (tagData[n.getId()] == "ステータス")
             {
@@ -105,8 +166,9 @@ public class SkillTreeGanerate : MonoBehaviour
     /// <summary>
     /// ラインの生成
     /// </summary>
-    void DrawLines()
+    public void DrawLines()
     {
+
         foreach (int[] c in dataSetting.connections)
         {
             float posX = 0f;
@@ -135,6 +197,65 @@ public class SkillTreeGanerate : MonoBehaviour
             rect.localScale = new Vector3(1, 1, 0);
         }
     }
+
+    /// <summary>
+    /// ラインの生成
+    /// </summary>
+    void DrawLines2()
+    {
+        // まず古い線を削除する
+        if (lineRenderers != null)
+        {
+            foreach (UILineRenderer line in lineRenderers)
+            {
+                if (line != null)
+                    Destroy(line.gameObject); // ← gameObjectごと消すのが重要！
+            }
+            lineRenderers.Clear();
+        }
+        else
+        {
+            lineRenderers = new List<UILineRenderer>();
+        }
+
+        // 新しい線を生成
+        foreach (int[] c in dataSetting.connections)
+        {
+            float nextPosX = 0f;
+            float nextPosY = 0f;
+            List<Vector2[]> positionsList = new List<Vector2[]>();
+
+            foreach (Node n in dataSetting.nodeData)
+            {
+                if (n.getId().Equals(c[0]))
+                {
+                    float[] dist = checkNodeDist(c[0], c[1]);
+                    nextPosX = n.getX() + dist[0];
+                    nextPosY = n.getY() + dist[1];
+
+                    Vector2[] positions = new Vector2[2];
+                    positions[0] = new Vector2(n.getX(), n.getY());
+                    positions[1] = new Vector2(nextPosX, nextPosY);
+
+                    positionsList.Add(positions);
+                }
+            }
+
+            foreach (var pos in positionsList)
+            {
+                GameObject lineObj = new GameObject("UILine", typeof(RectTransform), typeof(UILineRenderer));
+                lineObj.transform.SetParent(linesPanel, false);
+
+                var uiLine = lineObj.GetComponent<UILineRenderer>();
+                uiLine.Points = pos;
+                uiLine.LineThickness = lineWidth;
+                uiLine.color = lineColor;
+
+                lineRenderers.Add(uiLine);
+            }
+        }
+    }
+
 
     /// <summary>
     /// ノード間の距離（配列（X座標,Y座標））を取得
@@ -221,5 +342,26 @@ public class SkillTreeGanerate : MonoBehaviour
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// SPの合計を返す
+    /// </summary>
+    /// <returns></returns>
+    int SumSP()
+    {
+        int sum = 0;
+        foreach (var data in dataSetting.nodeSkillData)
+        {
+            sum += data.GetSp();
+        }
+
+        foreach (var data in dataSetting.nodeStatusData)
+        {
+            sum += data.GetSp();
+        }
+
+
+        return sum;
     }
 }
