@@ -35,9 +35,57 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// パーティメンバーの初期化
     /// 最初はゾフィ一人なので、partyCharacterのリストに、ゾフィIDである「１」を入れる。
     /// </summary>
-    private void Initialize()
+    public void Initialize()
     {
-        partyCharacter = new List<int>() { 1 };
+        partyCharacter = new List<int>() { 1, 2, 3 };
+        // デバッグ用に適当な値をぶち込んでいます
+        characterStatuses = new List<CharacterStatus>()
+        {
+            SetCharacterStatus(1),
+            SetCharacterStatus(2),
+            SetCharacterStatus(3)
+        };
+        partyGold = 1000;
+    }
+
+    /// <summary>
+    /// CharacterStatusを返す
+    /// 新しくキャラクター生成を行った際に使用する
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    private CharacterStatus SetCharacterStatus(int id)
+    {
+        CharacterStatus characterStatus = new()
+        {
+            characterId = id,
+            level = 1,
+            exp = 0,
+            currentHp = 90,
+            maxHp = 100,
+            currentMp = 50,
+            maxMp = 100,
+            skillList = new List<int>()
+            {
+                1,
+                2,
+                3
+            }
+        };
+
+        return characterStatus;
+    }
+
+    /// <summary>
+    /// 新しくパーティメンバーが加入したときに使用
+    /// 加入したいパーティメンバーのキャラクターIDと、レベルを記述する
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="level"></param>
+    public void SetNewFriend(int id, int level)
+    {
+        partyCharacter.Add(id);
+        characterStatuses.Add(SetCharacterStatus(id));
     }
 
     /// <summary>

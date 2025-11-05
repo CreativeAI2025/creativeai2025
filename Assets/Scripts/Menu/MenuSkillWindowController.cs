@@ -6,34 +6,82 @@ using Unity.VisualScripting;
 public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
 {
     [SerializeField] MenuSkillUIController _uiController;
+    [SerializeField] private MenuHeaderMiniUIController _headerUIController;
     private bool _canClose;
     private InputSetting _inputSetting;
     private int _skillListCursor; // スキルリスト内のどの位置を指しているかを数字で表す
-    private int _characterCursor;   // どのキャラクターのリストを表示しているかを数字（キャラクターId）で表す（Maxの値は、キャラクターの人数によって変動）
     private SkillData _selectedSkillData;    // _skillListCursorが示すスキルのデータ
     private List<int> _skillList; // スキルのリスト（１キャラクター）
+    private int _characterIndex;
+    private int _characterIndexMax;
+    private bool stop;
 
     /// <summary>
     /// スキルの一覧を画面に表示する
     /// </summary>
     private void SetUpSkill()
     {
+        stop = false;
         _skillListCursor = 0;
-        _characterCursor = 1;
-        // 以下の部分はデバッグ用に変更。本来ならば、各キャラクターごとに習得しているスキルを代入する。今回は、データベースで実験。
-        _skillList = new();
-        foreach (var sd in SkillDataManager.Instance.GetAllData())
-        {
-            _skillList.Add(sd.skillId);
-        }
-
+        SetSkillList(); // スキルリストをセットする
         if (_skillList == null)
         {
+            stop = true;
             Debug.Log("[MenuSkillWindowController]skillListがnull");
+            return;
+        }
+        if (_skillList.Count == 0)
+        {
+            stop = true;
+            Debug.Log("[MenuSkillWindowController]skillListの要素数が０");
             return;
         }
         _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
         SetText();
+
+        // ヘッダーの設定
+        _headerUIController.Initialize();
+        _headerUIController.SetHeight(1);
+        List<int> characterIds = CharacterStatusManager.Instance.partyCharacter;
+        int count = characterIds.Count;
+        for (int i = 0; i < 3; i++)
+        {
+            string text = string.Empty;
+            if (i == 0)
+            {
+                if (i < count)
+                {
+                    int id = characterIds[i];
+                    var characterdata = CharacterDataManager.Instance.GetCharacterData(id);
+                    text = characterdata.characterName;
+                }
+                _headerUIController.SetHeaderObject1(text);
+            }
+            else if (i == 1)
+            {
+                if (i < count)
+                {
+                    int id = characterIds[i];
+                    var characterdata = CharacterDataManager.Instance.GetCharacterData(id);
+                    text = characterdata.characterName;
+                }
+                _headerUIController.SetHeaderObject2(text);
+            }
+            else if (i == 2)
+            {
+                if (i < count)
+                {
+                    int id = characterIds[i];
+                    var characterdata = CharacterDataManager.Instance.GetCharacterData(id);
+                    text = characterdata.characterName;
+                }
+                _headerUIController.SetHeaderObject3(text);
+            }
+        }
+        _characterIndex = 0;
+        _characterIndexMax = characterIds.Count;    // パーティメンバーが二人なら「２」を返すよ
+        _headerUIController.SetSameHeight();
+        _headerUIController.SetHeight(_characterIndex); // キャラクターの添え字にあるタブを大きくする
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -81,7 +129,19 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         }
         else if (_inputSetting.GetDecideInputDown())
         {
+            if (stop)
+            {
+                return;
+            }
             MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.SkillUse);
+        }
+        else if (_inputSetting.GetRightKeyDown())
+        {
+            StartCoroutine(NextPage());
+        }
+        else if (_inputSetting.GetLeftKeyDown())
+        {
+            StartCoroutine(PreviousPage());
         }
     }
     private IEnumerator HideProcess()
@@ -141,6 +201,61 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     }
 
     /// <summary>
+    /// キャラクタータブを次（右）に移動する
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator NextPage()
+    {
+        _characterIndex++;
+        if (_characterIndex >= _characterIndexMax)
+        {
+            _characterIndex = 0;
+        }
+        yield return null;
+
+        _headerUIController.SetSameHeight();
+        _headerUIController.SetHeight(_characterIndex);
+
+        SetSkillList();
+        InitializePage();
+    }
+
+    /// <summary>
+    /// キャラクタータブを前（左）に移動する
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator PreviousPage()
+    {
+        _characterIndex--;
+        if (_characterIndex < 0)
+        {
+            _characterIndex = _characterIndexMax - 1;
+        }
+        yield return null;
+
+        _headerUIController.SetSameHeight();
+        _headerUIController.SetHeight(_characterIndex);
+
+        SetSkillList();
+        InitializePage();
+    }
+
+    /// <summary>
+    /// スキルリストのカーソルを一番上にするなどの、
+    /// ページの切り替えを行った際に行われる初期化
+    /// </summary>
+    private void InitializePage()
+    {
+        if (stop)
+        {
+            return;
+        }
+        _skillListCursor = 0;
+        _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
+        SetText();
+    }
+
+    /// <summary>
     /// 引数で与えられた値にあるスキルの名前を返す
     /// </summary>
     /// <param name="n"></param>
@@ -179,5 +294,21 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     public SkillData getSkillData()
     {
         return _selectedSkillData;
+    }
+
+    /// <summary>
+    /// 現在の_characterIndexを元に、キャラクターのIDを取得し、
+    /// そのキャラクターのステータスを取得し、
+    /// 覚えているスキルIDのリストを、_skillListに渡す
+    /// </summary>
+    private void SetSkillList()
+    {
+        int id = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
+        CharacterStatus currentCharacterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(id);
+        _skillList = currentCharacterStatus.skillList;
+        if (_skillList.Count == 0)
+        {
+            stop = true;
+        }
     }
 }
