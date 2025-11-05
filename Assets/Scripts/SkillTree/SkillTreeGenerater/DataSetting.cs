@@ -438,7 +438,7 @@ public class DataSetting : MonoBehaviour
         //SkillListの中身の確認
         foreach (var n in nodeSkillData)
         {
-            Debug.Log(n.toString());
+            Debug.Log(n.ToString());
         }
 
         //putIdForNodeSkillDataListRandom(nodeData);
@@ -722,7 +722,7 @@ public class DataSetting : MonoBehaviour
         return CreateNewSkillClass(name, main_explain);
     }
 
-    Skill CreateNewSkillClass(string name, string explain, bool isSub = false)
+    public Skill CreateNewSkillClass(string name, string explain, bool isSub = false)
     {
         string subject = null;//対象 
         string action = "";//行動(攻撃、回復など) 

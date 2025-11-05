@@ -20,7 +20,7 @@ public class ObjectEngine : MonoBehaviour
 
     [SerializeField] private MapEngine mapEngine;
     [SerializeField] private MapDataController mapDataController;
-    private static Vector2Int changedPos = new Vector2Int(4, 2);
+    private static Vector2Int changedPos = new Vector2Int(10, 10);
     private string _mapName;
     private Vector2Int _pastGridPosition = new Vector2Int(-1, -1);
     private bool conversationFlag = false;
