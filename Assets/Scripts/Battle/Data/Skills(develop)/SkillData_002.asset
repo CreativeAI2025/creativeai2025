@@ -16,10 +16,25 @@ MonoBehaviour:
   skillName: "\u6575\u5168\u4F53\u30B9\u30AD\u30EB"
   skillDesc: none
   cost: 5
-  skillEffects:
-  - skillCategory: 2
-    EffectTarget: 4
-    value: 30
+  skillEffect:
+    skillCategory: 0
+    EffectTarget: 0
+    value: 0
     StatusEffectEnable: 0
-    StatusEffect: []
-    Buff: []
+    StatusEffect:
+    - EffectCategory: 0
+      Duration: 0
+      Power: 0
+    Buff:
+    - BuffCategory: 0
+      EffectTarget: 0
+      Duration: 0
+      Power: 0
+    probability: 0
+    status: 
+    duration: 0
+    isExtra: 0
+    extra_value: 0
+    extra_probability: 0
+    extra_status: 
+    extra_duration: 0
