@@ -39,7 +39,7 @@ public class SkillTreeManager : MonoBehaviour
         UpdateSkillInfoText(0, true);
         skillList = new List<Node>();
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks>();
-        startStatus = parameterTable.parameterRecords[0];
+        if (parameterTable != null) startStatus = parameterTable.parameterRecords[0];
     }
 
     // Update is called once per frame
@@ -83,7 +83,7 @@ public class SkillTreeManager : MonoBehaviour
                 }
 
 
-                if (skill != null) skillEntry = System.Array.Find(SkillStatusLoader.instance.GetSkillEntryList().skills, s => s.name == skill.GetName());
+                if (skill != null) skillEntry = System.Array.Find(SkillStatusLoader.instance.GetSkillEntryList(dataSetting.characterName).skills, s => s.name == skill.GetName());
 
                 // 獲得したステータスアップをカウント
                 foreach (Skill d in nodeSkillList)
@@ -142,7 +142,7 @@ public class SkillTreeManager : MonoBehaviour
                 if (n.getId().Equals(id))
                 {
                     text = n.getExplain() + newInfo + "\n必要SP:" + n.GetSp();
-                    Debug.Log(n.ToString());
+                    //Debug.Log(n.ToString());
                 }
             }
         }
@@ -245,7 +245,7 @@ public class SkillTreeManager : MonoBehaviour
         }
 
 
-        if (skill != null) skillEntry = System.Array.Find(SkillStatusLoader.instance.GetSkillEntryList().skills, s => s.name == skill.GetName());
+        if (skill != null) skillEntry = System.Array.Find(SkillStatusLoader.instance.GetSkillEntryList(dataSetting.characterName).skills, s => s.name == skill.GetName());
 
         //Jsonファイルのスキル所得状況の更新
         foreach (Status d in nodeStatusList)
@@ -258,7 +258,7 @@ public class SkillTreeManager : MonoBehaviour
 
         if (status != null)
         {
-            foreach (var s in SkillStatusLoader.instance.GetStatusEntryList().statuses)
+            foreach (var s in SkillStatusLoader.instance.GetStatusEntryList(dataSetting.characterName).statuses)
             {
                 if (s.name == status.getName())
                 {

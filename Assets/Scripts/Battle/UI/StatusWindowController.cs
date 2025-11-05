@@ -1,72 +1,80 @@
-// using UnityEngine;
+using UnityEngine;
 
-// public class StatusWindowController : MonoBehaviour
-// {
-//     /// <summary>
-//     /// ステータス表示のUIを制御するクラスへの参照です。
-//     /// </summary>
-//     [SerializeField]
-//     StatusUIController _uiController;
+/// <summary>
+/// ステータス表示のウィンドウを制御するクラスです。
+/// </summary>
+public class StatusWindowController : MonoBehaviour, IBattleWindowController
+{
+    /// <summary>
+    /// ステータス表示のUIを制御するクラスへの参照です。
+    /// </summary>
+    [SerializeField]
+    StatusUIController _uiController;
+        [SerializeField]
+    StatusUIController _uiController1;
+        [SerializeField]
+    StatusUIController _uiController2;
 
-//     /// <summary>
-//     /// コントローラの状態をセットアップします。
-//     /// </summary>
-//     /// <param name="battleManager">戦闘に関する機能を管理するクラス</param>
-//     public void SetUpController(BattleManager battleManager)
-//     {
+    /// <summary>
+    /// コントローラの状態をセットアップします。
+    /// </summary>
+    /// <param name="battleManager">戦闘に関する機能を管理するクラス</param>
+    public void SetUpController(BattleManager battleManager)
+    {
 
-//     }
+    }
 
-//     /// <summary>
-//     /// キャラクターのステータスを全てセットします。
-//     /// </summary>
-//     /// <param name="characterStatus">キャラクターのステータス</param>
-//     public void SetCharacterStatus(CharacterStatus characterStatus)
-//     {
-//         if (characterStatus == null)
-//         {
-//             SimpleLogger.Instance.LogWarning("キャラクターステータスがnullです。");
-//             return;
-//         }
 
-//         var characterName = CharacterDataManager.GetCharacterName(characterStatus.characterId);
-//         _uiController.SetCharacterName(characterName);
+    /// <summary>
+    /// キャラクターのステータスを全てセットします。
+    /// </summary>
+    /// <param name="characterStatus">キャラクターのステータス</param>
+    public void SetCharacterStatus(CharacterStatus characterStatus)
+    {
+        if (characterStatus == null)
+        {
+            Logger.Instance.LogWarning("キャラクターステータスがnullです。");
+            return;
+        }
 
-//         var level = characterStatus.level;
-//         var parameterTable = CharacterDataManager.GetParameterTable(characterStatus.characterId);
-//         var record = parameterTable.parameterRecords.Find(r => r.level == level);
+        var characterName = CharacterDataManager.Instance.GetCharacterName(characterStatus.characterId);
+        _uiController.SetCharacterName(characterName);
 
-//         _uiController.SetCurrentHp(characterStatus.currentHp);
-//         _uiController.SetMaxHp(record.hp);
-//         _uiController.SetCurrentMp(characterStatus.currentMp);
-//         _uiController.SetMaxMp(record.mp);
-//     }
+        var level = characterStatus.level;
+        var parameterTable = CharacterDataManager.Instance.GetParameterTable(characterStatus.characterId);
+        var record = parameterTable.parameterRecords.Find(r => r.Level == level);
 
-//     /// <summary>
-//     /// 全キャラクターのステータスを更新します。
-//     /// </summary>
-//     public void UpdateAllCharacterStatus()
-//     {
-//         foreach (var characterId in CharacterStatusManager.partyCharacter)
-//         {
-//             var characterStatus = CharacterStatusManager.GetCharacterStatusById(characterId);
-//             SetCharacterStatus(characterStatus);
-//         }
-//     }
+        _uiController.SetCurrentHp(characterStatus.currentHp);
+        _uiController.SetMaxHp(record.HP);
+        _uiController.SetCurrentMp(characterStatus.currentMp);
+        _uiController.SetMaxMp(record.MP);
+    }
 
-//     /// <summary>
-//     /// ステータス表示のウィンドウを表示します。
-//     /// </summary>
-//     public void ShowWindow()
-//     {
-//         _uiController.Show();
-//     }
+    /// <summary>
+    /// 全キャラクターのステータスを更新します。
+    /// </summary>
+    public void UpdateAllCharacterStatus()
+    {
+        foreach (var characterId in CharacterStatusManager.Instance.partyCharacter)
+        {
+            var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(characterId);
+            SetCharacterStatus(characterStatus);
+        }
+    }
 
-//     /// <summary>
-//     /// ステータス表示のウィンドウを非表示にします。
-//     /// </summary>
-//     public void HideWindow()
-//     {
-//         _uiController.Hide();
-//     }
-// }
+    /// <summary>
+    /// ステータス表示のウィンドウを表示します。
+    /// </summary>
+    public void ShowWindow()
+    {
+        _uiController.Show();
+    }
+
+    /// <summary>
+    /// ステータス表示のウィンドウを非表示にします。
+    /// </summary>
+    public void HideWindow()
+    {
+        _uiController.Hide();
+    }
+}
