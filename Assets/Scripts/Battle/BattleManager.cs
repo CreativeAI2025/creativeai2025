@@ -292,6 +292,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         return statusEffectManager;
     }
 
+
     /// <summary>
     /// コマンド入力を開始（敵が現れたあとや、ターンが終わったあとに呼ばれる）
     /// </summary>
