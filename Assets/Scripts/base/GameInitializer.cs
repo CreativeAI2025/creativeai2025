@@ -3,7 +3,6 @@ using System;
 
 /// <summary>
 /// ゲームを初期化するためのクラス
-/// 不変データなどの取得をここで行う。
 /// </summary>
 public class GameInitializer : MonoBehaviour
 {
@@ -11,8 +10,14 @@ public class GameInitializer : MonoBehaviour
     {
         /// <summary>
         /// パーティキャラクター（ゾフィ、リナ、ノア）のデータを登録するためのクラス
+        /// このデータは不変
         /// </summary>
         CharacterDataManager characterDataManager = CharacterDataManager.Instance;
+        /// <summary>
+        /// アイテムの定義データを登録するためのクラス
+        /// このデータは不変
+        /// </summary>
+        ItemDataManager itemDatamanager = ItemDataManager.Instance;
         /// <summary>
         /// パーティキャラクターの状態に関する登録（パーティメンバーの初期化（最初はゾフィのみ）、所持金の初期化など）を行うためのクラス
         /// </summary>
@@ -23,9 +28,10 @@ public class GameInitializer : MonoBehaviour
         {
             await characterDataManager.Initialize();
             Debug.Log("CharacterDataManagerのロード完了");
+            await itemDatamanager.Initialize();
             characterStatusManager.Initialize();
             Debug.Log("CharacterStatusManagerの初期化完了");
-            skillDataManager.Initialize();
+            await skillDataManager.Initialize();
         }
         catch (Exception e)
         {

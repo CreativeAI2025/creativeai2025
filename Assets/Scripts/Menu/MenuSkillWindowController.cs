@@ -14,17 +14,26 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     private List<int> _skillList; // スキルのリスト（１キャラクター）
     private int _characterIndex;
     private int _characterIndexMax;
+    private bool stop;
 
     /// <summary>
     /// スキルの一覧を画面に表示する
     /// </summary>
     private void SetUpSkill()
     {
+        stop = false;
         _skillListCursor = 0;
         SetSkillList(); // スキルリストをセットする
         if (_skillList == null)
         {
+            stop = true;
             Debug.Log("[MenuSkillWindowController]skillListがnull");
+            return;
+        }
+        if (_skillList.Count == 0)
+        {
+            stop = true;
+            Debug.Log("[MenuSkillWindowController]skillListの要素数が０");
             return;
         }
         _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
@@ -120,6 +129,10 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         }
         else if (_inputSetting.GetDecideInputDown())
         {
+            if (stop)
+            {
+                return;
+            }
             MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.SkillUse);
         }
         else if (_inputSetting.GetRightKeyDown())
@@ -233,6 +246,10 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private void InitializePage()
     {
+        if (stop)
+        {
+            return;
+        }
         _skillListCursor = 0;
         _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
         SetText();
@@ -289,5 +306,9 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         int id = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
         CharacterStatus currentCharacterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(id);
         _skillList = currentCharacterStatus.skillList;
+        if (_skillList.Count == 0)
+        {
+            stop = true;
+        }
     }
 }

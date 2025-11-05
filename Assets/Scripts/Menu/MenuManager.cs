@@ -205,7 +205,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         }
         else if (m == MenuUsePhase.ItemUse)
         {
-            //
+            _menuSelectWindowController.SetItemData(_menuItemWindowController.getItemData());
         }
         _menuSelectWindowController.ShowWindow();
     }

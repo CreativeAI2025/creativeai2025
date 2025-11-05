@@ -12,6 +12,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     private int _cursor;
     private int _cursorMax;
     private SkillData _skillData;
+    private ItemData _itemData;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -161,12 +162,26 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
         _cursor = 0;
         _selectPhase = 0;
         _uiController.ShowSelectedCursor(_cursor);
-        _uiController.InputText(_skillData.skillDesc);
+        if (MenuManager.Instance.MenuUsePhase == MenuUsePhase.SkillUse)
+        {
+            _uiController.InputText(_skillData.skillDesc);
+        }
+        else if (MenuManager.Instance.MenuUsePhase == MenuUsePhase.ItemUse)
+        {
+            _uiController.InputText(_itemData.itemDesc);
+        }
+
     }
 
     // スキル一覧で選択されているスキルデータを手に入れるために使用
     public void SetSkillData(SkillData sd)
     {
         _skillData = sd;
+    }
+
+    // アイテム一覧で選択されているアイテムデータを手に入れるために使用
+    public void SetItemData(ItemData itemdata)
+    {
+        _itemData = itemdata;
     }
 }
