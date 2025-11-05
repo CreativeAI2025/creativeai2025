@@ -15,15 +15,19 @@ MonoBehaviour:
   skillId: 2
   skillName: "\u6575\u5168\u4F53\u30B9\u30AD\u30EB"
   skillDesc: none
-  cost: 10
+  cost: 5
   skillEffect:
-    skillCategory: 3
-    EffectTarget: 4
-    value: 50
+    skillCategory: 0
+    EffectTarget: 0
+    value: 0
     StatusEffectEnable: 0
-    StatusEffect: []
+    StatusEffect:
+    - EffectCategory: 0
+      Duration: 0
+      Power: 0
     Buff:
     - BuffCategory: 0
+      EffectTarget: 0
       Duration: 0
       Power: 0
     probability: 0

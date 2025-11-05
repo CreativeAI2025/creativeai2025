@@ -5,6 +5,10 @@ using System.Collections.Generic;
 public class Buff
 {
     public BuffStatusCategory BuffCategory; 
+      /// <summary>
+    /// 魔法の効果範囲です。
+    /// </summary>
+    public EffectTarget EffectTarget; 
     public int Duration; // 残りターン数
     public int Power;   // 効果の強さ（倍率）
 

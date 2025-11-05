@@ -18,12 +18,20 @@ MonoBehaviour:
   cost: 7
   skillEffect:
     skillCategory: 3
-    EffectTarget: 3
-    value: 6
+    EffectTarget: 4
+    value: 4.5
     StatusEffectEnable: 0
     StatusEffect: []
-    Buff: []
-    probability: 60
+    Buff:
+    - BuffCategory: 0
+      EffectTarget: 0
+      Duration: 0
+      Power: 0
+    - BuffCategory: 1
+      EffectTarget: 0
+      Duration: 0
+      Power: 0
+    probability: 100
     status: 
     duration: 0
     isExtra: 0
