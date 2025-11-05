@@ -929,9 +929,10 @@ GameObject:
   m_Component:
   - component: {fileID: 309473685}
   - component: {fileID: 309473684}
+  - component: {fileID: 309473686}
   - component: {fileID: 309473683}
   - component: {fileID: 309473682}
-  - component: {fileID: 309473686}
+  - component: {fileID: 309473687}
   m_Layer: 5
   m_Name: Menu
   m_TagString: Untagged
@@ -1034,12 +1035,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c0dddacf0bb3424fa6927f3ebe93a88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuUIPause: {fileID: 0}
   _topMenuWindowController: {fileID: 36827825}
   _menuCharacterWindowController: {fileID: 1133865207}
   _menuSkillWindowController: {fileID: 1871556355}
   _menuItemWindowController: {fileID: 979704925}
   _menuSelectWindowController: {fileID: 1610643207}
   _menuSkillTreeWindowController: {fileID: 1569393258}
+--- !u!114 &309473687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309473681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd64450fb2ebe1c448e36aa774b12821, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseScripts:
+  - {fileID: 309473686}
 --- !u!1 &391208484
 GameObject:
   m_ObjectHideFlags: 0
