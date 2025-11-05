@@ -25,6 +25,7 @@ public class ObjectEngine : MonoBehaviour
     private Vector2Int _pastGridPosition = new Vector2Int(-1, -1);
     private bool conversationFlag = false;
     private bool battleFlag = false;
+    private bool animationFlag = false;
     private bool changeSceneFlag = false;
     private bool runFlag = false;
     private InputSetting _inputSetting;
@@ -267,6 +268,11 @@ public class ObjectEngine : MonoBehaviour
                 Battle(eventArgs[1]);
                 await UniTask.WaitUntil(() => !battleFlag);
                 break;
+            case "Animation":
+                animationFlag = true;
+                Animation(eventArgs[1]);
+                await UniTask.WaitUntil(() => !animationFlag);
+                break;
             default: throw new NotImplementedException();
         }
     }
@@ -282,11 +288,11 @@ public class ObjectEngine : MonoBehaviour
         {
             if (nextFlag.Value)
             {
-                //FlagManager.Instance.AddFlag(nextFlag.Key);
+                FlagManager.Instance.AddFlag(nextFlag.Key);
             }
             else
             {
-                //FlagManager.Instance.DeleteFlag(nextFlag.Key);
+                FlagManager.Instance.DeleteFlag(nextFlag.Key);
             }
         }
     }
@@ -313,6 +319,11 @@ public class ObjectEngine : MonoBehaviour
     private void Battle(string fileName)
     {
         BattleManager.Instance.InitializeFromJson(fileName);
+    }
+
+    private void Animation(string animationName)
+    {
+        AnimationManager.Instance.InitializeFromString(animationName);
     }
 
     private void GetItem(string itemName)
