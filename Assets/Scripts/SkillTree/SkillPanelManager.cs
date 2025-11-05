@@ -11,7 +11,7 @@ public class SkillPanelManager : MonoBehaviour
 
     void Start()
     {
-        SkillPanel0();
+
     }
 
     public void SkillPanel0()
