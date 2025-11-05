@@ -24,6 +24,7 @@ public class Ending : MonoBehaviour
     {
         inputSetting = InputSetting.Load();
         playableDirector = this.gameObject.GetComponent<PlayableDirector>();
+        playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0.5f);
         isEnd = false;
         EndSelect(end_num);
     }

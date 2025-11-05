@@ -4,16 +4,26 @@ using System;
 public static class DamageFormula //ダメージ計算式を書く
 {
     //攻撃時ダメージ
-    public static int CalculateDamage(int attack, int defense)
+    public static int CalculateDamage(int attack, int defense,float atkBuff,float defBuff)
     {
         float atk = attack / 2.0f;
         float def = defense / 4.0f;
         float rand = UnityEngine.Random.Range(0.8f, 1.2f);
-        int damage = Mathf.Max(Mathf.CeilToInt((atk - def) * rand), 1);
+        int damage = Mathf.Max(Mathf.CeilToInt((atk*atkBuff - def*defBuff) * rand), 1);
+        return damage;
+    }
+       //スキル攻撃時ダメージ
+    public static int CalculateSkillDamage(int attack, int defense,float atkBuff,float defBuff ,float skillValue)
+    {
+        float atk = attack / 2.0f;
+        float def = defense / 4.0f;
+        
+        float rand = UnityEngine.Random.Range(0.8f, 1.2f);
+        int damage = Mathf.Max(Mathf.CeilToInt(((atk*skillValue*atkBuff) - def*defBuff) * rand), 1);
         return damage;
     }
     //回復量計算
-    public static int CalculateHealValue(int baseValue)
+    public static int CalculateHealValue(float baseValue)
     {
         float rand = UnityEngine.Random.Range(0.8f, 1.2f);
         int healValue = Mathf.CeilToInt(baseValue * rand);

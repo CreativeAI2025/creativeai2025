@@ -9,6 +9,7 @@ using UnityEditor.Overlays;
 [System.Serializable]
 public class SkillEntry
 {
+    public int id;
     public string name;
     public string explain;
     public bool get;
@@ -91,7 +92,7 @@ public class SkillStatusLoader : MonoBehaviour
     [SerializeField] List<SkillJsonFile> skillJsonFiles = new List<SkillJsonFile>();//インスペクターでセッティング
     [SerializeField] List<StatusJsonFile> statusJsonFiles = new List<StatusJsonFile>();//インスペクターでセッティング
 
-    // ★追加：キャラクターごとにスキルとステータスを保持
+    // キャラクターごとにスキルとステータスを保持
     private Dictionary<string, SkillEntryList> skillEntryDict = new Dictionary<string, SkillEntryList>();
     private Dictionary<string, StatusEntryList> statusEntryDict = new Dictionary<string, StatusEntryList>();
 
@@ -173,6 +174,45 @@ public class SkillStatusLoader : MonoBehaviour
 
         skillEntryDict[characterName] = skillEntryList;
     }
+
+    /// <summary>
+    /// 全てのスキルをロードまたはDictionaryを返す
+    /// </summary>
+    public Dictionary<int, string[]> LoadAllSkill()
+    {
+        Dictionary<int, string[]> newSkillData = new Dictionary<int, string[]>();
+
+        int id = 0;
+
+        // すべての SkillJsonFile を走査
+        foreach (var file in skillJsonFiles)
+        {
+            // JSONをSkillEntryListに変換
+            SkillEntryList list = JsonUtility.FromJson<SkillEntryList>(file.GetTextAsset().text);
+
+            // nullチェック（安全対策）
+            if (list == null || list.skills == null)
+            {
+                //Debug.LogWarning($"{file.GetcharacterName()} のスキルデータが空です。");
+                continue;
+            }
+
+            // すべてのスキルをDictionaryに追加
+            foreach (var skill in list.skills)
+            {
+                if (!newSkillData.ContainsKey(id))
+                {
+                    newSkillData[id] = new string[] { skill.name, skill.explain };
+                    id++;
+                }
+            }
+        }
+
+        //Debug.Log($"全スキルロード完了: 合計 {newSkillData.Count} 件");
+
+        return newSkillData;
+    }
+
 
     /// <summary>
     /// スキルの取得情報をJSON に保存（全キャラ）

@@ -4,7 +4,6 @@ using UnityEngine;
 public class WorldMapData : ScriptableObject
 {
     [Header("ワールドマップ設定")]
-    public string worldName = "ワールド名";
     public Sprite backgroundImage;
     
     [Header("マップポイント一覧")]
@@ -29,10 +28,9 @@ public class WorldMapData : ScriptableObject
         
         [Header("隣接エリア（インデックス）")]
         public int[] neighborIndices = new int[0];
-        
-        [Header("UI表示")]
+
+        [Header("マップの見た目設定")]
         public Sprite icon;
-        public string description = "エリアの説明";
         
         // 実行時の状態（外部フラグシステムから取得）
         [System.NonSerialized]
@@ -239,24 +237,6 @@ public class WorldMapData : ScriptableObject
     public void UpdateProgressBasedUnlocks()
     {
         if (FlagManager.Instance == null) return;
-        
-        // チュートリアル完了でステージ1解放
-        if (FlagManager.Instance.HasFlag("tutorial_completed"))
-        {
-            UnlockAreaByAreaId("stage1_forest_unlocked");
-        }
-        
-        // ステージ1クリアでステージ2解放
-        if (FlagManager.Instance.HasFlag("stage1_completed"))
-        {
-            UnlockAreaByAreaId("stage2_mountain_unlocked");
-        }
-        
-        // ステージ2クリアでステージ3解放
-        if (FlagManager.Instance.HasFlag("stage2_completed"))
-        {
-            UnlockAreaByAreaId("stage3_desert_unlocked");
-        }
         
         // 必要に応じて他の解放条件も追加...
         

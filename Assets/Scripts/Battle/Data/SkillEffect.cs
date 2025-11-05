@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 [Serializable]
 public class SkillEffect
 {
@@ -17,6 +18,16 @@ public class SkillEffect
     /// 効果量です。
     /// </summary>
     public float value;
+
+    public bool StatusEffectEnable;
+    /// <summary>
+    /// 状態異常のリストです
+    /// </summary>
+    public List<StatusEffect> StatusEffect;
+    /// <summary>
+    /// バフのリストです
+    /// </summary>
+    public List<Buff> Buff;
 
     /// <summary>
     /// 発動確率
