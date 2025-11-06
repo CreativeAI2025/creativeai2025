@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using System.Text.RegularExpressions;
 
 [System.Serializable]
 public class SkillScriptableObject
@@ -132,6 +133,68 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         break;
                 }
 
+                SkillCategory extra_skillCategory = SkillCategory.None;
+
+                switch (skill.sub_action)
+                {
+                    case "物理攻撃":
+                        extra_skillCategory = SkillCategory.PhysicalDamage;
+                        break;
+                    case "魔法攻撃":
+                        extra_skillCategory = SkillCategory.MagicDamage;
+                        break;
+                    case "特殊攻撃":
+                        extra_skillCategory = SkillCategory.MagicDamage;
+                        break;
+                    case "回復":
+                        extra_skillCategory = SkillCategory.Recovery;
+                        break;
+                    case "状態異常回復":
+                        extra_skillCategory = SkillCategory.EffectRecovery;
+                        break;
+                    case "復活":
+                        extra_skillCategory = SkillCategory.Revive;
+                        break;
+                    case "強化":
+                        extra_skillCategory = SkillCategory.Buff;
+                        break;
+                    case "弱体":
+                        extra_skillCategory = SkillCategory.DeBuff;
+                        break;
+                    case "":
+                        break;
+                    default:
+                        break;
+                }
+
+
+                EffectTarget extra_effectTarget = EffectTarget.EnemySolo;
+
+                switch (skill.sub_subject)
+                {
+                    case "相手":
+                        extra_effectTarget = EffectTarget.EnemySolo;
+                        break;
+                    case "相手全体":
+                        extra_effectTarget = EffectTarget.EnemyAll;
+                        break;
+                    case "味方1人":
+                        extra_effectTarget = EffectTarget.FriendSolo;
+                        break;
+                    case "味方全体":
+                        extra_effectTarget = EffectTarget.FriendAll;
+                        break;
+                    case "自分":
+                        extra_effectTarget = EffectTarget.Own;
+                        break;
+                    case "不明":
+                        break;
+                    case "null":
+                        break;
+                    default:
+                        break;
+                }
+
 
                 asset.skillEffect = new SkillEffect(
                         skillCategory,
@@ -141,11 +204,171 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         skill.GetStatus(),
                         skill.GetDuration(),
                         skill.isSub,
+                        extra_skillCategory,
+                        extra_effectTarget,
                         skill.sub_power,
                         skill.sub_probability,
                         skill.sub_status,
                         skill.sub_duration
                     );
+
+                if (skill.GetStatus() != null)
+                {
+                    string[] statuses = Regex.Split(skill.GetStatus(), "[,、]+");// 説明文
+
+                    BuffStatusCategory buffStatusCategory = BuffStatusCategory.Attack;
+
+                    for (int i = 0; i < statuses.Length; i++)//メインのバフ要素の格納
+                    {
+                        switch (statuses[i])
+                        {
+                            case "攻撃力":
+                                buffStatusCategory = BuffStatusCategory.Attack;
+                                break;
+                            case "防御力":
+                                buffStatusCategory = BuffStatusCategory.Defence;
+                                break;
+                            case "回避率":
+                                buffStatusCategory = BuffStatusCategory.Evasion;
+                                break;
+                            case "魔力":
+                                buffStatusCategory = BuffStatusCategory.MagicAttack;
+                                break;
+                            case "魔法防御力":
+                                buffStatusCategory = BuffStatusCategory.MagicDefence;
+                                break;
+                            case "魔法防御":
+                                buffStatusCategory = BuffStatusCategory.MagicDefence;
+                                break;
+                            case "素早さ":
+                                buffStatusCategory = BuffStatusCategory.Speed;
+                                break;
+                            case "全ステータス":
+                                buffStatusCategory = BuffStatusCategory.All;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        asset.skillEffect.buff.Add(new Buff(buffStatusCategory, skill.GetDuration(), skill.GetPower(), effectTarget));
+                    }
+                }
+
+
+                StatusEffectCategory statusEffectCategory = StatusEffectCategory.None;
+
+                if (skill.GetExtra() != null)
+                {
+                    switch (skill.GetExtra())//状態異常
+                    {
+                        case "毒":
+                            statusEffectCategory = StatusEffectCategory.Poison;
+                            break;
+                        case "麻痺":
+                            statusEffectCategory = StatusEffectCategory.Paralysis;
+                            break;
+                        case "睡眠":
+                            statusEffectCategory = StatusEffectCategory.Sleep;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    asset.skillEffect.StatusEffect.Add(new StatusEffect(statusEffectCategory));//メインの状態異常要素の格納
+                }
+
+                if (skill.isSub)
+                {
+                    //追加効果の対象
+                    switch (skill.sub_subject)
+                    {
+                        case "相手":
+                            effectTarget = EffectTarget.EnemySolo;
+                            break;
+                        case "相手全体":
+                            effectTarget = EffectTarget.EnemyAll;
+                            break;
+                        case "味方1人":
+                            effectTarget = EffectTarget.FriendSolo;
+                            break;
+                        case "味方全体":
+                            effectTarget = EffectTarget.FriendAll;
+                            break;
+                        case "自分":
+                            effectTarget = EffectTarget.Own;
+                            break;
+                        case "不明":
+                            break;
+                        default:
+                            break;
+                    }
+
+                    if (skill.sub_status != null)
+                    {
+                        string[] statuses = Regex.Split(skill.sub_status, "[,、]+");// 説明文
+
+                        BuffStatusCategory buffStatusCategory = BuffStatusCategory.None;
+
+                        for (int i = 0; i < statuses.Length; i++)//追加効果のバフ要素の格納
+                        {
+                            switch (statuses[i])
+                            {
+                                case "攻撃力":
+                                    buffStatusCategory = BuffStatusCategory.Attack;
+                                    break;
+                                case "防御力":
+                                    buffStatusCategory = BuffStatusCategory.Defence;
+                                    break;
+                                case "回避率":
+                                    buffStatusCategory = BuffStatusCategory.Evasion;
+                                    break;
+                                case "魔力":
+                                    buffStatusCategory = BuffStatusCategory.MagicAttack;
+                                    break;
+                                case "魔法防御力":
+                                    buffStatusCategory = BuffStatusCategory.MagicDefence;
+                                    break;
+                                case "魔法防御":
+                                    buffStatusCategory = BuffStatusCategory.MagicDefence;
+                                    break;
+                                case "素早さ":
+                                    buffStatusCategory = BuffStatusCategory.Speed;
+                                    break;
+                                case "全ステータス":
+                                    buffStatusCategory = BuffStatusCategory.All;
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            asset.skillEffect.extar_buff.Add(new Buff(buffStatusCategory, skill.sub_duration, skill.sub_power, effectTarget));
+                        }
+                    }
+
+
+                    statusEffectCategory = StatusEffectCategory.None;
+
+                    if (skill.sub_extra != null)
+                    {
+                        switch (skill.sub_extra)//状態異常
+                        {
+                            case "毒":
+                                statusEffectCategory = StatusEffectCategory.Poison;
+                                break;
+                            case "麻痺":
+                                statusEffectCategory = StatusEffectCategory.Paralysis;
+                                break;
+                            case "睡眠":
+                                statusEffectCategory = StatusEffectCategory.Sleep;
+                                break;
+                            default:
+                                break;
+                        }
+
+                        asset.skillEffect.extra_StatusEffect.Add(new StatusEffect(statusEffectCategory));//追加効果の状態異常要素の格納
+                    }
+                }
+
 
                 // アセット作成
                 AssetDatabase.CreateAsset(asset, assetPath);

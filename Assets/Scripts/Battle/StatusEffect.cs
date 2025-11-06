@@ -8,5 +8,10 @@ public class StatusEffect
     public int Duration; // 残りターン数
     public int Power;   // 効果の強さ（ダメージ量など）
 
-    
+    public StatusEffect(StatusEffectCategory EffectCategory, int Duration = 0, int Power = 0)
+    {
+        this.EffectCategory = EffectCategory;
+        this.Duration = Duration;
+        this.Power = Power;
+    }
 }
