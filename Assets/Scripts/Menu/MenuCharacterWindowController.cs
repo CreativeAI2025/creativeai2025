@@ -83,8 +83,6 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
     // Update is called once per frame
     void Update()
     {
-        if (stop)
-            return;
         CheckKeyInput();
     }
 
@@ -106,6 +104,10 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         {
             StartCoroutine(HideProcess());
         }
+        else if (stop)
+        {
+            return;
+        }
         else if (_inputSetting.GetRightKeyDown())
         {
             StartCoroutine(NextPage());
@@ -125,8 +127,9 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
 
     public void ShowWindow()
     {
-        // _uiController.InitializeText(); // テキストの初期化
+        _uiController.InitializeText(); // テキストの初期化
         SetUpCharacter();
+        SetCharacterStatus();
         _uiController.Show();
         _canClose = false;
 
@@ -182,8 +185,15 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
     private void SetCharacterStatus()
     {
         int currentId = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
-        var currentCharacterData = CharacterDataManager.Instance.GetCharacterData(currentId);
+        var currentCharacterData = CharacterDataManager.Instance.GetCharacterData(currentId);   // キャラクターのデータを持ってくる
+        var currentCharacterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(currentId); // キャラクターの現在のステータスを持ってくる
+        var currentParameterTable = CharacterDataManager.Instance.GetParameterTable(currentId); // キャラクターのパラメータテーブルを取得する
+        var currentParameterRecord = currentParameterTable.parameterRecords[currentCharacterStatus.level - 1]; // キャラクターの実際のステータスの値を持ってくる（持ってきたいレベルのステータス＝
         _uiController.SetCharacterNameText(currentCharacterData.characterName);
+        _uiController.SetLevelValueText(currentCharacterStatus.level);
+        _uiController.SetHPValueText(currentCharacterStatus.currentHp, currentCharacterStatus.maxHp);
+        _uiController.SetMPValueText(currentCharacterStatus.currentMp, currentCharacterStatus.maxMp);
+        // ここから攻撃力などを入力していく
         _uiController.SetCharacterSprite(currentCharacterData.sprite);
     }
 }

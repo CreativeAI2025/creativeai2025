@@ -39,13 +39,29 @@ public class ObjectEngine : MonoBehaviour
         }
         mapDataController.LoadMapData(_mapName);
 
+        /* 
+        会話開始時に、マップ上のキャラクター移動を止める
+        会話終了後に、マップ上のキャラクター移動を再開する
+        */
         ConversationTextManager.Instance.OnConversationStart += Pause;
         ConversationTextManager.Instance.OnConversationEnd += UnPause;
         ConversationTextManager.Instance.OnConversationEnd += () => conversationFlag = false;
 
+        /* 
+        戦闘開始時に、マップ上のキャラクター移動を止める
+        戦闘終了後に、マップ上のキャラクター移動を再開する
+        */
         BattleManager.Instance.OnBattleStart += Pause;
         BattleManager.Instance.OnBattleEnd += UnPause;
         BattleManager.Instance.OnBattleEnd += () => battleFlag = false;
+
+        /* 
+        アニメーション開始時に、マップ上のキャラクター移動を止める
+        アニメーション終了後に、マップ上のキャラクター移動を再開する
+        */
+        AnimationManager.Instance.OnAnimationStart += Pause;
+        AnimationManager.Instance.OnAnimationEnd += UnPause;
+        AnimationManager.Instance.OnAnimationEnd += () => animationFlag = false;
 
         mapDataController.SetChange(ResetAction);
         ResetAction();

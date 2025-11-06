@@ -194,12 +194,12 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     }
 
     // アイテム/スキル選択ウィンドウを表示させる。引数にはSkillUseかItemUseの値を入れる
-    public void OnOpenSelectWindow(MenuUsePhase m)
+    public void OnOpenSelectWindow(MenuUsePhase m, int userId)
     {
         MenuUsePhase = m;
         if (m == MenuUsePhase.SkillUse)
         {
-            _menuSelectWindowController.SetSkillData(_menuSkillWindowController.getSkillData());
+            _menuSelectWindowController.SetSkillData(_menuSkillWindowController.getSkillData(), userId);
         }
         else if (m == MenuUsePhase.ItemUse)
         {
