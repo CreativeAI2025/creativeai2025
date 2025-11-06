@@ -18,7 +18,7 @@ MonoBehaviour:
   cost: 10
   skillEffect:
     skillCategory: 3
-    EffectTarget: 3
+    EffectTarget: 0
     value: 2
     probability: 100
     StatusEffect: []
@@ -33,8 +33,8 @@ MonoBehaviour:
     extra_StatusEffect: []
     extar_buff:
     - BuffCategory: 0
+      effectTarget: 0
       Duration: 0
       Power: 20
-      effectTarget: 0
     extra_status: "\u653B\u6483\u529B"
     extra_duration: 0

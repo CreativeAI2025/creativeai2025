@@ -73,7 +73,12 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                 asset.cost = skill.GetMp();
                 asset.skillDesc = skill.GetExplain();
 
+                asset.skillEffect = new SkillEffect();
+
+                float power = skill.GetPower();
+
                 SkillCategory skillCategory = SkillCategory.None;
+
 
                 switch (skill.GetAction())
                 {
@@ -99,7 +104,8 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         skillCategory = SkillCategory.Buff;
                         break;
                     case "弱体":
-                        skillCategory = SkillCategory.DeBuff;
+                        skillCategory = SkillCategory.Buff;
+                        power = power / 100;
                         break;
                     case "":
                         break;
@@ -133,6 +139,8 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         break;
                 }
 
+                float extra_power = skill.sub_power;
+
                 SkillCategory extra_skillCategory = SkillCategory.None;
 
                 switch (skill.sub_action)
@@ -159,7 +167,8 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         extra_skillCategory = SkillCategory.Buff;
                         break;
                     case "弱体":
-                        extra_skillCategory = SkillCategory.DeBuff;
+                        extra_skillCategory = SkillCategory.Buff;
+                        extra_power = extra_power / 100;
                         break;
                     case "":
                         break;
@@ -195,25 +204,9 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         break;
                 }
 
-
-                asset.skillEffect = new SkillEffect(
-                        skillCategory,
-                        effectTarget,
-                        skill.GetPower(),
-                        skill.GetProbability(),
-                        skill.GetStatus(),
-                        skill.GetDuration(),
-                        skill.isSub,
-                        extra_skillCategory,
-                        extra_effectTarget,
-                        skill.sub_power,
-                        skill.sub_probability,
-                        skill.sub_status,
-                        skill.sub_duration
-                    );
-
                 if (skill.GetStatus() != null)
                 {
+                    asset.skillEffect.buff = new List<Buff>();
                     string[] statuses = Regex.Split(skill.GetStatus(), "[,、]+");// 説明文
 
                     BuffStatusCategory buffStatusCategory = BuffStatusCategory.Attack;
@@ -259,6 +252,8 @@ public class SkillScriptableObjectCreater : MonoBehaviour
 
                 if (skill.GetExtra() != null)
                 {
+                    asset.skillEffect.StatusEffect = new List<StatusEffect>();//状態異常用リストの初期化
+                    skillCategory = SkillCategory.DeBuff;
                     switch (skill.GetExtra())//状態異常
                     {
                         case "毒":
@@ -305,7 +300,13 @@ public class SkillScriptableObjectCreater : MonoBehaviour
 
                     if (skill.sub_status != null)
                     {
+                        asset.skillEffect.extar_buff = new List<Buff>();
                         string[] statuses = Regex.Split(skill.sub_status, "[,、]+");// 説明文
+
+                        for (int i = 0; i < statuses.Length; i++)//追加効果のバフ要素の格納
+                        {
+                            Debug.Log(statuses[i]);
+                        }
 
                         BuffStatusCategory buffStatusCategory = BuffStatusCategory.None;
 
@@ -348,8 +349,10 @@ public class SkillScriptableObjectCreater : MonoBehaviour
 
                     statusEffectCategory = StatusEffectCategory.None;
 
-                    if (skill.sub_extra != null)
+                    if (skill.sub_extra != null)//状態異常があるとき
                     {
+                        asset.skillEffect.extra_StatusEffect = new List<StatusEffect>();
+                        extra_skillCategory = SkillCategory.DeBuff;
                         switch (skill.sub_extra)//状態異常
                         {
                             case "毒":
@@ -368,6 +371,21 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         asset.skillEffect.extra_StatusEffect.Add(new StatusEffect(statusEffectCategory));//追加効果の状態異常要素の格納
                     }
                 }
+
+                asset.skillEffect.skillCategory = skillCategory;
+                asset.skillEffect.EffectTarget = effectTarget;
+                asset.skillEffect.value = power;
+                asset.skillEffect.probability = skill.GetProbability();
+                asset.skillEffect.status = skill.GetStatus();
+                asset.skillEffect.duration = skill.GetDuration();
+
+                asset.skillEffect.isExtra = skill.isSub;
+                asset.skillEffect.extar_skillCategory = extra_skillCategory;
+                asset.skillEffect.extar_EffectTarget = extra_effectTarget;
+                asset.skillEffect.extra_value = extra_power;
+                asset.skillEffect.extra_probability = skill.sub_probability;
+                asset.skillEffect.extra_status = skill.sub_status;
+                asset.skillEffect.extra_duration = skill.sub_duration;
 
 
                 // アセット作成

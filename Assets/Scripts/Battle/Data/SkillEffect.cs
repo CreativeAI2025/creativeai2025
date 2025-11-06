@@ -88,6 +88,10 @@ public class SkillEffect
     /// </summary>
     public int extra_duration = 1;//持続ターン
 
+    public SkillEffect()
+    {
+    }
+
     public SkillEffect(SkillCategory skillCategory, EffectTarget EffectTarget, float value = 0, int probability = 100, string status = "対象ステータスはありません", int duration = 1,
     bool isExtra = false, SkillCategory extar_skillCategory = SkillCategory.None, EffectTarget extar_EffectTarget = EffectTarget.Own, float extra_value = 0, int extra_probability = 100,
     string extra_status = "対象ステータスはありません", int extra_duration = 1)//コンストラクター
