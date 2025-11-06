@@ -22,7 +22,11 @@ MonoBehaviour:
     value: 20
     probability: 100
     StatusEffect: []
-    buff: []
+    buff:
+    - BuffCategory: 0
+      effectTarget: 2
+      Duration: 0
+      Power: 20
     status: "\u653B\u6483\u529B"
     duration: 0
     isExtra: 1
@@ -31,6 +35,14 @@ MonoBehaviour:
     extra_value: 0.2
     extra_probability: 90
     extra_StatusEffect: []
-    extar_buff: []
+    extar_buff:
+    - BuffCategory: 1
+      effectTarget: 4
+      Duration: 0
+      Power: 20
+    - BuffCategory: 3
+      effectTarget: 4
+      Duration: 0
+      Power: 20
     extra_status: "\u9632\u5FA1\u529B\u3001\u9B54\u6CD5\u9632\u5FA1\u529B"
     extra_duration: 0

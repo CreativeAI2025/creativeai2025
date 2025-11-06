@@ -21,7 +21,10 @@ MonoBehaviour:
     EffectTarget: 4
     value: 0
     probability: 80
-    StatusEffect: []
+    StatusEffect:
+    - EffectCategory: 1
+      Duration: 0
+      Power: 0
     buff: []
     status: 
     duration: 0

@@ -31,6 +31,14 @@ MonoBehaviour:
     extra_value: 0.2
     extra_probability: 80
     extra_StatusEffect: []
-    extar_buff: []
+    extar_buff:
+    - BuffCategory: 0
+      effectTarget: 4
+      Duration: 0
+      Power: 20
+    - BuffCategory: 2
+      effectTarget: 4
+      Duration: 0
+      Power: 20
     extra_status: "\u653B\u6483\u529B\u3001\u9B54\u529B"
     extra_duration: 0

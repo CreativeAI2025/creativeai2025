@@ -22,7 +22,11 @@ MonoBehaviour:
     value: 50
     probability: 80
     StatusEffect: []
-    buff: []
+    buff:
+    - BuffCategory: 2
+      effectTarget: 0
+      Duration: 0
+      Power: 50
     status: "\u9B54\u529B"
     duration: 0
     isExtra: 0
