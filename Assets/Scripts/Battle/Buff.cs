@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class Buff
 {
     public BuffStatusCategory BuffCategory;
+    public EffectTarget effectTarget;//対象の範囲
     public int Duration; // 残りターン数
     public float Power;   // 効果の強さ（倍率）
-    public EffectTarget effectTarget;
 
     public Buff(BuffStatusCategory buffCategory = BuffStatusCategory.Attack, int duration = 0, float power = 0, EffectTarget effectTarget = EffectTarget.Own)
     {
