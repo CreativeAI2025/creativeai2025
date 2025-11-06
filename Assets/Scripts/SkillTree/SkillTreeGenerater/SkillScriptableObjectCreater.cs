@@ -73,6 +73,10 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                 asset.cost = skill.GetMp();
                 asset.skillDesc = skill.GetExplain();
 
+                asset.skillEffect = new SkillEffect();
+
+                float power = skill.GetPower();
+
                 SkillCategory skillCategory = SkillCategory.None;
 
                 switch (skill.GetAction())
@@ -99,7 +103,8 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         skillCategory = SkillCategory.Buff;
                         break;
                     case "弱体":
-                        skillCategory = SkillCategory.DeBuff;
+                        skillCategory = SkillCategory.Buff;
+                        power = power / 100;
                         break;
                     case "":
                         break;
@@ -133,6 +138,8 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         break;
                 }
 
+                float extra_power = skill.sub_power;
+
                 SkillCategory extra_skillCategory = SkillCategory.None;
 
                 switch (skill.sub_action)
@@ -159,7 +166,8 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         extra_skillCategory = SkillCategory.Buff;
                         break;
                     case "弱体":
-                        extra_skillCategory = SkillCategory.DeBuff;
+                        extra_skillCategory = SkillCategory.Buff;
+                        extra_power = extra_power / 100;
                         break;
                     case "":
                         break;
@@ -194,23 +202,6 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                     default:
                         break;
                 }
-
-
-                asset.skillEffect = new SkillEffect(
-                        skillCategory,
-                        effectTarget,
-                        skill.GetPower(),
-                        skill.GetProbability(),
-                        skill.GetStatus(),
-                        skill.GetDuration(),
-                        skill.isSub,
-                        extra_skillCategory,
-                        extra_effectTarget,
-                        skill.sub_power,
-                        skill.sub_probability,
-                        skill.sub_status,
-                        skill.sub_duration
-                    );
 
                 if (skill.GetStatus() != null)
                 {
@@ -259,6 +250,7 @@ public class SkillScriptableObjectCreater : MonoBehaviour
 
                 if (skill.GetExtra() != null)
                 {
+                    skillCategory = SkillCategory.DeBuff;
                     switch (skill.GetExtra())//状態異常
                     {
                         case "毒":
@@ -348,8 +340,9 @@ public class SkillScriptableObjectCreater : MonoBehaviour
 
                     statusEffectCategory = StatusEffectCategory.None;
 
-                    if (skill.sub_extra != null)
+                    if (skill.sub_extra != null)//状態異常があるとき
                     {
+                        extra_skillCategory = SkillCategory.DeBuff;
                         switch (skill.sub_extra)//状態異常
                         {
                             case "毒":
@@ -368,6 +361,22 @@ public class SkillScriptableObjectCreater : MonoBehaviour
                         asset.skillEffect.extra_StatusEffect.Add(new StatusEffect(statusEffectCategory));//追加効果の状態異常要素の格納
                     }
                 }
+
+                asset.skillEffect = new SkillEffect(
+                        skillCategory,
+                        effectTarget,
+                        power,
+                        skill.GetProbability(),
+                        skill.GetStatus(),
+                        skill.GetDuration(),
+                        skill.isSub,
+                        extra_skillCategory,
+                        extra_effectTarget,
+                        extra_power,
+                        skill.sub_probability,
+                        skill.sub_status,
+                        skill.sub_duration
+                    );
 
 
                 // アセット作成

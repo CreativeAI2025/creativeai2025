@@ -18,31 +18,19 @@ MonoBehaviour:
   cost: 39
   skillEffect:
     skillCategory: 6
-    EffectTarget: 2
+    EffectTarget: 4
     value: 20
     probability: 100
     StatusEffect: []
-    buff:
-    - BuffCategory: 0
-      Duration: 0
-      Power: 20
-      effectTarget: 2
+    buff: []
     status: "\u653B\u6483\u529B"
     duration: 0
     isExtra: 1
-    extar_skillCategory: 7
+    extar_skillCategory: 6
     extar_EffectTarget: 4
-    extra_value: 20
+    extra_value: 0.2
     extra_probability: 90
     extra_StatusEffect: []
-    extar_buff:
-    - BuffCategory: 1
-      Duration: 0
-      Power: 20
-      effectTarget: 4
-    - BuffCategory: 3
-      Duration: 0
-      Power: 20
-      effectTarget: 4
+    extar_buff: []
     extra_status: "\u9632\u5FA1\u529B\u3001\u9B54\u6CD5\u9632\u5FA1\u529B"
     extra_duration: 0
