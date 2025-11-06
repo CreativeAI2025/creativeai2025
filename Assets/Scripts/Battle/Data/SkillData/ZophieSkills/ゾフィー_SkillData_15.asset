@@ -15,19 +15,22 @@ MonoBehaviour:
   skillId: 15
   skillName: "\u30D5\u30A1\u30B9\u30C8\u30A8\u30A4\u30C9"
   skillDesc: "70%\u306E\u78BA\u7387\u3067\u5473\u65B9\u4E00\u4EBA\u306E\u72B6\u614B\u7570\u5E38\u3092\u6CBB\u7642\u3057\u3001100%\u306E\u78BA\u7387\u3067\u5473\u65B9\u4E00\u4EBA\u306BHP10%\u306E\u56DE\u5FA9"
-  cost: 22
+  cost: 21
   skillEffect:
     skillCategory: 1
     EffectTarget: 1
     value: 0
-    StatusEffectEnable: 0
-    StatusEffect: []
-    Buff: []
     probability: 70
+    StatusEffect: []
+    buff: []
     status: 
     duration: 0
     isExtra: 1
+    extar_skillCategory: 1
+    extar_EffectTarget: 1
     extra_value: 10
     extra_probability: 100
+    extra_StatusEffect: []
+    extar_buff: []
     extra_status: 
     extra_duration: 0
