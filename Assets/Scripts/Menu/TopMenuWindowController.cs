@@ -12,6 +12,10 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
     /// 現在選択中のメニュー
     /// </summary>
     MenuCommand _selectedCommand;
+    // 縦方向のカーソルが上にあるか下にあるか（false＝上、true＝下）
+    private bool verticalSelector = false;
+    // 横方向のカーソルが左にあるか右にあるか（false＝左、true＝右）
+    private bool horizontalSelector = false;
 
     InputSetting _inputSetting;
 
@@ -38,14 +42,14 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
         {
             return;
         }
-        if (_inputSetting.GetLeftKeyDown())
+        if (_inputSetting.GetLeftKeyDown() || _inputSetting.GetRightKeyDown())
         {
-            SetPreCommand();
+            moveVertical();
             _uiController.ShowSelectedCursor(_selectedCommand);
         }
-        else if (_inputSetting.GetRightKeyDown())
+        else if (_inputSetting.GetForwardKeyDown() || _inputSetting.GetBackKeyDown())
         {
-            SetNextCommand();
+            moveHorizontal();
             _uiController.ShowSelectedCursor(_selectedCommand);
         }
         else if (_inputSetting.GetDecideInputDown())
@@ -58,32 +62,36 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
         }
     }
 
-    /// <summary>
-    /// １つ前のコマンドを選択する
-    /// </summary>
-    void SetPreCommand()
+    private void moveVertical()
     {
-        int currentCommand = (int)_selectedCommand;
-        int nextCommand = currentCommand - 1;
-        if (nextCommand < 0)
-        {
-            nextCommand = 3;    // 選択が４つ（０～４）あるので、最大の３に設定
-        }
-        _selectedCommand = (MenuCommand)nextCommand;
+        verticalSelector = !verticalSelector;
+        _selectedCommand = GetMenuCommand(verticalSelector, horizontalSelector);
+    }
+
+    private void moveHorizontal()
+    {
+        horizontalSelector = !horizontalSelector;
+        _selectedCommand = GetMenuCommand(verticalSelector, horizontalSelector);
     }
 
     /// <summary>
-    /// １つ後のコマンドを選択する
+    /// 引数のtrue/falseによって、適切なメニューコマンド（キャラクター、スキル、アイテム、スキルツリー）を返す
     /// </summary>
-    void SetNextCommand()
+    /// <param name="ver"></param>
+    /// <param name="hor"></param>
+    /// <returns></returns>
+    private MenuCommand GetMenuCommand(bool ver, bool hor)
     {
-        int currentCommand = (int)_selectedCommand;
-        int nextCommand = currentCommand + 1;
-        if (nextCommand > 3)
+        int menuCommand = 0;
+        if (ver)
         {
-            nextCommand = 0;
+            menuCommand += 1;
         }
-        _selectedCommand = (MenuCommand)nextCommand;
+        if (hor)
+        {
+            menuCommand += 2;
+        }
+        return (MenuCommand)menuCommand;
     }
 
     /// <summary>
@@ -93,6 +101,8 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
     {
         _selectedCommand = MenuCommand.Character;
         _uiController.ShowSelectedCursor(_selectedCommand);
+        verticalSelector = false;
+        horizontalSelector = false;
     }
 
     /// <summary>

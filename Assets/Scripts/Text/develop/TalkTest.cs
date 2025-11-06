@@ -10,13 +10,11 @@ using System.Threading.Tasks;
 
 public class TalkTest : MonoBehaviour
 {
-    [SerializeField] private string fileName;
+    private string fileName = "TextDataSample";
     private bool _conversationFlag = false;
-    private InputSetting _inputSetting;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _inputSetting = InputSetting.Load();
         ConversationTextManager.Instance.OnConversationEnd += () => _conversationFlag = false;
     }
 
@@ -27,10 +25,7 @@ public class TalkTest : MonoBehaviour
         {
             return;
         }
-        if (_inputSetting.GetDecideInputDown())
-        {
-            await CallEvent();
-        }
+        await CallEvent();
     }
 
     private async UniTask CallEvent()

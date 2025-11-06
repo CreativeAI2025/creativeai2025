@@ -112,7 +112,7 @@ public class Skill
         this.evaluationValue = evaluationValue;
     }
 
-    public string toString()
+    public string ToString()
     {
         return "ID:" + id
         + "スキル名: " + name

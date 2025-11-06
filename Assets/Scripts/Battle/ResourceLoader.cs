@@ -1,22 +1,25 @@
-// using UnityEngine;
+using UnityEngine;
+/// <summary>
+/// 定義データをロードするクラスです。
+/// </summary>
+public class ResourceLoader : MonoBehaviour
+{
+    void Start()
+    {
+        LoadDefinitionData();
+    }
 
-// public class NewMonoBehaviourScript : MonoBehaviour
-// {
-//     // Start is called once before the first execution of Update after the MonoBehaviour is created
-//     void Start()
-//     {
-//          LoadDefinitionData();
-//     }
+    /// <summary>
+    /// 定義データをロードします。
+    /// </summary>
+    void LoadDefinitionData()
+    {
+        CharacterDataManager.Instance.LoadCharacterData();
+        CharacterDataManager.Instance.LoadExpTables();
+        CharacterDataManager.Instance.LoadParameterTables();
 
-//     // Update is called once per frame
-//     void LoadDefinitionData()
-//         {
-//             CharacterDataManager.LoadCharacterData();
-//             CharacterDataManager.LoadExpTables();
-//             CharacterDataManager.LoadParameterTables();
-
-//             EnemyDataManager.LoadEnemyData();
-//             ItemDataManager.LoadItemData();
-//             MagicDataManager.LoadMagicData();
-//         }
-// }
+        EnemyDataManager.Instance.LoadEnemyData();
+        //ItemDataManager.Instance.LoadItemData();
+        SkillDataManager.Instance.LoadSkillData();
+    }
+}
