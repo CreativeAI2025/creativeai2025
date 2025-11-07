@@ -84,9 +84,12 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// </summary>
     /// <param name="id"></param>
     /// <param name="level"></param>
-    public void SetNewFriend(int id, int level)
+    public void SetNewFriend(int id)
     {
         partyCharacter.Add(id);
+        int mainId = 1; // 主人公のID
+        var mainCharacterStatus = GetCharacterStatusById(mainId);
+        int level = mainCharacterStatus.level;
         characterStatuses.Add(SetCharacterStatus(id, level));
     }
 

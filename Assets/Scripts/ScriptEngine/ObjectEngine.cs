@@ -290,9 +290,13 @@ public class ObjectEngine : MonoBehaviour
                 await UniTask.WaitUntil(() => !animationFlag);
                 break;
             case "Join":
-                string[] characterArgs = eventArgs[1].Split(',');
                 conversationFlag = true;
-                JoinPartyMember(int.Parse(characterArgs[0]), int.Parse(characterArgs[1]));
+                JoinPartyMember(int.Parse(eventArgs[1]));
+                await UniTask.WaitUntil(() => !conversationFlag);
+                break;
+            case "Recover":
+                conversationFlag = true;
+                Recover();
                 await UniTask.WaitUntil(() => !conversationFlag);
                 break;
             default: throw new NotImplementedException();
@@ -353,11 +357,22 @@ public class ObjectEngine : MonoBehaviour
         AnimationManager.Instance.InitializeFromString(animationName);
     }
 
-    private void JoinPartyMember(int id, int level)
+    private void JoinPartyMember(int id)
     {
         string joinText = string.Empty; // ここで「○○が仲間に加わった！」というテキストを設定する
-        CharacterStatusManager.Instance.SetNewFriend(id, level);   // パーティメンバーに加える
+        CharacterStatusManager.Instance.SetNewFriend(id);   // パーティメンバーに加える
         ConversationTextManager.Instance.InitializeFromString(joinText);    // 会話ウィンドウにテキストを表示させる
+    }
+
+    private void Recover()
+    {
+        string messageText = "全回復した！";
+        List<int> partyIds = CharacterStatusManager.Instance.partyCharacter;
+        foreach (int id in partyIds)
+        {
+            CharacterStatusManager.Instance.ChangeCharacterStatus(id, 9999, 9999);
+        }
+        ConversationTextManager.Instance.InitializeFromString(messageText);
     }
 
     private void GetItem(string itemName)
