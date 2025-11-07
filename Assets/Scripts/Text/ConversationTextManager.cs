@@ -21,7 +21,7 @@ public class ConversationTextManager : DontDestroySingleton<ConversationTextMana
     private int lineNumber;
     private bool initializeFlag = false;
     private bool stop = false;
-    public bool IsAllowCall {get; private set;} = true;
+    public bool IsAllowCall { get; private set; } = true;
     public event Action OnConversationStart { add => _onConversationStart += value; remove => _onConversationStart -= value; }
     private Action _onConversationStart;
     public event Action OnConversationEnd { add => _onConversationEnd += value; remove => _onConversationEnd -= value; }
@@ -50,7 +50,7 @@ public class ConversationTextManager : DontDestroySingleton<ConversationTextMana
 
         if (_inputSetting.GetDecideInputUp() && !stop)
         {
-            if (mainTextDrawer.AllowChangeLine() && unitTime > -0.45f )
+            if (mainTextDrawer.AllowChangeLine() && unitTime > -0.45f)
             {
                 //次の行へ移動し、表示する文字数をリセット
                 if (_inputSetting.GetDecideInputUp())
@@ -79,7 +79,8 @@ public class ConversationTextManager : DontDestroySingleton<ConversationTextMana
             }
             if (unitTime > -0.55f)//連打対策（爆速スクロール等）
                 unitTime -= 0.35f;
-        }else if (stop && !FlagManager.Instance.HasFlag("Ending"))
+        }
+        else if (stop && !FlagManager.Instance.HasFlag("Ending"))
         {
             ChangeQuestionData();
         }
@@ -174,11 +175,11 @@ public class ConversationTextManager : DontDestroySingleton<ConversationTextMana
         if (talkDataContent.QuestionData != null)
         {
             question.DisplayQuestion(talkDataContent.QuestionData);
-            textInstructions.enabled = false;
+            //textInstructions.enabled = false;
         }
         else
         {
-            textInstructions.enabled = true;
+            //textInstructions.enabled = true;
         }
         if (talkDataContent.BGM != null)
         {
@@ -196,7 +197,7 @@ public class ConversationTextManager : DontDestroySingleton<ConversationTextMana
                 stop = true;
                 mainText = talkDataContent.Text.Split("{")[0];
                 mainTextDrawer.DisableNextLineIcon();
-                textInstructions.gameObject.SetActive(false);
+                //textInstructions.gameObject.SetActive(false);
             }
             else
             {
@@ -204,7 +205,7 @@ public class ConversationTextManager : DontDestroySingleton<ConversationTextMana
             }
             mainTextDrawer.DisplayMainText(mainText);
             mainTextDrawer.DisplayTextRuby();
-            
+
         }
     }
 
