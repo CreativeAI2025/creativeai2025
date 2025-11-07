@@ -2,12 +2,14 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Opening : MonoBehaviour
 {
     [SerializeField] GameObject tapToButtonObj;
     [SerializeField] GameObject newGameButton;
     [SerializeField] GameObject continueButton;
+    [SerializeField] GameInitializer initializer;
     Image newGameButtonImage;
     Image continueButtonImage;
     int buttonCount = 0;
@@ -122,10 +124,20 @@ public class Opening : MonoBehaviour
                 if (_inputSetting.GetDecideInputDown())
                 {
                     Continue();
+                    GoStartGame();
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    /// <summary>
+    /// ゲームの初期化処理をここに入れる
+    /// </summary>
+    private void GoStartGame()
+    {
+        initializer.InitializeGame();
+        SceneManager.LoadScene("");
     }
 }
