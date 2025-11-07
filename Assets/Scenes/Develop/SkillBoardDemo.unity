@@ -692,6 +692,7 @@ GameObject:
   - component: {fileID: 5247452799850240861}
   - component: {fileID: 5158151963044688019}
   - component: {fileID: 5247452799850240862}
+  - component: {fileID: 5247452799850240863}
   m_Layer: 5
   m_Name: SkillBlocksPanel
   m_TagString: Untagged
@@ -2949,13 +2950,32 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1117824653369619291}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4fdc75323c7c87c47adefd480484ca03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dataSetting1: {fileID: 5511026779456706343}
   skillTreeGanerate1: {fileID: 5511026779456706342}
+  parameterTable: {fileID: 0}
+  skillPointText: {fileID: 5251001123891060030}
+  skillInfoText: {fileID: 6499728753265582707}
+  skillBlockPanel: {fileID: 1117824653369619291}
+  skillPoint: 1000
+--- !u!114 &5247452799850240863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117824653369619291}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3ddf63d1e1c0314bb5c585d7ab0fdbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataSetting: {fileID: 5511026779456706345}
+  skillTreeGanerate: {fileID: 5511026779456706344}
   parameterTable: {fileID: 0}
   skillPointText: {fileID: 5251001123891060030}
   skillInfoText: {fileID: 6499728753265582707}
@@ -3187,6 +3207,8 @@ GameObject:
   - component: {fileID: 805877311827152558}
   - component: {fileID: 5511026779456706343}
   - component: {fileID: 5511026779456706342}
+  - component: {fileID: 5511026779456706345}
+  - component: {fileID: 5511026779456706344}
   m_Layer: 0
   m_Name: SkillTreeGenerater
   m_TagString: Untagged
@@ -3201,7 +3223,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5511026779456706341}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1844d0545f5013c4891c8761fd494bb3, type: 3}
   m_Name: 
@@ -3229,7 +3251,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5511026779456706341}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa86f624e8b3c664baf790ff1139b96f, type: 3}
   m_Name: 
@@ -3252,6 +3274,65 @@ MonoBehaviour:
   sub_subjectValue: 0.4
   skillRate: 0.419
   statusRate: 0.581
+  statusSp: 20
+--- !u!114 &5511026779456706344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5511026779456706341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 607d64def56ea264eb8cac96cb4a8a99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  physicsIocn: {fileID: 1447738714311606801, guid: 541fc9d20738d024c80dcbfbfa38fe41, type: 3}
+  magicIcon: {fileID: 1447738714311606801, guid: af95e5182d98dec4db1a3effc1031d9e, type: 3}
+  healIocn: {fileID: 1447738714311606801, guid: d783394c9b373ea488eca5e6a5374cea, type: 3}
+  buffIcon: {fileID: 1447738714311606801, guid: cc073e3be1fb87749a25ca2c7218be71, type: 3}
+  debuffIocn: {fileID: 1447738714311606801, guid: 02938d33e7a81cf4abea28d450d1e651, type: 3}
+  statusIcon: {fileID: 8927151294216243759, guid: 2c7c681fc6e83834e88593990081e626, type: 3}
+  startIcon: {fileID: 236245430332037112, guid: 748bc428255eae34bbe29ce325557aff, type: 3}
+  line: {fileID: 0}
+  lineColor: {r: 0, g: 0, b: 0, a: 1}
+  lineWidth: 1
+  dataSetting: {fileID: 5511026779456706345}
+  skillBlocksPanel: {fileID: 5247452799850240861}
+  linesPanel: {fileID: 4229103551977043853}
+  activeGenerate: 0
+  maxRetry: 100
+  sum_sp: 0
+--- !u!114 &5511026779456706345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5511026779456706341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a8c20a35597aba45b695b0cf29a3576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nodeDataJson: {fileID: 4900000, guid: 6a91dda29789d2c47909ed6442083f1b, type: 3}
+  selfSkillTree: {fileID: 0}
+  selfTree: 0
+  characterName: "\u30BE\u30D5\u30A3\u30FC"
+  cellSizeX: 80
+  cellSizeY: 55
+  positionX: 5
+  positionY: -90
+  powerValue: 1
+  probabilityValue: 1
+  durationValue: 1
+  subjectValue: 1
+  sub_powerValue: 1
+  sub_probabilityValue: 1
+  sub_durationValue: 1
+  sub_subjectValue: 1
+  skillRate: 1
+  statusRate: 1
   statusSp: 20
 --- !u!222 &5526811331003361912
 CanvasRenderer:
@@ -3546,7 +3627,7 @@ PrefabInstance:
     - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: dataSetting
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1644971694916556275}
     - target: {fileID: -841139126875265673, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
       propertyPath: sub_powerValue
       value: 0

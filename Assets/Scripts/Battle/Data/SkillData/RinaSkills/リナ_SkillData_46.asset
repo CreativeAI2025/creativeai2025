@@ -13,21 +13,24 @@ MonoBehaviour:
   m_Name: "\u30EA\u30CA_SkillData_46"
   m_EditorClassIdentifier: 
   skillId: 46
-  skillName: "\u30A8\u30AF\u30BD"
-  skillDesc: "80%\u306E\u78BA\u7387\u3067\u5473\u65B9\u5168\u4F53\u306E\u72B6\u614B\u7570\u5E38\u3092\u6CBB\u7642\u3059\u308B"
-  cost: 17
+  skillName: "\u30D5\u30EB\u30B9\u30A6\u30A3\u30F3\u30B0"
+  skillDesc: "60%\u306E\u78BA\u7387\u3067\u76F8\u624B\u4E00\u4F53\u306B6.0\u500D\u306E\u7269\u7406\u653B\u6483"
+  cost: 7
   skillEffect:
-    skillCategory: 1
-    EffectTarget: 2
-    value: 0
-    StatusEffectEnable: 0
+    skillCategory: 3
+    EffectTarget: 3
+    value: 6
+    probability: 60
     StatusEffect: []
-    Buff: []
-    probability: 80
+    buff: []
     status: 
     duration: 0
     isExtra: 0
+    extar_skillCategory: 0
+    extar_EffectTarget: 3
     extra_value: 0
     extra_probability: 0
+    extra_StatusEffect: []
+    extar_buff: []
     extra_status: 
     extra_duration: 0
