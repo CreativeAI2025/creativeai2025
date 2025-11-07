@@ -216,7 +216,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                         while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
                     }
                 }
-                foreach (var buff in skillEffect.Buff)
+                foreach (var buff in skillEffect.buff)
                 {
                     appliedBuffCategory = buff.BuffCategory;
                     buffValue = buff.Power;
@@ -372,7 +372,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                         while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
                     }
                 }
-                foreach (var buff in skillEffect.Buff)
+                foreach (var buff in skillEffect.buff)
                 {
                     appliedBuffCategory = buff.BuffCategory;
                     buffValue = buff.Power;
@@ -494,7 +494,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 BuffStatusCategory? appliedBuffCategory = null;
                 float buffValue = 0.0f;                            //バフデバフ付与
 
-                foreach (var buff in skillEffect.Buff)
+                foreach (var buff in skillEffect.buff)
                 {
                     appliedBuffCategory = buff.BuffCategory;
                     buffValue = buff.Power;
