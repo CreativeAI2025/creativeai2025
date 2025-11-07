@@ -2,20 +2,36 @@ using UnityEngine;
 
 public class PlayerSpawnManager : MonoBehaviour
 {
-    [SerializeField] private GameObject player; // 既に配置済みのプレイヤーをInspectorで指定
-
     void Start()
     {
-        string spawnPointName = PlayerPrefs.GetString("LastSpawnPointName", "");
-        GameObject spawnPoint = GameObject.Find(spawnPointName);
+        // 保存されている出現地点名を取得
+        string spawnName = PlayerPrefs.GetString("LastSpawnPointName", "");
+
+        if (string.IsNullOrEmpty(spawnName))
+        {
+            Debug.LogWarning("Spawn point name not found. Using default position.");
+            return;
+        }
+
+        // 該当するSpawnPointオブジェクトを探す
+        GameObject spawnPoint = GameObject.Find(spawnName);
 
         if (spawnPoint != null)
         {
-            player.transform.position = spawnPoint.transform.position;
+            GameObject player = GameObject.FindWithTag("Player");
+            if (player != null)
+            {
+                player.transform.position = spawnPoint.transform.position;
+                Debug.Log($"Player spawned at: {spawnPoint.name}");
+            }
+            else
+            {
+                Debug.LogWarning("Player object not found in scene.");
+            }
         }
         else
         {
-            Debug.LogWarning($"出現地点 '{spawnPointName}' が見つかりません。");
+            Debug.LogWarning($"Spawn point '{spawnName}' not found in scene.");
         }
     }
 }
