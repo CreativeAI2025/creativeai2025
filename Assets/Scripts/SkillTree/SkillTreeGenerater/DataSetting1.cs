@@ -6,6 +6,19 @@ using System.IO;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 
+[System.Serializable]
+public struct RangeValues
+{
+    public float min;
+    public float max;
+
+    public RangeValues(float min, float max)
+    {
+        this.min = min;
+        this.max = max;
+    }
+}
+
 public class DataSetting1 : MonoBehaviour
 {
     [Header("ノードデータのJsonFile"), SerializeField] TextAsset nodeDataJson;
@@ -20,15 +33,11 @@ public class DataSetting1 : MonoBehaviour
     [SerializeField] float positionX = 5f;
     [SerializeField] float positionY = -90f;
 
-    [Header("効果量の重み"), SerializeField] float powerValue = 1f;
-    [Header("発動確率の重み"), SerializeField] float probabilityValue = 1f;
-    [Header("効果時間（ターン数）の重み"), SerializeField] float durationValue = 1f;
-    [Header("攻撃対象の重み"), SerializeField] float subjectValue = 1f;
-
-    [Header("追加効果の効果量の重み"), SerializeField] float sub_powerValue = 1f;
-    [Header("追加効果の発動確率の重み"), SerializeField] float sub_probabilityValue = 1f;
-    [Header("追加効果の効果時間（ターン数）の重み"), SerializeField] float sub_durationValue = 1f;
-    [Header("追加効果の攻撃対象の重み"), SerializeField] float sub_subjectValue = 1f;
+    [Header("効果量の重み"), SerializeField] float[] powerValue;
+    //要素0：物理,要素1：魔法,要素2：回復,要素3：バフ,要素4：デバフ,要素5：状態異常(以下同様)
+    [Header("発動確率の重み"), SerializeField] float[] probabilityValue;
+    [Header("効果時間（ターン数）の重み"), SerializeField] float[] durationValue;
+    [Header("攻撃対象の重み"), SerializeField] float[] subjectValue;
 
     [Header("スキルの割合"), SerializeField] float skillRate = 1.0f;
     [Header("ステータスの割合"), SerializeField] float statusRate = 1.0f;
@@ -112,12 +121,12 @@ public class DataSetting1 : MonoBehaviour
         //StatusData();
         StatusJsonLoader();
         allSkillData = SkillStatusLoader.instance.LoadAllSkill();
-        int count = 0;
-        foreach (var all in allSkillData)
-        {
-            count++;
-        }
-        Debug.Log(count);
+        // int count = 0;
+        // foreach (var all in allSkillData)
+        // {
+        //     count++;
+        // }
+        // Debug.Log(count);
     }
 
     void NodeDataLoader()
@@ -699,7 +708,7 @@ public class DataSetting1 : MonoBehaviour
         string action = "";//行動(攻撃、回復など) 
         int probability = 0;//発動確率 
         float power = 0;//効果量 
-        string type = null;//種類（物理攻撃、特殊攻撃など） 
+        string type = "その他";//種類（物理攻撃、特殊攻撃など） 
         string status = null;//対象ステータス 
         string extra = null;//追加効果 
         int duration = 0;//持続ターン
@@ -811,8 +820,8 @@ public class DataSetting1 : MonoBehaviour
             // ⑤ ステータス文字列を格納
             status = string.Join("、", statusList);
 
-            // ✅ デバッグ確認
-            Debug.Log($"解析結果: {status} を {power}% {action} ({type})");
+            // デバッグ確認
+            // Debug.Log($"解析結果: {status} を {power}% {action} ({type})");
         }
 
 
@@ -830,231 +839,215 @@ public class DataSetting1 : MonoBehaviour
     }
 
     /// <summary>
-    /// nodeSkillDataに評価値,MP,SPをセットする
+    /// 各スキルに対して評価値・MP・SPを設定する
     /// </summary>
-    public List<Skill> SetEvaluationValue(float powerValue, float probabilityValue, float durationValue, float subjectValue, List<Skill> list)
+    public List<Skill> SetEvaluationValue(
+        float[] powerValue,
+        float[] probabilityValue,
+        float[] durationValue,
+        float[] subjectValue,
+        List<Skill> list)
     {
-        List<Skill> newList = list;
+        if (list == null || list.Count == 0)
+            return list;
 
-        List<Skill> physicsList = new List<Skill>();
-        List<Skill> magicList = new List<Skill>();
-        List<Skill> healList = new List<Skill>();
-        List<Skill> buffList = new List<Skill>();
-        List<Skill> debuffList = new List<Skill>();
+        // タイプ別に min/max を計算
+        Dictionary<string, Dictionary<string, RangeValues>> typeRanges = CalculateAllTypeRangesByType(allSkillDataList);
 
-        foreach (var skill in allSkillDataList)
+        // --- ログ出力（確認用）---
+        Debug.Log("<color=cyan>--- 各タイプごとの範囲 ---</color>");
+        foreach (var type in typeRanges.Keys)
         {
-            if (skill.GetTypeName() == "物理攻撃")
+            Debug.Log($"[{type}]");
+            foreach (var kv in typeRanges[type])
             {
-                physicsList.Add(skill);
-            }
-            else if (skill.GetTypeName() == "特殊攻撃" || skill.GetTypeName() == "魔法攻撃")
-            {
-                magicList.Add(skill);
-            }
-            if (skill.GetTypeName() == "回復")
-            {
-                healList.Add(skill);
-            }
-            if (skill.GetTypeName() == "バフ")
-            {
-                buffList.Add(skill);
-            }
-            if (skill.GetTypeName() == "デバフ")
-            {
-                debuffList.Add(skill);
+                Debug.Log($"  {kv.Key}: min={kv.Value.min}, max={kv.Value.max}");
             }
         }
 
-        Debug.Log("物理");
-        physicsList = DetailEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, physicsList);
-
-        Debug.Log("魔法");
-        magicList = DetailEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, magicList);
-
-        Debug.Log("回復");
-        healList = DetailEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, healList);
-
-        Debug.Log("バフ");
-        buffList = DetailEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, buffList);
-
-        Debug.Log("デバフ");
-        debuffList = DetailEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, debuffList);
-
-        // --- すべてのリストを1つにまとめる ---
-        List<Skill> allEvaluatedLists = new List<Skill>();
-        allEvaluatedLists.AddRange(physicsList);
-        allEvaluatedLists.AddRange(magicList);
-        allEvaluatedLists.AddRange(healList);
-        allEvaluatedLists.AddRange(buffList);
-        allEvaluatedLists.AddRange(debuffList);
-
-        // --- 名前が一致するものを nodeSkillData 内で更新 ---
-        for (int i = 0; i < newList.Count; i++)
+        // 各スキルごとに評価値を算出
+        foreach (var skill in list)
         {
-            foreach (var skill1 in allEvaluatedLists)
-            {
-                if (newList[i].GetName().Equals(skill1.GetName()))
-                {
-                    newList[i].SetEvaluationValue(skill1.GetEvaluationValue());
-                    newList[i].SetMp(skill1.GetMp());
-                    newList[i].SetSp(skill1.GetSp());
-                }
-            }
+            int index = GetTypeIndex(skill.GetTypeName());
+
+            float pw = (index >= 0 && index < powerValue.Length) ? powerValue[index] : 1f;
+            float pr = (index >= 0 && index < probabilityValue.Length) ? probabilityValue[index] : 1f;
+            float du = (index >= 0 && index < durationValue.Length) ? durationValue[index] : 1f;
+            float sb = (index >= 0 && index < subjectValue.Length) ? subjectValue[index] : 1f;
+
+            float evalMain = EvaluationCalculation(skill, typeRanges, false, pw, pr, du, sb);
+            float evalSub = skill.isSub ? EvaluationCalculation(skill, typeRanges, true, pw, pr, du, sb) : 0f;
+
+            float totalEval = evalMain + evalSub;
+
+            Debug.Log(
+                $"<color=yellow>[評価結果]</color> {skill.GetName()} ({skill.GetTypeName()})\n" +
+                $"主効果={evalMain:F3}, 副効果={evalSub:F3}, 合計={totalEval:F3}");
+
+            skill.SetEvaluationValue(totalEval);
+            skill.SetMp(MpCalculate(totalEval));
+            skill.SetSp(SpCalculatie(totalEval));
         }
 
-        return newList;
-    }
-
-    List<Skill> DetailEvaluationValue(float powerValue, float probabilityValue, float durationValue, float subjectValue, List<Skill> list)
-    {
-        List<Skill> newList = list;
-
-        float maxPower = GetMaxValue("power", newList);
-        float maxProbability = GetMaxValue("probability", newList);
-        float maxDuration = GetMaxValue("duration", newList);
-        float maxSubjectNum = GetMaxValue("subject", newList);
-        float minPower = GetMinValue("power", newList);
-        float minProbability = GetMinValue("probability", newList);
-        float minDuration = GetMinValue("duration", newList);
-        float minSubjectNum = GetMinValue("subject", newList);
-
-        float sub_maxPower = GetMaxValue("sub_power", newList);
-        float sub_maxProbability = GetMaxValue("sub_probability", newList);
-        float sub_maxDuration = GetMaxValue("sub_duration", newList);
-        float sub_maxSubjectNum = GetMaxValue("sub_subject", newList);
-        float sub_minPower = GetMinValue("sub_power", newList);
-        float sub_minProbability = GetMinValue("sub_probability", newList);
-        float sub_minDuration = GetMinValue("sub_duration", newList);
-        float sub_minSubjectNum = GetMinValue("sub_subject", newList);
-
-        // --- ログ出力 ---
-        string logMessage = $@"
-        === メインスキルの最大値・最小値 ===
-        Power      : min = {minPower}, max = {maxPower}
-        Probability: min = {minProbability}, max = {maxProbability}
-        Duration   : min = {minDuration}, max = {maxDuration}
-        SubjectNum : min = {minSubjectNum}, max = {maxSubjectNum}
-
-        === サブスキルの最大値・最小値 ===
-        Sub Power      : min = {sub_minPower}, max = {sub_maxPower}
-        Sub Probability: min = {sub_minProbability}, max = {sub_maxProbability}
-        Sub Duration   : min = {sub_minDuration}, max = {sub_maxDuration}
-        Sub SubjectNum : min = {sub_minSubjectNum}, max = {sub_maxSubjectNum}
-        ==============================";
-
-        Debug.Log(logMessage);
-
-        for (int i = 0; i < newList.Count; i++)
-        {
-            float evaluationValue = EvaluationCalculation(
-            powerValue, probabilityValue, durationValue, subjectValue,
-            maxPower, maxProbability, maxDuration, maxSubjectNum,
-            minPower, minProbability, minDuration, minSubjectNum, newList[i]);
-
-            if (newList[i].isSub)
-            {
-                evaluationValue += EvaluationCalculation(
-                sub_powerValue, sub_probabilityValue, sub_durationValue, sub_subjectValue,
-                sub_maxPower, sub_maxProbability, sub_maxDuration, sub_maxSubjectNum,
-                sub_minPower, sub_minProbability, sub_minDuration, sub_minSubjectNum, newList[i]);
-            }
-
-            newList[i].SetEvaluationValue(evaluationValue);
-            newList[i].SetMp(MpCalculate(evaluationValue));
-            newList[i].SetSp(SpCalculatie(evaluationValue));
-        }
-
-        return newList;
+        return list;
     }
 
 
+    // --------------------------------------------
+    // 各タイプごとの min / max を事前計算
+    // --------------------------------------------
     /// <summary>
-    /// 評価値を返す
+    /// 各タイプごとに min/max を計算
     /// </summary>
-    /// <param name="power"></param>
-    /// <param name="probability"></param>
-    /// <param name="duration"></param>
-    /// <param name="subject"></param>
-    /// <returns></returns>
-    float EvaluationCalculation(float powerValue, float probabilityValue, float durationValue, float subjectValue,
-                                float maxPower, float maxProbability, float maxDuration, float maxSubjectNum,
-                                float minPower, float minProbability, float minDuration, float minSubjectNum, Skill skill)
+    Dictionary<string, Dictionary<string, RangeValues>> CalculateAllTypeRangesByType(List<Skill> list)
     {
-        Skill new_skill = skill;
+        Dictionary<string, Dictionary<string, RangeValues>> result = new Dictionary<string, Dictionary<string, RangeValues>>();
 
-        float power = new_skill.GetPower();
-        int probability = new_skill.GetProbability();
-        int duration = new_skill.GetDuration();
-        string subject = new_skill.GetSubject();
+        string[] allTypes = { "物理攻撃", "魔法攻撃", "特殊攻撃", "回復", "バフ", "デバフ", "状態異常", "その他" };
 
-        int subjectNum = 1;
-
-        if (powerValue == 0f || probabilityValue == 0 || durationValue == 0 || subjectValue == 0)
+        foreach (string type in allTypes)
         {
-            new_skill.SetEvaluationValue(0f); // 評価できないので0点
+            var typeSkills = list.FindAll(s => s.GetTypeName() == type);
+            Dictionary<string, RangeValues> range = new Dictionary<string, RangeValues>();
+
+            // すべてのキーを事前定義（デフォルト0）
+            string[] keys = {
+            "power", "probability", "duration", "subject",
+            "sub_power", "sub_probability", "sub_duration", "sub_subject"
+        };
+
+            foreach (string key in keys)
+            {
+                range[key] = new RangeValues(0, 0);
+            }
+
+            // スキルが存在するなら計算して上書き
+            if (typeSkills.Count > 0)
+            {
+                range["power"] = new RangeValues(GetMinValue("power", typeSkills), GetMaxValue("power", typeSkills));
+                range["probability"] = new RangeValues(GetMinValue("probability", typeSkills), GetMaxValue("probability", typeSkills));
+                range["duration"] = new RangeValues(GetMinValue("duration", typeSkills), GetMaxValue("duration", typeSkills));
+                range["subject"] = new RangeValues(GetMinValue("subject", typeSkills), GetMaxValue("subject", typeSkills));
+
+                range["sub_power"] = new RangeValues(GetMinValue("sub_power", typeSkills), GetMaxValue("sub_power", typeSkills));
+                range["sub_probability"] = new RangeValues(GetMinValue("sub_probability", typeSkills), GetMaxValue("sub_probability", typeSkills));
+                range["sub_duration"] = new RangeValues(GetMinValue("sub_duration", typeSkills), GetMaxValue("sub_duration", typeSkills));
+                range["sub_subject"] = new RangeValues(GetMinValue("sub_subject", typeSkills), GetMaxValue("sub_subject", typeSkills));
+            }
+            else
+            {
+                Debug.LogWarning($"⚠️ {type} に該当するスキルがありません。デフォルト範囲(0,0)を設定します。");
+            }
+
+            result[type] = range;
         }
 
-        if (subject == "相手" || subject == "自分")
+        // 🧾 集計結果をログ出力（デバッグ確認用）
+        Debug.Log("==== スキルタイプごとの範囲値一覧 ====");
+        foreach (var kv in result)
         {
-            subjectNum = 1;
+            string type = kv.Key;
+            var r = kv.Value;
+
+            Debug.Log(
+                $"＜{type}＞\n" +
+                $"  Power      : {r["power"].min} ～ {r["power"].max}\n" +
+                $"  Probability: {r["probability"].min} ～ {r["probability"].max}\n" +
+                $"  Duration   : {r["duration"].min} ～ {r["duration"].max}\n" +
+                $"  Subject    : {r["subject"].min} ～ {r["subject"].max}\n" +
+                $"  SubPower   : {r["sub_power"].min} ～ {r["sub_power"].max}\n" +
+                $"  SubProb    : {r["sub_probability"].min} ～ {r["sub_probability"].max}\n" +
+                $"  SubDur     : {r["sub_duration"].min} ～ {r["sub_duration"].max}\n" +
+                $"  SubSubj    : {r["sub_subject"].min} ～ {r["sub_subject"].max}\n"
+            );
         }
-        else if (subject == "相手全体" || subject == "味方1人")
+
+        return result;
+    }
+
+
+
+    // --------------------------------------------
+    // 各タイプのインデックス判定
+    // --------------------------------------------
+    int GetTypeIndex(string type)
+    {
+        switch (type)
         {
-            subjectNum = 2;
+            case "物理攻撃": return 0;
+            case "魔法攻撃": return 1;
+            case "特殊攻撃": return 1;
+            case "回復": return 2;
+            case "バフ": return 3;
+            case "デバフ": return 4;
+            case "状態異常": return 5;
+            case "毒": return 5;
+            default: return -1;
         }
-        else if (subject == "味方全体")
-        {
-            subjectNum = 3;
-        }
-
-        //あるスキルの効果をA、発動確立をB、発動回数・ターン数をC、対象をDとします。　重みをvalue、最大値をMax、最小値をminとします。
-        //評価値 = A.value × (A - A.min) / (A.Max - A.min) + B.value × (B - B.min) / (B.Max - B.min) + C.value × (C - C.min) / (C.Max - C.min) + D.value × (D - D.min) / (D.Max - D.min)
-
-        float evaluationPowerValue = SafeNormalize(power, minPower, maxPower, powerValue);
-        float evaluationProbabilityValue = SafeNormalize(probability, minProbability, maxProbability, probabilityValue);
-        float evaluationDurationValue = SafeNormalize(duration, minDuration, maxDuration, durationValue);
-        float evaluationSubjectNumValue = SafeNormalize(subjectNum, minSubjectNum, maxSubjectNum, subjectNum);
-
-        float evaluationValue = 0f;
-        evaluationValue = evaluationPowerValue + evaluationProbabilityValue + evaluationDurationValue + evaluationSubjectNumValue;
-
-        string logMessage = $@"
-        --- {new_skill.GetName()} の評価 ---
-        [スキル効果]
-        値 = {power}, 重み = {powerValue}, 正規化後 = {evaluationPowerValue:F2}
-
-        [発動確率]
-        値 = {probability}, 重み = {probabilityValue}, 正規化後 = {evaluationProbabilityValue:F2}
-
-        [発動回数・ターン数]
-        値 = {duration}, 重み = {durationValue}, 正規化後 = {evaluationDurationValue:F2}
-
-        [対象]
-        値 = {subjectNum} ({subject}), 重み = {subjectValue}, 正規化後 = {evaluationSubjectNumValue:F2}
-
-        [合計評価値] = {evaluationValue:F2}
-        -----------------------------
-        ";
-
-        Debug.Log(logMessage);
-
-        return evaluationValue;
     }
 
     /// <summary>
-    /// 評価値計算（割り算できないときは0を返す）
+    /// 評価値計算（タイプごとの範囲に対応）
     /// </summary>
-    /// <param name="value"></param>
-    /// <param name="min"></param>
-    /// <param name="max"></param>
-    /// <param name="scale"></param>
-    /// <returns></returns>
+    float EvaluationCalculation(
+        Skill skill,
+        Dictionary<string, Dictionary<string, RangeValues>> typeRanges,
+        bool isSub,
+        float wPower,
+        float wProb,
+        float wDuration,
+        float wSubject)
+    {
+        string type = skill.GetTypeName();
+        if (!typeRanges.ContainsKey(type))
+            return 0f;
+
+        var range = typeRanges[type];
+
+        float power = isSub ? skill.sub_power : skill.GetPower();
+        int prob = isSub ? skill.sub_probability : skill.GetProbability();
+        int duration = isSub ? skill.sub_duration : skill.GetDuration();
+        string subject = isSub ? skill.sub_subject : skill.GetSubject();
+
+        float normPower = SafeNormalize(power, range[isSub ? "sub_power" : "power"].min, range[isSub ? "sub_power" : "power"].max, wPower);
+        float normProb = SafeNormalize(prob, range[isSub ? "sub_probability" : "probability"].min, range[isSub ? "sub_probability" : "probability"].max, wProb);
+        float normDuration = SafeNormalize(duration, range[isSub ? "sub_duration" : "duration"].min, range[isSub ? "sub_duration" : "duration"].max, wDuration);
+        float normSubject = SafeNormalize(ConvertSubjectToValue(subject), range[isSub ? "sub_subject" : "subject"].min, range[isSub ? "sub_subject" : "subject"].max, wSubject);
+
+        float eval = normPower + normProb + normDuration + normSubject;
+
+        Debug.Log(
+            $"[{(isSub ? "副" : "主")}効果計算] {skill.GetName()} ({skill.GetTypeName()})\n" +
+            $"  Power={power} → {normPower:F3} (w={wPower})\n" +
+            $"  Prob={prob} → {normProb:F3} (w={wProb})\n" +
+            $"  Duration={duration} → {normDuration:F3} (w={wDuration})\n" +
+            $"  Subject={subject} → {normSubject:F3} (w={wSubject})\n" +
+            $"  => 評価値={eval:F3}");
+
+        return eval;
+    }
+
+    // --------------------------------------------
+    // 安全な正規化
+    // --------------------------------------------
     float SafeNormalize(float value, float min, float max, float scale)
     {
         if (max == min) return 0f;
-        return scale * (value - min) / (max - min);//評価値計算
+        return scale * (value - min) / (max - min);
     }
+
+    // --------------------------------------------
+    // 対象を数値化
+    // --------------------------------------------
+    float ConvertSubjectToValue(string subject)
+    {
+        if (subject == null) return 0;
+        if (subject.Equals("相手") || subject.Equals("自分")) return 1;
+        if (subject.Equals("相手全体") || subject.Equals("味方1人")) return 2;
+        if (subject.Equals("味方全体")) return 3;
+        return 0;
+    }
+
 
     /// <summary>
     /// 引数に関しての最大の値を返す

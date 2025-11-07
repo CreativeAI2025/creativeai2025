@@ -969,7 +969,7 @@ public class DataSetting : MonoBehaviour
         float evaluationPowerValue = SafeNormalize(power, minPower, maxPower, powerValue);
         float evaluationProbabilityValue = SafeNormalize(probability, minProbability, maxProbability, probabilityValue);
         float evaluationDurationValue = SafeNormalize(duration, minDuration, maxDuration, durationValue);
-        float evaluationSubjectNumValue = SafeNormalize(subjectNum, minSubjectNum, maxSubjectNum, subjectNum);
+        float evaluationSubjectNumValue = SafeNormalize(subjectNum, minSubjectNum, maxSubjectNum, subjectValue);
 
         float evaluationValue = 0f; evaluationValue = evaluationPowerValue + evaluationProbabilityValue + evaluationDurationValue + evaluationSubjectNumValue;
 

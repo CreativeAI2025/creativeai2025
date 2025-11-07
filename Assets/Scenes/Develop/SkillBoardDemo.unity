@@ -2820,14 +2820,10 @@ MonoBehaviour:
   cellSizeY: 55
   positionX: 5
   positionY: -90
-  powerValue: 1
-  probabilityValue: 1
-  durationValue: 1
-  subjectValue: 1
-  sub_powerValue: 1
-  sub_probabilityValue: 1
-  sub_durationValue: 1
-  sub_subjectValue: 1
+  powerValue: []
+  probabilityValue: []
+  durationValue: []
+  subjectValue: []
   skillRate: 1
   statusRate: 1
   statusSp: 20
@@ -2950,7 +2946,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1117824653369619291}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4fdc75323c7c87c47adefd480484ca03, type: 3}
   m_Name: 
@@ -2961,7 +2957,7 @@ MonoBehaviour:
   skillPointText: {fileID: 5251001123891060030}
   skillInfoText: {fileID: 6499728753265582707}
   skillBlockPanel: {fileID: 1117824653369619291}
-  skillPoint: 1000
+  skillPoint: 100
 --- !u!114 &5247452799850240863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2969,7 +2965,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1117824653369619291}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e3ddf63d1e1c0314bb5c585d7ab0fdbc, type: 3}
   m_Name: 
@@ -3223,7 +3219,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5511026779456706341}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1844d0545f5013c4891c8761fd494bb3, type: 3}
   m_Name: 
@@ -3251,7 +3247,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5511026779456706341}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa86f624e8b3c664baf790ff1139b96f, type: 3}
   m_Name: 
@@ -3264,14 +3260,34 @@ MonoBehaviour:
   cellSizeY: 75
   positionX: 5
   positionY: -90
-  powerValue: 0.6
-  probabilityValue: 0.3
-  durationValue: 0
-  subjectValue: 0.2
-  sub_powerValue: 0
-  sub_probabilityValue: 0.6
-  sub_durationValue: 0
-  sub_subjectValue: 0.4
+  powerValue:
+  - 0.5
+  - 0.5
+  - 0.5
+  - 0.4
+  - 0.3
+  - 0
+  probabilityValue:
+  - 0.3
+  - 0.3
+  - 0.3
+  - 0.4
+  - 0.4
+  - 0.6
+  durationValue:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  subjectValue:
+  - 0.2
+  - 0.2
+  - 0.2
+  - 0.2
+  - 0.3
+  - 0.4
   skillRate: 0.419
   statusRate: 0.581
   statusSp: 20
@@ -3282,7 +3298,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5511026779456706341}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 607d64def56ea264eb8cac96cb4a8a99, type: 3}
   m_Name: 
@@ -3310,7 +3326,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5511026779456706341}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a8c20a35597aba45b695b0cf29a3576, type: 3}
   m_Name: 
@@ -3319,8 +3335,8 @@ MonoBehaviour:
   selfSkillTree: {fileID: 0}
   selfTree: 0
   characterName: "\u30BE\u30D5\u30A3\u30FC"
-  cellSizeX: 80
-  cellSizeY: 55
+  cellSizeX: 100
+  cellSizeY: 75
   positionX: 5
   positionY: -90
   powerValue: 1
@@ -4775,14 +4791,10 @@ MonoBehaviour:
   cellSizeY: 55
   positionX: 5
   positionY: -90
-  powerValue: 1
-  probabilityValue: 1
-  durationValue: 1
-  subjectValue: 1
-  sub_powerValue: 1
-  sub_probabilityValue: 1
-  sub_durationValue: 1
-  sub_subjectValue: 1
+  powerValue: []
+  probabilityValue: []
+  durationValue: []
+  subjectValue: []
   skillRate: 1
   statusRate: 1
   statusSp: 20
