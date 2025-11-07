@@ -289,6 +289,12 @@ public class ObjectEngine : MonoBehaviour
                 Animation(eventArgs[1]);
                 await UniTask.WaitUntil(() => !animationFlag);
                 break;
+            case "Join":
+                string[] characterArgs = eventArgs[1].Split(',');
+                conversationFlag = true;
+                JoinPartyMember(int.Parse(characterArgs[0]), int.Parse(characterArgs[1]));
+                await UniTask.WaitUntil(() => !conversationFlag);
+                break;
             default: throw new NotImplementedException();
         }
     }
@@ -318,6 +324,11 @@ public class ObjectEngine : MonoBehaviour
         changeSceneFlag = true;
         ConversationTextManager.Instance.OnConversationStart -= Pause;
         ConversationTextManager.Instance.OnConversationEnd -= UnPause;
+        BattleManager.Instance.OnBattleStart -= Pause;
+        BattleManager.Instance.OnBattleEnd -= UnPause;
+        AnimationManager.Instance.OnAnimationStart -= Pause;
+        AnimationManager.Instance.OnAnimationEnd -= UnPause;
+
         await SceneManager.LoadSceneAsync(sceneName).ToUniTask();
         PlayerPrefs.SetString("SceneName", sceneName);
     }
@@ -340,6 +351,13 @@ public class ObjectEngine : MonoBehaviour
     private void Animation(string animationName)
     {
         AnimationManager.Instance.InitializeFromString(animationName);
+    }
+
+    private void JoinPartyMember(int id, int level)
+    {
+        string joinText = string.Empty; // ここで「○○が仲間に加わった！」というテキストを設定する
+        CharacterStatusManager.Instance.SetNewFriend(id, level);   // パーティメンバーに加える
+        ConversationTextManager.Instance.InitializeFromString(joinText);    // 会話ウィンドウにテキストを表示させる
     }
 
     private void GetItem(string itemName)
