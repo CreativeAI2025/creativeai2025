@@ -10,20 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75fee2ab71e53c24bbd8e6a341727434, type: 3}
-  m_Name: "\u30BE\u30D5\u30A3\u30FC_SkillData_9"
+  m_Name: "\u30CE\u30A2_SkillData_36"
   m_EditorClassIdentifier: 
-  skillId: 9
-  skillName: "\u30D6\u30EA\u30B6\u30FC\u30C9"
-  skillDesc: "80\uFF05\u306E\u78BA\u7387\u3067\u76F8\u624B\u5168\u4F53\u306B2.0\u500D\u306E\u7279\u6B8A\u653B\u6483"
-  cost: 14
+  skillId: 36
+  skillName: "\u30DE\u30B8\u30D8\u30FC\u30D9\u30F3"
+  skillDesc: "80%\u306E\u78BA\u7387\u3067\u81EA\u8EAB\u306E\u9B54\u529B\u309250%\u4E0A\u6607\u3055\u305B\u308B"
+  cost: 8
   skillEffect:
-    skillCategory: 4
-    EffectTarget: 4
-    value: 2
+    skillCategory: 6
+    EffectTarget: 0
+    value: 50
     probability: 80
     StatusEffect: []
-    buff: []
-    status: 
+    buff:
+    - BuffCategory: 2
+      effectTarget: 0
+      Duration: 0
+      Power: 50
+    status: "\u9B54\u529B"
     duration: 0
     isExtra: 0
     extar_skillCategory: 0

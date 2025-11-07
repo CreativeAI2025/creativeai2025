@@ -20,14 +20,21 @@ MonoBehaviour:
     skillCategory: 6
     EffectTarget: 0
     value: 50
-    StatusEffectEnable: 0
-    StatusEffect: []
-    Buff: []
     probability: 100
+    StatusEffect: []
+    buff:
+    - BuffCategory: 6
+      effectTarget: 0
+      Duration: 0
+      Power: 50
     status: "\u5168\u30B9\u30C6\u30FC\u30BF\u30B9"
     duration: 0
     isExtra: 0
+    extar_skillCategory: 0
+    extar_EffectTarget: 3
     extra_value: 0
     extra_probability: 0
+    extra_StatusEffect: []
+    extar_buff: []
     extra_status: 
     extra_duration: 0
