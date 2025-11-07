@@ -8,6 +8,11 @@ public class GameInitializer : MonoBehaviour
 {
     private async void Start()
     {
+        InitializeGame();
+    }
+
+    public async void InitializeGame()
+    {
         /// <summary>
         /// パーティキャラクター（ゾフィ、リナ、ノア）のデータを登録するためのクラス
         /// このデータは不変

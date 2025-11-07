@@ -41,9 +41,9 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         // デバッグ用に適当な値をぶち込んでいます
         characterStatuses = new List<CharacterStatus>()
         {
-            SetCharacterStatus(1),
-            SetCharacterStatus(2),
-            SetCharacterStatus(3)
+            SetCharacterStatus(1, 1),
+            SetCharacterStatus(2, 1),
+            SetCharacterStatus(3, 1)
         };
         partyGold = 1000;
     }
@@ -54,17 +54,19 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    private CharacterStatus SetCharacterStatus(int id)
+    private CharacterStatus SetCharacterStatus(int id, int level)
     {
+        var characterParameterTable = CharacterDataManager.Instance.GetParameterTable(id);  // キャラクターのレベルごとのパラメーターテーブルを取得する
+        var characterParameterRecord = characterParameterTable.parameterRecords[level - 1]; // キャラクターのレベルに応じたパラメーターを取得
         CharacterStatus characterStatus = new()
         {
             characterId = id,
-            level = 1,
+            level = characterParameterRecord.Level,
             exp = 0,
-            currentHp = 90,
-            maxHp = 100,
-            currentMp = 50,
-            maxMp = 100,
+            currentHp = characterParameterRecord.HP,
+            maxHp = characterParameterRecord.HP,
+            currentMp = characterParameterRecord.MP,
+            maxMp = characterParameterRecord.MP,
             skillList = new List<int>()
             {
                 1,
@@ -82,10 +84,13 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// </summary>
     /// <param name="id"></param>
     /// <param name="level"></param>
-    public void SetNewFriend(int id, int level)
+    public void SetNewFriend(int id)
     {
         partyCharacter.Add(id);
-        characterStatuses.Add(SetCharacterStatus(id));
+        int mainId = 1; // 主人公のID
+        var mainCharacterStatus = GetCharacterStatusById(mainId);
+        int level = mainCharacterStatus.level;
+        characterStatuses.Add(SetCharacterStatus(id, level));
     }
 
     /// <summary>
