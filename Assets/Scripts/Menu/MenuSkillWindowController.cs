@@ -133,7 +133,8 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
             {
                 return;
             }
-            MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.SkillUse);
+            int userId = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
+            MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.SkillUse, userId);
         }
         else if (_inputSetting.GetRightKeyDown())
         {

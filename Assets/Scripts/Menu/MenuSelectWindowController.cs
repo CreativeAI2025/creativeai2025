@@ -13,6 +13,11 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     private int _cursorMax;
     private SkillData _skillData;
     private ItemData _itemData;
+    private int _skillUserId;    // スキルを使用するキャラクターのID
+    private bool _isTargetAll;  // スキル/アイテムの効果対象が全体かどうか
+    private const string INVALID_CHARACTER_SELECTED = "このキャラクターには　効果がなかったようだ...";
+    private const string INVALID_LACK_OF_MP = "MPが足りなかったようだ...";
+    private const string VALID_USED = "を使用した！";
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,10 +47,14 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
         }
         else if (_inputSetting.GetRightKeyDown())
         {
+            if (_isTargetAll) return;
+            if (_selectPhase != 0) return;
             PointNext();
         }
         else if (_inputSetting.GetLeftKeyDown())
         {
+            if (_isTargetAll) return;
+            if (_selectPhase != 0) return;
             PointPrevious();
         }
         else if (_inputSetting.GetDecideInputDown())
@@ -120,7 +129,6 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
         InitializeCommand();
         SetupSelectWindow();
         _uiController.Show();
-
     }
 
     public void HideWindow()
@@ -151,9 +159,63 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
 
     private void SetPhase2Text()
     {
-        string text = "使用した！";
+        string text = string.Empty;
+        if (MenuManager.Instance.MenuUsePhase == MenuUsePhase.SkillUse)
+        {
+            text = UseSkill();
+        }
+        else if (MenuManager.Instance.MenuUsePhase == MenuUsePhase.ItemUse)
+        {
+            text = UseItem();
+        }
         _uiController.InputText(text);
         _selectPhase++;
+    }
+
+    /// <summary>
+    /// アイテムを使用した時の処理
+    /// </summary>
+    private string UseItem()
+    {
+        string text = string.Empty;
+        // 使用するアイテムデータ
+        ItemData itemData = _itemData;
+        // 現在カーソルが指されているキャラクターのID
+        int selectedCharacterId = CharacterStatusManager.Instance.partyCharacter[_cursor];
+        /*
+        ーーーーー　景山君への依頼１　ーーーーー
+        アイテムを使用した時の処理を書いてほしいです。
+        必要な変数は用意したはず
+        この関数はアイテムが使えたかによって、特定の文字列を返すようにする
+        （返り値は、上の方にある「private const string ~~」のどれか）
+        （場合によっては、アイテム名がプラスで必要な場合もある）
+        もしアイテムの効果の対象が全員の場合は、selectedCharacterIdを使わなくていいです
+        */
+        return text;
+    }
+
+    /// <summary>
+    /// スキルを使用した時の処理
+    /// </summary>
+    private string UseSkill()
+    {
+        string text = string.Empty;
+        // 使用する予定のスキルデータ
+        SkillData skillData = _skillData;
+        // そのスキルを使用するキャラクターのID
+        int userId = _skillUserId;
+        // 現在カーソルが指されているキャラクターのID
+        int selectedCharacterId = CharacterStatusManager.Instance.partyCharacter[_cursor];
+        /*
+        ーーーーー　景山君への依頼１　ーーーーー
+        スキルを使用した時の処理を書いてほしいです。
+        必要な変数は用意したはず
+        この関数はスキルが使えたかによって、特定の文字列を返すようにする
+        （返り値は、上の方にある「private const string ~~」のどれか）
+        （場合によっては、スキル名がプラスで必要な場合もある）
+        もしスキルの効果の対象が全員の場合は、selectedCharacterIdを使わなくていいです
+        */
+        return text;
     }
 
     // 初期化をここで行う。
@@ -162,6 +224,10 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
         _cursor = 0;
         _selectPhase = 0;
         _uiController.ShowSelectedCursor(_cursor);
+        if (_isTargetAll)
+        {
+            _uiController.GetBrightAll();
+        }
         if (MenuManager.Instance.MenuUsePhase == MenuUsePhase.SkillUse)
         {
             _uiController.InputText(_skillData.skillDesc);
@@ -174,14 +240,39 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     }
 
     // スキル一覧で選択されているスキルデータを手に入れるために使用
-    public void SetSkillData(SkillData sd)
+    public void SetSkillData(SkillData sd, int userId)
     {
         _skillData = sd;
+        _skillUserId = userId;
+        if (_skillData.skillEffect.EffectTarget == EffectTarget.FriendSolo)
+        {
+            _isTargetAll = false;
+        }
+        else if (_skillData.skillEffect.EffectTarget == EffectTarget.FriendAll)
+        {
+            _isTargetAll = true;
+        }
+        else
+        {
+            _isTargetAll = false;
+        }
     }
 
     // アイテム一覧で選択されているアイテムデータを手に入れるために使用
     public void SetItemData(ItemData itemdata)
     {
         _itemData = itemdata;
+        if (_itemData.itemEffect.effectTarget == EffectTarget.FriendSolo)
+        {
+            _isTargetAll = false;
+        }
+        else if (_itemData.itemEffect.effectTarget == EffectTarget.FriendAll)
+        {
+            _isTargetAll = true;
+        }
+        else
+        {
+            _isTargetAll = false;
+        }
     }
 }
