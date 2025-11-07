@@ -33,7 +33,7 @@ public class MenuCharacterUIController : MonoBehaviour, IMenuUIController
     }
     public void SetLevelValueText(int level)
     {
-        _levelValueText.text = $"Level： {level.ToString()}";
+        _levelValueText.text = $"Lv. {level.ToString()}";
     }
     public void SetHPValueText(int currentHP, int maxHP)
     {

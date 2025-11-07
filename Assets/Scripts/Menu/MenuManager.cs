@@ -42,6 +42,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
 
         // メニューマネージャー固有の初期化処理をここに記述
         Debug.Log("[MenuManager] Specific initialization for IMenuManager completed.");
+        HideMenuWindowAll();
     }
     void Start()
     {
@@ -56,6 +57,8 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         BattleManager.Instance.OnBattleEnd += menuUIPause.UnPauseAll;
 
         // アニメーション中にメニューを開けなくする
+        AnimationManager.Instance.OnAnimationStart += menuUIPause.PauseAll;
+        AnimationManager.Instance.OnAnimationEnd += menuUIPause.UnPauseAll;
     }
 
     // Update is called once per frame
@@ -214,5 +217,18 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     {
         MenuUsePhase = MenuUsePhase.Closed;
         _menuSelectWindowController.HideWindow();
+    }
+
+    /// <summary>
+    /// メニューの全てのウィンドウを閉じる
+    /// </summary>
+    private void HideMenuWindowAll()
+    {
+        _topMenuWindowController.HideWindow();
+        _menuCharacterWindowController.HideWindow();
+        _menuSkillWindowController.HideWindow();
+        _menuItemWindowController.HideWindow();
+        _menuSelectWindowController.HideWindow();
+        _menuSkillTreeWindowController.HideWindow();
     }
 }
