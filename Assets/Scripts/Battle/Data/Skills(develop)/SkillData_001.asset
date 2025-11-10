@@ -17,12 +17,19 @@ MonoBehaviour:
   skillDesc: ffffff
   cost: 9
   skillEffect:
-    skillCategory: 3
-    EffectTarget: 3
+    skillCategory: 0
+    EffectTarget: 0
     value: 0
     StatusEffectEnable: 0
-    StatusEffect: []
-    Buff: []
+    StatusEffect:
+    - EffectCategory: 0
+      Duration: 0
+      Power: 0
+    Buff:
+    - BuffCategory: 0
+      EffectTarget: 0
+      Duration: 0
+      Power: 0
     probability: 0
     status: 
     duration: 0
