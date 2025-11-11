@@ -4,20 +4,21 @@
     {
       "MapName": "Village",
       "Position": [
-        7,
-        20
+        14,
+        22
       ]
     }
   ],
-  "EventName": "Conversation Mura_womanA",
+  "EventName": "Conversation Mura_kodomo_2",
   "TriggerType": 1,
   "FlagCondition": {
-    "Flag": [
-      [
+    "Flag": [[
         "NusiBattleFinished",
-        false
-      ]
+        true
+    ]
+       
     ],
-    "NextFlag": []
+    "NextFlag": [
+    ]
   }
 }
