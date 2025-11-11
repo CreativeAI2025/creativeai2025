@@ -71,6 +71,25 @@ public class Skill
         this.evaluationValue = 0;
     }
 
+    public Skill(string name, string explain, string subject, string action, int probability,
+    float power, string type, string status, string extra, int duration)
+    {//コンストラクタ（スキル用（詳細情報））
+        this.id = 0;//ID
+        this.explain = explain;
+        this.tag = "スキル";//分類
+        this.name = name;//名前
+
+        //メイン効果
+        this.subject = subject;//対象
+        this.action = action;//行動
+        this.probability = probability;//確率
+        this.power = power;//強さ
+        this.type = type;//種類
+        this.status = status;
+        this.extra = extra;
+        this.duration = duration;
+    }
+
     public int GetId() { return id; }
     public string GetExplain() { return explain; }
     public string GetTag() { return tag; }
@@ -112,7 +131,7 @@ public class Skill
         this.evaluationValue = evaluationValue;
     }
 
-    public string toString()
+    public string ToString()
     {
         return "ID:" + id
         + "スキル名: " + name
@@ -123,9 +142,30 @@ public class Skill
         + ", 種類: " + type
         + ", 追加効果: " + extra
         + ", 持続ターン: " + duration
+        + "スキル名: (追加効果)"
+        + ", 対象: " + sub_subject
+        + ", 行動: " + sub_action
+        + ", 発動確率" + sub_probability
+        + ", 効果量: " + sub_power
+        + ", 種類: " + sub_type
+        + ", 追加効果: " + sub_extra
+        + ", 持続ターン: " + sub_duration
         + ", MP:" + mp
         + ", SP" + sp
         + ", 評価値" + evaluationValue;
+    }
+
+    public string ToStringAll()
+    {
+        return "ID:" + id
+        + "スキル名: " + name
+        + ", 対象: " + subject
+        + ", 行動: " + action
+        + ", 発動確率" + probability
+        + ", 効果量: " + power
+        + ", 種類: " + type
+        + ", 追加効果: " + extra
+        + ", 持続ターン: " + duration;
     }
 
     /// <summary>
