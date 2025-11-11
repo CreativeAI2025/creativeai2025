@@ -382,9 +382,10 @@ public class ObjectEngine : MonoBehaviour
         ConversationTextManager.Instance.InitializeFromString(joinText);    // 会話ウィンドウにテキストを表示させる
     }
 
-    private void Worldmap()
+    private async void Worldmap()
     {
-        WorldmapManager.Instance.Initialize();
+        await WorldmapManager.Instance.StartWorldmapAsync();
+        worldmapFlag = false;
     }
 
     private void Recover()

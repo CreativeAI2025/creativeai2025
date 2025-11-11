@@ -113,9 +113,13 @@ public class WorldMapController : MonoBehaviour
             {
                 var selectedPoint = worldMapData.mapPoints[currentIndex];
 
-                PlayerPrefs.SetInt("LastWorldMapIndex", currentIndex);
-                PlayerPrefs.SetString("LastSpawnPointName", selectedPoint.spawnPointName); // ← 追加
-                PlayerPrefs.Save();
+                if (WorldmapManager.Instance != null)
+                {
+                    WorldmapManager.Instance.SetNextScene(selectedPoint.sceneName);
+                    WorldmapManager.Instance.SetSpawnPoint(selectedPoint.spawnPosition);
+                    // ワールドマップ終了を通知
+                    WorldmapManager.Instance.FinishWorldmap();
+                }
 
                 SceneManager.LoadScene(selectedPoint.sceneName);
             }
