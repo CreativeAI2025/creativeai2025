@@ -115,6 +115,7 @@ public class Opening : MonoBehaviour
                 if (_inputSetting.GetDecideInputDown())
                 {
                     NewGame();
+                    GoStartGame();
                 }
                 break;
             case 1:
@@ -138,6 +139,6 @@ public class Opening : MonoBehaviour
     private void GoStartGame()
     {
         initializer.InitializeGame();
-        SceneManager.LoadScene("");
+        SceneManager.LoadScene("zophy_House");
     }
 }

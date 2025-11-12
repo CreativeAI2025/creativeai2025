@@ -106,6 +106,10 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     /// <param name="characterId">キャラクターID</param>
     public CharacterData GetCharacterData(int characterId)
     {
+        if (!characterDataDict.ContainsKey(characterId))
+        {
+            return null;
+        }
         return characterDataDict[characterId];
     }
 

@@ -119,6 +119,10 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         {
             StartCoroutine(HideProcess());
         }
+        else if (stop)
+        {
+            return;
+        }
         else if (_inputSetting.GetBackKeyDown())
         {
             ShowNextSkill();
@@ -157,6 +161,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     {
         _uiController.InitializeText(); // テキストの初期化
         SetUpSkill();
+        _headerUIController.Initialize();
         _uiController.Show();
         _canClose = false;
 
