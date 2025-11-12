@@ -883,6 +883,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6953879396734268783, guid: 891bfdd84b13b394e97945ea1084669c, type: 3}
+      propertyPath: worldmapCanvasPrefab
+      value: 
+      objectReference: {fileID: 1952865689}
     - target: {fileID: 7483999663876321585, guid: 891bfdd84b13b394e97945ea1084669c, type: 3}
       propertyPath: m_Name
       value: WorldmapEngine
@@ -2028,6 +2032,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1952865689 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4895730985503889213, guid: 891bfdd84b13b394e97945ea1084669c, type: 3}
+  m_PrefabInstance: {fileID: 773815395}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1966443121
 GameObject:
   m_ObjectHideFlags: 0
