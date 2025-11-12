@@ -85,6 +85,7 @@ public class ObjectEngine : MonoBehaviour
     // Start is called before the first frame update
     private void Initialize(string mapName, int width, int height)
     {
+        UnityEngine.Debug.Log($"マップサイズ：｛{width}、{height}｝");
         _eventObjects = new List<ObjectData>[width][];
         _trapEventObjects = new List<ObjectData>[width][];
         for (int i = 0; i < width; i++)
