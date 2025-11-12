@@ -111,17 +111,10 @@ public class WorldMapController : MonoBehaviour
         {
             if (worldMapData.IsAreaUnlocked(currentIndex))
             {
-                var selectedPoint = worldMapData.mapPoints[currentIndex];
-
-                if (WorldmapManager.Instance != null)
-                {
-                    WorldmapManager.Instance.SetNextScene(selectedPoint.sceneName);
-                    WorldmapManager.Instance.SetSpawnPoint(selectedPoint.spawnPosition);
-                    // ワールドマップ終了を通知
-                    WorldmapManager.Instance.FinishWorldmap();
-                }
-
-                SceneManager.LoadScene(selectedPoint.sceneName);
+                // ★選択位置を保存
+                PlayerPrefs.SetInt("LastWorldMapIndex", currentIndex);
+                PlayerPrefs.Save();
+                SceneManager.LoadScene(worldMapData.mapPoints[currentIndex].sceneName);
             }
             else
             {

@@ -384,8 +384,7 @@ public class ObjectEngine : MonoBehaviour
 
     private async void Worldmap()
     {
-        await WorldmapManager.Instance.StartWorldmapAsync();
-        worldmapFlag = false;
+        WorldmapManager.Instance.StartWorldmapAsync();
     }
 
     private void Recover()
