@@ -31,9 +31,6 @@ public class WorldMapData : ScriptableObject
 
         [Header("マップの見た目設定")]
         public Sprite icon;
-
-        [Header("プレイヤー出現地点設定")]
-        public string spawnPointName = ""; // ←★ これを追加！
         
         // 実行時の状態（外部フラグシステムから取得）
         [System.NonSerialized]
