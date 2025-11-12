@@ -12,17 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f16436ac038bdf4b92bc19360a4c5c8, type: 3}
   m_Name: EnemyData_105
   m_EditorClassIdentifier: 
-  enemyId: 0
-  enemyName: 
-  sprite: {fileID: 0}
-  HP: 0
+  enemyId: 105
+  enemyName: "\u30C8\u30F3\u30DC\u30EB\u30D3\u30FC"
+  sprite: {fileID: 6593720334227321285, guid: cd9a0d83ef1761b4e8e912faa73ac743, type: 3}
+  HP: 33
   MP: 0
-  Attack: 0
-  Defence: 0
-  MagicAttack: 0
-  MagicDefence: 0
-  Speed: 0
+  Attack: 42
+  Defence: 26
+  MagicAttack: 35
+  MagicDefence: 23
+  Speed: 23
   Evasion: 0
-  exp: 0
-  gold: 0
-  enemyActionRecords: []
+  exp: 19
+  gold: 23
+  enemyActionRecords:
+  - enemyActionCategory: 1
+    enemyConditionRecords: []
+    skillData: {fileID: 11400000, guid: c79aa095a0ef0e5418270ec17a2e6ba5, type: 2}
+    priority: 30
+  - enemyActionCategory: 0
+    enemyConditionRecords: []
+    skillData: {fileID: 0}
+    priority: 50
+  - enemyActionCategory: 1
+    enemyConditionRecords: []
+    skillData: {fileID: 11400000, guid: db6d44b3c640fbd41a45ed27ab1883c3, type: 2}
+    priority: 20

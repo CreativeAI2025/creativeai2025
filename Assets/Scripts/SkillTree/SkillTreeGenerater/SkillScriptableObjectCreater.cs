@@ -26,6 +26,9 @@ public class SkillScriptableObjectCreater : MonoBehaviour
     [Header("追加効果の攻撃対象の重み"), SerializeField] float sub_subjectValue = 1f;
 
     [SerializeField] DataSetting dataSetting;
+    [SerializeField] bool is_dataSetting = false;
+    [SerializeField] DataSetting1 dataSetting1;
+    [SerializeField] bool is_dataSetting1 = false;
     List<Skill> skills = new List<Skill>();
     Dictionary<int, string[]> skillData = new Dictionary<int, string[]>();// スキル名とスキルの説明のデータ
 
@@ -36,15 +39,29 @@ public class SkillScriptableObjectCreater : MonoBehaviour
 
         foreach (var list in creatSetting)
         {
-            skillData = dataSetting.SkillJsonLoader(list.characterName, list.textAsset);
-
-            for (int i = 0; i < skillData.Count; i++)
+            if (is_dataSetting)
             {
-                // データ格納
-                skills.Add(dataSetting.SerchSkillDescription(skillData[i]));
+                skillData = dataSetting.SkillJsonLoader(list.characterName, list.textAsset);
+
+                for (int i = 0; i < skillData.Count; i++)
+                {
+                    // データ格納
+                    skills.Add(dataSetting.SerchSkillDescription(skillData[i]));
+                }
+
+                skills = dataSetting.SetEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, skills);
             }
 
-            skills = dataSetting.SetEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, skills);
+            if (is_dataSetting1)
+            {
+                skillData = dataSetting1.SkillJsonLoader(list.characterName, list.textAsset);
+                for (int i = 0; i < skillData.Count; i++)
+                {
+                    // データ格納
+                    skills.Add(dataSetting1.SerchSkillDescription(skillData[i]));
+                }
+                skills = dataSetting1.SetEvaluationValue(skills);
+            }
 
             if (list.targetFolder == null)
             {

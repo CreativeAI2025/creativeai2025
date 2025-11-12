@@ -10,7 +10,7 @@ public class MenuCharacterStatusUI : MonoBehaviour
     // MPバー
     [SerializeField] private MenuBarUIController mpbarController;
     private Color32 hpColor = new Color32(180, 250, 145, 192);  // HPバーの色
-    private Color32 mpColor = new Color32(145, 250, 180, 192);  // MPバーの色
+    private Color32 mpColor = new Color32(145, 190, 250, 192);  // MPバーの色
     private Color32 nonselectedColor = new Color32(159, 159, 159, 255);    // このオブジェクトが選択されていないときの、キャラクターの色（じゃっかん暗く）
     private Color32 selectedColor = new Color32(255, 255, 255, 255);    // このオブジェクトが選択されているときの、キャラクターの色（明るく）
 

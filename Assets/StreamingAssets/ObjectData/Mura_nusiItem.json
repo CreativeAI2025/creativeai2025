@@ -1,0 +1,30 @@
+{
+  "Id": 0,
+  "Location": [
+    {
+      "MapName": "Village",
+      "Position": [
+        27,
+        27
+      ]
+    }
+  ],
+  "EventName": "Conversation Mura_nusiItem",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      ["nusiItem",
+        false
+    ],[
+        "NusiBattleFinished",
+        true
+      ]
+    ],
+    "NextFlag": [
+      [
+      "nusiItem",
+        true
+      ]
+    ]
+  }
+}
