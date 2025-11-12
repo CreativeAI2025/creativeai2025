@@ -18,6 +18,16 @@ public class AnimationList : MonoBehaviour
     /// </summary>
     private void SetDictionary()
     {
+        if (animationList == null)
+        {
+            Debug.Log("このシーンにはアニメーションが設定されていません。");
+            return;
+        }
+        if (animationList.Count == 0)
+        {
+            Debug.Log("このシーンにはアニメーションが設定されていません。");
+            return;
+        }
         foreach (var animation in animationList)
         {
             animationDict = animationList.ToDictionary(x => x.gameObject.name, x => x);
