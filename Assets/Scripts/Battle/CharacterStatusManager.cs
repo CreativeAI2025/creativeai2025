@@ -68,15 +68,23 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// <returns></returns>
     private CharacterStatus SetCharacterStatus(int id)
     {
+        var level = 1;
+        var parameterTable = CharacterDataManager.Instance.GetParameterTable(id);
+        var record = parameterTable.parameterRecords.Find(r => r.Level == level);
         CharacterStatus characterStatus = new()
         {
             characterId = id,
+
             level = 1,
             exp = 0,
-            currentHp = 90,
-            maxHp = 100,
-            currentMp = 50,
-            maxMp = 100,
+        //   currentHp = status.currentHp,
+        //     maxHp = 100,
+        //     currentMp = 50,
+        //     maxMp = 100,
+            currentHp = record.HP,
+            maxHp = record.HP,
+            currentMp = record.MP,
+            maxMp = record.MP,
             skillList = new List<int>()
             {
                 1,
