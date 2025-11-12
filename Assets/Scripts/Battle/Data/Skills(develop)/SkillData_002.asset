@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75fee2ab71e53c24bbd8e6a341727434, type: 3}
   m_Name: SkillData_002
   m_EditorClassIdentifier: 
-  skillId: 2
+  skillId: 999
   skillName: "\u6575\u5168\u4F53\u30B9\u30AD\u30EB"
   skillDesc: none
   cost: 5
@@ -20,21 +20,20 @@ MonoBehaviour:
     skillCategory: 0
     EffectTarget: 0
     value: 0
-    StatusEffectEnable: 0
+    probability: 0
     StatusEffect:
     - EffectCategory: 0
       Duration: 0
       Power: 0
-    Buff:
-    - BuffCategory: 0
-      EffectTarget: 0
-      Duration: 0
-      Power: 0
-    probability: 0
+    buff: []
     status: 
     duration: 0
     isExtra: 0
+    extar_skillCategory: 0
+    extar_EffectTarget: 0
     extra_value: 0
     extra_probability: 0
+    extra_StatusEffect: []
+    extar_buff: []
     extra_status: 
     extra_duration: 0

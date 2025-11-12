@@ -160,7 +160,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     private void Initialize()
     {
-        SetPlayerStatus();  // プレイヤー周りの情報をセットする
+        //SetPlayerStatus();  // プレイヤー周りの情報をセットする
         Logger.Instance.Log("戦闘を開始します。");
         _onBattleStart?.Invoke();
         //  GameStateManager.ChangeToBattle();
@@ -200,47 +200,11 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     private void SetPlayerStatus()
     {
-        int _playerLevel = 1;
-        // 経験値表を使って、レベルから経験値を取得します。
-        var expTable = CharacterDataManager.Instance.GetExpTable();
-        var expRecord = expTable.expRecords.Find(record => record.Level == _playerLevel);
-        var exp = expRecord.Exp;
-
-        // レベルに対応するパラメータデータを取得します。
-        int charcterId = 1;
-        var parameterTable = CharacterDataManager.Instance.GetParameterTable(charcterId);
-        var parameterRecord = parameterTable.parameterRecords.Find(record => record.Level == _playerLevel);
-
-        // 指定したレベルまでに覚えている魔法のIDをリスト化します。（要改善）
-        List<int> skillList = new List<int>() { 1, 2, 3 };
-
-        // キャラクターのステータスを設定します。
-        CharacterStatus status = new()
-        {
-            characterId = charcterId,
-            level = _playerLevel,
-            exp = exp,
-            currentHp = parameterRecord.HP,
-            currentMp = parameterRecord.MP,
-
-            skillList = skillList,
-        };
-
-        CharacterStatusManager.Instance.characterStatuses = new()
-            {
-                status
-            };
-
-        // パーティにいるキャラクターのIDをセットします。
-        CharacterStatusManager.Instance.partyCharacter = new()
-            {
-                charcterId
-            };
 
         // 所持アイテムをセットします。
         PartyItemInfo item = new()
         {
-            itemId = 1,
+            itemId = 101,
             itemNum = 5,
             usedNum = 1
         };

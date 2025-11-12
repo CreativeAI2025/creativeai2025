@@ -45,6 +45,18 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             SetCharacterStatus(2),
             SetCharacterStatus(3)
         };
+
+        // 所持アイテムをセットします。
+        PartyItemInfo item = new()
+        {
+            itemId = 101,
+            itemNum = 5,
+            usedNum = 1
+        };
+        partyItemInfoList = new()
+        {
+            item
+        };
         partyGold = 1000;
     }
 
@@ -69,7 +81,10 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             {
                 1,
                 2,
-                3
+                3,
+                4,
+                5,
+                6
             }
         };
 

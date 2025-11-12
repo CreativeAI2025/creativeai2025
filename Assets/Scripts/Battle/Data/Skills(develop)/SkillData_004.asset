@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75fee2ab71e53c24bbd8e6a341727434, type: 3}
   m_Name: SkillData_004
   m_EditorClassIdentifier: 
-  skillId: 4
+  skillId: 999
   skillName: ZOOM
   skillDesc: Return to the Town
   cost: 3
@@ -20,14 +20,17 @@ MonoBehaviour:
     skillCategory: 8
     EffectTarget: 0
     value: 0
-    StatusEffectEnable: 0
-    StatusEffect: []
-    Buff: []
     probability: 0
+    StatusEffect: []
+    buff: []
     status: 
     duration: 0
     isExtra: 0
+    extar_skillCategory: 0
+    extar_EffectTarget: 0
     extra_value: 0
     extra_probability: 0
+    extra_StatusEffect: []
+    extar_buff: []
     extra_status: 
     extra_duration: 0

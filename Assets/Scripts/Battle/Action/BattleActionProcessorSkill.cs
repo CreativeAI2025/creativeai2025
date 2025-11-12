@@ -91,7 +91,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
             _enemyStatusManager.ChangeEnemyStatus(action.actorId, hpDelta, mpDelta);
 
         _actionProcessor.SetPauseProcess(true);
-        StartCoroutine(ProcessSkillActionCoroutine(action, skillData));
+       
 
 
         // 修正: 有効なターゲットのみでリストを再構築（他のアクションで倒された敵を除外）
