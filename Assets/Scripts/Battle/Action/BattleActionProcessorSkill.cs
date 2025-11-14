@@ -91,7 +91,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
             _enemyStatusManager.ChangeEnemyStatus(action.actorId, hpDelta, mpDelta);
 
         _actionProcessor.SetPauseProcess(true);
-        StartCoroutine(ProcessSkillActionCoroutine(action, skillData));
+       
 
 
         // 修正: 有効なターゲットのみでリストを再構築（他のアクションで倒された敵を除外）
@@ -190,6 +190,16 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
                 foreach (var statusEffect in skillEffect.StatusEffect)
                 {
+                    appliedEffectCategory = statusEffect.EffectCategory;
+                    Logger.Instance.Log("状態異常付与");
+                    if (isTargetFriend)
+                    {
+                        statusEffectManager.ApplyStatusEffectToPlayer(currentTargetId, statusEffect);
+                    }
+                    else
+                    {
+                        statusEffectManager.ApplyStatusEffectToEnemy(currentTargetId, statusEffect);
+                    }
                     string statusMessage = "";
                     if (appliedEffectCategory != null)
                     {
@@ -220,10 +230,19 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 {
                     appliedBuffCategory = buff.BuffCategory;
                     buffValue = buff.Power;
+                    bool buffTarget = IsBuffTargetFriend(buff);
                     Logger.Instance.Log("バフデバフ付与");
                     string buffMessage = "";
                     if (appliedBuffCategory != null)
                     {
+                        if (buffTarget)
+                        {
+                            statusEffectManager.PlayerApplyBuff(currentTargetId, buff);
+                        }
+                        else
+                        {
+                            statusEffectManager.EnemyApplyBuff(currentTargetId, buff);
+                        }
                         switch (appliedBuffCategory)
                         {
                             case BuffStatusCategory.Attack:
@@ -345,6 +364,16 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
                 foreach (var statusEffect in skillEffect.StatusEffect)
                 {
+                    appliedEffectCategory = statusEffect.EffectCategory;
+                    Logger.Instance.Log("状態異常付与");
+                    if (isTargetFriend)
+                    {
+                        statusEffectManager.ApplyStatusEffectToPlayer(currentTargetId, statusEffect);
+                    }
+                    else
+                    {
+                        statusEffectManager.ApplyStatusEffectToEnemy(currentTargetId, statusEffect);
+                    }
                     string statusMessage = "";
                     if (appliedEffectCategory != null)
                     {
@@ -365,7 +394,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
                                 statusMessage = BattleMessage.ConfusionSuffix;
                                 break;
                         }
-                    
+
                         _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
                         _messageWindowController.GenerateStatusAilmentMessage(targetName, statusMessage);
                         _battleManager.OnUpdateStatus();
@@ -376,10 +405,19 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 {
                     appliedBuffCategory = buff.BuffCategory;
                     buffValue = buff.Power;
+                    bool buffTarget = IsBuffTargetFriend(buff);
                     Logger.Instance.Log("バフデバフ付与");
                     string buffMessage = "";
                     if (appliedBuffCategory != null)
                     {
+                        if (buffTarget)
+                        {
+                            statusEffectManager.PlayerApplyBuff(currentTargetId, buff);
+                        }
+                        else
+                        {
+                            statusEffectManager.EnemyApplyBuff(currentTargetId, buff);
+                        }
                         switch (appliedBuffCategory)
                         {
                             case BuffStatusCategory.Attack:
@@ -674,5 +712,11 @@ public class BattleActionProcessorSkill : MonoBehaviour
         return skillEffect.EffectTarget == EffectTarget.Own
             || skillEffect.EffectTarget == EffectTarget.FriendSolo
             || skillEffect.EffectTarget == EffectTarget.FriendAll;
+    }
+    bool IsBuffTargetFriend(Buff buff)
+    {
+        return buff.effectTarget == EffectTarget.Own
+            || buff.effectTarget == EffectTarget.FriendSolo
+            || buff.effectTarget == EffectTarget.FriendAll;
     }
 }
