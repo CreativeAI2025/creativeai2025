@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics.Tracing;
 /// <summary>
 /// 戦闘に関する機能を管理するクラスです。
 /// </summary>
@@ -80,7 +81,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     /// <value></value>
     public int CharacterCursor { get; private set; }
-
+    bool RunSelect = false;
     public event Action OnBattleStart { add => _onBattleStart += value; remove => _onBattleStart -= value; }
     private Action _onBattleStart;
     public event Action OnBattleEnd { add => _onBattleEnd += value; remove => _onBattleEnd -= value; }
@@ -349,6 +350,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
 
         // ターゲット選択へ移行
         StartTargetSelection(SelectedCommand, selectedItemId);
+
     }
     /// <summary>
     /// 💡 新規: ターゲット選択フェーズを開始します。
@@ -376,6 +378,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
 
         // ターゲット選択ウィンドウを非表示にする（ここではTargetSelectionControllerが実行すると仮定）
 
+
         // 選択されたコマンドに応じてアクションを登録
         switch (SelectedCommand)
         {
@@ -389,7 +392,14 @@ public class BattleManager : DontDestroySingleton<BattleManager>
                 SetItemCommandAction(targetIds, isTargetFriend, itemId);
                 break;
         }
+        StartCoroutine(DelayPostCommandSelect());
+    }
+    private IEnumerator DelayPostCommandSelect()
+    {
+        // 1フレーム待つことでUIの非表示処理を完了させる
+        yield return null;
 
+        SetBattlePhase(BattlePhase.InputCommand);
         PostCommandSelect();
     }
 
@@ -447,7 +457,8 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         int actorId = CharacterStatusManager.Instance.partyCharacter[0];
         _battleActionRegister.SetFriendRunAction(actorId);
-
+        RunSelect = true;
+        Logger.Instance.Log($"逃げるコマンドが選択されました");
         PostCommandSelect();
     }
     /// <summary>
@@ -503,15 +514,18 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         // 修正: 次のキャラクターへカーソルを移動させるか、敵フェーズへ移行
         int nextIndex = GetNextActiveCharacterIndex(CharacterCursor + 1);
 
-        if (nextIndex != -1)
+        if (nextIndex != -1 && RunSelect == false)
         {
             // 次のキャラクターへ入力を移行
             CharacterCursor = nextIndex;
             Logger.Instance.Log($"次のキャラクターの入力へ移行します。Cursor: {CharacterCursor}");
 
             // UIの再表示 (次のキャラクターのステータスやコマンドUIへ切り替える処理が別途必要)
-            _battleWindowManager.GetCommandWindowController().ShowWindow();
+            _battleWindowManager.GetCommandWindowController().ShowWindow(); 
             _battleWindowManager.GetCommandWindowController().InitializeCommand();
+
+            SetBattlePhase(BattlePhase.InputCommand);
+            Logger.Instance.Log($"今の状態{BattlePhase}");
         }
         else
         {
