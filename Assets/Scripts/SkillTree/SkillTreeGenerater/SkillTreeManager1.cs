@@ -17,7 +17,7 @@ public class SkillTreeManager1 : MonoBehaviour
     List<Node> skillList = new List<Node>();//取得済みのものを格納
     List<Skill> nodeSkillList = new List<Skill>();
     List<Status> nodeStatusList = new List<Status>();
-    SkillBlocks[] skillBlocks;//skillBlockPanelの子オブジェクトを格納
+    SkillBlocks1[] skillBlocks;//skillBlockPanelの子オブジェクトを格納
 
     ParameterRecord startStatus;
 
@@ -38,7 +38,7 @@ public class SkillTreeManager1 : MonoBehaviour
         UpdateSkillPointText();
         UpdateSkillInfoText(0, true);
         skillList = new List<Node>();
-        skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks>();
+        skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks1>();
         if (parameterTable != null) startStatus = parameterTable.parameterRecords[0];
     }
 
@@ -340,8 +340,8 @@ public class SkillTreeManager1 : MonoBehaviour
     void ChechActiveBlocks()
     {
         // Destroy 済みのオブジェクトを含まない最新の配列を取り直す
-        skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks>();
-        foreach (SkillBlocks skillBlocks in skillBlocks)
+        skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks1>();
+        foreach (SkillBlocks1 skillBlocks in skillBlocks)
         {
             skillBlocks.CheckActiveBlock();
         }

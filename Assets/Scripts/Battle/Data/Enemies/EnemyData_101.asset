@@ -15,14 +15,22 @@ MonoBehaviour:
   enemyId: 101
   enemyName: "\u30BE\u30FB\u30BE\u30F3\u30D3"
   sprite: {fileID: 21300000, guid: f79ad1437abba1c4b9b5ffad051c29ec, type: 3}
-  HP: 200
-  MP: 2
-  Attack: 10
-  Defence: 2
-  MagicAttack: 2
-  MagicDefence: 2
-  Speed: 2
-  Evasion: 2
-  exp: 2
-  gold: 5
-  enemyActionRecords: []
+  HP: 15
+  MP: 0
+  Attack: 20
+  Defence: 15
+  MagicAttack: 20
+  MagicDefence: 15
+  Speed: 6
+  Evasion: 0
+  exp: 12
+  gold: 3
+  enemyActionRecords:
+  - enemyActionCategory: 0
+    enemyConditionRecords: []
+    skillData: {fileID: 0}
+    priority: 78
+  - enemyActionCategory: 1
+    enemyConditionRecords: []
+    skillData: {fileID: 11400000, guid: 40a9c9f5c3af190499b057ea87f44fed, type: 2}
+    priority: 22

@@ -1,0 +1,54 @@
+{
+  "Content": [
+    {
+      "Speaker": "ケント",
+      "Text": "まだやる気か、リナ。お前の妹は俺たちが始末したんだ。",
+      "ChangeImage": [
+                {
+                    "ImageName": "LeftPanel",
+                    "SpriteName": "mb1"
+                }
+            ]
+    },
+    {
+      "Speaker": "？？？",
+      "Text": "黙りなさい………。\n　ルナを殺したあんたたちを見逃すわけにはいかない！",
+      "ChangeImage": [
+                {
+                    "ImageName": "RightPanel",
+                    "SpriteName": "rina"
+                }
+            ]
+    },
+    {
+      "Speaker": "ゾフィ",
+      "Text": "（…あの人が、村で噂になっていた戦士か。\n　どう見ても分が悪い…。）",
+      "ChangeImage": [
+                {
+                    "ImageName": "RightPanel",
+                    "SpriteName": "zofy"
+                },
+                {
+                    "ImageName": "LeftPanel",
+                    "SpriteName": "void"
+                }
+            ]
+    },
+    {
+      "Speaker": "ゾフィ",
+      "Text": "（…今、助けるべきか？）",
+      "QuestionData": [
+        {
+          "Answer": "戦う",
+          "NextFlag": [
+            ["rina_friend", true]
+          ]
+        },
+        {
+          "Answer": "様子を見る",
+          "NextTalkData":"Mori_1_2"
+        }
+      ]
+    }
+  ]
+}

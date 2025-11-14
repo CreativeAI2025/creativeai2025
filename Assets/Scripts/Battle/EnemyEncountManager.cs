@@ -37,6 +37,7 @@ public class EnemyEncountManager : MonoBehaviour
     /// </summary>
     public void Initialize()
     {
+        IsEncounted = true;
         // ここでデータベースの読み込みを待つのもあり
         _mapName = SceneManager.GetActiveScene().name;   // 現在いるシーン名の取得
         if (!_encounterData)
@@ -45,7 +46,11 @@ public class EnemyEncountManager : MonoBehaviour
             IsEncounted = false;
             return;
         }
-        IsEncounted = true;
+        if (!_encounterData.hasEncounter)
+        {
+            Debug.Log("このシーンでは、エンカウントを行わないように設定されています。");
+            IsEncounted = false;
+        }
         ResetEncount();
     }
 
