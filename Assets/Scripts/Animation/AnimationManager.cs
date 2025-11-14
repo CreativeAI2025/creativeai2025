@@ -38,6 +38,12 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
     public void InitializeFromString(string animationName)
     {
         _onAnimationStart?.Invoke();
+        if (_currentAnimationList == null)
+        {
+            Debug.Log("[AnimationManager]animationListがnullです。");
+            _onAnimationEnd?.Invoke();
+            return;
+        }
         TimelineController controller = _currentAnimationList.GetTimelineController(animationName);
         if (controller == null)
         {

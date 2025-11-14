@@ -3,6 +3,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using System.Collections;
+using System.Diagnostics.Tracing;
 
 /// <summary>
 /// 💡 ターゲット選択ウィンドウを制御するクラスです。
@@ -132,7 +135,21 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
 
         // BattleManagerに決定を通知し、アクションを登録させる
         BattleManager.Instance.OnTargetSelected(finalTargetIds, isTargetFriend, _selectedItemId);
+
+
+
+        StartCoroutine(DelayPostCommandSelect());
         HideWindow();
+    }
+
+
+    private IEnumerator DelayPostCommandSelect()
+    {
+        // 1フレーム待つことでUIの非表示処理を完了させる
+        yield return null;
+        BattleManager.Instance.SetBattlePhase(BattlePhase.InputCommand);
+
+
     }
 
 

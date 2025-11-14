@@ -149,44 +149,47 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
     }
 
     /// <summary>
-    /// 右側の項目を選択します。
+    /// 右キーで次のページに移動します。
     /// </summary>
     void SelectRightItem()
     {
-        // 左側の項目を選択していない場合は何もしません。
-        if (!IsLeftColumn())
+        if (_page < GetMaxPageNum() - 1)
         {
-            return;
-        }
+            _page++;
+            SetPageElement();
 
-        // 移動先のインデックスに魔法が存在する場合はカーソルを移動します。
-        if (IsValidIndex(_selectedIndex + 1))
-        {
-            _selectedIndex += 1;
-        }
+            // ページ移動後、最初の有効項目にカーソルを合わせる
+            _selectedIndex = 0;
+            while (!IsValidIndex(_selectedIndex) && _selectedIndex < 4)
+            {
+                _selectedIndex++;
+            }
 
-        ShowSelectionCursor();
+            ShowSelectionCursor();
+        }
     }
 
     /// <summary>
-    /// 左側の項目を選択します。
+    /// 左キーで前のページに移動します。
     /// </summary>
     void SelectLeftItem()
     {
-        // 右側の項目を選択していない場合は何もしません。
-        if (IsLeftColumn())
+        if (_page > 0)
         {
-            return;
-        }
+            _page--;
+            SetPageElement();
 
-        // 移動先のインデックスに魔法が存在する場合はカーソルを移動します。
-        if (IsValidIndex(_selectedIndex - 1))
-        {
-            _selectedIndex -= 1;
-        }
+            // ページ移動後、最初の有効項目にカーソルを合わせる
+            _selectedIndex = 0;
+            while (!IsValidIndex(_selectedIndex) && _selectedIndex < 4)
+            {
+                _selectedIndex++;
+            }
 
-        ShowSelectionCursor();
+            ShowSelectionCursor();
+        }
     }
+
 
     /// <summary>
     /// 現在の選択位置が左側のカラムかどうかを確認します。
@@ -199,53 +202,39 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
     }
 
     /// <summary>
-    /// ひとつ上の項目を選択します。
+    /// 上方向に移動
     /// </summary>
     void SelectUpperItem()
     {
-        if (IsUpperRow())
+        int newIndex = _selectedIndex - 1;
+        if (newIndex < 0)
         {
-            if (_page > 0)
-            {
-                _page -= 1;
-                SetPageElement();
-                _selectedIndex = _page * 4;
-            }
-        }
-        else
-        {
-            if (IsValidIndex(_selectedIndex - 2))
-            {
-                _selectedIndex -= 2;
-            }
+            newIndex = 3; // 一番上から下にループ
         }
 
-        ShowSelectionCursor();
+        if (IsValidIndex(newIndex))
+        {
+            _selectedIndex = newIndex;
+            ShowSelectionCursor();
+        }
     }
 
     /// <summary>
-    /// ひとつ下の項目を選択します。
+    /// 下方向に移動
     /// </summary>
     void SelectLowerItem()
     {
-        if (IsUpperRow())
+        int newIndex = _selectedIndex + 1;
+        if (newIndex > 3)
         {
-            if (IsValidIndex(_selectedIndex + 2))
-            {
-                _selectedIndex += 2;
-            }
-        }
-        else
-        {
-            if (_page < GetMaxPageNum() - 1)
-            {
-                _page += 1;
-                SetPageElement();
-                _selectedIndex = _page * 4;
-            }
+            newIndex = 0; // 一番下から上にループ
         }
 
-        ShowSelectionCursor();
+        if (IsValidIndex(newIndex))
+        {
+            _selectedIndex = newIndex;
+            ShowSelectionCursor();
+        }
     }
 
     /// <summary>
