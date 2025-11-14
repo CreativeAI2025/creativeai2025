@@ -352,6 +352,8 @@ public class ObjectEngine : MonoBehaviour
         WorldmapManager.Instance.OnWorldmapStart -= Pause;
         WorldmapManager.Instance.OnWorldmapEnd -= UnPause;
 
+        UnityEngine.Debug.Log($"移動先の座標｛{changedPos.x}、{changedPos.y}｝");
+
         await SceneManager.LoadSceneAsync(sceneName).ToUniTask();
         PlayerPrefs.SetString("SceneName", sceneName);
     }
