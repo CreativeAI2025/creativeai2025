@@ -18,12 +18,12 @@ public class ChangeBackground : MonoBehaviour
     private float listenerBrightness = 0.5f;
     private Dictionary<string, string> speakerToSpriteDict = new Dictionary<string, string>
     {
-        {"ゾフィ", "Zophy"},
-        {"ゾフィ（魔物）", "Zophy_m"},
-        {"リナ", "Rina"},
-        {"ノア", "Noa"},
-        {"ゼバス", "Zebus"},
-        {"ゼバス（魔物）", "Zebus_m"},
+        {"ゾフィ", "zofy"},
+        {"ゾフィ（魔物）", "zofy_m"},
+        {"リナ", "rina"},
+        {"ノア", "noa"},
+        {"ゼバス", "zebus"},
+        {"ゼバス（魔物）", "zebus_m"},
         {"ケント", "mb1"},
         {"ブタバナ", "mb2"},
         {"アデレート", "mb3"},

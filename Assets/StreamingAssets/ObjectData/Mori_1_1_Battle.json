@@ -1,0 +1,35 @@
+{
+  "Id": 1,
+  "Location": [
+    {
+      "MapName": "Forest",
+      "Position": [
+          10,
+          18
+      ]
+    },
+    {
+      "MapName": "Forest",
+      "Position": [
+          11,
+          18
+      ]
+    }
+  ],
+  "EventName": " Join 2 | Battle Battle_kent",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "rina_friend",
+        true
+      ],
+      [
+        "KentBattleFinished",
+        false
+      ]
+    ],
+    "NextFlag": [ 
+    ]
+  }
+}

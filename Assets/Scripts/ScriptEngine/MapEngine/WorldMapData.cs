@@ -33,7 +33,8 @@ public class WorldMapData : ScriptableObject
         public Sprite icon;
 
         [Header("プレイヤー出現地点設定")]
-        public string spawnPointName = ""; // ←★ これを追加！
+        public Vector2Int spawnPosition = Vector2Int.zero; // ← ★ここを座標に変更！
+        
         
         // 実行時の状態（外部フラグシステムから取得）
         [System.NonSerialized]

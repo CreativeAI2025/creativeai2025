@@ -1,0 +1,39 @@
+{
+  "Id": 0,
+  "Location": [
+    {
+      "MapName": "Forest",
+      "Position": [
+          7,
+          2
+      ]
+    },
+    {
+      "MapName": "Forest",
+      "Position": [
+          8,
+          2
+      ]
+    }
+  ],
+  "EventName": "Animation R1S4TT | Conversation Mori_noa",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+      "MakeibeBattleFinished",
+      true
+      ],
+      [
+        "Makeibe",
+        false
+      ]
+    ],
+    "NextFlag": [
+      [
+      "Makeibe",
+      true
+      ]
+    ]
+  }
+}
