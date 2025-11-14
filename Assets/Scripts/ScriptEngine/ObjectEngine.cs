@@ -85,6 +85,7 @@ public class ObjectEngine : MonoBehaviour
     // Start is called before the first frame update
     private void Initialize(string mapName, int width, int height)
     {
+        UnityEngine.Debug.Log($"マップサイズ：｛{width}、{height}｝");
         _eventObjects = new List<ObjectData>[width][];
         _trapEventObjects = new List<ObjectData>[width][];
         for (int i = 0; i < width; i++)
@@ -350,6 +351,8 @@ public class ObjectEngine : MonoBehaviour
         AnimationManager.Instance.OnAnimationEnd -= UnPause;
         WorldmapManager.Instance.OnWorldmapStart -= Pause;
         WorldmapManager.Instance.OnWorldmapEnd -= UnPause;
+
+        UnityEngine.Debug.Log($"移動先の座標｛{changedPos.x}、{changedPos.y}｝");
 
         await SceneManager.LoadSceneAsync(sceneName).ToUniTask();
         PlayerPrefs.SetString("SceneName", sceneName);
