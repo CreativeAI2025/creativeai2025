@@ -37,13 +37,11 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// </summary>
     public void Initialize()
     {
-        partyCharacter = new List<int>() { 1, 2, 3 };
+        partyCharacter = new List<int>() { 1 };
         // デバッグ用に適当な値をぶち込んでいます
         characterStatuses = new List<CharacterStatus>()
         {
-            SetCharacterStatus(1),
-            SetCharacterStatus(2),
-            SetCharacterStatus(3)
+            SetCharacterStatus(1, 1)
         };
 
         // 所持アイテムをセットします。
@@ -58,6 +56,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             item
         };
         partyGold = 1000;
+        partyItemInfoList = new();
     }
 
     /// <summary>
@@ -66,34 +65,20 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    private CharacterStatus SetCharacterStatus(int id)
+    private CharacterStatus SetCharacterStatus(int id, int level)
     {
-        var level = 1;
-        var parameterTable = CharacterDataManager.Instance.GetParameterTable(id);
-        var record = parameterTable.parameterRecords.Find(r => r.Level == level);
+        var characterParameterTable = CharacterDataManager.Instance.GetParameterTable(id);  // キャラクターのレベルごとのパラメーターテーブルを取得する
+        var characterParameterRecord = characterParameterTable.parameterRecords[level - 1]; // キャラクターのレベルに応じたパラメーターを取得
         CharacterStatus characterStatus = new()
         {
             characterId = id,
-
-            level = 1,
+            level = characterParameterRecord.Level,
             exp = 0,
-        //   currentHp = status.currentHp,
-        //     maxHp = 100,
-        //     currentMp = 50,
-        //     maxMp = 100,
-            currentHp = record.HP,
-            maxHp = record.HP,
-            currentMp = record.MP,
-            maxMp = record.MP,
+            currentHp = characterParameterRecord.HP,
+            maxHp = characterParameterRecord.HP,
+            currentMp = characterParameterRecord.MP,
+            maxMp = characterParameterRecord.MP,
             skillList = new List<int>()
-            {
-                1,
-                2,
-                3,
-                4,
-                5,
-                6
-            }
         };
 
         return characterStatus;
@@ -105,10 +90,19 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// </summary>
     /// <param name="id"></param>
     /// <param name="level"></param>
-    public void SetNewFriend(int id, int level)
+    public void SetNewFriend(int id)
     {
+        var data = CharacterDataManager.Instance.GetCharacterData(id);
+        if (data == null)
+        {
+            Debug.Log($"[CharacterStatusManager]ID：{id}　はデータに登録されていません。");
+            return;
+        }
         partyCharacter.Add(id);
-        characterStatuses.Add(SetCharacterStatus(id));
+        int mainId = 1; // 主人公のID
+        var mainCharacterStatus = GetCharacterStatusById(mainId);   // IDから主人公のキャラクターステータスを持ってくる
+        int level = mainCharacterStatus.level;  // 新しく加入するメンバーのレベルを、主人公の現在のレベルと同じにする
+        characterStatuses.Add(SetCharacterStatus(id, level));   // メンバーを加える
     }
 
     /// <summary>

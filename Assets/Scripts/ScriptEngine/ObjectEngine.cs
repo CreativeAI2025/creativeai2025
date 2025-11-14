@@ -20,11 +20,13 @@ public class ObjectEngine : MonoBehaviour
 
     [SerializeField] private MapEngine mapEngine;
     [SerializeField] private MapDataController mapDataController;
-    private static Vector2Int changedPos = new Vector2Int(10, 10);
+    private static Vector2Int changedPos = new Vector2Int(8, 6);
     private string _mapName;
     private Vector2Int _pastGridPosition = new Vector2Int(-1, -1);
     private bool conversationFlag = false;
     private bool battleFlag = false;
+    private bool animationFlag = false;
+    private bool worldmapFlag = false;
     private bool changeSceneFlag = false;
     private bool runFlag = false;
     private InputSetting _inputSetting;
@@ -38,13 +40,36 @@ public class ObjectEngine : MonoBehaviour
         }
         mapDataController.LoadMapData(_mapName);
 
+        /* 
+        会話開始時に、マップ上のキャラクター移動を止める
+        会話終了後に、マップ上のキャラクター移動を再開する
+        */
         ConversationTextManager.Instance.OnConversationStart += Pause;
         ConversationTextManager.Instance.OnConversationEnd += UnPause;
         ConversationTextManager.Instance.OnConversationEnd += () => conversationFlag = false;
 
+        /* 
+        戦闘開始時に、マップ上のキャラクター移動を止める
+        戦闘終了後に、マップ上のキャラクター移動を再開する
+        */
         BattleManager.Instance.OnBattleStart += Pause;
         BattleManager.Instance.OnBattleEnd += UnPause;
         BattleManager.Instance.OnBattleEnd += () => battleFlag = false;
+
+        /* 
+        アニメーション開始時に、マップ上のキャラクター移動を止める
+        アニメーション終了後に、マップ上のキャラクター移動を再開する
+        */
+        AnimationManager.Instance.OnAnimationStart += Pause;
+        AnimationManager.Instance.OnAnimationEnd += UnPause;
+        AnimationManager.Instance.OnAnimationEnd += () => animationFlag = false;
+
+        /*
+
+        */
+        WorldmapManager.Instance.OnWorldmapStart += Pause;
+        WorldmapManager.Instance.OnWorldmapEnd += UnPause;
+        WorldmapManager.Instance.OnWorldmapEnd += () => worldmapFlag = false;
 
         mapDataController.SetChange(ResetAction);
         ResetAction();
@@ -60,6 +85,7 @@ public class ObjectEngine : MonoBehaviour
     // Start is called before the first frame update
     private void Initialize(string mapName, int width, int height)
     {
+        UnityEngine.Debug.Log($"マップサイズ：｛{width}、{height}｝");
         _eventObjects = new List<ObjectData>[width][];
         _trapEventObjects = new List<ObjectData>[width][];
         for (int i = 0; i < width; i++)
@@ -202,7 +228,7 @@ public class ObjectEngine : MonoBehaviour
         {
             foreach (var x in objectData.FlagCondition.Flag)
             {
-                //DebugLogger.Log(x.Key + " : expected: " + x.Value + " : actual:" + FlagManager.Instance.HasFlag(x.Key), DebugLogger.Colors.Blue);
+                UnityEngine.Debug.Log(x.Key + " : expected: " + x.Value + " : actual:" + FlagManager.Instance.HasFlag(x.Key));
             }
             if (IsFlagsInsufficient(objectData))
             {
@@ -267,6 +293,29 @@ public class ObjectEngine : MonoBehaviour
                 Battle(eventArgs[1]);
                 await UniTask.WaitUntil(() => !battleFlag);
                 break;
+            case "Animation":
+                animationFlag = true;
+                Animation(eventArgs[1]);
+                await UniTask.WaitUntil(() => !animationFlag);
+                break;
+            case "Join":
+                conversationFlag = true;
+                JoinPartyMember(int.Parse(eventArgs[1]));
+                await UniTask.WaitUntil(() => !conversationFlag);
+                break;
+            case "Recover":
+                conversationFlag = true;
+                Recover();
+                await UniTask.WaitUntil(() => !conversationFlag);
+                break;
+            case "Worldmap":
+                worldmapFlag = true;
+                Worldmap();
+                await UniTask.WaitUntil(() => !worldmapFlag);
+                changedPos = WorldmapManager.Instance.GetSpawnPoint();
+                string sceneName = WorldmapManager.Instance.GetNextScene();
+                await SceneChange(sceneName);
+                break;
             default: throw new NotImplementedException();
         }
     }
@@ -282,11 +331,11 @@ public class ObjectEngine : MonoBehaviour
         {
             if (nextFlag.Value)
             {
-                //FlagManager.Instance.AddFlag(nextFlag.Key);
+                FlagManager.Instance.AddFlag(nextFlag.Key);
             }
             else
             {
-                //FlagManager.Instance.DeleteFlag(nextFlag.Key);
+                FlagManager.Instance.DeleteFlag(nextFlag.Key);
             }
         }
     }
@@ -296,6 +345,15 @@ public class ObjectEngine : MonoBehaviour
         changeSceneFlag = true;
         ConversationTextManager.Instance.OnConversationStart -= Pause;
         ConversationTextManager.Instance.OnConversationEnd -= UnPause;
+        BattleManager.Instance.OnBattleStart -= Pause;
+        BattleManager.Instance.OnBattleEnd -= UnPause;
+        AnimationManager.Instance.OnAnimationStart -= Pause;
+        AnimationManager.Instance.OnAnimationEnd -= UnPause;
+        WorldmapManager.Instance.OnWorldmapStart -= Pause;
+        WorldmapManager.Instance.OnWorldmapEnd -= UnPause;
+
+        UnityEngine.Debug.Log($"移動先の座標｛{changedPos.x}、{changedPos.y}｝");
+
         await SceneManager.LoadSceneAsync(sceneName).ToUniTask();
         PlayerPrefs.SetString("SceneName", sceneName);
     }
@@ -313,6 +371,34 @@ public class ObjectEngine : MonoBehaviour
     private void Battle(string fileName)
     {
         BattleManager.Instance.InitializeFromJson(fileName);
+    }
+
+    private void Animation(string animationName)
+    {
+        AnimationManager.Instance.InitializeFromString(animationName);
+    }
+
+    private void JoinPartyMember(int id)
+    {
+        string joinText = string.Empty; // ここで「○○が仲間に加わった！」というテキストを設定する
+        CharacterStatusManager.Instance.SetNewFriend(id);   // パーティメンバーに加える
+        ConversationTextManager.Instance.InitializeFromString(joinText);    // 会話ウィンドウにテキストを表示させる
+    }
+
+    private async void Worldmap()
+    {
+        WorldmapManager.Instance.StartWorldmapAsync();
+    }
+
+    private void Recover()
+    {
+        string messageText = "全回復した！";
+        List<int> partyIds = CharacterStatusManager.Instance.partyCharacter;
+        foreach (int id in partyIds)
+        {
+            CharacterStatusManager.Instance.ChangeCharacterStatus(id, 9999, 9999);
+        }
+        ConversationTextManager.Instance.InitializeFromString(messageText);
     }
 
     private void GetItem(string itemName)

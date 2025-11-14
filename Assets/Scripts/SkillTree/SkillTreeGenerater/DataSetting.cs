@@ -436,10 +436,10 @@ public class DataSetting : MonoBehaviour
         this.nodeSkillData = SetEvaluationValue(powerValue, probabilityValue, durationValue, subjectValue, this.nodeSkillData);
 
         //SkillListの中身の確認
-        foreach (var n in nodeSkillData)
-        {
-            Debug.Log(n.ToString());
-        }
+        // foreach (var n in nodeSkillData)
+        // {
+        //     Debug.Log(n.ToString());
+        // }
 
         //putIdForNodeSkillDataListRandom(nodeData);
 
@@ -852,8 +852,8 @@ public class DataSetting : MonoBehaviour
         if (Regex.IsMatch(explain, "麻痺") || Regex.IsMatch(explain, "マヒ")) { action = "特殊攻撃"; extra = "麻痺"; }
         if (Regex.IsMatch(explain, "睡眠") || Regex.IsMatch(explain, "眠り")) { action = "特殊攻撃"; extra = "睡眠"; }
 
-        if (!isSub) Debug.Log($"メイン効果の解析結果: [{name}] {action} / {type} / Power:{power} / P:{probability}% / D:{duration}T / 対象:{subject} / 状態異常:{extra}");
-        if (isSub) Debug.Log($"追加効果の解析結果: [{name}] {action} / {type} / Power:{power} / P:{probability}% / D:{duration}T / 対象:{subject} / 状態異常:{extra}");
+        // if (!isSub) Debug.Log($"メイン効果の解析結果: [{name}] {action} / {type} / Power:{power} / P:{probability}% / D:{duration}T / 対象:{subject} / 状態異常:{extra}");
+        // if (isSub) Debug.Log($"追加効果の解析結果: [{name}] {action} / {type} / Power:{power} / P:{probability}% / D:{duration}T / 対象:{subject} / 状態異常:{extra}");
 
         return new Skill(name, explain, subject, action, probability, power, type, status, extra, duration);
     }
@@ -969,7 +969,7 @@ public class DataSetting : MonoBehaviour
         float evaluationPowerValue = SafeNormalize(power, minPower, maxPower, powerValue);
         float evaluationProbabilityValue = SafeNormalize(probability, minProbability, maxProbability, probabilityValue);
         float evaluationDurationValue = SafeNormalize(duration, minDuration, maxDuration, durationValue);
-        float evaluationSubjectNumValue = SafeNormalize(subjectNum, minSubjectNum, maxSubjectNum, subjectNum);
+        float evaluationSubjectNumValue = SafeNormalize(subjectNum, minSubjectNum, maxSubjectNum, subjectValue);
 
         float evaluationValue = 0f; evaluationValue = evaluationPowerValue + evaluationProbabilityValue + evaluationDurationValue + evaluationSubjectNumValue;
 

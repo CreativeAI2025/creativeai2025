@@ -104,7 +104,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         }
         else if (_inputSetting.GetDecideInputDown())
         {
-            MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.ItemUse);
+            MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.ItemUse, -1);
         }
         else if (_inputSetting.GetRightKeyDown())
         {

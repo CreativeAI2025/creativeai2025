@@ -29,6 +29,13 @@ public class MenuSelectUIController : MonoBehaviour, IMenuUIController
         _characterStatusField3.MakeCharacterImageDark();
     }
 
+    public void GetBrightAll()
+    {
+        _characterStatusField1.MakeCharacterImageBright();
+        _characterStatusField2.MakeCharacterImageBright();
+        _characterStatusField3.MakeCharacterImageBright();
+    }
+
     public void InputText(string text)
     {
         _textField.text = text;

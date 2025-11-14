@@ -6,7 +6,14 @@ using System;
 /// </summary>
 public class GameInitializer : MonoBehaviour
 {
+    /*
     private async void Start()
+    {
+        InitializeGame();
+    }
+    */
+
+    public async void InitializeGame()
     {
         /// <summary>
         /// パーティキャラクター（ゾフィ、リナ、ノア）のデータを登録するためのクラス
@@ -19,10 +26,13 @@ public class GameInitializer : MonoBehaviour
         /// </summary>
         ItemDataManager itemDatamanager = ItemDataManager.Instance;
         /// <summary>
+        /// スキル定義データを登録するためのクラス
+        /// </summary>
+        SkillDataManager skillDataManager = SkillDataManager.Instance;
+        /// <summary>
         /// パーティキャラクターの状態に関する登録（パーティメンバーの初期化（最初はゾフィのみ）、所持金の初期化など）を行うためのクラス
         /// </summary>
         CharacterStatusManager characterStatusManager = CharacterStatusManager.Instance;
-        SkillDataManager skillDataManager = SkillDataManager.Instance;
         Debug.Log("ロードを開始します。");
         try
         {
@@ -32,6 +42,8 @@ public class GameInitializer : MonoBehaviour
             characterStatusManager.Initialize();
             Debug.Log("CharacterStatusManagerの初期化完了");
             await skillDataManager.Initialize();
+            FlagManager.Instance.DeleteFlagFile();
+            Debug.Log("フラグファイルの初期化完了");
         }
         catch (Exception e)
         {

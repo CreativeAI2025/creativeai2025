@@ -131,7 +131,7 @@ public class SkillTreeGanerate1 : MonoBehaviour
                         {
                             prefab = magicIcon;
                         }
-                        else if (data.GetAction().Equals("回復") || data.GetAction().Equals("復活"))
+                        else if (data.GetAction().Equals("回復") || data.GetAction().Equals("復活") || data.GetAction().Equals("治療"))
                         {
                             prefab = healIocn;
                         }
