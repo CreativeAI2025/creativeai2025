@@ -66,12 +66,12 @@ public class MenuSkillTreeWindowController : MonoBehaviour, IMenuWindowControlle
     {
         switch (currentID)
         {
-            case 0:
+            case 1:
                 _skillTreeController[0].SetActive(true);
                 _skillTreeController[1].SetActive(false);
                 _skillTreeController[2].SetActive(false);
                 break;
-            case 1:
+            case 3:
                 _skillTreeController[0].SetActive(false);
                 _skillTreeController[1].SetActive(true);
                 _skillTreeController[2].SetActive(false);
@@ -171,6 +171,9 @@ public class MenuSkillTreeWindowController : MonoBehaviour, IMenuWindowControlle
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex);
         // ここに_characterIndexの添え字に応じたスキルツリーを表示する
+        int currentID = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
+
+        SkillSetActive(currentID);
     }
 
     private IEnumerator SetCloseStateDelay()
