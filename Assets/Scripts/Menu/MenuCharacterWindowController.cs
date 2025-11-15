@@ -195,6 +195,11 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         _uiController.SetHPValueText(currentCharacterStatus.currentHp, currentCharacterStatus.maxHp);
         _uiController.SetMPValueText(currentCharacterStatus.currentMp, currentCharacterStatus.maxMp);
         // ここから攻撃力などを入力していく
+        _uiController.SetAttackValueText(currentCharacterStatus.currentAttack);
+        _uiController.SetDefenceValueText(currentCharacterStatus.currentDefence);
+        _uiController.SetMagicAtkValueText(currentCharacterStatus.currentMagicAttack);
+        _uiController.SetMagicDefValueText(currentCharacterStatus.currentMagicDefence);
+        _uiController.SetSpeedValueText(currentCharacterStatus.currentSpeed);
         _uiController.SetCharacterSprite(currentCharacterData.sprite);
     }
 }
