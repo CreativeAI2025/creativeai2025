@@ -187,8 +187,6 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         int currentId = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
         var currentCharacterData = CharacterDataManager.Instance.GetCharacterData(currentId);   // キャラクターのデータを持ってくる
         var currentCharacterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(currentId); // キャラクターの現在のステータスを持ってくる
-        var currentParameterTable = CharacterDataManager.Instance.GetParameterTable(currentId); // キャラクターのパラメータテーブルを取得する
-        var currentParameterRecord = currentParameterTable.parameterRecords[currentCharacterStatus.level - 1]; // キャラクターの実際のステータスの値を持ってくる（持ってきたいレベルのステータス＝
 
         _uiController.SetCharacterNameText(currentCharacterData.characterName);
         _uiController.SetLevelValueText(currentCharacterStatus.level);
