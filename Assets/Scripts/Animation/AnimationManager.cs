@@ -38,6 +38,7 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
     public void InitializeFromString(string animationName)
     {
         _onAnimationStart?.Invoke();
+        Debug.Log($"[AnimationManager]アニメーション名「{animationName}」を再生します。");
         if (_currentAnimationList == null)
         {
             Debug.Log("[AnimationManager]animationListがnullです。");

@@ -33,17 +33,19 @@ public class GameInitializer : MonoBehaviour
         /// パーティキャラクターの状態に関する登録（パーティメンバーの初期化（最初はゾフィのみ）、所持金の初期化など）を行うためのクラス
         /// </summary>
         CharacterStatusManager characterStatusManager = CharacterStatusManager.Instance;
+        /// <summary>
+        /// 敵キャラクターのデータを登録するためのクラス
+        /// </summary>
+        EnemyDataManager enemyDataManager = EnemyDataManager.Instance;
         Debug.Log("ロードを開始します。");
         try
         {
             await characterDataManager.Initialize();
-            Debug.Log("CharacterDataManagerのロード完了");
             await itemDatamanager.Initialize();
             characterStatusManager.Initialize();
-            Debug.Log("CharacterStatusManagerの初期化完了");
             await skillDataManager.Initialize();
             FlagManager.Instance.DeleteFlagFile();
-            Debug.Log("フラグファイルの初期化完了");
+            await enemyDataManager.Initialize();
         }
         catch (Exception e)
         {
