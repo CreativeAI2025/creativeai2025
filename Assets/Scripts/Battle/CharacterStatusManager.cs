@@ -303,4 +303,75 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
 
         return false;
     }
+
+    /// <summary>
+    /// スキルを追加する
+    /// </summary>
+    /// <param name="characterId"></param>
+    /// <param name="skillId"></param>
+    public void AddSkill(int characterId, int skillId)
+    {
+        var characterStatus = GetCharacterStatusById(characterId);
+        characterStatus.skillList.Add(skillId);
+    }
+
+    /// <summary>
+    /// スキルツリーでステータスアップを獲得した際、倍率をかけて実際のステータスに反映させる
+    /// </summary>
+    /// <param name="characterId"></param>
+    /// <param name="category"></param>
+    /// <param name="value"></param>
+    public void UpdataCharacterCurrentStatus(int characterId, CharacterParameterCategory category, float value)
+    {
+        var characterStatus = GetCharacterStatusById(characterId);
+        int level = characterStatus.level;
+        var characterParameterTable = CharacterDataManager.Instance.GetParameterTable(characterId);
+        var characterParameterRecord = characterParameterTable.parameterRecords[level - 1];
+
+        int currentValue;
+        float modifiedValue;
+        int gap;
+        switch (category)
+        {
+            case CharacterParameterCategory.HP:
+                currentValue = characterParameterRecord.HP;
+                modifiedValue = currentValue * value;
+                gap = characterStatus.maxHp - characterStatus.currentHp;
+                characterStatus.maxHp = (int)modifiedValue;
+                characterStatus.currentHp = characterStatus.maxHp - gap;
+                break;
+            case CharacterParameterCategory.MP:
+                currentValue = characterParameterRecord.MP;
+                modifiedValue = currentValue * value;
+                gap = characterStatus.maxMp - characterStatus.currentMp;
+                characterStatus.maxMp = (int)modifiedValue;
+                characterStatus.currentMp = characterStatus.maxMp - gap;
+                break;
+            case CharacterParameterCategory.Attack:
+                currentValue = characterParameterRecord.Attack;
+                modifiedValue = currentValue * value;
+                characterStatus.currentAttack = (int)modifiedValue;
+                break;
+            case CharacterParameterCategory.Defence:
+                currentValue = characterParameterRecord.Defence;
+                modifiedValue = currentValue * value;
+                characterStatus.currentDefence = (int)modifiedValue;
+                break;
+            case CharacterParameterCategory.MagicAttack:
+                currentValue = characterParameterRecord.MagicAttack;
+                modifiedValue = currentValue * value;
+                characterStatus.currentMagicAttack = (int)modifiedValue;
+                break;
+            case CharacterParameterCategory.MagicDefence:
+                currentValue = characterParameterRecord.MagicDefence;
+                modifiedValue = currentValue * value;
+                characterStatus.currentMagicDefence = (int)modifiedValue;
+                break;
+            case CharacterParameterCategory.Speed:
+                currentValue = characterParameterRecord.Speed;
+                modifiedValue = currentValue * value;
+                characterStatus.currentSpeed = (int)modifiedValue;
+                break;
+        }
+    }
 }
