@@ -78,6 +78,11 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             maxHp = characterParameterRecord.HP,
             currentMp = characterParameterRecord.MP,
             maxMp = characterParameterRecord.MP,
+            currentAttack = characterParameterRecord.Attack,
+            currentDefence = characterParameterRecord.Defence,
+            currentMagicAttack = characterParameterRecord.MagicAttack,
+            currentMagicDefence = characterParameterRecord.MagicDefence,
+            currentSpeed = characterParameterRecord.Speed,
             skillList = new List<int>()
         };
 

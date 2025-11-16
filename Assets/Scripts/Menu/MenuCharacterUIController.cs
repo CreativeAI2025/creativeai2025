@@ -67,7 +67,7 @@ public class MenuCharacterUIController : MonoBehaviour, IMenuUIController
     }
     public void SetSpeedValueText(int speed)
     {
-        _speedValueText.text = "$素早さ：{speed.ToString()}";
+        _speedValueText.text = $"素早さ：{speed.ToString()}";
     }
     /*public void SetDodgeValueText(int dodge)
     {

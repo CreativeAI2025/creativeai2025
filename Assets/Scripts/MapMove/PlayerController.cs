@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
 
         _playerTransform.position = targetVector;
 
-        //enemyEncountManager.IncreaseEncountProbability();
+        enemyEncountManager.IncreaseEncountProbability();
 
         MovePrepare();
     }
