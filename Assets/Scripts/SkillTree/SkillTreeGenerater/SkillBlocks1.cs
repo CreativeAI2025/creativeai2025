@@ -43,6 +43,7 @@ public class SkillBlocks1 : MonoBehaviour
         //　習得済なら何もしない
         if (skillTreeManager1.HasSkill(id))
         {
+            SoundManager.Instance.PlaySE(4, 0.5f);
             skillTreeManager1.UpdateSkillInfoText(id, true, "(習得済み)");
             Debug.Log("ID:" + id + "習得済");
             return;
@@ -51,6 +52,7 @@ public class SkillBlocks1 : MonoBehaviour
         // 習得可能？
         if (skillTreeManager1.CanLearnSkill(cost, id))
         {
+            SoundManager.Instance.PlaySE(3, 0.5f);
             // 習得可能なら習得する
             skillTreeManager1.LearnSkill(cost, id);
             skillTreeManager1.UpdateSkillInfoText(id, true, "(習得済み)");
@@ -61,6 +63,7 @@ public class SkillBlocks1 : MonoBehaviour
         }
         else
         {
+            SoundManager.Instance.PlaySE(4, 0.5f);
             // 習得不可能ならログを出す
             Debug.Log("ID:" + id + "習得できません");
         }
