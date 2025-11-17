@@ -26,6 +26,7 @@ public class ObjectEngine : MonoBehaviour
     private bool conversationFlag = false;
     private bool battleFlag = false;
     private bool animationFlag = false;
+    private bool worldmapFlag = false;
     private bool changeSceneFlag = false;
     private bool runFlag = false;
     private InputSetting _inputSetting;
@@ -63,6 +64,13 @@ public class ObjectEngine : MonoBehaviour
         AnimationManager.Instance.OnAnimationEnd += UnPause;
         AnimationManager.Instance.OnAnimationEnd += () => animationFlag = false;
 
+        /*
+
+        */
+        WorldmapManager.Instance.OnWorldmapStart += Pause;
+        WorldmapManager.Instance.OnWorldmapEnd += UnPause;
+        WorldmapManager.Instance.OnWorldmapEnd += () => worldmapFlag = false;
+
         mapDataController.SetChange(ResetAction);
         ResetAction();
         PlayerMove(changedPos);
@@ -77,6 +85,7 @@ public class ObjectEngine : MonoBehaviour
     // Start is called before the first frame update
     private void Initialize(string mapName, int width, int height)
     {
+        UnityEngine.Debug.Log($"マップサイズ：｛{width}、{height}｝");
         _eventObjects = new List<ObjectData>[width][];
         _trapEventObjects = new List<ObjectData>[width][];
         for (int i = 0; i < width; i++)
@@ -299,6 +308,14 @@ public class ObjectEngine : MonoBehaviour
                 Recover();
                 await UniTask.WaitUntil(() => !conversationFlag);
                 break;
+            case "Worldmap":
+                worldmapFlag = true;
+                Worldmap();
+                await UniTask.WaitUntil(() => !worldmapFlag);
+                changedPos = WorldmapManager.Instance.GetSpawnPoint();
+                string sceneName = WorldmapManager.Instance.GetNextScene();
+                await SceneChange(sceneName);
+                break;
             default: throw new NotImplementedException();
         }
     }
@@ -332,6 +349,8 @@ public class ObjectEngine : MonoBehaviour
         BattleManager.Instance.OnBattleEnd -= UnPause;
         AnimationManager.Instance.OnAnimationStart -= Pause;
         AnimationManager.Instance.OnAnimationEnd -= UnPause;
+        WorldmapManager.Instance.OnWorldmapStart -= Pause;
+        WorldmapManager.Instance.OnWorldmapEnd -= UnPause;
 
         await SceneManager.LoadSceneAsync(sceneName).ToUniTask();
         PlayerPrefs.SetString("SceneName", sceneName);
@@ -362,6 +381,11 @@ public class ObjectEngine : MonoBehaviour
         string joinText = string.Empty; // ここで「○○が仲間に加わった！」というテキストを設定する
         CharacterStatusManager.Instance.SetNewFriend(id);   // パーティメンバーに加える
         ConversationTextManager.Instance.InitializeFromString(joinText);    // 会話ウィンドウにテキストを表示させる
+    }
+
+    private async void Worldmap()
+    {
+        WorldmapManager.Instance.StartWorldmapAsync();
     }
 
     private void Recover()

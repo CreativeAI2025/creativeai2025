@@ -114,7 +114,10 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         /// </summary>
         yield return null;
 
-        playerPause.PauseAll(); // マップ上のプレイヤーの動きを止める
+        if (playerPause != null)
+        {
+            playerPause.PauseAll(); // マップ上のプレイヤーの動きを止める
+        }
         MenuPhase = MenuPhase.Top;
         MenuUsePhase = MenuUsePhase.Closed;
         _topMenuWindowController.InitializeCommand();
@@ -210,8 +213,10 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     public void OnCloseMenu()
     {
         MenuPhase = MenuPhase.Closed;
-        playerPause.UnPauseAll();   // マップ上のキャラクターを動かせるようにする
-        //_characterMoverManager.ResumeCharacterMover();
+        if (playerPause != null)
+        {
+            playerPause.UnPauseAll();   // マップ上のキャラクターを動かせるようにする
+        }
     }
 
     // アイテム/スキル選択ウィンドウを表示させる。引数にはSkillUseかItemUseの値を入れる
