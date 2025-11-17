@@ -297,8 +297,10 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
 
         if (targetLevel > characterStatus.level)
         {
+            int levelGap = targetLevel - characterStatus.level; // レベルアップした数
             characterStatus.level = targetLevel;
             Levelup(characterId, targetLevel);
+            GetSkillPoint(characterId, levelGap);
             return true;
         }
 
@@ -315,7 +317,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         var characterName = CharacterDataManager.Instance.GetCharacterData(characterId).characterName;
         var characterParameterTable = CharacterDataManager.Instance.GetParameterTable(characterId); // キャラクターのパラメーターテーブルを取得
         var characterParameterRecord = characterParameterTable.parameterRecords[newLevel - 1];
-        SetCharacterStatusFromParameterRecord(characterId, characterParameterRecord);
+        SetCharacterStatusFromParameterRecord(characterId, characterParameterRecord);   // スキルツリーを計算する前に、各パラメータをセットする。
         var statusList = SkillStatusLoader.instance.GetStatusEntryList(characterName);  // スキルツリーで現在取得しているステータスアップの種類とその数を取得
         int categoryInt = 0;   // ステータスカテゴリ（Attack, Deffence, ... , HP, MP）
         int categoryLength = 8; // ステータスカテゴリの要素数
@@ -331,8 +333,20 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             }
             float value = 1.0f + constValue * count;
             UpdataCharacterCurrentStatus(characterId, category, value);
-            category++;
+            categoryInt++;
         }
+    }
+
+    /// <summary>
+    /// スキルポイントを獲得する
+    /// </summary>
+    /// <param name="characterId"></param>
+    /// <param name="gap"></param>
+    private void GetSkillPoint(int characterId, int gap)
+    {
+        int skillPointPerLevel = CharacterDataManager.Instance.GetCharacterData(characterId).skillPointPerLevel;
+        var characterStatus = GetCharacterStatusById(characterId);
+        characterStatus.skillPoint += skillPointPerLevel * gap;
     }
 
     /// <summary>

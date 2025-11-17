@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class SkillTreeManager1 : MonoBehaviour
 {
+    [SerializeField] private int characterId;
     [SerializeField] DataSetting1 dataSetting1;
     [SerializeField] SkillTreeGanerate1 skillTreeGanerate1;
     [SerializeField] ParameterTable parameterTable;
@@ -12,7 +13,7 @@ public class SkillTreeManager1 : MonoBehaviour
     [SerializeField] TextMeshProUGUI skillPointText;//SPのテキスト
     [SerializeField] TextMeshProUGUI skillInfoText;//スキルの表示
     [SerializeField] GameObject skillBlockPanel;
-    [SerializeField] int skillPoint = 1000;
+    [SerializeField] int skillPoint = 1000; // 初期値設定
 
     List<Node> skillList = new List<Node>();//取得済みのものを格納
     List<Skill> nodeSkillList = new List<Skill>();
@@ -40,6 +41,7 @@ public class SkillTreeManager1 : MonoBehaviour
         skillList = new List<Node>();
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks1>();
         if (parameterTable != null) startStatus = parameterTable.parameterRecords[0];
+        CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint = skillPoint;    // デバッグ用？スキルポイントの初期値設定（実は危険なことをやっている）
     }
 
     // Update is called once per frame
@@ -111,7 +113,7 @@ public class SkillTreeManager1 : MonoBehaviour
     /// </summary>
     public void UpdateSkillPointText()
     {
-        skillPointText.text = string.Format("SP：{0}", skillPoint);
+        skillPointText.text = string.Format("SP：{0}", CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint);
     }
 
     /// <summary>
@@ -181,7 +183,7 @@ public class SkillTreeManager1 : MonoBehaviour
     {
         //Debug.Log($"{skillPoint},{cost}");
         if (id == 0) return true;
-        if (skillPoint < cost)
+        if (CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint < cost)
         {
             return false;
         }
@@ -291,7 +293,7 @@ public class SkillTreeManager1 : MonoBehaviour
             }
         }
 
-        skillPoint -= cost;
+        CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint -= cost;
 
         ChechActiveBlocks();
         UpdateSkillPointText();
