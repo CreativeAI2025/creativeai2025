@@ -18738,6 +18738,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8654563899702959826}
   - component: {fileID: 171714182979976975}
+  - component: {fileID: 8856748425502060684}
+  - component: {fileID: 3917103460073161439}
   m_Layer: 0
   m_Name: R1S6FF_2
   m_TagString: Untagged
@@ -18833,6 +18835,32 @@ PlayableDirector:
     value: {fileID: 6098940415043820438}
   m_ExposedReferences:
     m_References: []
+--- !u!114 &8856748425502060684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4407126778957602365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a1589aa39fda8f4bb1b1e952eedfd24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playableDirector: {fileID: 171714182979976975}
+  _notifier: {fileID: 3917103460073161439}
+--- !u!114 &3917103460073161439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4407126778957602365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29598f986f27b7b41b43c6176aeb6274, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5151325920005301529
 GameObject:
   m_ObjectHideFlags: 0
