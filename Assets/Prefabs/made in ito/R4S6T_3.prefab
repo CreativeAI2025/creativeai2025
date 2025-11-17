@@ -4258,6 +4258,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3450956922966179283}
   - component: {fileID: 3227300893316915855}
+  - component: {fileID: 601103419390297856}
+  - component: {fileID: 8546157945609118270}
   m_Layer: 0
   m_Name: R4S6T_3
   m_TagString: Untagged
@@ -4324,6 +4326,32 @@ PlayableDirector:
     value: {fileID: 5078491765576094194}
   m_ExposedReferences:
     m_References: []
+--- !u!114 &601103419390297856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732390581165529608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a1589aa39fda8f4bb1b1e952eedfd24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playableDirector: {fileID: 3227300893316915855}
+  _notifier: {fileID: 8546157945609118270}
+--- !u!114 &8546157945609118270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732390581165529608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29598f986f27b7b41b43c6176aeb6274, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1915159858767815512
 GameObject:
   m_ObjectHideFlags: 0
