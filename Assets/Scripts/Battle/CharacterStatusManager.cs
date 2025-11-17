@@ -298,10 +298,56 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         if (targetLevel > characterStatus.level)
         {
             characterStatus.level = targetLevel;
+            Levelup(characterId, targetLevel);
             return true;
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// このキャラクターのレベルアップを行う。
+    /// パラメーターテーブルに記録されている情報と、スキルツリーで獲得したステータス上昇を加味して、
+    /// ステータスを更新する。
+    /// </summary>
+    private void Levelup(int characterId, int newLevel)
+    {
+        var characterName = CharacterDataManager.Instance.GetCharacterData(characterId).characterName;
+        var characterParameterTable = CharacterDataManager.Instance.GetParameterTable(characterId); // キャラクターのパラメーターテーブルを取得
+        var characterParameterRecord = characterParameterTable.parameterRecords[newLevel - 1];
+        SetCharacterStatusFromParameterRecord(characterId, characterParameterRecord);
+        var statusList = SkillStatusLoader.instance.GetStatusEntryList(characterName);  // スキルツリーで現在取得しているステータスアップの種類とその数を取得
+        int categoryInt = 0;   // ステータスカテゴリ（Attack, Deffence, ... , HP, MP）
+        int categoryLength = 8; // ステータスカテゴリの要素数
+        while (categoryInt < categoryLength)
+        {
+            var status = statusList.statuses[categoryInt];
+            CharacterParameterCategory category = (CharacterParameterCategory)categoryInt;
+            int count = status.count;
+            float constValue = 0.05f;
+            if (category == CharacterParameterCategory.HP || category == CharacterParameterCategory.MP)
+            {
+                constValue = 0.1f;
+            }
+            float value = 1.0f + constValue * count;
+            UpdataCharacterCurrentStatus(characterId, category, value);
+            category++;
+        }
+    }
+
+    /// <summary>
+    /// 引数で与えられたパラメータレコードを、実際のキャラクターのステータスにそのまま反映させる
+    /// なお、スキルツリーで取得したステータスアップは、この関数では計算されないので、別途計算する処理が必要
+    /// </summary>
+    /// <param name="record"></param>
+    private void SetCharacterStatusFromParameterRecord(int characterId, ParameterRecord record)
+    {
+        var characterStatus = GetCharacterStatusById(characterId);
+        characterStatus.currentAttack = record.Attack;
+        characterStatus.currentDefence = record.Defence;
+        characterStatus.currentMagicAttack = record.MagicAttack;
+        characterStatus.currentMagicDefence = record.MagicDefence;
+        characterStatus.currentSpeed = record.Speed;
     }
 
     /// <summary>

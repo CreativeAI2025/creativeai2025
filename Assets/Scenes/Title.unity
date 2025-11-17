@@ -1262,6 +1262,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: SkillStatusLoader
       objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: skillJsonFiles.Array.data[0].saveFileName
+      value: Zophy-skill
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: skillJsonFiles.Array.data[0].characterName
+      value: "\u30BE\u30D5\u30A3"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: statusJsonFiles.Array.data[0].saveFileName
+      value: Zophy-status
+      objectReference: {fileID: 0}
+    - target: {fileID: 4243941131320334130, guid: c35cf5e3dc8787843aaaec2a4e42c9e9, type: 3}
+      propertyPath: statusJsonFiles.Array.data[0].characterName
+      value: "\u30BE\u30D5\u30A3"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2637,7 +2653,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6400676462660671225, guid: f502a615a1d42564ea94d88496034dda, type: 3}
       propertyPath: characterName
-      value: "\u30BE\u30D5\u30A3\u30FC"
+      value: "\u30BE\u30D5\u30A3"
       objectReference: {fileID: 0}
     - target: {fileID: 6616343087711656737, guid: f502a615a1d42564ea94d88496034dda, type: 3}
       propertyPath: m_AnchorMax.y

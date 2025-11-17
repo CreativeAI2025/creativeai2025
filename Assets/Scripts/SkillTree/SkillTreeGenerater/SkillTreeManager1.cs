@@ -350,9 +350,22 @@ public class SkillTreeManager1 : MonoBehaviour
     /// <returns></returns>
     private int GetCharacterIdFromName(string name)
     {
+        int id = 1;
+        int maxId = 3;  // キャラクターデータのマックス（ここも本来は実際のデータ数を参照するべきだが、面倒なので割愛）
+        for (id = 1; id <= maxId; id++)
+        {
+            var characterData = CharacterDataManager.Instance.GetCharacterData(id);
+            if (characterData.characterName.Equals(name))
+            {
+                return id;
+            }
+        }
+        Debug.Log("キャラクター名に合致するIDを見つけられませんでした。");
+        return 0;
+        /*
         Dictionary<string, int> nameDict = new Dictionary<string, int>()
         {
-                {"ゾフィー", 1},
+                {"ゾフィ", 1},
                 {"リナ", 2},
                 {"ノア", 3}
         };
@@ -361,6 +374,7 @@ public class SkillTreeManager1 : MonoBehaviour
             return 0;
         }
         return nameDict[name];
+        */
     }
 
     /// <summary>
