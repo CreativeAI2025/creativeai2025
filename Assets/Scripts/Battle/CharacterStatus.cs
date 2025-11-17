@@ -47,7 +47,12 @@ public class CharacterStatus
     public int currentMagicAttack;
     public int currentMagicDefence;
     public int currentSpeed;
-   public int currentEvasion;
+    public int currentEvasion;
+
+    /// <summary>
+    /// 現在所有しているスキルポイント（スキルツリーの開放に必要）
+    /// </summary>
+    public int skillPoint;
 
 
     /// <summary>

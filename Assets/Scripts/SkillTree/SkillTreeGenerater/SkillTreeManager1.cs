@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class SkillTreeManager1 : MonoBehaviour
 {
+    [SerializeField] private int characterId;
     [SerializeField] DataSetting1 dataSetting1;
     [SerializeField] SkillTreeGanerate1 skillTreeGanerate1;
     [SerializeField] ParameterTable parameterTable;
@@ -12,7 +13,7 @@ public class SkillTreeManager1 : MonoBehaviour
     [SerializeField] TextMeshProUGUI skillPointText;//SPのテキスト
     [SerializeField] TextMeshProUGUI skillInfoText;//スキルの表示
     [SerializeField] GameObject skillBlockPanel;
-    [SerializeField] int skillPoint = 1000;
+    [SerializeField] int skillPoint = 1000; // 初期値設定
 
     List<Node> skillList = new List<Node>();//取得済みのものを格納
     List<Skill> nodeSkillList = new List<Skill>();
@@ -40,6 +41,7 @@ public class SkillTreeManager1 : MonoBehaviour
         skillList = new List<Node>();
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks1>();
         if (parameterTable != null) startStatus = parameterTable.parameterRecords[0];
+        CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint = skillPoint;    // デバッグ用？スキルポイントの初期値設定（実は危険なことをやっている）
     }
 
     // Update is called once per frame
@@ -111,7 +113,7 @@ public class SkillTreeManager1 : MonoBehaviour
     /// </summary>
     public void UpdateSkillPointText()
     {
-        skillPointText.text = string.Format("SP：{0}", skillPoint);
+        skillPointText.text = string.Format("SP：{0}", CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint);
     }
 
     /// <summary>
@@ -181,7 +183,7 @@ public class SkillTreeManager1 : MonoBehaviour
     {
         //Debug.Log($"{skillPoint},{cost}");
         if (id == 0) return true;
-        if (skillPoint < cost)
+        if (CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint < cost)
         {
             return false;
         }
@@ -291,7 +293,7 @@ public class SkillTreeManager1 : MonoBehaviour
             }
         }
 
-        skillPoint -= cost;
+        CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint -= cost;
 
         ChechActiveBlocks();
         UpdateSkillPointText();
@@ -350,9 +352,22 @@ public class SkillTreeManager1 : MonoBehaviour
     /// <returns></returns>
     private int GetCharacterIdFromName(string name)
     {
+        int id = 1;
+        int maxId = 3;  // キャラクターデータのマックス（ここも本来は実際のデータ数を参照するべきだが、面倒なので割愛）
+        for (id = 1; id <= maxId; id++)
+        {
+            var characterData = CharacterDataManager.Instance.GetCharacterData(id);
+            if (characterData.characterName.Equals(name))
+            {
+                return id;
+            }
+        }
+        Debug.Log("キャラクター名に合致するIDを見つけられませんでした。");
+        return 0;
+        /*
         Dictionary<string, int> nameDict = new Dictionary<string, int>()
         {
-                {"ゾフィー", 1},
+                {"ゾフィ", 1},
                 {"リナ", 2},
                 {"ノア", 3}
         };
@@ -361,6 +376,7 @@ public class SkillTreeManager1 : MonoBehaviour
             return 0;
         }
         return nameDict[name];
+        */
     }
 
     /// <summary>
