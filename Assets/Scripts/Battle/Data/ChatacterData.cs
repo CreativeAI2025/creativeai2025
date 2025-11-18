@@ -16,6 +16,10 @@ public class CharacterData : ScriptableObject
   /// </summary>
   public string characterName;
 
+  public string characterNameEn;
+
+  public int skillPointPerLevel = 30;
+
   /// <summary>
   /// キャラクターの見た目（等身大）
   /// </summary>

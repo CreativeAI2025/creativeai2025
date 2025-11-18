@@ -68,6 +68,9 @@ public class MenuManager : DontDestroySingleton<MenuManager>
 
         SceneManager.sceneLoaded += SceneLoaded;
         SetIsMenuOpen(SceneManager.GetActiveScene().name);
+
+        //playerPause = GameObject.Find("Pause").GetComponent<Pause>();
+
     }
 
     // Update is called once per frame

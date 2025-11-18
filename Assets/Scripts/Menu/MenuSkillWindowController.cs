@@ -160,8 +160,8 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     public void ShowWindow()
     {
         _uiController.InitializeText(); // テキストの初期化
-        SetUpSkill();
         _headerUIController.Initialize();
+        SetUpSkill();
         _uiController.Show();
         _canClose = false;
 

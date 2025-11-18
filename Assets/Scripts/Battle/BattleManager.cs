@@ -521,7 +521,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
             Logger.Instance.Log($"次のキャラクターの入力へ移行します。Cursor: {CharacterCursor}");
 
             // UIの再表示 (次のキャラクターのステータスやコマンドUIへ切り替える処理が別途必要)
-            _battleWindowManager.GetCommandWindowController().ShowWindow(); 
+            _battleWindowManager.GetCommandWindowController().ShowWindow();
             _battleWindowManager.GetCommandWindowController().InitializeCommand();
 
             SetBattlePhase(BattlePhase.InputCommand);
@@ -591,7 +591,8 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         Logger.Instance.Log("逃走に成功しました。");
         IsBattleFinished = true;
-        OnFinishBattle();
+        OnBattleWin();  // デバッグ用に勝ち判定にする
+        //OnFinishBattle();
     }
 
     /// <summary>

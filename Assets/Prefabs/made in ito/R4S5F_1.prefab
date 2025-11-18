@@ -17860,6 +17860,8 @@ GameObject:
   - component: {fileID: 2238211474855686735}
   - component: {fileID: 7208098844153874779}
   - component: {fileID: 5204738885465426177}
+  - component: {fileID: -5923415671305556149}
+  - component: {fileID: 4663860433661962593}
   m_Layer: 0
   m_Name: R4S5F_1
   m_TagString: Untagged
@@ -18013,6 +18015,32 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-5923415671305556149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3389047219535675825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a1589aa39fda8f4bb1b1e952eedfd24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playableDirector: {fileID: 7208098844153874779}
+  _notifier: {fileID: 4663860433661962593}
+--- !u!114 &4663860433661962593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3389047219535675825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29598f986f27b7b41b43c6176aeb6274, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3506960842106136492
 GameObject:
   m_ObjectHideFlags: 0

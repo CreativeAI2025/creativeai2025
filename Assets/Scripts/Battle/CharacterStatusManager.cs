@@ -78,6 +78,11 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             maxHp = characterParameterRecord.HP,
             currentMp = characterParameterRecord.MP,
             maxMp = characterParameterRecord.MP,
+            currentAttack = characterParameterRecord.Attack,
+            currentDefence = characterParameterRecord.Defence,
+            currentMagicAttack = characterParameterRecord.MagicAttack,
+            currentMagicDefence = characterParameterRecord.MagicDefence,
+            currentSpeed = characterParameterRecord.Speed,
             skillList = new List<int>()
         };
 
@@ -292,10 +297,141 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
 
         if (targetLevel > characterStatus.level)
         {
+            int levelGap = targetLevel - characterStatus.level; // レベルアップした数
             characterStatus.level = targetLevel;
+            Levelup(characterId, targetLevel);
+            GetSkillPoint(characterId, levelGap);
             return true;
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// このキャラクターのレベルアップを行う。
+    /// パラメーターテーブルに記録されている情報と、スキルツリーで獲得したステータス上昇を加味して、
+    /// ステータスを更新する。
+    /// </summary>
+    private void Levelup(int characterId, int newLevel)
+    {
+        var characterName = CharacterDataManager.Instance.GetCharacterData(characterId).characterName;
+        var characterParameterTable = CharacterDataManager.Instance.GetParameterTable(characterId); // キャラクターのパラメーターテーブルを取得
+        var characterParameterRecord = characterParameterTable.parameterRecords[newLevel - 1];
+        SetCharacterStatusFromParameterRecord(characterId, characterParameterRecord);   // スキルツリーを計算する前に、各パラメータをセットする。
+        var statusList = SkillStatusLoader.instance.GetStatusEntryList(characterName);  // スキルツリーで現在取得しているステータスアップの種類とその数を取得
+        int categoryInt = 0;   // ステータスカテゴリ（Attack, Deffence, ... , HP, MP）
+        int categoryLength = 8; // ステータスカテゴリの要素数
+        while (categoryInt < categoryLength)
+        {
+            var status = statusList.statuses[categoryInt];
+            CharacterParameterCategory category = (CharacterParameterCategory)categoryInt;
+            int count = status.count;
+            float constValue = 0.05f;
+            if (category == CharacterParameterCategory.HP || category == CharacterParameterCategory.MP)
+            {
+                constValue = 0.1f;
+            }
+            float value = 1.0f + constValue * count;
+            UpdataCharacterCurrentStatus(characterId, category, value);
+            categoryInt++;
+        }
+    }
+
+    /// <summary>
+    /// スキルポイントを獲得する
+    /// </summary>
+    /// <param name="characterId"></param>
+    /// <param name="gap"></param>
+    private void GetSkillPoint(int characterId, int gap)
+    {
+        int skillPointPerLevel = CharacterDataManager.Instance.GetCharacterData(characterId).skillPointPerLevel;
+        var characterStatus = GetCharacterStatusById(characterId);
+        characterStatus.skillPoint += skillPointPerLevel * gap;
+    }
+
+    /// <summary>
+    /// 引数で与えられたパラメータレコードを、実際のキャラクターのステータスにそのまま反映させる
+    /// なお、スキルツリーで取得したステータスアップは、この関数では計算されないので、別途計算する処理が必要
+    /// </summary>
+    /// <param name="record"></param>
+    private void SetCharacterStatusFromParameterRecord(int characterId, ParameterRecord record)
+    {
+        var characterStatus = GetCharacterStatusById(characterId);
+        characterStatus.currentAttack = record.Attack;
+        characterStatus.currentDefence = record.Defence;
+        characterStatus.currentMagicAttack = record.MagicAttack;
+        characterStatus.currentMagicDefence = record.MagicDefence;
+        characterStatus.currentSpeed = record.Speed;
+    }
+
+    /// <summary>
+    /// スキルを追加する
+    /// </summary>
+    /// <param name="characterId"></param>
+    /// <param name="skillId"></param>
+    public void AddSkill(int characterId, int skillId)
+    {
+        var characterStatus = GetCharacterStatusById(characterId);
+        characterStatus.skillList.Add(skillId);
+    }
+
+    /// <summary>
+    /// スキルツリーでステータスアップを獲得した際、倍率をかけて実際のステータスに反映させる
+    /// </summary>
+    /// <param name="characterId"></param>
+    /// <param name="category"></param>
+    /// <param name="value"></param>
+    public void UpdataCharacterCurrentStatus(int characterId, CharacterParameterCategory category, float value)
+    {
+        var characterStatus = GetCharacterStatusById(characterId);
+        int level = characterStatus.level;
+        var characterParameterTable = CharacterDataManager.Instance.GetParameterTable(characterId);
+        var characterParameterRecord = characterParameterTable.parameterRecords[level - 1];
+
+        int currentValue;
+        float modifiedValue;
+        int gap;
+        switch (category)
+        {
+            case CharacterParameterCategory.HP:
+                currentValue = characterParameterRecord.HP;
+                modifiedValue = currentValue * value;
+                gap = characterStatus.maxHp - characterStatus.currentHp;
+                characterStatus.maxHp = (int)modifiedValue;
+                characterStatus.currentHp = characterStatus.maxHp - gap;
+                break;
+            case CharacterParameterCategory.MP:
+                currentValue = characterParameterRecord.MP;
+                modifiedValue = currentValue * value;
+                gap = characterStatus.maxMp - characterStatus.currentMp;
+                characterStatus.maxMp = (int)modifiedValue;
+                characterStatus.currentMp = characterStatus.maxMp - gap;
+                break;
+            case CharacterParameterCategory.Attack:
+                currentValue = characterParameterRecord.Attack;
+                modifiedValue = currentValue * value;
+                characterStatus.currentAttack = (int)modifiedValue;
+                break;
+            case CharacterParameterCategory.Defence:
+                currentValue = characterParameterRecord.Defence;
+                modifiedValue = currentValue * value;
+                characterStatus.currentDefence = (int)modifiedValue;
+                break;
+            case CharacterParameterCategory.MagicAttack:
+                currentValue = characterParameterRecord.MagicAttack;
+                modifiedValue = currentValue * value;
+                characterStatus.currentMagicAttack = (int)modifiedValue;
+                break;
+            case CharacterParameterCategory.MagicDefence:
+                currentValue = characterParameterRecord.MagicDefence;
+                modifiedValue = currentValue * value;
+                characterStatus.currentMagicDefence = (int)modifiedValue;
+                break;
+            case CharacterParameterCategory.Speed:
+                currentValue = characterParameterRecord.Speed;
+                modifiedValue = currentValue * value;
+                characterStatus.currentSpeed = (int)modifiedValue;
+                break;
+        }
     }
 }

@@ -1139,6 +1139,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8284592808993467205}
   - component: {fileID: 1328568580272491300}
+  - component: {fileID: -2379640277745504456}
+  - component: {fileID: -3560548658670436909}
   m_Layer: 0
   m_Name: R3S5_1
   m_TagString: Untagged
@@ -1252,6 +1254,32 @@ PlayableDirector:
     value: {fileID: 4483752995870507984}
   m_ExposedReferences:
     m_References: []
+--- !u!114 &-2379640277745504456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5504011591586213679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a1589aa39fda8f4bb1b1e952eedfd24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playableDirector: {fileID: 1328568580272491300}
+  _notifier: {fileID: -3560548658670436909}
+--- !u!114 &-3560548658670436909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5504011591586213679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29598f986f27b7b41b43c6176aeb6274, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5812753712762871293
 GameObject:
   m_ObjectHideFlags: 0
