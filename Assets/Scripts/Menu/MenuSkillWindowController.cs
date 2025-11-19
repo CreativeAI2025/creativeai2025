@@ -139,6 +139,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
             }
             int userId = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
             MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.SkillUse, userId);
+            SoundManager.Instance.PlaySE(3);
         }
         else if (_inputSetting.GetRightKeyDown())
         {
@@ -154,6 +155,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         _canClose = false;
         yield return null;
         MenuManager.Instance.OnSkillCanceled();
+        SoundManager.Instance.PlaySE(3);
         HideWindow();
     }
 
@@ -196,6 +198,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         _skillListCursor = _skillListCursor % _skillList.Count;
         _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
         SetText();
+        SoundManager.Instance.PlaySE(1);
     }
 
     private void ShowPreviousSkill()
@@ -204,6 +207,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         _skillListCursor = (_skillListCursor + _skillList.Count) % _skillList.Count;
         _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
         SetText();
+        SoundManager.Instance.PlaySE(1);
     }
 
     /// <summary>
@@ -224,6 +228,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
 
         SetSkillList();
         InitializePage();
+        SoundManager.Instance.PlaySE(1);
     }
 
     /// <summary>
@@ -244,6 +249,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
 
         SetSkillList();
         InitializePage();
+        SoundManager.Instance.PlaySE(1);
     }
 
     /// <summary>
