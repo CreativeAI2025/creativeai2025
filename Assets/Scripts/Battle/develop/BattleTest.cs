@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 public class BattleTest : MonoBehaviour
 {
     [SerializeField] string filename;
+    [SerializeField] GameInitializer _initializer;
     private bool _battleFlag = false;
     private InputSetting _inputSetting;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -18,6 +19,7 @@ public class BattleTest : MonoBehaviour
     {
         _inputSetting = InputSetting.Load();
         BattleManager.Instance.OnBattleEnd += () => _battleFlag = false;
+        _initializer.InitializeGame();
     }
 
     // Update is called once per frame
