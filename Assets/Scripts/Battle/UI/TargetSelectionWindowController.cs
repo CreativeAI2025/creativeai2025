@@ -147,9 +147,6 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
     {
         // 1フレーム待つことでUIの非表示処理を完了させる
         yield return null;
-        BattleManager.Instance.SetBattlePhase(BattlePhase.InputCommand);
-
-
     }
 
 

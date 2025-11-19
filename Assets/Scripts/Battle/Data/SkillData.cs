@@ -7,7 +7,10 @@ public class SkillData : ScriptableObject
     /// 魔法のIDです。
     /// </summary>
     public int skillId;
-
+    /// <summary>
+    /// 魔法のスキルエフェクトのスプライトです。
+    /// </summary>
+    public Sprite effectSprite;
     /// <summary>
     /// 魔法の名前です。
     /// </summary>

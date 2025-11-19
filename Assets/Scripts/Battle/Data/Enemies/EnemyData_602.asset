@@ -12,17 +12,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f16436ac038bdf4b92bc19360a4c5c8, type: 3}
   m_Name: EnemyData_602
   m_EditorClassIdentifier: 
-  enemyId: 0
+  enemyId: 602
   enemyName: "\u30B1\u30F3\u30C8"
-  sprite: {fileID: 21300000, guid: e4cfe777c97e52543b5f773bf9fb0e42, type: 3}
+  sprite: {fileID: 0}
   HP: 0
   MP: 0
-  Attack: 0
-  Defence: 0
-  MagicAttack: 0
-  MagicDefence: 0
-  Speed: 0
+  Attack: 75
+  Defence: 65
+  MagicAttack: 58
+  MagicDefence: 60
+  Speed: 45
   Evasion: 0
-  exp: 0
-  gold: 0
-  enemyActionRecords: []
+  exp: 350
+  gold: 100
+  enemyActionRecords:
+  - enemyActionCategory: 0
+    enemyConditionRecords: []
+    skillData: {fileID: 0}
+    priority: 35
+  - enemyActionCategory: 1
+    enemyConditionRecords:
+    - conditionCategory: 0
+      comparisonOperator: 0
+      turnCriteria: 0
+      hpRateCriteria: 30
+    skillData: {fileID: 11400000, guid: 27b25364b6f237a4ba6589b729d3c06b, type: 2}
+    priority: 0
+  - enemyActionCategory: 1
+    enemyConditionRecords:
+    - conditionCategory: 0
+      comparisonOperator: 0
+      turnCriteria: 0
+      hpRateCriteria: 20
+    skillData: {fileID: 11400000, guid: 586e8a3317ba79844a7cf8d6a6ec1168, type: 2}
+    priority: 0
+  - enemyActionCategory: 1
+    enemyConditionRecords:
+    - conditionCategory: 0
+      comparisonOperator: 0
+      turnCriteria: 0
+      hpRateCriteria: 20
+    skillData: {fileID: 11400000, guid: 5a320096b1320bf45afa4923e63435c3, type: 2}
+    priority: 30
