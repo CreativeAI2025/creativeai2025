@@ -66,12 +66,14 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
     {
         verticalSelector = !verticalSelector;
         _selectedCommand = GetMenuCommand(verticalSelector, horizontalSelector);
+        SoundManager.Instance.PlaySE(1, 0.7f);
     }
 
     private void moveHorizontal()
     {
         horizontalSelector = !horizontalSelector;
         _selectedCommand = GetMenuCommand(verticalSelector, horizontalSelector);
+        SoundManager.Instance.PlaySE(1, 0.7f);
     }
 
     /// <summary>
@@ -121,6 +123,7 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
     {
         yield return null;
         MenuManager.Instance.OnCloseMenu();
+        SoundManager.Instance.PlaySE(2, 0.7f);
         HideWindow();
     }
 

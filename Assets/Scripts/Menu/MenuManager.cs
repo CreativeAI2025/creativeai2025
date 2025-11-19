@@ -66,6 +66,10 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         AnimationManager.Instance.OnAnimationStart += menuUIPause.PauseAll;
         AnimationManager.Instance.OnAnimationEnd += menuUIPause.UnPauseAll;
 
+        // ワールドマップ表示中はメニューを開けなくする
+        WorldmapManager.Instance.OnWorldmapStart += menuUIPause.PauseAll;
+        WorldmapManager.Instance.OnWorldmapEnd += menuUIPause.UnPauseAll;
+
         SceneManager.sceneLoaded += SceneLoaded;
         SetIsMenuOpen(SceneManager.GetActiveScene().name);
 
@@ -102,7 +106,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     /// <summary>
     /// メニュー画面の表示
     /// </summary>
-    public void OpenMenu()
+    private void OpenMenu()
     {
         StartCoroutine(OpenMenuProcess());
     }
@@ -123,7 +127,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         _topMenuWindowController.InitializeCommand();
         _topMenuWindowController.ShowWindow();
 
-        //_characterMoverManager.StopCharacterMover();
+        SoundManager.Instance.PlaySE(0, 0.7f);
     }
 
     /// <summary>
@@ -134,6 +138,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     {
         SelectedMenu = menuCommand;
         HandleMenu();
+        SoundManager.Instance.PlaySE(3, 0.7f);
     }
 
     /// <summary>
