@@ -122,6 +122,7 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         _canClose = false;
         yield return null;
         MenuManager.Instance.OnCharacterCanceled();
+        SoundManager.Instance.PlaySE(3);
         HideWindow();
     }
 
@@ -163,6 +164,7 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex);
         SetCharacterStatus();
+        SoundManager.Instance.PlaySE(1);
     }
 
     private IEnumerator previousPage()
@@ -177,6 +179,7 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex);
         SetCharacterStatus();
+        SoundManager.Instance.PlaySE(1);
     }
 
     /// <summary>
