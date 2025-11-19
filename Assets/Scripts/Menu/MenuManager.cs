@@ -66,6 +66,10 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         AnimationManager.Instance.OnAnimationStart += menuUIPause.PauseAll;
         AnimationManager.Instance.OnAnimationEnd += menuUIPause.UnPauseAll;
 
+        // ワールドマップ表示中はメニューを開けなくする
+        WorldmapManager.Instance.OnWorldmapStart += menuUIPause.PauseAll;
+        WorldmapManager.Instance.OnWorldmapEnd += menuUIPause.UnPauseAll;
+
         SceneManager.sceneLoaded += SceneLoaded;
         SetIsMenuOpen(SceneManager.GetActiveScene().name);
 
