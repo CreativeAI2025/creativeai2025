@@ -113,7 +113,7 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     private void ChangeCursor()
     {
-        SoundManager.Instance.PlaySE(1, 0.7f); // 効果音をつける
+        SoundManager.Instance.PlaySE(1); // 効果音をつける
         if (cursor == 0)
         {
             cursor = 1;

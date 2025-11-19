@@ -123,7 +123,6 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
     {
         yield return null;
         MenuManager.Instance.OnCloseMenu();
-        SoundManager.Instance.PlaySE(2, 0.7f);
         HideWindow();
     }
 
@@ -141,5 +140,6 @@ public class TopMenuWindowController : MonoBehaviour, IMenuWindowController
     public void HideWindow()
     {
         _uiController.Hide();
+        SoundManager.Instance.PlaySE(2, 0.7f);
     }
 }
