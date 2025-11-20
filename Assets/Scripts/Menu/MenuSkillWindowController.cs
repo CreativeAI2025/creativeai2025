@@ -34,10 +34,12 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         {
             stop = true;
             Debug.Log("[MenuSkillWindowController]skillListの要素数が０");
-            return;
         }
-        _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
-        SetText();
+        else
+        {
+            _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
+            SetText();
+        }
 
         // ヘッダーの設定
         _headerUIController.Initialize();
@@ -119,16 +121,20 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         {
             StartCoroutine(HideProcess());
         }
-        else if (stop)
-        {
-            return;
-        }
         else if (_inputSetting.GetBackKeyDown())
         {
+            if (stop)
+            {
+                return;
+            }
             ShowNextSkill();
         }
         else if (_inputSetting.GetForwardKeyDown())
         {
+            if (stop)
+            {
+                return;
+            }
             ShowPreviousSkill();
         }
         else if (_inputSetting.GetDecideInputDown())
@@ -274,11 +280,6 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     /// <returns></returns>
     private string GetSkillNameByCursor(int n)
     {
-        if (_skillList == null)
-        {
-            Debug.Log("[MenuSkillWindowController]_skillListがnull");
-            return string.Empty;
-        }
         if (n < 0 || n > _skillList.Count - 1)
         {
             return "---";
