@@ -264,11 +264,11 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private void InitializePage()
     {
+        _skillListCursor = 0;
         if (stop)
         {
             return;
         }
-        _skillListCursor = 0;
         _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
         SetText();
     }
