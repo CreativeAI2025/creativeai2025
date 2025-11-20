@@ -235,6 +235,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 443944180}
+  minPosition: {x: 1.5, y: 1}
+  maxPosition: {x: 40, y: 28}
+  smoothSpeed: 0.1
 --- !u!1 &443944173 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4866882733963371132, guid: 4f77b68f96dd2954f89a18e28535160d, type: 3}
@@ -1002,6 +1005,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 443944178}
+  pause: {fileID: 0}
   mapEngine: {fileID: 1314316514}
   mapDataController: {fileID: 1314316513}
 --- !u!1001 &4127917937506699905
@@ -1097,6 +1101,10 @@ PrefabInstance:
       propertyPath: m_Simulated
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7168359691995283053, guid: a6b840703287d854aa1781e77453fb49, type: 3}
+      propertyPath: tilemaps
+      value: 
+      objectReference: {fileID: 11400000, guid: efd5fa5cbf85a4fd49cc764bd2c745eb, type: 2}
     - target: {fileID: 7168359691995283053, guid: a6b840703287d854aa1781e77453fb49, type: 3}
       propertyPath: clearTile
       value: 
