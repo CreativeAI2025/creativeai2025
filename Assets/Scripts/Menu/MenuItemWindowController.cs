@@ -105,6 +105,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         else if (_inputSetting.GetDecideInputDown())
         {
             MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.ItemUse, -1);
+            SoundManager.Instance.PlaySE(3);
         }
         else if (_inputSetting.GetRightKeyDown())
         {
@@ -120,6 +121,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         _canClose = false;
         yield return null;
         MenuManager.Instance.OnItemCanceled();
+        SoundManager.Instance.PlaySE(3);
         HideWindow();
     }
 
@@ -162,6 +164,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         _itemListCursor = _itemListCursor % _itemList.Count;
         _selectedItemData = ItemDataManager.Instance.GetItemDataById(_itemList[_itemListCursor]);
         SetText();
+        SoundManager.Instance.PlaySE(1);
     }
 
     private void ShowPreviousItem()
@@ -170,6 +173,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         _itemListCursor = (_itemListCursor + _itemList.Count) % _itemList.Count;
         _selectedItemData = ItemDataManager.Instance.GetItemDataById(_itemList[_itemListCursor]);
         SetText();
+        SoundManager.Instance.PlaySE(1);
     }
 
     /// <summary>
@@ -190,6 +194,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
 
         SetItemList();
         InitializePage();
+        SoundManager.Instance.PlaySE(1);
     }
 
     /// <summary>
@@ -210,6 +215,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
 
         SetItemList();
         InitializePage();
+        SoundManager.Instance.PlaySE(1);
     }
 
     /// <summary>

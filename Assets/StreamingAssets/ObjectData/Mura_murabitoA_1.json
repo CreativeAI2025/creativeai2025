@@ -2,31 +2,30 @@
   "Id": 0,
   "Location": [
     {
+    
       "MapName": "Village",
       "Position": [
-        26,
-        15
+        10,
+        18
       ]
     }
   ],
   "EventName": "Conversation Mura_murabitoA_1",
   "TriggerType": 0,
   "FlagCondition": {
-    "Flag": [
-      [
+    "Flag": [[
         "MurabitoA",
         false
-      ],
-      [
-        "NusiBattleFinished",
+    ],[
+       "NusiBattleFinished",
         false
-      ]
+    ]
     ],
     "NextFlag": [
-      [
-        "MurabitoA",
+    [
+     "MurabitoA",
         true
-      ]
+    ]
     ]
   }
 }
