@@ -34,10 +34,12 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         {
             stop = true;
             Debug.Log("[MenuSkillWindowController]skillListの要素数が０");
-            return;
         }
-        _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
-        SetText();
+        else
+        {
+            _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
+            SetText();
+        }
 
         // ヘッダーの設定
         _headerUIController.Initialize();
@@ -119,16 +121,20 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         {
             StartCoroutine(HideProcess());
         }
-        else if (stop)
-        {
-            return;
-        }
         else if (_inputSetting.GetBackKeyDown())
         {
+            if (stop)
+            {
+                return;
+            }
             ShowNextSkill();
         }
         else if (_inputSetting.GetForwardKeyDown())
         {
+            if (stop)
+            {
+                return;
+            }
             ShowPreviousSkill();
         }
         else if (_inputSetting.GetDecideInputDown())
@@ -139,6 +145,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
             }
             int userId = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
             MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.SkillUse, userId);
+            SoundManager.Instance.PlaySE(3);
         }
         else if (_inputSetting.GetRightKeyDown())
         {
@@ -154,6 +161,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         _canClose = false;
         yield return null;
         MenuManager.Instance.OnSkillCanceled();
+        SoundManager.Instance.PlaySE(3);
         HideWindow();
     }
 
@@ -196,6 +204,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         _skillListCursor = _skillListCursor % _skillList.Count;
         _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
         SetText();
+        SoundManager.Instance.PlaySE(1);
     }
 
     private void ShowPreviousSkill()
@@ -204,6 +213,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         _skillListCursor = (_skillListCursor + _skillList.Count) % _skillList.Count;
         _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
         SetText();
+        SoundManager.Instance.PlaySE(1);
     }
 
     /// <summary>
@@ -224,6 +234,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
 
         SetSkillList();
         InitializePage();
+        SoundManager.Instance.PlaySE(1);
     }
 
     /// <summary>
@@ -244,6 +255,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
 
         SetSkillList();
         InitializePage();
+        SoundManager.Instance.PlaySE(1);
     }
 
     /// <summary>
@@ -252,11 +264,11 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private void InitializePage()
     {
+        _skillListCursor = 0;
         if (stop)
         {
             return;
         }
-        _skillListCursor = 0;
         _selectedSkillData = SkillDataManager.Instance.GetSkillDataById(_skillList[_skillListCursor]);
         SetText();
     }
@@ -268,11 +280,6 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     /// <returns></returns>
     private string GetSkillNameByCursor(int n)
     {
-        if (_skillList == null)
-        {
-            Debug.Log("[MenuSkillWindowController]_skillListがnull");
-            return string.Empty;
-        }
         if (n < 0 || n > _skillList.Count - 1)
         {
             return "---";

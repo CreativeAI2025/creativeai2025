@@ -4,20 +4,28 @@
     {
       "MapName": "Village",
       "Position": [
-        27,
-        15
+        33,
+        18
+      ]
+    },
+    {
+      "MapName": "Village",
+      "Position": [
+        34,
+        18
       ]
     }
   ],
   "EventName": "Conversation Mura_murabitotati",
   "TriggerType": 1,
   "FlagCondition": {
-    "Flag": [
-      [
-        "NusiBattleFinished",
+    "Flag": [[
+         "NusiBattleFinished",
         false
-      ]
+    ]
     ],
-    "NextFlag": []
+    "NextFlag": [
+     
+    ]
   }
 }

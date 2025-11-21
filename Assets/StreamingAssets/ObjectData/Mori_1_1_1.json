@@ -4,15 +4,15 @@
     {
       "MapName": "Forest",
       "Position": [
-          10,
-          18
+          8,
+          11
       ]
     },
     {
       "MapName": "Forest",
       "Position": [
-          11,
-          18
+          9,
+          11
       ]
     }
   ],
@@ -23,9 +23,17 @@
       [
       "KentBattleFinished",
         false
+      ],
+      [
+      "StopMori",
+        false
       ]
     ],
     "NextFlag": [ 
+      [
+      "StopMori",
+        true
+      ]
     ]
   }
 }

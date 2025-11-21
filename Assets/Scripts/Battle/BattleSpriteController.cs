@@ -23,6 +23,10 @@ public class BattleSpriteController : MonoBehaviour
     /// 敵キャラクターの表示用Spriteです。
     /// </summary>
     [SerializeField] private Image[] enemySprites;
+        /// <summary>
+    /// 敵キャラクターの表示用Spriteです。
+    /// </summary>
+    [SerializeField] private Image[] enemyEffectSprites;
 
     /// <summary>
     /// カメラへの参照です。
@@ -101,6 +105,40 @@ public class BattleSpriteController : MonoBehaviour
             }
         }
     }
+        /// <summary>
+    /// 敵へのスキルエフェクトを表示します。
+    /// </summary>
+    /// <param name="enemyId">敵キャラクターのID</param>
+    public void ShowSkillEffectforEnemy(List<int> enemyIds)
+    {
+        const int EncountMax = 5;
+        for (int i = 0; i < EncountMax; i++)
+        {
+            Sprite enemySprite = voidSprite;
+            if (i < enemyIds.Count)
+            {
+                // 適切な画像を入れる
+                int enemyId = enemyIds[i];
+                var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
+                if (enemyData == null)
+                {
+                    Logger.Instance.LogWarning($"敵キャラクターの画像が取得できませんでした。 ID: {enemyId}");
+                }
+                else
+                {
+                    enemySprite = enemyData.sprite;
+                }
+                enemySprites[i].sprite = enemySprite;
+                enemySprites[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                // 透明の画像を入れる
+                enemySprites[i].sprite = enemySprite;
+                enemySprites[i].gameObject.SetActive(false);
+            }
+        }
+    }
 
     /// <summary>
     /// 敵キャラクターを非表示にします。
@@ -108,6 +146,16 @@ public class BattleSpriteController : MonoBehaviour
     public void HideEnemy()
     {
         foreach (var image in enemySprites)
+        {
+            image.gameObject.SetActive(false);
+        }
+    }
+    /// <summary>
+    /// 敵キャラクターを非表示にします。
+    /// </summary>
+    public void HideEnemyEffect()
+    {
+        foreach (var image in enemyEffectSprites)
         {
             image.gameObject.SetActive(false);
         }
