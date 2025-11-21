@@ -164,7 +164,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         //SetPlayerStatus();  // プレイヤー周りの情報をセットする
         Logger.Instance.Log("戦闘を開始します。");
         _onBattleStart?.Invoke();
-        //SoundManager.Instance.ChangeSE(BattleData.BGM);
+        SoundManager.Instance.ChangeBGM(BattleData.BGM);
         //  GameStateManager.ChangeToBattle();
         SetBattlePhase(BattlePhase.ShowEnemy);
         TurnCount = 1;
