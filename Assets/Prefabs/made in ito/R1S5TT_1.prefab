@@ -310,7 +310,7 @@ MonoBehaviour:
   jumpDuration: 0.3
   blinkInterval: 0.1
   blinkCount: 5
---- !u!1 &179155514290484383
+--- !u!1 &1157079513920698711
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -318,42 +318,42 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1735376832637548298}
-  - component: {fileID: 952412341658454543}
+  - component: {fileID: 1177627189225676581}
+  - component: {fileID: 1578176606481963497}
   m_Layer: 0
-  m_Name: SE_Ken
+  m_Name: SE_Direct_81
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1735376832637548298
+--- !u!4 &1177627189225676581
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 179155514290484383}
+  m_GameObject: {fileID: 1157079513920698711}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.22924504, y: 1.7380291, z: 0.002779007}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2549006600983827601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &952412341658454543
+--- !u!82 &1578176606481963497
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 179155514290484383}
+  m_GameObject: {fileID: 1157079513920698711}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ceb9cbb573568ae478c279314a20cefc, type: 3}
-  m_Resource: {fileID: 8300000, guid: ceb9cbb573568ae478c279314a20cefc, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 459055d72210d324eaddda6f2f3be336, type: 3}
+  m_Resource: {fileID: 8300000, guid: 459055d72210d324eaddda6f2f3be336, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -14974,13 +14974,13 @@ Transform:
   - {fileID: 5685643993899463088}
   - {fileID: 7448327447080339886}
   - {fileID: 8632933364673514729}
-  - {fileID: 1735376832637548298}
   - {fileID: 854431995680517721}
   - {fileID: 4869942226297550444}
   - {fileID: 179928364646498809}
   - {fileID: 500078392329817443}
   - {fileID: 4845608630526869628}
   - {fileID: 2472780186351997626}
+  - {fileID: 1177627189225676581}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!320 &1638352351382704416
@@ -15021,7 +15021,7 @@ PlayableDirector:
   - key: {fileID: 4414265141972071210, guid: 0a17c86f3369aba4288640187c6b78ff, type: 2}
     value: {fileID: 2216480957895103922}
   - key: {fileID: 7182794026209961773, guid: 0a17c86f3369aba4288640187c6b78ff, type: 2}
-    value: {fileID: 952412341658454543}
+    value: {fileID: 0}
   - key: {fileID: -5999803608958258458, guid: 0a17c86f3369aba4288640187c6b78ff, type: 2}
     value: {fileID: 0}
   - key: {fileID: 7599693333607608427, guid: 0a17c86f3369aba4288640187c6b78ff, type: 2}
@@ -15050,15 +15050,15 @@ PlayableDirector:
     value: {fileID: 7934652665440616411}
   - key: {fileID: 1677332175341606333, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
     value: {fileID: 3594275045557290586}
-  - key: {fileID: 8434441296305723252, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 2216480957895103922}
   - key: {fileID: -851066348599356844, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
-    value: {fileID: 952412341658454543}
+    value: {fileID: 1578176606481963497}
   - key: {fileID: 3618590916952275625, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
     value: {fileID: 4208542136153305928}
   - key: {fileID: 7745548048948437611, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
     value: {fileID: 8356225209293292606}
-  - key: {fileID: 7511107340400414180, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 3739080107186086980}
   m_ExposedReferences:
     m_References: []

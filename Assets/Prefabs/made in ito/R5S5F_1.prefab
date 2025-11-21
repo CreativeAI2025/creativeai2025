@@ -38,13 +38,13 @@ Transform:
   - {fileID: 7487924460290343428}
   - {fileID: 4842615814444684752}
   - {fileID: 7703996510376063547}
-  - {fileID: 5222008455133675195}
   - {fileID: 5655311121132033948}
   - {fileID: 557656233910012326}
   - {fileID: 3490215555288825393}
   - {fileID: 3596782435833236917}
   - {fileID: 1906771637905075878}
   - {fileID: 7159723488512699253}
+  - {fileID: 875209499725087171}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!320 &2828671372254193178
@@ -85,7 +85,7 @@ PlayableDirector:
   - key: {fileID: 8434441296305723252, guid: 6d3415cbab82f63458c6f4010936dbc4, type: 2}
     value: {fileID: 9034273260707922605}
   - key: {fileID: -851066348599356844, guid: 6d3415cbab82f63458c6f4010936dbc4, type: 2}
-    value: {fileID: 8350158425690130762}
+    value: {fileID: 0}
   - key: {fileID: 3618590916952275625, guid: 6d3415cbab82f63458c6f4010936dbc4, type: 2}
     value: {fileID: 0}
   - key: {fileID: 7745548048948437611, guid: 6d3415cbab82f63458c6f4010936dbc4, type: 2}
@@ -178,15 +178,15 @@ PlayableDirector:
     value: {fileID: 7647452683859411681}
   - key: {fileID: 1677332175341606333, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
     value: {fileID: 5103516673618236334}
-  - key: {fileID: 8434441296305723252, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 9034273260707922605}
   - key: {fileID: -851066348599356844, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
-    value: {fileID: 8350158425690130762}
+    value: {fileID: 292489944141890981}
   - key: {fileID: 3618590916952275625, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
     value: {fileID: 5151602857991103831}
   - key: {fileID: 7745548048948437611, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
     value: {fileID: 860841788139653115}
-  - key: {fileID: 7511107340400414180, guid: 61523cf4374cee44dbed6eae963081d0, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 2256147794335465721}
   m_ExposedReferences:
     m_References: []
@@ -670,7 +670,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1 &1780512533346541104
+--- !u!1 &1898032262957546370
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -678,42 +678,42 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5222008455133675195}
-  - component: {fileID: 8350158425690130762}
+  - component: {fileID: 875209499725087171}
+  - component: {fileID: 292489944141890981}
   m_Layer: 0
-  m_Name: SE_Ken
+  m_Name: SE_Direct_81
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5222008455133675195
+--- !u!4 &875209499725087171
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1780512533346541104}
+  m_GameObject: {fileID: 1898032262957546370}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.22924504, y: 1.7380291, z: 0.002779007}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6441253472197248976}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &8350158425690130762
+--- !u!82 &292489944141890981
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1780512533346541104}
+  m_GameObject: {fileID: 1898032262957546370}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ceb9cbb573568ae478c279314a20cefc, type: 3}
-  m_Resource: {fileID: 8300000, guid: ceb9cbb573568ae478c279314a20cefc, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 459055d72210d324eaddda6f2f3be336, type: 3}
+  m_Resource: {fileID: 8300000, guid: 459055d72210d324eaddda6f2f3be336, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
