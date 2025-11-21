@@ -12,6 +12,9 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
     private Action _onAnimationStart;
     public event Action OnAnimationEnd { add => _onAnimationEnd += value; remove => _onAnimationEnd -= value; }
     private Action _onAnimationEnd;
+    private bool isPlaying = false;
+    private InputSetting _inputSetting;
+    [SerializeField] AnimationWindowController _windowController;
 
     /// <summary>
     /// アニメーションリストがあるゲームオブジェクトを取得する
@@ -23,6 +26,23 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
     void Start()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        _inputSetting = InputSetting.Load();
+        _windowController.HideWindow();
+    }
+
+    void Update()
+    {
+        if (!isPlaying)
+        {
+            return;
+        }
+        if (_inputSetting.GetDecideInputDown())
+        {
+            if (!_windowController.gameObject.activeSelf)
+            {
+                _windowController.ShowWindow();
+            }
+        }
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -65,6 +85,8 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
         notifier.OnTimelineEnd += () => OnTimelineFinished(notifier);
         // アニメーションを開始させる
         controller.StartTimeline();
+        _windowController.OnTimelineEnd += () => OnTimelineFinished(notifier);
+        isPlaying = true;
     }
 
     /// <summary>
@@ -77,9 +99,11 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
         {
             // 登録時と同じ形のラムダ式を渡すことで解除
             notifier.OnTimelineEnd -= () => OnTimelineFinished(notifier);
+            _windowController.OnTimelineEnd -= () => OnTimelineFinished(notifier);
 
             //  NotifierがアタッチされているGameObject（＝TimelineControllerと同じGameObject）を非アクティブにする
             notifier.gameObject.SetActive(false);
+            _windowController.HideWindow();
             EndAnimation();
         }
     }
@@ -90,5 +114,6 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
     private void EndAnimation()
     {
         _onAnimationEnd?.Invoke();
+        isPlaying = false;
     }
 }
