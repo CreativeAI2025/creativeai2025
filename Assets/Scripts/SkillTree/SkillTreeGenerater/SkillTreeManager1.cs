@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class SkillTreeManager1 : MonoBehaviour
 {
+    [SerializeField] private int characterId;
     [SerializeField] DataSetting1 dataSetting1;
     [SerializeField] SkillTreeGanerate1 skillTreeGanerate1;
     [SerializeField] ParameterTable parameterTable;
@@ -12,7 +13,7 @@ public class SkillTreeManager1 : MonoBehaviour
     [SerializeField] TextMeshProUGUI skillPointText;//SPのテキスト
     [SerializeField] TextMeshProUGUI skillInfoText;//スキルの表示
     [SerializeField] GameObject skillBlockPanel;
-    [SerializeField] int skillPoint = 1000;
+    [SerializeField] int skillPoint = 1000; // 初期値設定
 
     List<Node> skillList = new List<Node>();//取得済みのものを格納
     List<Skill> nodeSkillList = new List<Skill>();
@@ -40,6 +41,7 @@ public class SkillTreeManager1 : MonoBehaviour
         skillList = new List<Node>();
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks1>();
         if (parameterTable != null) startStatus = parameterTable.parameterRecords[0];
+        CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint = skillPoint;    // デバッグ用？スキルポイントの初期値設定（実は危険なことをやっている）
     }
 
     // Update is called once per frame
@@ -111,7 +113,7 @@ public class SkillTreeManager1 : MonoBehaviour
     /// </summary>
     public void UpdateSkillPointText()
     {
-        skillPointText.text = string.Format("SP：{0}", skillPoint);
+        skillPointText.text = string.Format("SP：{0}", CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint);
     }
 
     /// <summary>
@@ -181,7 +183,7 @@ public class SkillTreeManager1 : MonoBehaviour
     {
         //Debug.Log($"{skillPoint},{cost}");
         if (id == 0) return true;
-        if (skillPoint < cost)
+        if (CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint < cost)
         {
             return false;
         }
@@ -273,22 +275,113 @@ public class SkillTreeManager1 : MonoBehaviour
         {
             if (n.getId() == id)
             {
-                if (skillEntry != null) skillEntry.get = true;//取得状況の変更
+                int characterId = GetCharacterIdFromName(dataSetting1.characterName);
+                Debug.Log($"スキルツリー拾得者のID：{characterId}");
+                if (skillEntry != null)
+                {
+                    skillEntry.get = true;//取得状況の変更
+                    int skillId = skillEntry.id - 1;    // 取得したスキルのID
+                    Debug.Log($"リストに追加するスキル：{skillId}");
+                    CharacterStatusManager.Instance.AddSkill(characterId, skillId); // キャラクターのスキルリストに反映させる
+                }
                 if (statusEntry != null)
                 {
                     statusEntry.count++;//取得状況の変更
+                    SetCharacterParameter(characterId, statusEntry.name, statusEntry.count);
                 }
                 skillList.Add(n);
             }
         }
 
-        skillPoint -= cost;
+        CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint -= cost;
 
         ChechActiveBlocks();
         UpdateSkillPointText();
         SkillStatusLoader.instance.SaveSkillData();// スキルのJSONに保存
         SkillStatusLoader.instance.SaveStatusData();// ステータスのJSONに保存
         Debug.Log("保存先: " + Application.persistentDataPath);
+    }
+
+    /// <summary>
+    /// キャラクターステータスの値を反映させる
+    /// </summary>
+    /// <param name="characterId"></param>
+    /// <param name="textName"></param>
+    /// <param name="count"></param>
+    private void SetCharacterParameter(int characterId, string textName, int count)
+    {
+        CharacterParameterCategory category = CharacterParameterCategory.Attack;
+        float value = 1.0f;    // ステータスにかける値
+        if (textName.Contains("魔法攻撃"))
+        {
+            category = CharacterParameterCategory.MagicAttack;
+            value += 0.05f * count;
+        }
+        else if (textName.Contains("魔法防御"))
+        {
+            category = CharacterParameterCategory.MagicDefence;
+            value += 0.05f * count;
+        }
+        else if (textName.Contains("攻撃"))
+        {
+            category = CharacterParameterCategory.Attack;
+            value += 0.05f * count;
+        }
+        else if (textName.Contains("防御"))
+        {
+            category = CharacterParameterCategory.Defence;
+            value += 0.05f * count;
+        }
+        else if (textName.Contains("素早さ"))
+        {
+            category = CharacterParameterCategory.Speed;
+            value += 0.05f * count;
+        }
+        else if (textName.Contains("HP"))
+        {
+            category = CharacterParameterCategory.HP;
+            value += 0.1f * count;
+        }
+        else if (textName.Contains("MP"))
+        {
+            category = CharacterParameterCategory.MP;
+            value += 0.1f * count;
+        }
+        CharacterStatusManager.Instance.UpdataCharacterCurrentStatus(characterId, category, value);
+    }
+
+    /// <summary>
+    /// キャラクターの名前から、そのキャラクターのIDを返す
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    private int GetCharacterIdFromName(string name)
+    {
+        int id = 1;
+        int maxId = 3;  // キャラクターデータのマックス（ここも本来は実際のデータ数を参照するべきだが、面倒なので割愛）
+        for (id = 1; id <= maxId; id++)
+        {
+            var characterData = CharacterDataManager.Instance.GetCharacterData(id);
+            if (characterData.characterName.Equals(name))
+            {
+                return id;
+            }
+        }
+        Debug.Log("キャラクター名に合致するIDを見つけられませんでした。");
+        return 0;
+        /*
+        Dictionary<string, int> nameDict = new Dictionary<string, int>()
+        {
+                {"ゾフィ", 1},
+                {"リナ", 2},
+                {"ノア", 3}
+        };
+        if (!nameDict.ContainsKey(name))
+        {
+            return 0;
+        }
+        return nameDict[name];
+        */
     }
 
     /// <summary>

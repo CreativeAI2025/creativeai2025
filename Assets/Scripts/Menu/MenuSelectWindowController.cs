@@ -67,6 +67,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
             {
                 StartCoroutine(HideProcess());
             }
+            SoundManager.Instance.PlaySE(3);
         }
 
     }
@@ -121,6 +122,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     {
         yield return null;
         MenuManager.Instance.OnCloseSelectWindow();
+        SoundManager.Instance.PlaySE(3);
         HideWindow();
     }
 
@@ -146,6 +148,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
             _cursor = 0;
         }
         _uiController.ShowSelectedCursor(_cursor);
+        SoundManager.Instance.PlaySE(1);
     }
     private void PointPrevious()
     {
@@ -155,6 +158,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
             _cursor = _cursorMax - 1;
         }
         _uiController.ShowSelectedCursor(_cursor);
+        SoundManager.Instance.PlaySE(1);
     }
 
     private void SetPhase2Text()

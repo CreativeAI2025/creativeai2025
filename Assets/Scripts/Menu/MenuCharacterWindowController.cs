@@ -122,6 +122,7 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         _canClose = false;
         yield return null;
         MenuManager.Instance.OnCharacterCanceled();
+        SoundManager.Instance.PlaySE(3);
         HideWindow();
     }
 
@@ -163,6 +164,7 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex);
         SetCharacterStatus();
+        SoundManager.Instance.PlaySE(1);
     }
 
     private IEnumerator previousPage()
@@ -177,6 +179,7 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex);
         SetCharacterStatus();
+        SoundManager.Instance.PlaySE(1);
     }
 
     /// <summary>
@@ -187,14 +190,17 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         int currentId = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
         var currentCharacterData = CharacterDataManager.Instance.GetCharacterData(currentId);   // キャラクターのデータを持ってくる
         var currentCharacterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(currentId); // キャラクターの現在のステータスを持ってくる
-        var currentParameterTable = CharacterDataManager.Instance.GetParameterTable(currentId); // キャラクターのパラメータテーブルを取得する
-        var currentParameterRecord = currentParameterTable.parameterRecords[currentCharacterStatus.level - 1]; // キャラクターの実際のステータスの値を持ってくる（持ってきたいレベルのステータス＝
 
         _uiController.SetCharacterNameText(currentCharacterData.characterName);
         _uiController.SetLevelValueText(currentCharacterStatus.level);
         _uiController.SetHPValueText(currentCharacterStatus.currentHp, currentCharacterStatus.maxHp);
         _uiController.SetMPValueText(currentCharacterStatus.currentMp, currentCharacterStatus.maxMp);
         // ここから攻撃力などを入力していく
+        _uiController.SetAttackValueText(currentCharacterStatus.currentAttack);
+        _uiController.SetDefenceValueText(currentCharacterStatus.currentDefence);
+        _uiController.SetMagicAtkValueText(currentCharacterStatus.currentMagicAttack);
+        _uiController.SetMagicDefValueText(currentCharacterStatus.currentMagicDefence);
+        _uiController.SetSpeedValueText(currentCharacterStatus.currentSpeed);
         _uiController.SetCharacterSprite(currentCharacterData.sprite);
     }
 }

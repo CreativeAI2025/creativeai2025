@@ -85,6 +85,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2123257188915495698}
   - component: {fileID: 1194147996280028395}
+  - component: {fileID: -418411388993321651}
+  - component: {fileID: 399377514397282460}
   m_Layer: 0
   m_Name: R1S1
   m_TagString: Untagged
@@ -123,7 +125,7 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: e2562ea93b418f24c9a33a404070a925, type: 2}
-  m_InitialState: 1
+  m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
@@ -144,6 +146,32 @@ PlayableDirector:
     value: {fileID: 3155584886973257606}
   m_ExposedReferences:
     m_References: []
+--- !u!114 &-418411388993321651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2826266145838538656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a1589aa39fda8f4bb1b1e952eedfd24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playableDirector: {fileID: 1194147996280028395}
+  _notifier: {fileID: 399377514397282460}
+--- !u!114 &399377514397282460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2826266145838538656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29598f986f27b7b41b43c6176aeb6274, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3471803812944785224
 GameObject:
   m_ObjectHideFlags: 0

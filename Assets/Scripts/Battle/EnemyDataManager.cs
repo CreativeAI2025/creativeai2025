@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-
+using System.Threading.Tasks;
+using UnityEngine;
 
 /// <summary>
 /// ゲーム内の敵キャラクターのデータを管理するクラスです。
@@ -17,11 +18,19 @@ public class EnemyDataManager : DontDestroySingleton<EnemyDataManager>
     {
         base.Awake();
     }
-    
+
+    public async Task Initialize()
+    {
+        await Task.WhenAll(
+            LoadEnemyData()
+        );
+        Debug.Log("[EnemyDataManager]すべてのデータのロードが完了しました。");
+    }
+
     /// <summary>
     /// 敵キャラクターのデータをロードします。
     /// </summary>
-    public async void LoadEnemyData()
+    public async Task LoadEnemyData()
     {
         AsyncOperationHandle<IList<EnemyData>> handle = Addressables.LoadAssetsAsync<EnemyData>(AddressablesLabels.Enemy, null);
         await handle.Task;

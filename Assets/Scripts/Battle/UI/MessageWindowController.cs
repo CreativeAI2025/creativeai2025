@@ -183,7 +183,14 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
         string message = $"{targetName}{BattleMessage.HealTargetSuffix} {healNum} {BattleMessage.HealNumSuffix}";
         StartCoroutine(ShowMessageWaitInputProcess(message));
     }
-
+    /// <summary>
+    /// 状態異常が回復する時のメッセージを生成します。
+    /// </summary>
+    public void GenerateStaEfeRecoveryMessage(string targetName)
+    {
+        string message = $"{targetName}の状態異常が回復した！";
+        StartCoroutine(ShowMessageWaitInputProcess(message));
+    }
     /// <summary>
     /// 生き返ったときのメッセージを表示
     /// </summary>

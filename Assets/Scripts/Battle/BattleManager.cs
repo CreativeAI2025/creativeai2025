@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics.Tracing;
 /// <summary>
 /// 戦闘に関する機能を管理するクラスです。
 /// </summary>
@@ -80,7 +81,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     /// <value></value>
     public int CharacterCursor { get; private set; }
-
+    bool RunSelect = false;
     public event Action OnBattleStart { add => _onBattleStart += value; remove => _onBattleStart -= value; }
     private Action _onBattleStart;
     public event Action OnBattleEnd { add => _onBattleEnd += value; remove => _onBattleEnd -= value; }
@@ -113,7 +114,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         BattleData = new BattleData();
         BattleData.EnemyIds = enemyIds.ToArray();
-        //BattleData.BGM = "";    // BGMの設定（エンカウントなので、基本的には雑魚戦）
+        BattleData.BGM = "bgm_05";    // BGMの設定（エンカウントなので、基本的には雑魚戦）
         int enemyId = enemyIds[0];
         var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
         // エンカウントした敵の数に応じて、敵出現メッセージを変える
@@ -160,9 +161,10 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     private void Initialize()
     {
-        SetPlayerStatus();  // プレイヤー周りの情報をセットする
+        //SetPlayerStatus();  // プレイヤー周りの情報をセットする
         Logger.Instance.Log("戦闘を開始します。");
         _onBattleStart?.Invoke();
+        SoundManager.Instance.ChangeBGM(BattleData.BGM);
         //  GameStateManager.ChangeToBattle();
         SetBattlePhase(BattlePhase.ShowEnemy);
         TurnCount = 1;
@@ -200,47 +202,11 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     private void SetPlayerStatus()
     {
-        int _playerLevel = 1;
-        // 経験値表を使って、レベルから経験値を取得します。
-        var expTable = CharacterDataManager.Instance.GetExpTable();
-        var expRecord = expTable.expRecords.Find(record => record.Level == _playerLevel);
-        var exp = expRecord.Exp;
-
-        // レベルに対応するパラメータデータを取得します。
-        int charcterId = 1;
-        var parameterTable = CharacterDataManager.Instance.GetParameterTable(charcterId);
-        var parameterRecord = parameterTable.parameterRecords.Find(record => record.Level == _playerLevel);
-
-        // 指定したレベルまでに覚えている魔法のIDをリスト化します。（要改善）
-        List<int> skillList = new List<int>() { 1, 2, 3 };
-
-        // キャラクターのステータスを設定します。
-        CharacterStatus status = new()
-        {
-            characterId = charcterId,
-            level = _playerLevel,
-            exp = exp,
-            currentHp = parameterRecord.HP,
-            currentMp = parameterRecord.MP,
-
-            skillList = skillList,
-        };
-
-        CharacterStatusManager.Instance.characterStatuses = new()
-            {
-                status
-            };
-
-        // パーティにいるキャラクターのIDをセットします。
-        CharacterStatusManager.Instance.partyCharacter = new()
-            {
-                charcterId
-            };
 
         // 所持アイテムをセットします。
         PartyItemInfo item = new()
         {
-            itemId = 1,
+            itemId = 101,
             itemNum = 5,
             usedNum = 1
         };
@@ -385,6 +351,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
 
         // ターゲット選択へ移行
         StartTargetSelection(SelectedCommand, selectedItemId);
+
     }
     /// <summary>
     /// 💡 新規: ターゲット選択フェーズを開始します。
@@ -412,6 +379,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
 
         // ターゲット選択ウィンドウを非表示にする（ここではTargetSelectionControllerが実行すると仮定）
 
+
         // 選択されたコマンドに応じてアクションを登録
         switch (SelectedCommand)
         {
@@ -425,7 +393,14 @@ public class BattleManager : DontDestroySingleton<BattleManager>
                 SetItemCommandAction(targetIds, isTargetFriend, itemId);
                 break;
         }
+        StartCoroutine(DelayPostCommandSelect());
+    }
+    private IEnumerator DelayPostCommandSelect()
+    {
+        // 1フレーム待つことでUIの非表示処理を完了させる
+        yield return null;
 
+        SetBattlePhase(BattlePhase.InputCommand);
         PostCommandSelect();
     }
 
@@ -483,7 +458,8 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         int actorId = CharacterStatusManager.Instance.partyCharacter[0];
         _battleActionRegister.SetFriendRunAction(actorId);
-
+        RunSelect = true;
+        Logger.Instance.Log($"逃げるコマンドが選択されました");
         PostCommandSelect();
     }
     /// <summary>
@@ -539,7 +515,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         // 修正: 次のキャラクターへカーソルを移動させるか、敵フェーズへ移行
         int nextIndex = GetNextActiveCharacterIndex(CharacterCursor + 1);
 
-        if (nextIndex != -1)
+        if (nextIndex != -1 && RunSelect == false)
         {
             // 次のキャラクターへ入力を移行
             CharacterCursor = nextIndex;
@@ -548,6 +524,9 @@ public class BattleManager : DontDestroySingleton<BattleManager>
             // UIの再表示 (次のキャラクターのステータスやコマンドUIへ切り替える処理が別途必要)
             _battleWindowManager.GetCommandWindowController().ShowWindow();
             _battleWindowManager.GetCommandWindowController().InitializeCommand();
+
+            SetBattlePhase(BattlePhase.InputCommand);
+            Logger.Instance.Log($"今の状態{BattlePhase}");
         }
         else
         {
@@ -613,7 +592,8 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         Logger.Instance.Log("逃走に成功しました。");
         IsBattleFinished = true;
-        OnFinishBattle();
+        OnBattleWin();  // デバッグ用に勝ち判定にする
+        //OnFinishBattle();
     }
 
     /// <summary>

@@ -263,13 +263,14 @@ public class ConversationTextManager : DontDestroySingleton<ConversationTextMana
         }
 
         initializeFlag = false;
-        _onConversationEnd?.Invoke();
+
         if (nextTalkData != null)
         {  //会話分岐
             InitializeFromJson(nextTalkData);
         }
         else
         {
+            _onConversationEnd?.Invoke();
             contentObject.SetActive(false);
             // UniTask.Void(async () => 
             // {

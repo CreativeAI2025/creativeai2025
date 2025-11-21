@@ -42,6 +42,19 @@ public class CharacterStatus
     /// </summary>
     public int maxMp;
 
+    public int currentAttack;
+    public int currentDefence;
+    public int currentMagicAttack;
+    public int currentMagicDefence;
+    public int currentSpeed;
+    public int currentEvasion;
+
+    /// <summary>
+    /// 現在所有しているスキルポイント（スキルツリーの開放に必要）
+    /// </summary>
+    public int skillPoint;
+
+
     /// <summary>
     /// 装備中の武器のIDです。
     /// </summary>
@@ -51,7 +64,6 @@ public class CharacterStatus
     /// 装備中の防具のIDです。
     /// </summary>
     public int equipArmorId;
-
     /// <summary>
     /// 覚えた魔法のIDのリストです。
     /// </summary>

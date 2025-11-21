@@ -118,6 +118,23 @@ public class BattleActionProcessorItem : MonoBehaviour
                 // メッセージ表示コルーチンを呼び出し
                 yield return StartCoroutine(ShowItemMpHealMessage(targetId, mpDelta, action.isTargetFriend));
             }
+            else if (itemData.itemEffect.itemEffectCategory == ItemEffectCategory.StaEfeRecovery)
+            {
+                var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(targetId);
+                characterStatus.Poison = false;
+                characterStatus.Paralysis = false;
+                characterStatus.Sleep = false;
+                characterStatus.Confusion = false;
+                yield return StartCoroutine(ShowItemStaEfeRecoveryMessage(targetId,  action.isTargetFriend));
+            }
+            else if (itemData.itemEffect.itemEffectCategory == ItemEffectCategory.Revive)
+            {
+                int healValue = DamageFormula.CalculateHealValue(itemData.itemEffect.value);
+                var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(targetId);
+                characterStatus.isDefeated = false;
+                CharacterStatusManager.Instance.ChangeCharacterStatus(targetId, healValue, 0);
+                yield return StartCoroutine(ShowItemReviveMessage(targetId, healValue, action.isTargetFriend));
+            }
             // ... (他の効果も同様に ShowItem...Message を呼ぶ) ...
 
         } // 💡 foreach (var targetId in action.targetIds) の終了
@@ -164,27 +181,36 @@ public class BattleActionProcessorItem : MonoBehaviour
             yield return null;
         }
     }
+        /// <summary>
+    /// 状態異常回復アイテムのメッセージを表示します。
+    /// </summary>
+    IEnumerator ShowItemStaEfeRecoveryMessage(int targetId, bool isTargetFriend)
+    {
+        string targetName = _actionProcessor.GetCharacterName(targetId, isTargetFriend);
+
+        // 💡 メッセージ表示（UseItemMessageはループ前に移動したため削除）
+
+        _actionProcessor.SetPauseMessage(true);
+        _messageWindowController.GenerateStaEfeRecoveryMessage(targetName);
+        _battleManager.OnUpdateStatus();
+        while (_actionProcessor.IsPausedMessage)
+        {
+            yield return null;
+        }
+    }
     /// <summary>
     /// 蘇生アイテムのメッセージを表示します。
     /// </summary>
-    IEnumerator ShowItemReviveMessage(BattleAction action, string itemName, int reviveHp)
+    IEnumerator ShowItemReviveMessage(int targetId, int healValue, bool isTargetFriend)
     {
-        string actorName = _actionProcessor.GetCharacterName(action.actorId, action.isActorFriend);
-        foreach (var targetId in action.targetIds)
-        {
-            string targetName = _actionProcessor.GetCharacterName(targetId, action.isTargetFriend);
+        string targetName = _actionProcessor.GetCharacterName(targetId, isTargetFriend);
 
-            // アイテム使用メッセージ
-            _actionProcessor.SetPauseMessage(true);
-            _messageWindowController.GenerateUseItemMessage(actorName, itemName);
-            while (_actionProcessor.IsPausedMessage) yield return null;
+        // 蘇生メッセージ（＋回復量表示）
+        _actionProcessor.SetPauseMessage(true);
+        _messageWindowController.GenerateReviveMessage(targetName, healValue);
+        _battleManager.OnUpdateStatus();
+        while (_actionProcessor.IsPausedMessage) yield return null;
 
-            // 蘇生メッセージ（＋回復量表示）
-            _actionProcessor.SetPauseMessage(true);
-            _messageWindowController.GenerateReviveMessage(targetName, reviveHp);
-            _battleManager.OnUpdateStatus();
-            while (_actionProcessor.IsPausedMessage) yield return null;
-        }
 
         _actionProcessor.SetPauseProcess(false);
     }
