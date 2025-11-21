@@ -652,145 +652,145 @@ public class BattleActionProcessorSkill : MonoBehaviour
                     soundManager.PlaySE(13, 0.5f);
                     break;
                 case 8:
-                    soundManager.PlaySE(6, 0.5f);
+                    soundManager.PlaySE(26, 0.5f);
                     break;
                 case 9:
-                    soundManager.PlaySE(7, 0.5f);
+                    soundManager.PlaySE(26, 0.5f);
                     break;
                 case 10:
-                    soundManager.PlaySE(8, 0.5f);
+                    soundManager.PlaySE(26, 0.5f);
                     break;
                 case 11:
-                    soundManager.PlaySE(9, 0.5f);
+                    soundManager.PlaySE(26, 0.5f);
                     break;
                 case 12:
-                    soundManager.PlaySE(10, 0.5f);
+                    soundManager.PlaySE(26, 0.5f);
                     break;
                 case 13:
-                    soundManager.PlaySE(6, 0.5f);
+                    soundManager.PlaySE(27, 0.5f);
                     break;
                 case 14:
-                    soundManager.PlaySE(7, 0.5f);
+                    soundManager.PlaySE(28, 0.5f);
                     break;
                 case 15:
-                    soundManager.PlaySE(8, 0.5f);
+                    soundManager.PlaySE(29, 0.5f);
                     break;
                 case 16:
-                    soundManager.PlaySE(9, 0.5f);
+                    soundManager.PlaySE(22, 0.5f);
                     break;
                 case 17:
-                    soundManager.PlaySE(10, 0.5f);
+                    soundManager.PlaySE(23, 0.5f);
                     break;
                 case 18:
-                    soundManager.PlaySE(11, 0.5f);
+                    soundManager.PlaySE(24, 0.5f);
                     break;
                 case 19:
-                    soundManager.PlaySE(12, 0.5f);
+                    soundManager.PlaySE(25, 0.5f);
                     break;
                 case 20:
-                    soundManager.PlaySE(13, 0.5f);
+                    soundManager.PlaySE(25, 0.5f);
                     break;
                 case 21:
-                    soundManager.PlaySE(6, 0.5f);
+                    soundManager.PlaySE(24, 0.5f);
                     break;
                 case 22:
-                    soundManager.PlaySE(7, 0.5f);
+                    soundManager.PlaySE(24, 0.5f);
                     break;
                 case 23:
-                    soundManager.PlaySE(8, 0.5f);
+                    soundManager.PlaySE(24, 0.5f);
                     break;
                 case 24:
-                    soundManager.PlaySE(9, 0.5f);
+                    soundManager.PlaySE(24, 0.5f);
                     break;
                 case 25:
-                    soundManager.PlaySE(10, 0.5f);
+                    soundManager.PlaySE(24, 0.5f);
                     break;
                 case 26:
-                    soundManager.PlaySE(6, 0.5f);
+                    soundManager.PlaySE(24, 0.5f);
                     break;
                 case 27:
-                    soundManager.PlaySE(7, 0.5f);
+                    soundManager.PlaySE(27, 0.5f);
                     break;
                 case 28:
-                    soundManager.PlaySE(8, 0.5f);
+                    soundManager.PlaySE(44, 0.5f);
                     break;
                 case 29:
-                    soundManager.PlaySE(9, 0.5f);
+                    soundManager.PlaySE(45, 0.5f);
                     break;
                 case 30:
-                    soundManager.PlaySE(10, 0.5f);
+                    soundManager.PlaySE(29, 0.5f);
                     break;
                 case 31:
-                    soundManager.PlaySE(11, 0.5f);
+                    soundManager.PlaySE(28, 0.5f);
                     break;
                 case 32:
-                    soundManager.PlaySE(12, 0.5f);
+                    soundManager.PlaySE(46, 0.5f);
                     break;
                 case 33:
-                    soundManager.PlaySE(13, 0.5f);
+                    soundManager.PlaySE(21, 0.5f);
                     break;
                 case 34:
-                    soundManager.PlaySE(6, 0.5f);
+                    soundManager.PlaySE(47, 0.5f);
                     break;
                 case 35:
-                    soundManager.PlaySE(7, 0.5f);
+                    soundManager.PlaySE(21, 0.5f);
                     break;
                 case 36:
-                    soundManager.PlaySE(8, 0.5f);
+                    soundManager.PlaySE(22, 0.5f);
                     break;
                 case 37:
-                    soundManager.PlaySE(9, 0.5f);
+                    soundManager.PlaySE(48, 0.5f);
                     break;
                 case 38:
-                    soundManager.PlaySE(10, 0.5f);
+                    soundManager.PlaySE(24, 0.5f);
                     break;
                 case 39:
-                    soundManager.PlaySE(6, 0.5f);
+                    soundManager.PlaySE(24, 0.5f);
                     break;
                 case 40:
-                    soundManager.PlaySE(7, 0.5f);
+                    soundManager.PlaySE(14, 0.5f);
                     break;
                 case 41:
-                    soundManager.PlaySE(8, 0.5f);
+                    soundManager.PlaySE(15, 0.5f);
                     break;
                 case 42:
-                    soundManager.PlaySE(9, 0.5f);
+                    soundManager.PlaySE(16, 0.5f);
                     break;
                 case 43:
-                    soundManager.PlaySE(10, 0.5f);
+                    soundManager.PlaySE(17, 0.5f);
                     break;
                 case 44:
-                    soundManager.PlaySE(11, 0.5f);
+                    soundManager.PlaySE(18, 0.5f);
                     break;
                 case 45:
-                    soundManager.PlaySE(12, 0.5f);
+                    soundManager.PlaySE(19, 0.5f);
                     break;
                 case 46:
-                    soundManager.PlaySE(13, 0.5f);
+                    soundManager.PlaySE(20, 0.5f);
                     break;
                 case 47:
-                    soundManager.PlaySE(6, 0.5f);
+                    soundManager.PlaySE(21, 0.5f);
                     break;
                 case 48:
-                    soundManager.PlaySE(7, 0.5f);
+                    soundManager.PlaySE(21, 0.5f);
                     break;
                 case 49:
-                    soundManager.PlaySE(8, 0.5f);
+                    soundManager.PlaySE(21, 0.5f);
                     break;
                 case 50:
-                    soundManager.PlaySE(9, 0.5f);
+                    soundManager.PlaySE(22, 0.5f);
                     break;
                 case 51:
-                    soundManager.PlaySE(10, 0.5f);
+                    soundManager.PlaySE(22, 0.5f);
                     break;
                 case 52:
-                    soundManager.PlaySE(9, 0.5f);
+                    soundManager.PlaySE(23, 0.5f);
                     break;
                 case 53:
-                    soundManager.PlaySE(10, 0.5f);
+                    soundManager.PlaySE(24, 0.5f);
                     break;
                 case 54:
-                    soundManager.PlaySE(10, 0.5f);
+                    soundManager.PlaySE(26, 0.5f);
                     break;
             }
             // 修正: ターゲットの処理が終わったら、次のターゲットに進む前にユーザー入力待ちを挟む

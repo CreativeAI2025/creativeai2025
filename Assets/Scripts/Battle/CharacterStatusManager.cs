@@ -83,6 +83,8 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             currentMagicAttack = characterParameterRecord.MagicAttack,
             currentMagicDefence = characterParameterRecord.MagicDefence,
             currentSpeed = characterParameterRecord.Speed,
+            currentEvasion = characterParameterRecord.Evasion,
+            skillPoint = 0,
             skillList = new List<int>()
         };
 
@@ -108,6 +110,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         var mainCharacterStatus = GetCharacterStatusById(mainId);   // IDから主人公のキャラクターステータスを持ってくる
         int level = mainCharacterStatus.level;  // 新しく加入するメンバーのレベルを、主人公の現在のレベルと同じにする
         characterStatuses.Add(SetCharacterStatus(id, level));   // メンバーを加える
+        //Debug.Log($"新しい仲間が加わった！\nID：{id}\nレベル：{level}");
     }
 
     /// <summary>
