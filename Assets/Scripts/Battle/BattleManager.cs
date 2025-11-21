@@ -114,7 +114,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         BattleData = new BattleData();
         BattleData.EnemyIds = enemyIds.ToArray();
-        BattleData.BGM = "bgm_05";    // BGMの設定（エンカウントなので、基本的には雑魚戦）
+        BattleData.BGM = "bgm_5";    // BGMの設定（エンカウントなので、基本的には雑魚戦）
         int enemyId = enemyIds[0];
         var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
         // エンカウントした敵の数に応じて、敵出現メッセージを変える
@@ -164,7 +164,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         //SetPlayerStatus();  // プレイヤー周りの情報をセットする
         Logger.Instance.Log("戦闘を開始します。");
         _onBattleStart?.Invoke();
-        //SoundManager.Instance.ChangeSE(BattleData.BGM);
+        SoundManager.Instance.ChangeSE(BattleData.BGM);
         //  GameStateManager.ChangeToBattle();
         SetBattlePhase(BattlePhase.ShowEnemy);
         TurnCount = 1;
@@ -625,6 +625,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
 
         //_characterMoverManager.ResumeCharacterMover();
         BattlePhase = BattlePhase.NotInBattle;
+        SoundManager.Instance.SetCurrentSceneBGM();
     }
 
     public void OnBattleWin()
