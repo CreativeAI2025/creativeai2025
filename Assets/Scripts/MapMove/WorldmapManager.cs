@@ -15,7 +15,6 @@ public class WorldmapManager : DontDestroySingleton<WorldmapManager>
 
     // 内部データ
     private Vector2Int _spawnPoint;
-    private int _bgmNumber;
     private string _nextScene;
     private bool _isWorldmapActive = false;
 
@@ -69,11 +68,9 @@ public class WorldmapManager : DontDestroySingleton<WorldmapManager>
     }
 
     public void SetNextScene(string sceneName) => _nextScene = sceneName;
-    public void SetBGM(int bgmNumber) => _bgmNumber = bgmNumber;
     public void SetSpawnPoint(Vector2Int point) => _spawnPoint = point;
 
     public Vector2Int GetSpawnPoint() => _spawnPoint;
-    public int GetBGM() => _bgmNumber;
     public string GetNextScene() => _nextScene;
 
     //=====================================================
@@ -164,7 +161,6 @@ public class WorldmapManager : DontDestroySingleton<WorldmapManager>
                 // 次のシーンと出現地点を設定して終了
                 SetNextScene(worldMapData.mapPoints[currentIndex].sceneName);
                 SetSpawnPoint(worldMapData.mapPoints[currentIndex].spawnPosition);
-                SetBGM(worldMapData.mapPoints[currentIndex].bgmID);
                 _isWorldmapActive = false;
                 Debug.Log("マップ選択された");
             }
