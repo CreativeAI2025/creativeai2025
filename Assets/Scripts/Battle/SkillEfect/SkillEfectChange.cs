@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class SkillEfectChange : MonoBehaviour
 {
-    [Header("画像番号（前から3桁）")] public int animationNum;
+    [Header("画像番号（前から3桁）")] int animationNum = 0;
     private Animator animator;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         animator = GetComponent<Animator>();
-        // PlaySkillAnimation(animationNum);
     }
+
 
     // Update is called once per frame
     void Update()
@@ -27,6 +26,7 @@ public class SkillEfectChange : MonoBehaviour
     /// <param name="animationNum"></param>
     public void PlaySkillAnimation(int animationNum)
     {
+        this.animationNum = animationNum;
         animator.SetInteger("SkillID", animationNum);
         animator.SetTrigger("Play");
     }
