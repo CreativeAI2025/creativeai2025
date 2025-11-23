@@ -69,7 +69,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -147,10 +147,10 @@ TextureImporter:
       name: 225_0
       rect:
         serializedVersion: 2
-        x: 124
-        y: 1654
-        width: 127
-        height: 48
+        x: 0
+        y: 1536
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,10 +169,10 @@ TextureImporter:
       name: 225_1
       rect:
         serializedVersion: 2
-        x: 451
-        y: 1630
-        width: 284
-        height: 137
+        x: 384
+        y: 1536
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,9 +192,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 1217
-        width: 385
-        height: 197
+        y: 1152
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,10 +213,10 @@ TextureImporter:
       name: 225_3
       rect:
         serializedVersion: 2
-        x: 383
-        y: 1197
-        width: 385
-        height: 219
+        x: 384
+        y: 1152
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -236,9 +236,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 792
-        width: 768
-        height: 261
+        y: 768
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -257,10 +257,10 @@ TextureImporter:
       name: 225_5
       rect:
         serializedVersion: 2
-        x: 0
-        y: 407
-        width: 768
-        height: 267
+        x: 384
+        y: 768
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -280,9 +280,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 21
-        width: 768
-        height: 269
+        y: 384
+        width: 384
+        height: 384
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -297,11 +297,77 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: 225_7
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 384
+        width: 384
+        height: 384
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5494e4f8f830784baaf50979c24dc77
+      internalID: 1023169376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 225_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 384
+        height: 384
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0990a2134cf5519428dac6ab519a069b
+      internalID: -1052694693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 225_9
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 384
+        height: 384
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9972e3b8251de3d488d536e448954567
+      internalID: -346595645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 1b2fa69b8ebb24b449c34c9ddc68e5c4
     internalID: 0
     vertices: []
     indices: 
@@ -318,6 +384,9 @@ TextureImporter:
       225_4: -5232494126788275556
       225_5: -1513386080026689967
       225_6: -418880384103900720
+      225_7: 1023169376
+      225_8: -1052694693
+      225_9: -346595645
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
