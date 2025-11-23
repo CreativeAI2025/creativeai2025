@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SkillEfectChange : MonoBehaviour
 {
-    [Header("画像番号（3桁）")] public int animationNum;
+    [Header("画像番号（前から3桁）")] public int animationNum;
     private Animator animator;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -22,7 +22,7 @@ public class SkillEfectChange : MonoBehaviour
     }
 
     /// <summary>
-    /// スキルアニメーションの再生（引数：画像番号3桁）
+    /// スキルアニメーションの再生（引数：画像番号前から3桁）
     /// </summary>
     /// <param name="animationNum"></param>
     public void PlaySkillAnimation(int animationNum)
