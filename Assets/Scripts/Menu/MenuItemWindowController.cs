@@ -14,8 +14,8 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     private List<int> _itemList; // スキルのリスト（１キャラクター）
     private int _characterIndex;
     private int _characterIndexMax;
-    private const string NORMAL_ITEM_TEXT = "消費アイテム";
-    private const string IMPORTANT_ITEM_TEXT = "大切なアイテム";
+    private const string NORMAL_ITEM_TEXT = "戦闘";
+    private const string IMPORTANT_ITEM_TEXT = "大切なもの";
     private bool stop;  // アイテムリストがnullのときは、キャンセルのみ受け付けるようにする
 
     /// <summary>
@@ -36,10 +36,12 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         {
             stop = true;
             Debug.Log("[MenuItemWindowController]itemListの要素が０");
-            return;
         }
-        _selectedItemData = ItemDataManager.Instance.GetItemDataById(_itemList[_itemListCursor]);
-        SetText();
+        else
+        {
+            _selectedItemData = ItemDataManager.Instance.GetItemDataById(_itemList[_itemListCursor]);
+            SetText();
+        }
 
         // ヘッダーの設定
         _headerUIController.Initialize();
@@ -90,20 +92,28 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         {
             StartCoroutine(HideProcess());
         }
-        else if (stop)
-        {
-            return;
-        }
         else if (_inputSetting.GetBackKeyDown())
         {
+            if (stop)
+            {
+                return;
+            }
             ShowNextItem();
         }
         else if (_inputSetting.GetForwardKeyDown())
         {
+            if (stop)
+            {
+                return;
+            }
             ShowPreviousItem();
         }
         else if (_inputSetting.GetDecideInputDown())
         {
+            if (stop)
+            {
+                return;
+            }
             MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.ItemUse, -1);
             SoundManager.Instance.PlaySE(3);
         }
@@ -224,7 +234,12 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private void InitializePage()
     {
+
         _itemListCursor = 0;
+        if (stop)
+        {
+            return;
+        }
         _selectedItemData = ItemDataManager.Instance.GetItemDataById(_itemList[_itemListCursor]);
         SetText();
     }

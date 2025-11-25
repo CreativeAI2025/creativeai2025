@@ -332,6 +332,11 @@ public class SkillTreeManager1 : MonoBehaviour
             category = CharacterParameterCategory.Defence;
             value += 0.05f * count;
         }
+        else if (textName.Contains("素早さ"))
+        {
+            category = CharacterParameterCategory.Speed;
+            value += 0.05f * count;
+        }
         else if (textName.Contains("HP"))
         {
             category = CharacterParameterCategory.HP;

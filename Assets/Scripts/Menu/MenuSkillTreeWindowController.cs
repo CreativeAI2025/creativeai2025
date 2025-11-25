@@ -71,12 +71,12 @@ public class MenuSkillTreeWindowController : MonoBehaviour, IMenuWindowControlle
                 _skillTreeController[1].SetActive(false);
                 _skillTreeController[2].SetActive(false);
                 break;
-            case 3:
+            case 2:
                 _skillTreeController[0].SetActive(false);
                 _skillTreeController[1].SetActive(true);
                 _skillTreeController[2].SetActive(false);
                 break;
-            case 2:
+            case 3:
                 _skillTreeController[0].SetActive(false);
                 _skillTreeController[1].SetActive(false);
                 _skillTreeController[2].SetActive(true);
