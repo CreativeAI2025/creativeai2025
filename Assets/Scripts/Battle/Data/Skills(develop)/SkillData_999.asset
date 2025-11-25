@@ -10,27 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 75fee2ab71e53c24bbd8e6a341727434, type: 3}
-  m_Name: SkillData_003
+  m_Name: SkillData_999
   m_EditorClassIdentifier: 
   skillId: 999
-  skillName: MinHeal
-  skillDesc: Low Heal.
-  cost: 5
+  effectSprite: {fileID: 1335917559, guid: 22ce2e94c054003478e78c652eaecde3, type: 3}
+  skillName: a
+  skillDesc: a
+  cost: 0
   skillEffect:
-    skillCategory: 1
+    skillCategory: 0
     EffectTarget: 0
-    value: 50
-    probability: 0
+    value: 0
+    probability: 100
     StatusEffect: []
     buff: []
-    status: 
-    duration: 0
+    status: "\u5BFE\u8C61\u30B9\u30C6\u30FC\u30BF\u30B9\u306F\u3042\u308A\u307E\u305B\u3093"
+    duration: 1
     isExtra: 0
     extar_skillCategory: 0
     extar_EffectTarget: 0
     extra_value: 0
-    extra_probability: 0
+    extra_probability: 100
     extra_StatusEffect: []
     extar_buff: []
-    extra_status: 
-    extra_duration: 0
+    extra_status: "\u5BFE\u8C61\u30B9\u30C6\u30FC\u30BF\u30B9\u306F\u3042\u308A\u307E\u305B\u3093"
+    extra_duration: 1

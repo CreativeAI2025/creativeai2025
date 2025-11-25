@@ -101,7 +101,9 @@ public class BattleActionProcessorAttack : MonoBehaviour
                     EnemyStatusManager.Instance.OnDefeatEnemy(targetId);
                 }
             }
-
+            var skillData = SkillDataManager.Instance.GetSkillDataById(999);
+             _battleSpriteController.PlayEffectAtEnemy(targetId, skillData.effectSprite);
+            SoundManager.Instance.PlaySE(21, 0.5f);
             // ダメージメッセージ表示
             _actionProcessor.SetPauseMessage(true);
             string targetName = _actionProcessor.GetCharacterName(targetId, action.isTargetFriend);

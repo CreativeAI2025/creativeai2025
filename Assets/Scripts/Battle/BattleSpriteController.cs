@@ -23,7 +23,7 @@ public class BattleSpriteController : MonoBehaviour
     /// 敵キャラクターの表示用Spriteです。
     /// </summary>
     [SerializeField] private Image[] enemySprites;
-        /// <summary>
+    /// <summary>
     /// 敵キャラクターの表示用Spriteです。
     /// </summary>
     [SerializeField] private Image[] enemyEffectSprites;
@@ -105,39 +105,24 @@ public class BattleSpriteController : MonoBehaviour
             }
         }
     }
-        /// <summary>
+    /// <summary>
     /// 敵へのスキルエフェクトを表示します。
     /// </summary>
     /// <param name="enemyId">敵キャラクターのID</param>
-    public void ShowSkillEffectforEnemy(List<int> enemyIds)
+    public void PlayEffectAtEnemy(int targetIndex, Sprite effectSprite)
     {
-        const int EncountMax = 5;
-        for (int i = 0; i < EncountMax; i++)
-        {
-            Sprite enemySprite = voidSprite;
-            if (i < enemyIds.Count)
-            {
-                // 適切な画像を入れる
-                int enemyId = enemyIds[i];
-                var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
-                if (enemyData == null)
-                {
-                    Logger.Instance.LogWarning($"敵キャラクターの画像が取得できませんでした。 ID: {enemyId}");
-                }
-                else
-                {
-                    enemySprite = enemyData.sprite;
-                }
-                enemySprites[i].sprite = enemySprite;
-                enemySprites[i].gameObject.SetActive(true);
-            }
-            else
-            {
-                // 透明の画像を入れる
-                enemySprites[i].sprite = enemySprite;
-                enemySprites[i].gameObject.SetActive(false);
-            }
-        }
+      //  enemyEffectSprites[i].sprite = effectSprite;
+       // enemySprites[i].gameObject.SetActive(true);
+
+        //     if (targetIndex < 0 || targetIndex >= enemySprites.Length) return;
+
+        //     // 敵スプライトと同じ座標にエフェクトを生成
+        //     Vector3 position = enemySprites[targetIndex].transform.position;
+
+        //     Sprite effect = Instantiate(effectSprite, position, Quaternion.identity, this.transform);
+
+        //     // 任意: 1秒後削除
+        //     Destroy(effect, 1f);
     }
 
     /// <summary>
@@ -146,16 +131,6 @@ public class BattleSpriteController : MonoBehaviour
     public void HideEnemy()
     {
         foreach (var image in enemySprites)
-        {
-            image.gameObject.SetActive(false);
-        }
-    }
-    /// <summary>
-    /// 敵キャラクターを非表示にします。
-    /// </summary>
-    public void HideEnemyEffect()
-    {
-        foreach (var image in enemyEffectSprites)
         {
             image.gameObject.SetActive(false);
         }
