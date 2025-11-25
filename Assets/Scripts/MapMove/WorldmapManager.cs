@@ -86,6 +86,7 @@ public class WorldmapManager : DontDestroySingleton<WorldmapManager>
             Debug.LogError("WorldMapData が設定されていません！");
             return;
         }
+        ApplyBackground();
 
         // マップポイント生成
         mapPointObjects = new GameObject[worldMapData.mapPoints.Length];
@@ -101,6 +102,23 @@ public class WorldmapManager : DontDestroySingleton<WorldmapManager>
         ApplyMapPointPositions();
         UpdateUnlockStatesFromFlags();
         UpdateSelectionVisuals();
+    }
+    
+    void ApplyBackground()
+    { 
+        GameObject background = new GameObject("Worldmapimage");
+        background.transform.SetParent(worldmapCanvasInstance.transform, false);
+        Image bgImage = background.AddComponent<Image>();
+        bgImage.sprite = worldMapData.backgroundImage;
+
+        // RectTransform 設定（MapPoint は位置だけだが、背景は全画面にしたいので stretch）
+        RectTransform rt = background.GetComponent<RectTransform>();
+
+        // 全画面に広げる（UI 背景でよく使う）
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
     }
 
     void ApplyMapPointPositions()
