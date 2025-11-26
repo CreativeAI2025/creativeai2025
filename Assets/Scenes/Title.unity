@@ -1264,6 +1264,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1057510835314807609, guid: 891bfdd84b13b394e97945ea1084669c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1607685251449890502, guid: 891bfdd84b13b394e97945ea1084669c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1313,7 +1317,9 @@ PrefabInstance:
       value: WorldmapEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1057510835314807609, guid: 891bfdd84b13b394e97945ea1084669c, type: 3}
+    - {fileID: 2565557490444091136, guid: 891bfdd84b13b394e97945ea1084669c, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 891bfdd84b13b394e97945ea1084669c, type: 3}
@@ -1944,6 +1950,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -150
       objectReference: {fileID: 0}
+    - target: {fileID: 421246902334135040, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 484263001903931052, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -2380,6 +2390,10 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    - target: {fileID: 7403851294897030001, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7611810297147307242, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
       propertyPath: m_fontAsset
       value: 

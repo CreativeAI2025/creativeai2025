@@ -2,11 +2,19 @@
     "EnemyIds":[
         604
     ],
-    "BGM" : "edited_bgm_8",
+    "BGM" : "bgm_8",
+    "EncounterMessage":"こいつも烏の紋章が入っているな……。",
     "WinFlags" : [
         [
             "AdelateBattleFinished",
             true
         ]
+    ],
+    "LoseFlags":
+    [
+      [
+        "AdelateBattleTry",
+        true
+      ]     
     ]
 }
