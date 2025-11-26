@@ -15,7 +15,6 @@ public class WorldmapManager : DontDestroySingleton<WorldmapManager>
 
     // 内部データ
     private Vector2Int _spawnPoint;
-    private int _bgmNumber;
     private string _nextScene;
     private bool _isWorldmapActive = false;
 
@@ -69,11 +68,9 @@ public class WorldmapManager : DontDestroySingleton<WorldmapManager>
     }
 
     public void SetNextScene(string sceneName) => _nextScene = sceneName;
-    public void SetBGM(int bgmNumber) => _bgmNumber = bgmNumber;
     public void SetSpawnPoint(Vector2Int point) => _spawnPoint = point;
 
     public Vector2Int GetSpawnPoint() => _spawnPoint;
-    public int GetBGM() => _bgmNumber;
     public string GetNextScene() => _nextScene;
 
     //=====================================================
@@ -86,6 +83,7 @@ public class WorldmapManager : DontDestroySingleton<WorldmapManager>
             Debug.LogError("WorldMapData が設定されていません！");
             return;
         }
+        ApplyBackground();
 
         // マップポイント生成
         mapPointObjects = new GameObject[worldMapData.mapPoints.Length];
@@ -101,6 +99,23 @@ public class WorldmapManager : DontDestroySingleton<WorldmapManager>
         ApplyMapPointPositions();
         UpdateUnlockStatesFromFlags();
         UpdateSelectionVisuals();
+    }
+    
+    void ApplyBackground()
+    { 
+        GameObject background = new GameObject("Worldmapimage");
+        background.transform.SetParent(worldmapCanvasInstance.transform, false);
+        Image bgImage = background.AddComponent<Image>();
+        bgImage.sprite = worldMapData.backgroundImage;
+
+        // RectTransform 設定（MapPoint は位置だけだが、背景は全画面にしたいので stretch）
+        RectTransform rt = background.GetComponent<RectTransform>();
+
+        // 全画面に広げる（UI 背景でよく使う）
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
     }
 
     void ApplyMapPointPositions()
@@ -164,7 +179,6 @@ public class WorldmapManager : DontDestroySingleton<WorldmapManager>
                 // 次のシーンと出現地点を設定して終了
                 SetNextScene(worldMapData.mapPoints[currentIndex].sceneName);
                 SetSpawnPoint(worldMapData.mapPoints[currentIndex].spawnPosition);
-                SetBGM(worldMapData.mapPoints[currentIndex].bgmID);
                 _isWorldmapActive = false;
                 Debug.Log("マップ選択された");
             }
