@@ -6,11 +6,7 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class MenuManager : DontDestroySingleton<MenuManager>
 {
-    /// <summary>
-    /// キャラクターの移動を行うクラスを管理するクラスへの参照
-    /// </summary>
-    //[SerializeField] CharacterMoverManager _characterMoverManager;
-
+    [SerializeField] private Pause menuUIPause;
     /// <summary>
     /// メニューのトップ画面を制御するクラスへの参照
     /// </summary>
@@ -25,6 +21,8 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     [SerializeField] private MenuItemWindowController _menuItemWindowController;
     [SerializeField] private MenuSelectWindowController _menuSelectWindowController;
     [SerializeField] private MenuSkillTreeWindowController _menuSkillTreeWindowController;
+    // マップ上のプレイヤーの動きを制限させるクラスへの参照
+    private Pause playerPause;
 
     /// <summary>
     /// メニューのフェーズ
@@ -37,6 +35,10 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     public MenuCommand SelectedMenu { get; private set; }
     public MenuUsePhase MenuUsePhase { get; private set; }
 
+    // メニューを開いていいシーンかどうかを判別する（タイトルとエンディング以外は開ける）
+    private bool isOpenMenu = true;
+    private string[] notOpenMenuScenes = new string[] { "Title", "Ending" };
+
     private InputSetting _inputSetting;
 
 
@@ -46,10 +48,33 @@ public class MenuManager : DontDestroySingleton<MenuManager>
 
         // メニューマネージャー固有の初期化処理をここに記述
         Debug.Log("[MenuManager] Specific initialization for IMenuManager completed.");
+        HideMenuWindowAll();
     }
     void Start()
     {
         _inputSetting = InputSetting.Load();
+
+        // 会話中にメニューを開けなくする
+        ConversationTextManager.Instance.OnConversationStart += menuUIPause.PauseAll;
+        ConversationTextManager.Instance.OnConversationEnd += menuUIPause.UnPauseAll;
+
+        // 戦闘中にメニューを開けなくする
+        BattleManager.Instance.OnBattleStart += menuUIPause.PauseAll;
+        BattleManager.Instance.OnBattleEnd += menuUIPause.UnPauseAll;
+
+        // アニメーション中にメニューを開けなくする
+        AnimationManager.Instance.OnAnimationStart += menuUIPause.PauseAll;
+        AnimationManager.Instance.OnAnimationEnd += menuUIPause.UnPauseAll;
+
+        // ワールドマップ表示中はメニューを開けなくする
+        WorldmapManager.Instance.OnWorldmapStart += menuUIPause.PauseAll;
+        WorldmapManager.Instance.OnWorldmapEnd += menuUIPause.UnPauseAll;
+
+        SceneManager.sceneLoaded += SceneLoaded;
+        SetIsMenuOpen(SceneManager.GetActiveScene().name);
+
+        //playerPause = GameObject.Find("Pause").GetComponent<Pause>();
+
     }
 
     // Update is called once per frame
@@ -60,22 +85,18 @@ public class MenuManager : DontDestroySingleton<MenuManager>
 
     private void CheckOpenMenuKey()
     {
-        /*
-        // 移動中以外の場合は、メニューを開けないようにする
-        if (GameStateManager.CurrentState != GameState.Moving)
-        {
-            return;
-        }
-        */
-
         // メニューが閉じている場合のみ、メニューを開くキーの入力を確認する
         if (MenuPhase != MenuPhase.Closed)
         {
             return;
         }
 
+        if (!isOpenMenu)
+        {
+            return;
+        }
+
         // メニューキーが押された時、メニューを開く
-        // ここは将来いらないだろう
         if (_inputSetting.GetMenuKeyDown())
         {
             OpenMenu();
@@ -85,7 +106,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     /// <summary>
     /// メニュー画面の表示
     /// </summary>
-    public void OpenMenu()
+    private void OpenMenu()
     {
         StartCoroutine(OpenMenuProcess());
     }
@@ -97,12 +118,16 @@ public class MenuManager : DontDestroySingleton<MenuManager>
         /// </summary>
         yield return null;
 
+        if (playerPause != null)
+        {
+            playerPause.PauseAll(); // マップ上のプレイヤーの動きを止める
+        }
         MenuPhase = MenuPhase.Top;
         MenuUsePhase = MenuUsePhase.Closed;
         _topMenuWindowController.InitializeCommand();
         _topMenuWindowController.ShowWindow();
 
-        //_characterMoverManager.StopCharacterMover();
+        SoundManager.Instance.PlaySE(0, 0.7f);
     }
 
     /// <summary>
@@ -113,6 +138,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     {
         SelectedMenu = menuCommand;
         HandleMenu();
+        SoundManager.Instance.PlaySE(3, 0.7f);
     }
 
     /// <summary>
@@ -192,20 +218,23 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     public void OnCloseMenu()
     {
         MenuPhase = MenuPhase.Closed;
-        //_characterMoverManager.ResumeCharacterMover();
+        if (playerPause != null)
+        {
+            playerPause.UnPauseAll();   // マップ上のキャラクターを動かせるようにする
+        }
     }
 
     // アイテム/スキル選択ウィンドウを表示させる。引数にはSkillUseかItemUseの値を入れる
-    public void OnOpenSelectWindow(MenuUsePhase m)
+    public void OnOpenSelectWindow(MenuUsePhase m, int userId)
     {
         MenuUsePhase = m;
         if (m == MenuUsePhase.SkillUse)
         {
-            _menuSelectWindowController.SetSkillData(_menuSkillWindowController.getSkillData());
+            _menuSelectWindowController.SetSkillData(_menuSkillWindowController.getSkillData(), userId);
         }
         else if (m == MenuUsePhase.ItemUse)
         {
-            //
+            _menuSelectWindowController.SetItemData(_menuItemWindowController.getItemData());
         }
         _menuSelectWindowController.ShowWindow();
     }
@@ -216,5 +245,40 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     {
         MenuUsePhase = MenuUsePhase.Closed;
         _menuSelectWindowController.HideWindow();
+    }
+
+    /// <summary>
+    /// メニューの全てのウィンドウを閉じる
+    /// </summary>
+    private void HideMenuWindowAll()
+    {
+        _topMenuWindowController.HideWindow();
+        _menuCharacterWindowController.HideWindow();
+        _menuSkillWindowController.HideWindow();
+        _menuItemWindowController.HideWindow();
+        _menuSelectWindowController.HideWindow();
+        _menuSkillTreeWindowController.HideWindow();
+    }
+
+    /// <summary>
+    /// シーンの切り替え時にこの関数を呼び、メニュー画面が開けるシーンかどうかを判別する
+    /// </summary>
+    private void SetIsMenuOpen(string sceneName)
+    {
+        isOpenMenu = true;
+        foreach (string scene in notOpenMenuScenes)
+        {
+            if (sceneName.Equals(scene))
+            {
+                isOpenMenu = false;
+                return;
+            }
+        }
+    }
+
+    private void SceneLoaded(Scene nextScene, LoadSceneMode mode)
+    {
+        SetIsMenuOpen(nextScene.name);
+        playerPause = GameObject.Find("Pause").GetComponent<Pause>();
     }
 }

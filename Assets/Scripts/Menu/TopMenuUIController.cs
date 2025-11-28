@@ -1,24 +1,33 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TopMenuUIController : MonoBehaviour, IMenuUIController
 {
+    /*
+    以下、「カーソル」と表記されていますが、imageカラーを変えるように変更されているので、ご注意を
+    */
     /// <summary>
     /// メニューの各カーソルオブジェクト
     /// </summary>
-    [SerializeField] GameObject _cursorObjCharacter;
-    [SerializeField] GameObject _cursorObjSkill;
-    [SerializeField] GameObject _cursorObjItem;
-    [SerializeField] GameObject _cursorObjSkillBoard;
+    [SerializeField] Image _cursorObjCharacter;
+    [SerializeField] Image _cursorObjSkill;
+    [SerializeField] Image _cursorObjItem;
+    [SerializeField] Image _cursorObjSkillBoard;
+
+    // カーソルが指されていないときの色
+    private Color white = Color.white;
+    // カーソルが指されているときの色
+    private Color selectedColor = Color.red;
 
     /// <summary>
     /// コマンドのカーソルを全て非表示にする
     /// </summary>
     private void HideAllCursor()
     {
-        _cursorObjCharacter.SetActive(false);
-        _cursorObjSkill.SetActive(false);
-        _cursorObjItem.SetActive(false);
-        _cursorObjSkillBoard.SetActive(false);
+        _cursorObjCharacter.color = white;
+        _cursorObjSkill.color = white;
+        _cursorObjItem.color = white;
+        _cursorObjSkillBoard.color = white;
     }
 
     /// <summary>
@@ -32,19 +41,19 @@ public class TopMenuUIController : MonoBehaviour, IMenuUIController
         switch (command)
         {
             case MenuCommand.Character:
-                _cursorObjCharacter.SetActive(true);
+                _cursorObjCharacter.color = selectedColor;
                 //Debug.Log("キャラクター選択中");
                 break;
             case MenuCommand.Skill:
-                _cursorObjSkill.SetActive(true);
+                _cursorObjSkill.color = selectedColor;
                 //Debug.Log("スキル選択中");
                 break;
             case MenuCommand.Item:
-                _cursorObjItem.SetActive(true);
+                _cursorObjItem.color = selectedColor;
                 //Debug.Log("アイテム選択中");
                 break;
             case MenuCommand.SkillTree:
-                _cursorObjSkillBoard.SetActive(true);
+                _cursorObjSkillBoard.color = selectedColor;
                 //Debug.Log("スキルボード選択中");
                 break;
         }

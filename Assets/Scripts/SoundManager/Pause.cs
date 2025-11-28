@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class Pause : MonoBehaviour
 {
-    [SerializeField] private List<Behaviour> pauseScripts;
-    
+    [SerializeField] private List<MonoBehaviour> pauseScripts;
+
     public void PauseAll()
     {
         foreach (Behaviour behaviour in pauseScripts)

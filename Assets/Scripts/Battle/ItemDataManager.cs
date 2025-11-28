@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using System.Linq;
+using System.Threading.Tasks;
 
 /// <summary>
 /// ゲーム内のアイテムを管理するクラスです。
@@ -18,13 +19,20 @@ public class ItemDataManager : DontDestroySingleton<ItemDataManager>
     public override void Awake()
     {
         base.Awake();
-        LoadItemData();
+    }
+
+    public async Task Initialize()
+    {
+        await Task.WhenAll(
+            LoadItemData()
+        );
+        Debug.Log("[ItemDatamanager]すべてのデータのロードが完了しました。");
     }
 
     /// <summary>
     /// アイテムデータをロードします。
     /// </summary>
-    public async void LoadItemData()
+    private async Task LoadItemData()
     {
         AsyncOperationHandle<IList<ItemData>> handle = Addressables.LoadAssetsAsync<ItemData>(AddressablesLabels.Item, null);
         await handle.Task;

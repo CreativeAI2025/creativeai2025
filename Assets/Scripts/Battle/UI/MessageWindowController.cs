@@ -137,20 +137,32 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     /// <summary>
     ///バフデバフを受けたときのメッセージを表示します。
     /// </summary>
-    public void GenerateRecoverStatusMessage(string targetName, string buffMessage, int buffValue)
+    public void GenerateRecoverStatusMessage(string targetName, string buffMessage, float buffValue)
     {
         string message = "";
-        if (buffValue < 1.2)
+        if (1.0 < buffValue && buffValue <= 1.2)
         {
             message = $"{targetName}{buffMessage}{BattleMessage.FewStatusUpSuffix}";
         }
-        else if (buffValue < 1.7)
+        else if (1.2<buffValue && buffValue <= 1.7)
         {
             message = $"{targetName}{buffMessage}{BattleMessage.StatusUpSuffix}";
         }
         else if (buffValue > 1.7)
         {
             message = $"{targetName}{buffMessage}{BattleMessage.VeryStatusUpSuffix}";
+        }
+        else if (1.0>buffValue && buffValue>=0.8)
+        {
+            message = $"{targetName}{buffMessage}{BattleMessage.FewStatusDownSuffix}";
+        }
+        else if (0.8>buffValue && buffValue>= 0.6)
+        {
+            message = $"{targetName}{buffMessage}{BattleMessage.StatusDownSuffix}";
+        }
+        else if (0.6>buffValue )
+        {
+            message = $"{targetName}{buffMessage}{BattleMessage.VeryStatusDownSuffix}";
         }
         StartCoroutine(ShowMessageAutoProcess(message));
     }
@@ -171,7 +183,14 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
         string message = $"{targetName}{BattleMessage.HealTargetSuffix} {healNum} {BattleMessage.HealNumSuffix}";
         StartCoroutine(ShowMessageWaitInputProcess(message));
     }
-
+    /// <summary>
+    /// 状態異常が回復する時のメッセージを生成します。
+    /// </summary>
+    public void GenerateStaEfeRecoveryMessage(string targetName)
+    {
+        string message = $"{targetName}の状態異常が回復した！";
+        StartCoroutine(ShowMessageWaitInputProcess(message));
+    }
     /// <summary>
     /// 生き返ったときのメッセージを表示
     /// </summary>

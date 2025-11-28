@@ -1,0 +1,40 @@
+{
+  "Id": 2,
+  "Location": [
+    {
+      "MapName": "Forest",
+      "Position": [
+          8,
+          11
+      ]
+    },
+    {
+      "MapName": "Forest",
+      "Position": [
+          9,
+          11
+      ]
+    }
+  ],
+  "EventName": "Animation R1S5FT_2 | Conversation Mori_1_2",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "rina_friend",
+        false
+      ],
+      [
+        "rinafriendFinished",
+        false
+      ]
+    ],
+    
+    "NextFlag": [
+      [
+      "rinafriendFinished",
+        true
+      ]
+    ]
+  }
+}

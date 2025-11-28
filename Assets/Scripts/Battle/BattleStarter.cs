@@ -77,7 +77,9 @@ public class BattleStarter : MonoBehaviour
         }
 
         var controller = BattleManager.Instance.GetWindowManager().GetStatusWindowController();
-        controller.SetCharacterStatus(characterStatus);
+        controller.SetCharacterStatus(CharacterStatusManager.Instance.GetCharacterStatusById(1));
+        controller.SetCharacterStatus(CharacterStatusManager.Instance.GetCharacterStatusById(2));
+        controller.SetCharacterStatus(CharacterStatusManager.Instance.GetCharacterStatusById(3));
         controller.ShowWindow();
     }
 

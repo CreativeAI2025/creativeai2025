@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using System.Threading.Tasks;
 
-    /// <summary>
-    /// ゲーム内の魔法データを管理するクラスです。
-    /// </summary>
+/// <summary>
+/// ゲーム内の魔法データを管理するクラスです。
+/// </summary>
 public class SkillDataManager : DontDestroySingleton<SkillDataManager>
 {
     /// <summary>
@@ -18,28 +19,20 @@ public class SkillDataManager : DontDestroySingleton<SkillDataManager>
     public override void Awake()
     {
         base.Awake();
-        LoadSkillData();
     }
 
-    /*
-    /// <summary>
-    /// デバッグ用
-    /// </summary>
-    public void Update()
+    public async Task Initialize()
     {
-        if (Input.GetKey(KeyCode.R))
-        {
-            int rand = Random.Range(1, _skillDataDictionary.Count + 1);
-            SkillData sd = GetSkillDataById(rand);
-            Debug.Log("[SkillDataManager]ランダムなスキルデータを習得" + sd);
-        }
+        await Task.WhenAll(
+            LoadSkillData()
+        );
+        Debug.Log("[SkillDatamanager]すべてのデータのロードが完了しました。");
     }
-    */
 
     /// <summary>
     /// 魔法データをロードします。
     /// </summary>
-    public async void LoadSkillData()
+    public async Task LoadSkillData()
     {
         AsyncOperationHandle<IList<SkillData>> handle = Addressables.LoadAssetsAsync<SkillData>(AddressablesLabels.Skill, null);
         await handle.Task;

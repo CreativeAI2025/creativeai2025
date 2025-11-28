@@ -16,14 +16,17 @@ public class ObjectEngine : MonoBehaviour
     [SerializeField] private PlayerController player;
     //[SerializeField] private ItemInventory inventory;
     //[SerializeField] private ItemDatabase itemDatabase;
-    //[SerializeField] private Pause pause;
+    [SerializeField] private Pause pause;
 
     [SerializeField] private MapEngine mapEngine;
     [SerializeField] private MapDataController mapDataController;
-    private static Vector2Int changedPos = new Vector2Int(4, 2);
+    private static Vector2Int changedPos = new Vector2Int(12, 4);
     private string _mapName;
     private Vector2Int _pastGridPosition = new Vector2Int(-1, -1);
     private bool conversationFlag = false;
+    private bool battleFlag = false;
+    private bool animationFlag = false;
+    private bool worldmapFlag = false;
     private bool changeSceneFlag = false;
     private bool runFlag = false;
     private InputSetting _inputSetting;
@@ -37,9 +40,37 @@ public class ObjectEngine : MonoBehaviour
         }
         mapDataController.LoadMapData(_mapName);
 
-        //ConversationTextManager.Instance.OnConversationStart += Pause;
-        //ConversationTextManager.Instance.OnConversationEnd += UnPause;
+        /* 
+        会話開始時に、マップ上のキャラクター移動を止める
+        会話終了後に、マップ上のキャラクター移動を再開する
+        */
+        ConversationTextManager.Instance.OnConversationStart += Pause;
+        ConversationTextManager.Instance.OnConversationEnd += UnPause;
         ConversationTextManager.Instance.OnConversationEnd += () => conversationFlag = false;
+
+        /* 
+        戦闘開始時に、マップ上のキャラクター移動を止める
+        戦闘終了後に、マップ上のキャラクター移動を再開する
+        */
+        BattleManager.Instance.OnBattleStart += Pause;
+        BattleManager.Instance.OnBattleEnd += UnPause;
+        BattleManager.Instance.OnBattleEnd += () => battleFlag = false;
+
+        /* 
+        アニメーション開始時に、マップ上のキャラクター移動を止める
+        アニメーション終了後に、マップ上のキャラクター移動を再開する
+        */
+        AnimationManager.Instance.OnAnimationStart += Pause;
+        AnimationManager.Instance.OnAnimationEnd += UnPause;
+        AnimationManager.Instance.OnAnimationEnd += () => animationFlag = false;
+
+        /*
+
+        */
+        WorldmapManager.Instance.OnWorldmapStart += Pause;
+        WorldmapManager.Instance.OnWorldmapEnd += UnPause;
+        WorldmapManager.Instance.OnWorldmapEnd += () => worldmapFlag = false;
+
         mapDataController.SetChange(ResetAction);
         ResetAction();
         PlayerMove(changedPos);
@@ -54,6 +85,7 @@ public class ObjectEngine : MonoBehaviour
     // Start is called before the first frame update
     private void Initialize(string mapName, int width, int height)
     {
+        UnityEngine.Debug.Log($"マップサイズ：｛{width}、{height}｝");
         _eventObjects = new List<ObjectData>[width][];
         _trapEventObjects = new List<ObjectData>[width][];
         for (int i = 0; i < width; i++)
@@ -82,9 +114,9 @@ public class ObjectEngine : MonoBehaviour
                 {
                     if (location.Position.x == -1 && location.Position.y == -1)
                     {
-                        for (int i=0; i<width; i++)
+                        for (int i = 0; i < width; i++)
                         {
-                            for (int j=0; j<height; j++)
+                            for (int j = 0; j < height; j++)
                             {
                                 _trapEventObjects[i][j].Add(objectData);
                             }
@@ -94,7 +126,7 @@ public class ObjectEngine : MonoBehaviour
                     {
                         _trapEventObjects[location.Position.x][location.Position.y].Add(objectData);
                     }
-                    
+
                 }
                 else
                 {
@@ -105,7 +137,7 @@ public class ObjectEngine : MonoBehaviour
         }
     }
 
-    
+
     [Conditional("UNITY_EDITOR")]
     private void OnDrawGizmos()
     {
@@ -116,23 +148,23 @@ public class ObjectEngine : MonoBehaviour
                 if (_trapEventObjects[j][i].Any())
                 {
                     Gizmos.color = Color.yellow;
-                    DrawRect(new Rect(j-0.5f, i-0.5f, 1, 1));
+                    DrawRect(new Rect(j - 0.5f, i - 0.5f, 1, 1));
                 }
                 else if (_eventObjects[j][i].Any())
                 {
                     Gizmos.color = Color.green;
-                    DrawRect(new Rect(j-0.5f, i-0.5f, 1, 1));
+                    DrawRect(new Rect(j - 0.5f, i - 0.5f, 1, 1));
                 }
             }
         }
     }
-    
+
     [Conditional("UNITY_EDITOR")]
     void DrawRect(Rect rect)
     {
         Gizmos.DrawWireCube(new Vector3(rect.center.x, rect.center.y, 0.01f), new Vector3(rect.size.x, rect.size.y, 0.01f));
     }
-    
+
     private async void Update()
     {
         if (conversationFlag || changeSceneFlag) return;
@@ -175,17 +207,17 @@ public class ObjectEngine : MonoBehaviour
         }
     }
 
-    /*private void Pause()
+    private void Pause()
     {
-        DebugLogger.Log("Pause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null), DebugLogger.Colors.Magenta);
+        UnityEngine.Debug.Log("Pause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null));
         pause.PauseAll();
     }
 
     private void UnPause()
     {
-        DebugLogger.Log("UnPause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null), DebugLogger.Colors.Magenta);
+        UnityEngine.Debug.Log("UnPause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null));
         pause.UnPauseAll();
-    }*/
+    }
 
     private async UniTask Call(ObjectData objectData, params int[] triggerType)
     {
@@ -196,7 +228,7 @@ public class ObjectEngine : MonoBehaviour
         {
             foreach (var x in objectData.FlagCondition.Flag)
             {
-                //DebugLogger.Log(x.Key + " : expected: " + x.Value + " : actual:" + FlagManager.Instance.HasFlag(x.Key), DebugLogger.Colors.Blue);
+                UnityEngine.Debug.Log(x.Key + " : expected: " + x.Value + " : actual:" + FlagManager.Instance.HasFlag(x.Key));
             }
             if (IsFlagsInsufficient(objectData))
             {
@@ -256,6 +288,34 @@ public class ObjectEngine : MonoBehaviour
                 TileModify(eventArgs[1], Enum.Parse<MapDataController.TileLayer>(eventArgs[2]), position,
                     eventArgs[4].ToCharArray()[0]);
                 break;
+            case "Battle":
+                battleFlag = true;
+                Battle(eventArgs[1]);
+                await UniTask.WaitUntil(() => !battleFlag);
+                break;
+            case "Animation":
+                animationFlag = true;
+                Animation(eventArgs[1]);
+                await UniTask.WaitUntil(() => !animationFlag);
+                break;
+            case "Join":
+                conversationFlag = true;
+                JoinPartyMember(int.Parse(eventArgs[1]));
+                await UniTask.WaitUntil(() => !conversationFlag);
+                break;
+            case "Recover":
+                conversationFlag = true;
+                Recover();
+                await UniTask.WaitUntil(() => !conversationFlag);
+                break;
+            case "Worldmap":
+                worldmapFlag = true;
+                Worldmap();
+                await UniTask.WaitUntil(() => !worldmapFlag);
+                changedPos = WorldmapManager.Instance.GetSpawnPoint();
+                string sceneName = WorldmapManager.Instance.GetNextScene();
+                await SceneChange(sceneName);
+                break;
             default: throw new NotImplementedException();
         }
     }
@@ -271,11 +331,11 @@ public class ObjectEngine : MonoBehaviour
         {
             if (nextFlag.Value)
             {
-                //FlagManager.Instance.AddFlag(nextFlag.Key);
+                FlagManager.Instance.AddFlag(nextFlag.Key);
             }
             else
             {
-               //FlagManager.Instance.DeleteFlag(nextFlag.Key);
+                FlagManager.Instance.DeleteFlag(nextFlag.Key);
             }
         }
     }
@@ -283,8 +343,17 @@ public class ObjectEngine : MonoBehaviour
     private async UniTask SceneChange(string sceneName)
     {
         changeSceneFlag = true;
-        //ConversationTextManager.Instance.OnConversationStart -= Pause;
-        //ConversationTextManager.Instance.OnConversationEnd -= UnPause;
+        ConversationTextManager.Instance.OnConversationStart -= Pause;
+        ConversationTextManager.Instance.OnConversationEnd -= UnPause;
+        BattleManager.Instance.OnBattleStart -= Pause;
+        BattleManager.Instance.OnBattleEnd -= UnPause;
+        AnimationManager.Instance.OnAnimationStart -= Pause;
+        AnimationManager.Instance.OnAnimationEnd -= UnPause;
+        WorldmapManager.Instance.OnWorldmapStart -= Pause;
+        WorldmapManager.Instance.OnWorldmapEnd -= UnPause;
+
+        UnityEngine.Debug.Log($"移動先の座標｛{changedPos.x}、{changedPos.y}｝");
+
         await SceneManager.LoadSceneAsync(sceneName).ToUniTask();
         PlayerPrefs.SetString("SceneName", sceneName);
     }
@@ -299,6 +368,41 @@ public class ObjectEngine : MonoBehaviour
         ConversationTextManager.Instance.InitializeFromJson(fileName);
     }
 
+    private void Battle(string fileName)
+    {
+        BattleManager.Instance.InitializeFromJson(fileName);
+    }
+
+    private void Animation(string animationName)
+    {
+        AnimationManager.Instance.InitializeFromString(animationName);
+    }
+
+    private void JoinPartyMember(int id)
+    {
+        var characterData = CharacterDataManager.Instance.GetCharacterData(id);
+        var name = characterData.characterName;
+        string joinText = name + "が　仲間に加わった！"; // ここで「○○が仲間に加わった！」というテキストを設定する
+        CharacterStatusManager.Instance.SetNewFriend(id);   // パーティメンバーに加える
+        ConversationTextManager.Instance.InitializeFromString(joinText);    // 会話ウィンドウにテキストを表示させる
+    }
+
+    private async void Worldmap()
+    {
+        WorldmapManager.Instance.StartWorldmapAsync();
+    }
+
+    private void Recover()
+    {
+        string messageText = "ゾフィは回復した";
+        List<int> partyIds = CharacterStatusManager.Instance.partyCharacter;
+        foreach (int id in partyIds)
+        {
+            CharacterStatusManager.Instance.ChangeCharacterStatus(id, 9999, 9999);
+        }
+        ConversationTextManager.Instance.InitializeFromString(messageText);
+    }
+
     private void GetItem(string itemName)
     {
         //Item item = itemDatabase.GetItem(itemName);
@@ -307,7 +411,7 @@ public class ObjectEngine : MonoBehaviour
         SoundManager.Instance.PlaySE(9, 5f); //アイテム拾う
         inventory.Add(item);
         CombineItem(item);*/
-        
+
         /*if (item.HasContentText())
         {
             //ConversationTextManager.Instance.InitializeFromJson($"{itemName}_get");
@@ -326,9 +430,9 @@ public class ObjectEngine : MonoBehaviour
         }
     }*/
 
-    private void TileModify(string mapName, MapDataController.TileLayer layer, Vector2Int position, char tipSign) 
+    private void TileModify(string mapName, MapDataController.TileLayer layer, Vector2Int position, char tipSign)
     {
-        mapDataController.ChangeMapTile(mapName, layer, position, tipSign); 
+        mapDataController.ChangeMapTile(mapName, layer, position, tipSign);
         mapDataController.ApplyMapChange();
     }
 

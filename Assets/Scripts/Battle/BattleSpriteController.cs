@@ -12,7 +12,7 @@ public class BattleSpriteController : MonoBehaviour
     /// 背景の表示用Spriteです。
     /// </summary>
     [SerializeField]
-    SpriteRenderer _backgroundRenderer;
+    GameObject _backgroundRenderer;
 
     /// <summary>
     /// 透明画像
@@ -23,6 +23,10 @@ public class BattleSpriteController : MonoBehaviour
     /// 敵キャラクターの表示用Spriteです。
     /// </summary>
     [SerializeField] private Image[] enemySprites;
+    /// <summary>
+    /// 敵キャラクターの表示用Spriteです。
+    /// </summary>
+    [SerializeField] private List<SkillEfectChange> enemyEffectSprites = new List<SkillEfectChange>();
 
     /// <summary>
     /// カメラへの参照です。
@@ -34,7 +38,7 @@ public class BattleSpriteController : MonoBehaviour
     /// </summary>
     public void ShowBackground()
     {
-        _backgroundRenderer.gameObject.SetActive(true);
+        _backgroundRenderer.SetActive(true);
     }
 
     /// <summary>
@@ -42,7 +46,7 @@ public class BattleSpriteController : MonoBehaviour
     /// </summary>
     public void HideBackground()
     {
-        _backgroundRenderer.gameObject.SetActive(false);
+        _backgroundRenderer.SetActive(false);
     }
 
     /// <summary>
@@ -100,6 +104,26 @@ public class BattleSpriteController : MonoBehaviour
                 enemySprites[i].gameObject.SetActive(false);
             }
         }
+    }
+    /// <summary>
+    /// 敵へのスキルエフェクトを表示します。
+    /// </summary>
+    /// <param name="enemyId">敵キャラクターのID</param>
+    public void PlayEffectAtEnemy(int targetIndex, int animationNum)
+    {
+        enemyEffectSprites[targetIndex].PlaySkillAnimation(animationNum);
+      //  enemyEffectSprites[i].sprite = effectSprite;
+       // enemySprites[i].gameObject.SetActive(true);
+
+        //     if (targetIndex < 0 || targetIndex >= enemySprites.Length) return;
+
+        //     // 敵スプライトと同じ座標にエフェクトを生成
+        //     Vector3 position = enemySprites[targetIndex].transform.position;
+
+        //     Sprite effect = Instantiate(effectSprite, position, Quaternion.identity, this.transform);
+
+        //     // 任意: 1秒後削除
+        //     Destroy(effect, 1f);
     }
 
     /// <summary>

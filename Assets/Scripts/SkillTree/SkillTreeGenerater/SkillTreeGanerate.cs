@@ -29,10 +29,13 @@ public class SkillTreeGanerate : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        sum_sp = 0;
-        dataSetting.DataSet();
-        View();
-        sum_sp = SumSP();
+        if (this.gameObject.activeSelf)
+        {
+            sum_sp = 0;
+            dataSetting.DataSet();
+            View();
+            sum_sp = SumSP();
+        }
     }
 
     // Update is called once per frame

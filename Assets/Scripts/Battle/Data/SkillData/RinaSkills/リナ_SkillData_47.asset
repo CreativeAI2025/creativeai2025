@@ -21,10 +21,20 @@ MonoBehaviour:
     EffectTarget: 0
     value: 20
     probability: 100
+    StatusEffect: []
+    buff: []
     status: 
     duration: 0
     isExtra: 1
+    extar_skillCategory: 6
+    extar_EffectTarget: 0
     extra_value: 20
     extra_probability: 100
+    extra_StatusEffect: []
+    extar_buff:
+    - BuffCategory: 1
+      effectTarget: 0
+      Duration: 0
+      Power: 20
     extra_status: "\u9632\u5FA1\u529B"
     extra_duration: 0

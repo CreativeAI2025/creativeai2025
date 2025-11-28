@@ -4,29 +4,41 @@
         {
             "MapName": "Village",
             "Position": [
-                24,
+                15,
                 0
             ]
         },
         {
             "MapName": "Village",
             "Position": [
-                25,
+                16,
                 0
             ]
         },
         {
             "MapName": "Village",
             "Position": [
-                26,
+                17,
+                0
+            ]
+        },
+        {
+            "MapName": "Village",
+            "Position": [
+                18,
                 0
             ]
         }
     ],
-    "EventName": "ChangeScene Worldmap,5,1",
+    "EventName": "Recover | Worldmap",
     "TriggerType": 0,
     "FlagCondition": {
-        "Flag": [],
+        "Flag": [
+            [
+                "NusiBattleFinished",
+                true
+            ]
+        ],
         "NextFlag": []
     }
 }

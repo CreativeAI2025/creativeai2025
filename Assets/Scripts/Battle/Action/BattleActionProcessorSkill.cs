@@ -8,7 +8,9 @@ public class BattleActionProcessorSkill : MonoBehaviour
     BattleActionProcessor _actionProcessor;
     BattleManager _battleManager;
     MessageWindowController _messageWindowController;
+    EnemyStatusManager _enemyStatusManager;
     BattleSpriteController _battleSpriteController;
+    SkillAnimationManager _skillAnimationManager;
 
     // 追加: 状態異常マネージャー
     [SerializeField] private StatusEffectManager statusEffectManager;
@@ -79,7 +81,19 @@ public class BattleActionProcessorSkill : MonoBehaviour
     {
         // ... (MP消費処理) ...
 
+
+
+        // 消費MP処理
+        int hpDelta = 0;
+        int mpDelta = skillData.cost * -1;
+        if (action.isActorFriend)
+            CharacterStatusManager.Instance.ChangeCharacterStatus(action.actorId, hpDelta, mpDelta);
+        else
+            _enemyStatusManager.ChangeEnemyStatus(action.actorId, hpDelta, mpDelta);
+
         _actionProcessor.SetPauseProcess(true);
+
+
 
         // 修正: 有効なターゲットのみでリストを再構築（他のアクションで倒された敵を除外）
         List<int> effectiveTargetIds = _actionProcessor.GetValidTargets(action.targetIds, action.isTargetFriend);
@@ -93,6 +107,8 @@ public class BattleActionProcessorSkill : MonoBehaviour
         // 追記: 詠唱メッセージの後に、メッセージウィンドウをクリアして次のメッセージに備えます
         // これにより、詠唱メッセージとダメージメッセージが混ざるのを防ぎます
         //_messageWindowController.GetMessageUIController().ClearMessage();
+        var actorParam = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
+        // var targetParam = _actionProcessor.GetCharacterParameter(action.targetIds, action.isTargetFriend);
 
         // ----------------------------------------------------
         // 💡 複数ターゲットへの効果適用ループ
@@ -112,29 +128,218 @@ public class BattleActionProcessorSkill : MonoBehaviour
             if (skillEffect.skillCategory == SkillCategory.PhysicalDamage)
             {
                 bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
+                float buffValue = 0.0f;
                 // 基本パラメータの取得
-                var actorParam = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
+                actorParam = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
                 var targetParam = _actionProcessor.GetCharacterParameter(currentTargetId, isTargetFriend);
-
+                StatusEffectCategory? appliedEffectCategory = null;
+                BuffStatusCategory? appliedBuffCategory = null;
                 // バフ/デバフ倍率の取得
-                float actorAttackBuff = 1.0f;
-                float targetDefenceBuff = 1.0f;
-
+                int damageValue = 0;
                 if (isTargetFriend)
                 {
-                    var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
-                    var targetStatus = isTargetFriend
-                        ? (object)charaStatus
-                        : EnemyStatusManager.Instance.GetEnemyStatusByBattleId(currentTargetId);
+                    var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(currentTargetId);
+                    var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.actorId);
+                    damageValue = DamageFormula.CalculateSkillDamage(actorParam.Attack, targetParam.Defence, enemyStatus.attackBuffMultiplier, characterStatus.defenceBuffMultiplier, skillEffect.value);
+
                 }
                 else
                 {
+                    var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
+                    var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(currentTargetId);
+                    damageValue = DamageFormula.CalculateSkillDamage(actorParam.Attack, targetParam.Defence, characterStatus.attackBuffMultiplier, enemyStatus.defenceBuffMultiplier, skillEffect.value);
 
                 }
+                // {
+                //     var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
+                //     var targetStatus = isTargetFriend
+                //         ? (object)charaStatus
+                //         : EnemyStatusManager.Instance.GetEnemyStatusByBattleId(currentTargetId);
+                // }
+                // else
+                // {
+
+                // }
 
                 // ... (ダメージ計算とステータス変更のロジックはそのまま) ...
-                int damageValue = 100;
-                int hpDelta = -damageValue;
+                hpDelta = -damageValue;
+                bool isTargetDefeated = false;
+
+                // ステータス変更
+                if (isTargetFriend)
+                {
+                    CharacterStatusManager.Instance.ChangeCharacterStatus(currentTargetId, hpDelta, 0);
+                    isTargetDefeated = CharacterStatusManager.Instance.IsCharacterDefeated(currentTargetId);
+                }
+                else
+                {
+                    EnemyStatusManager.Instance.ChangeEnemyStatus(currentTargetId, hpDelta, 0);
+                    isTargetDefeated = EnemyStatusManager.Instance.IsEnemyDefeated(currentTargetId);
+
+                    if (isTargetDefeated)
+                        EnemyStatusManager.Instance.OnDefeatEnemy(currentTargetId);
+                }
+
+                // 1. ダメージメッセージ表示と待機
+
+
+
+                _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                string targetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
+                _messageWindowController.GenerateDamageMessage(targetName, damageValue);
+                _battleManager.OnUpdateStatus();
+                while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+                foreach (var statusEffect in skillEffect.StatusEffect)
+                {
+                    appliedEffectCategory = statusEffect.EffectCategory;
+                    Logger.Instance.Log("状態異常付与");
+                    if (isTargetFriend)
+                    {
+                        statusEffectManager.ApplyStatusEffectToPlayer(currentTargetId, statusEffect);
+                    }
+                    else
+                    {
+                        statusEffectManager.ApplyStatusEffectToEnemy(currentTargetId, statusEffect);
+                    }
+                    string statusMessage = "";
+                    if (appliedEffectCategory != null)
+                    {
+                        appliedEffectCategory = statusEffect.EffectCategory;
+                        Logger.Instance.Log("状態異常付与");
+                        switch (appliedEffectCategory)
+                        {
+                            case StatusEffectCategory.Poison:
+                                statusMessage = BattleMessage.PoisonSuffix;
+                                break;
+                            case StatusEffectCategory.Paralysis:
+                                statusMessage = BattleMessage.ParalysisSuffix;
+                                break;
+                            case StatusEffectCategory.Sleep:
+                                statusMessage = BattleMessage.SleepSuffix;
+                                break;
+                            case StatusEffectCategory.Confusion:
+                                statusMessage = BattleMessage.ConfusionSuffix;
+                                break;
+                        }
+                        _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                        _messageWindowController.GenerateStatusAilmentMessage(targetName, statusMessage);
+                        _battleManager.OnUpdateStatus();
+                        while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+                    }
+                }
+                foreach (var buff in skillEffect.buff)
+                {
+                    appliedBuffCategory = buff.BuffCategory;
+                    buffValue = buff.Power;
+                    bool buffTarget = IsBuffTargetFriend(buff);
+                    Logger.Instance.Log("バフデバフ付与");
+                    string buffMessage = "";
+                    if (appliedBuffCategory != null)
+                    {
+                        if (buffTarget)
+                        {
+                            statusEffectManager.PlayerApplyBuff(currentTargetId, buff);
+                        }
+                        else
+                        {
+                            statusEffectManager.EnemyApplyBuff(currentTargetId, buff);
+                        }
+                        switch (appliedBuffCategory)
+                        {
+                            case BuffStatusCategory.Attack:
+                                buffMessage = BattleMessage.AttackStatusSuffix;
+                                break;
+                            case BuffStatusCategory.Defence:
+                                buffMessage = BattleMessage.DefenceStatusSuffix;
+                                break;
+                            case BuffStatusCategory.MagicAttack:
+                                buffMessage = BattleMessage.MagicAttackStatusSuffix;
+                                break;
+                            case BuffStatusCategory.MagicDefence:
+                                buffMessage = BattleMessage.MagicDefenceStatusSuffix;
+                                break;
+                            case BuffStatusCategory.Speed:
+                                buffMessage = BattleMessage.SpeedStatusSuffix;
+                                break;
+                            case BuffStatusCategory.Evasion:
+                                buffMessage = BattleMessage.EvasionStatusSuffix;
+                                break;
+                        }
+                        string buffTargetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
+                        _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                        _messageWindowController.GenerateRecoverStatusMessage(buffTargetName, buffMessage, buffValue);
+                        _battleManager.OnUpdateStatus();
+                        while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+                    }
+                }
+                // 2. 撃破メッセージ表示と待機
+                if (isTargetDefeated)
+                {
+                    _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                    if (isTargetFriend)
+                    {
+                        _messageWindowController.GenerateDefeateFriendMessage(targetName);
+                    }
+                    else
+                    {
+                        _battleSpriteController.RefreshActiveEnemies();
+                        _messageWindowController.GenerateDefeateEnemyMessage(targetName);
+                    }
+                    while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+
+                    // 勝利/ゲームオーバー判定
+                    if (EnemyStatusManager.Instance.IsAllEnemyDefeated())
+                        _battleManager.OnEnemyDefeated();
+                    if (CharacterStatusManager.Instance.IsAllCharacterDefeated())
+                        _battleManager.OnGameover();
+
+                    // 💡 修正: 戦闘が終了したら、即座にコルーチンを終了
+                    if (_battleManager.IsBattleFinished)
+                    {
+                        yield break;
+                    }
+                }
+            }
+            else if (skillEffect.skillCategory == SkillCategory.MagicDamage)
+            {
+                bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
+                float buffValue = 0.0f;
+                // 基本パラメータの取得
+                actorParam = _actionProcessor.GetCharacterParameter(action.actorId, action.isActorFriend);
+                var targetParam = _actionProcessor.GetCharacterParameter(currentTargetId, isTargetFriend);
+                StatusEffectCategory? appliedEffectCategory = null;
+                BuffStatusCategory? appliedBuffCategory = null;
+                // バフ/デバフ倍率の取得
+                float actorAttackBuff = 1.0f;
+                float targetDefenceBuff = 1.0f;
+                int damageValue = 0;
+                if (isTargetFriend)
+                {
+                    var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(currentTargetId);
+                    var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(action.actorId);
+                    damageValue = DamageFormula.CalculateSkillDamage(actorParam.MagicAttack, targetParam.MagicDefence, enemyStatus.magicAttackBuffMultiplier, characterStatus.magicDefenceBuffMultiplier, skillEffect.value);
+
+                }
+                else
+                {
+                    var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
+                    var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(currentTargetId);
+                    damageValue = DamageFormula.CalculateSkillDamage(actorParam.MagicAttack, targetParam.MagicDefence, characterStatus.magicAttackBuffMultiplier, enemyStatus.magicDefenceBuffMultiplier, skillEffect.value);
+
+                }
+                // {
+                //     var charaStatus = CharacterStatusManager.Instance.GetCharacterStatusById(action.actorId);
+                //     var targetStatus = isTargetFriend
+                //         ? (object)charaStatus
+                //         : EnemyStatusManager.Instance.GetEnemyStatusByBattleId(currentTargetId);
+                // }
+                // else
+                // {
+
+                // }
+
+                // ... (ダメージ計算とステータス変更のロジックはそのまま) ...
+                hpDelta = -damageValue;
                 bool isTargetDefeated = false;
 
                 // ステータス変更
@@ -158,6 +363,91 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 _messageWindowController.GenerateDamageMessage(targetName, damageValue);
                 _battleManager.OnUpdateStatus();
                 while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+                foreach (var statusEffect in skillEffect.StatusEffect)
+                {
+                    appliedEffectCategory = statusEffect.EffectCategory;
+                    Logger.Instance.Log("状態異常付与");
+                    if (isTargetFriend)
+                    {
+                        statusEffectManager.ApplyStatusEffectToPlayer(currentTargetId, statusEffect);
+                    }
+                    else
+                    {
+                        statusEffectManager.ApplyStatusEffectToEnemy(currentTargetId, statusEffect);
+                    }
+                    string statusMessage = "";
+                    if (appliedEffectCategory != null)
+                    {
+                        appliedEffectCategory = statusEffect.EffectCategory;
+                        Logger.Instance.Log("状態異常付与");
+                        switch (appliedEffectCategory)
+                        {
+                            case StatusEffectCategory.Poison:
+                                statusMessage = BattleMessage.PoisonSuffix;
+                                break;
+                            case StatusEffectCategory.Paralysis:
+                                statusMessage = BattleMessage.ParalysisSuffix;
+                                break;
+                            case StatusEffectCategory.Sleep:
+                                statusMessage = BattleMessage.SleepSuffix;
+                                break;
+                            case StatusEffectCategory.Confusion:
+                                statusMessage = BattleMessage.ConfusionSuffix;
+                                break;
+                        }
+
+                        _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                        _messageWindowController.GenerateStatusAilmentMessage(targetName, statusMessage);
+                        _battleManager.OnUpdateStatus();
+                        while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+                    }
+                }
+                foreach (var buff in skillEffect.buff)
+                {
+                    appliedBuffCategory = buff.BuffCategory;
+                    buffValue = buff.Power;
+                    bool buffTarget = IsBuffTargetFriend(buff);
+                    Logger.Instance.Log("バフデバフ付与");
+                    string buffMessage = "";
+                    if (appliedBuffCategory != null)
+                    {
+                        if (buffTarget)
+                        {
+                            statusEffectManager.PlayerApplyBuff(currentTargetId, buff);
+                        }
+                        else
+                        {
+                            statusEffectManager.EnemyApplyBuff(currentTargetId, buff);
+                        }
+                        switch (appliedBuffCategory)
+                        {
+                            case BuffStatusCategory.Attack:
+                                buffMessage = BattleMessage.AttackStatusSuffix;
+                                break;
+                            case BuffStatusCategory.Defence:
+                                buffMessage = BattleMessage.DefenceStatusSuffix;
+                                break;
+                            case BuffStatusCategory.MagicAttack:
+                                buffMessage = BattleMessage.MagicAttackStatusSuffix;
+                                break;
+                            case BuffStatusCategory.MagicDefence:
+                                buffMessage = BattleMessage.MagicDefenceStatusSuffix;
+                                break;
+                            case BuffStatusCategory.Speed:
+                                buffMessage = BattleMessage.SpeedStatusSuffix;
+                                break;
+                            case BuffStatusCategory.Evasion:
+                                buffMessage = BattleMessage.EvasionStatusSuffix;
+                                break;
+                        }
+                        string buffTargetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
+                        _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                        _messageWindowController.GenerateRecoverStatusMessage(buffTargetName, buffMessage, buffValue);
+                        _battleManager.OnUpdateStatus();
+                        while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+                    }
+                }
+
 
                 // 2. 撃破メッセージ表示と待機
                 if (isTargetDefeated)
@@ -206,12 +496,406 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 _battleManager.OnUpdateStatus();
                 while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
             }
-            // 状態異常の回復
-            else if (skillEffect.skillCategory == SkillCategory.Buff)
+            // 状態異常の回復     
+            else if (skillEffect.skillCategory == SkillCategory.EffectRecovery)
             {
-
+                var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(currentTargetId);
+                bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
+                characterStatus.Duration = 0;
+                characterStatus.Poison = false;
+                characterStatus.Sleep = false;
+                characterStatus.Paralysis = false;
+                characterStatus.IsCharaStop = false;
+                _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                string targetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
+                _messageWindowController.GenerateRecoverStatusMessage(targetName);
+                _battleManager.OnUpdateStatus();
+                while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+            }
+            else if (skillEffect.skillCategory == SkillCategory.Revive)
+            {
+                int healValue = DamageFormula.CalculateHealValue(skillEffect.value);
+                var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(currentTargetId);
+                bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
+                characterStatus.isDefeated = false;
+                CharacterStatusManager.Instance.ChangeCharacterStatus(currentTargetId, healValue, 0);
+                _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                string targetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
+                _messageWindowController.GenerateReviveMessage(targetName, healValue);
+                _battleManager.OnUpdateStatus();
+                while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
             }
 
+            else if (skillEffect.skillCategory == SkillCategory.Buff) //バフデバフ込み
+            {
+                string buffMessage = "";
+                bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
+                BuffStatusCategory? appliedBuffCategory = null;
+                float buffValue = 0.0f;                            //バフデバフ付与
+
+                foreach (var buff in skillEffect.buff)
+                {
+                    appliedBuffCategory = buff.BuffCategory;
+                    buffValue = buff.Power;
+                    Logger.Instance.Log("バフデバフ付与");
+                    if (isTargetFriend)
+                    {
+                        statusEffectManager.PlayerApplyBuff(currentTargetId, buff);
+                    }
+                    else
+                    {
+                        statusEffectManager.EnemyApplyBuff(currentTargetId, buff);
+                    }
+                    if (appliedBuffCategory != null)
+                    {
+                        switch (appliedBuffCategory)
+                        {
+                            case BuffStatusCategory.Attack:
+                                buffMessage = BattleMessage.AttackStatusSuffix;
+                                break;
+                            case BuffStatusCategory.Defence:
+                                buffMessage = BattleMessage.DefenceStatusSuffix;
+                                break;
+                            case BuffStatusCategory.MagicAttack:
+                                buffMessage = BattleMessage.MagicAttackStatusSuffix;
+                                break;
+                            case BuffStatusCategory.MagicDefence:
+                                buffMessage = BattleMessage.MagicDefenceStatusSuffix;
+                                break;
+                            case BuffStatusCategory.Speed:
+                                buffMessage = BattleMessage.SpeedStatusSuffix;
+                                break;
+                            case BuffStatusCategory.Evasion:
+                                buffMessage = BattleMessage.EvasionStatusSuffix;
+                                break;
+                        }
+                    }
+                    string targetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
+                    _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                    _messageWindowController.GenerateRecoverStatusMessage(targetName, buffMessage, buffValue);
+                    _battleManager.OnUpdateStatus();
+                    while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+                }
+
+
+            }
+            else if (skillEffect.skillCategory == SkillCategory.DeBuff) //StatusEffect用
+            {
+                // 状態異常付与
+                string statusMessage = "";
+                bool isTargetFriend = IsTargetFriend(currentTargetId, action.isActorFriend, skillEffect);
+                StatusEffectCategory? appliedEffectCategory = null;
+                foreach (var statusEffect in skillEffect.StatusEffect)
+                {
+                    appliedEffectCategory = statusEffect.EffectCategory;
+                    Logger.Instance.Log("状態異常付与");
+                    if (isTargetFriend)
+                    {
+                        statusEffectManager.ApplyStatusEffectToPlayer(currentTargetId, statusEffect);
+                    }
+                    else
+                    {
+                        statusEffectManager.ApplyStatusEffectToEnemy(currentTargetId, statusEffect);
+                    }
+
+                    if (appliedEffectCategory != null)
+                    {
+                        switch (appliedEffectCategory)
+                        {
+                            case StatusEffectCategory.Poison:
+                                statusMessage = BattleMessage.PoisonSuffix;
+                                break;
+                            case StatusEffectCategory.Paralysis:
+                                statusMessage = BattleMessage.ParalysisSuffix;
+                                break;
+                            case StatusEffectCategory.Sleep:
+                                statusMessage = BattleMessage.SleepSuffix;
+                                break;
+                            case StatusEffectCategory.Confusion:
+                                statusMessage = BattleMessage.ConfusionSuffix;
+                                break;
+                        }
+                    }
+                }
+
+                string targetName = _actionProcessor.GetCharacterName(currentTargetId, isTargetFriend);
+                _actionProcessor.SetPauseMessage(true); // 💡 メッセージポーズ開始
+                _messageWindowController.GenerateStatusAilmentMessage(targetName, statusMessage);
+                _battleManager.OnUpdateStatus();
+                while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
+            }
+            // _battleSpriteController.PlayEffectAtEnemy(currentTargetId, skillData.effectSprite);
+            switch (skillData.skillId)
+            {
+                case 0:
+                    SoundManager.Instance.PlaySE(6, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 101, action.isTargetFriend);
+                    break;
+                case 1:
+                    SoundManager.Instance.PlaySE(7, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 102, action.isTargetFriend);
+                    break;
+                case 2:
+                    SoundManager.Instance.PlaySE(8, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 103, action.isTargetFriend);
+                    break;
+                case 3:
+                    SoundManager.Instance.PlaySE(9, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 104, action.isTargetFriend);
+                    break;
+                case 4:
+                    SoundManager.Instance.PlaySE(10, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
+                    break;
+                case 5:
+                    SoundManager.Instance.PlaySE(11, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 106, action.isTargetFriend);
+                    break;
+                case 6:
+                    SoundManager.Instance.PlaySE(12, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 107, action.isTargetFriend);
+                    break;
+                case 7:
+                    SoundManager.Instance.PlaySE(13, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 108, action.isTargetFriend);
+                    break;
+                case 8:
+                    SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 201, action.isTargetFriend);
+                    break;
+                case 9:
+                    SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 202, action.isTargetFriend);
+                    break;
+                case 10:
+                    SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 203, action.isTargetFriend);
+                    break;
+                case 11:
+                    SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 204, action.isTargetFriend);
+                    break;
+                case 12:
+                    SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 205, action.isTargetFriend);
+                    break;
+                case 13:
+                    SoundManager.Instance.PlaySE(27, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 206, action.isTargetFriend);
+                    break;
+                case 14:
+                    SoundManager.Instance.PlaySE(28, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 207, action.isTargetFriend);
+                    break;
+                case 15:
+                    SoundManager.Instance.PlaySE(29, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 208, action.isTargetFriend);
+                    break;
+                case 16:
+                    SoundManager.Instance.PlaySE(47, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 209, action.isTargetFriend);
+                    break;
+                case 17:
+                    SoundManager.Instance.PlaySE(46, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 210, action.isTargetFriend);
+                    break;
+                case 18:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 211, action.isTargetFriend);
+                    break;
+                case 19:
+                    SoundManager.Instance.PlaySE(25, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 123, action.isTargetFriend);
+                    break;
+                case 20:
+                    SoundManager.Instance.PlaySE(25, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 124, action.isTargetFriend);
+                    break;
+                case 21:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 212, action.isTargetFriend);
+                    break;
+                case 22:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 213, action.isTargetFriend);
+                    break;
+                case 23:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 214, action.isTargetFriend);
+                    break;
+                case 24:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 215, action.isTargetFriend);
+                    break;
+                case 25:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 216, action.isTargetFriend);
+                    break;
+                case 26:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 217, action.isTargetFriend);
+                    break;
+                case 27:
+                    SoundManager.Instance.PlaySE(27, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 218, action.isTargetFriend);
+                    break;
+                case 28:
+                    SoundManager.Instance.PlaySE(44, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 219, action.isTargetFriend);
+                    break;
+                case 29:
+                    SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 220, action.isTargetFriend);
+                    break;
+                case 30:
+                    SoundManager.Instance.PlaySE(29, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 221, action.isTargetFriend);
+                    break;
+                case 31:
+                    SoundManager.Instance.PlaySE(28, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 222, action.isTargetFriend);
+                    break;
+                case 32:
+                    SoundManager.Instance.PlaySE(46, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 223, action.isTargetFriend);
+                    break;
+                case 33:
+                    SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 224, action.isTargetFriend);
+                    break;
+                case 34:
+                    SoundManager.Instance.PlaySE(47, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 225, action.isTargetFriend);
+                    break;
+                case 35:
+                    SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 226, action.isTargetFriend);
+                    break;
+                case 36:
+                    SoundManager.Instance.PlaySE(47, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 227, action.isTargetFriend);
+                    break;
+                case 37:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 228, action.isTargetFriend);
+                    break;
+                case 38:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 229, action.isTargetFriend);
+                    break;
+                case 39:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 230, action.isTargetFriend);
+                    break;
+                case 40:
+                    SoundManager.Instance.PlaySE(14, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 109, action.isTargetFriend);
+                    break;
+                case 41:
+                    SoundManager.Instance.PlaySE(15, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 110, action.isTargetFriend);
+                    break;
+                case 42:
+                    SoundManager.Instance.PlaySE(16, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 111, action.isTargetFriend);
+                    break;
+                case 43:
+                    SoundManager.Instance.PlaySE(17, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 112, action.isTargetFriend);
+                    break;
+                case 44:
+                    SoundManager.Instance.PlaySE(18, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 113, action.isTargetFriend);
+                    break;
+                case 45:
+                    SoundManager.Instance.PlaySE(19, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 114, action.isTargetFriend);
+                    break;
+                case 46:
+                    SoundManager.Instance.PlaySE(20, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 115, action.isTargetFriend);
+                    break;
+                case 47:
+                    SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 116, action.isTargetFriend);
+                    break;
+                case 48:
+                    SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 117, action.isTargetFriend);
+                    break;
+                case 49:
+                    SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 118, action.isTargetFriend);
+                    break;
+                case 50:
+                    SoundManager.Instance.PlaySE(47, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 119, action.isTargetFriend);
+                    break;
+                case 51:
+                    SoundManager.Instance.PlaySE(47, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 120, action.isTargetFriend);
+                    break;
+                case 52:
+                    SoundManager.Instance.PlaySE(46, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 121, action.isTargetFriend);
+                    break;
+                case 53:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 122, action.isTargetFriend);
+                    break;
+                case 54:
+                    SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 125, action.isTargetFriend);
+                    break;
+                case 901:
+                    SoundManager.Instance.PlaySE(21, 0.5f);
+                    
+                    break;
+                case 902:
+                    SoundManager.Instance.PlaySE(27, 0.5f);
+                   
+                    break;
+                case 903:
+                    SoundManager.Instance.PlaySE(21, 0.5f);
+                    
+                    break;
+                case 904:
+                    SoundManager.Instance.PlaySE(46, 0.5f);
+                
+                    break;
+                case 905:
+                    SoundManager.Instance.PlaySE(48, 0.5f);
+                    break;
+                   
+                case 906:
+                    SoundManager.Instance.PlaySE(22, 0.5f);
+                   
+                    break;
+                case 907:
+                    SoundManager.Instance.PlaySE(22, 0.5f);
+
+                    break;
+                case 908:
+                    SoundManager.Instance.PlaySE(21, 0.5f);
+             
+                    break;
+                case 909:
+                    SoundManager.Instance.PlaySE(21, 0.5f);
+                
+                    break;
+                case 910:
+                    SoundManager.Instance.PlaySE(21, 0.5f);
+    
+                    break;
+                case 911:
+                    SoundManager.Instance.PlaySE(21, 0.5f);
+             
+                    break;
+                case 912:
+                    SoundManager.Instance.PlaySE(22, 0.5f);
+           
+                    break;
+            }
             // 修正: ターゲットの処理が終わったら、次のターゲットに進む前にユーザー入力待ちを挟む
             if (!_battleManager.IsBattleFinished)
             {
@@ -253,8 +937,10 @@ public class BattleActionProcessorSkill : MonoBehaviour
         _battleManager = battleManager;
         _actionProcessor = actionProcessor;
         _messageWindowController = _battleManager.GetWindowManager().GetMessageWindowController();
+        // _enemyStatusManager = _battleManager.GetEnemyStatusManager();
         _battleSpriteController = _battleManager.GetBattleSpriteController();
         statusEffectManager = _battleManager.GetStatusEffectManager();
+        _skillAnimationManager = _battleManager.GetSkillAnimationManager();
     }
 
     public void ProcessAction(BattleAction action)
@@ -298,5 +984,11 @@ public class BattleActionProcessorSkill : MonoBehaviour
         return skillEffect.EffectTarget == EffectTarget.Own
             || skillEffect.EffectTarget == EffectTarget.FriendSolo
             || skillEffect.EffectTarget == EffectTarget.FriendAll;
+    }
+    bool IsBuffTargetFriend(Buff buff)
+    {
+        return buff.effectTarget == EffectTarget.Own
+            || buff.effectTarget == EffectTarget.FriendSolo
+            || buff.effectTarget == EffectTarget.FriendAll;
     }
 }

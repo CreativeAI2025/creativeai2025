@@ -105,9 +105,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataSetting: {fileID: 7226770791972441287}
   skillTreeGanerate: {fileID: 2932937622831780749}
+  parameterTable: {fileID: 0}
   skillPointText: {fileID: 0}
   skillInfoText: {fileID: 0}
   skillBlockPanel: {fileID: 3752195338391196214}
+  skillPoint: 1000
 --- !u!1 &5729776082210210909
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,12 +155,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a8c20a35597aba45b695b0cf29a3576, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nodeDataJson: {fileID: 0}
+  selfSkillTree: {fileID: 0}
+  selfTree: 0
   characterName: 
-  statusDadaJson: {fileID: 4900000, guid: 9b8e526f4d5e7ff4ab2bed9234939c96, type: 3}
   cellSizeX: 80
   cellSizeY: 55
   positionX: 5
   positionY: -90
+  powerValue: 1
+  probabilityValue: 1
+  durationValue: 1
+  subjectValue: 1
+  sub_powerValue: 1
+  sub_probabilityValue: 1
+  sub_durationValue: 1
+  sub_subjectValue: 1
+  skillRate: 1
+  statusRate: 1
+  statusSp: 20
 --- !u!114 &2932937622831780749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,15 +186,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 607d64def56ea264eb8cac96cb4a8a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillIocn: {fileID: 1447738714311606801, guid: d8fa84e10ac57024d95be4a531289da4, type: 3}
+  physicsIocn: {fileID: 0}
+  magicIcon: {fileID: 0}
+  healIocn: {fileID: 0}
+  buffIcon: {fileID: 0}
+  debuffIocn: {fileID: 0}
   statusIcon: {fileID: 8927151294216243759, guid: 2c7c681fc6e83834e88593990081e626, type: 3}
   startIcon: {fileID: 236245430332037112, guid: 748bc428255eae34bbe29ce325557aff, type: 3}
   line: {fileID: 6748225024623132174, guid: 2f821c1d09e1e8840bcfc84b1a46d156, type: 3}
+  lineColor: {r: 0, g: 0, b: 0, a: 1}
+  lineWidth: 1
   dataSetting: {fileID: 7226770791972441287}
   skillBlocksPanel: {fileID: 8589089249294118522}
   linesPanel: {fileID: 6288350644615249972}
   activeGenerate: 0
   maxRetry: 100
+  sum_sp: 0
 --- !u!1 &6016733518780030776
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,10 +10,11 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     [SerializeField]
     StatusUIController _uiController;
-        [SerializeField]
+    [SerializeField]
     StatusUIController _uiController1;
-        [SerializeField]
+    [SerializeField]
     StatusUIController _uiController2;
+    StatusUIController[] _uiControllers;
 
     /// <summary>
     /// コントローラの状態をセットアップします。
@@ -21,7 +22,13 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
     /// <param name="battleManager">戦闘に関する機能を管理するクラス</param>
     public void SetUpController(BattleManager battleManager)
     {
-
+        // 配列化して扱いやすく
+        _uiControllers = new StatusUIController[3]
+        {
+            _uiController,
+            _uiController1,
+            _uiController2
+        };
     }
 
 
@@ -38,16 +45,17 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
         }
 
         var characterName = CharacterDataManager.Instance.GetCharacterName(characterStatus.characterId);
-        _uiController.SetCharacterName(characterName);
+        _uiControllers[characterStatus.characterId - 1].SetCharacterName(characterName);
 
         var level = characterStatus.level;
         var parameterTable = CharacterDataManager.Instance.GetParameterTable(characterStatus.characterId);
         var record = parameterTable.parameterRecords.Find(r => r.Level == level);
 
-        _uiController.SetCurrentHp(characterStatus.currentHp);
-        _uiController.SetMaxHp(record.HP);
-        _uiController.SetCurrentMp(characterStatus.currentMp);
-        _uiController.SetMaxMp(record.MP);
+        _uiControllers[characterStatus.characterId - 1].SetCurrentHp(characterStatus.currentHp);
+        _uiControllers[characterStatus.characterId - 1].SetMaxHp(record.HP);
+        _uiControllers[characterStatus.characterId - 1].SetCurrentMp(characterStatus.currentMp);
+        _uiControllers[characterStatus.characterId - 1].SetMaxMp(record.MP);
+
     }
 
     /// <summary>
@@ -55,11 +63,14 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     public void UpdateAllCharacterStatus()
     {
-        foreach (var characterId in CharacterStatusManager.Instance.partyCharacter)
-        {
-            var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(characterId);
-            SetCharacterStatus(characterStatus);
-        }
+        SetCharacterStatus(CharacterStatusManager.Instance.GetCharacterStatusById(1));
+        SetCharacterStatus(CharacterStatusManager.Instance.GetCharacterStatusById(2));
+        SetCharacterStatus(CharacterStatusManager.Instance.GetCharacterStatusById(3));
+        // foreach (var characterId in CharacterStatusManager.Instance.partyCharacter)
+        // {
+        //     var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(characterId);
+        //     SetCharacterStatus(characterStatus);
+        // }
     }
 
     /// <summary>
@@ -68,6 +79,13 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
     public void ShowWindow()
     {
         _uiController.Show();
+        // foreach (var ui in _uiControllers)
+        // {
+        //     if (ui != null)
+        //     {
+        //         ui.Show();
+        //     }
+        // }
     }
 
     /// <summary>
@@ -76,5 +94,12 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
     public void HideWindow()
     {
         _uiController.Hide();
+        // foreach (var ui in _uiControllers)
+        // {
+        //     if (ui != null)
+        //     {
+        //         ui.Hide();
+        //     }
+        // }
     }
 }
