@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
-using UnityEditor.Overlays;
+//using UnityEditor.Overlays;
 
 //SP・MPはスキルツリーシーンを開くと適切な値がセットされます（現時点）
 
