@@ -16,7 +16,7 @@ public class ObjectEngine : MonoBehaviour
     [SerializeField] private PlayerController player;
     //[SerializeField] private ItemInventory inventory;
     //[SerializeField] private ItemDatabase itemDatabase;
-    //[SerializeField] private Pause pause;
+    [SerializeField] private Pause pause;
 
     [SerializeField] private MapEngine mapEngine;
     [SerializeField] private MapDataController mapDataController;
@@ -24,6 +24,7 @@ public class ObjectEngine : MonoBehaviour
     private string _mapName;
     private Vector2Int _pastGridPosition = new Vector2Int(-1, -1);
     private bool conversationFlag = false;
+    private bool battleFlag = false;
     private bool changeSceneFlag = false;
     private bool runFlag = false;
     private InputSetting _inputSetting;
@@ -37,9 +38,14 @@ public class ObjectEngine : MonoBehaviour
         }
         mapDataController.LoadMapData(_mapName);
 
-        //ConversationTextManager.Instance.OnConversationStart += Pause;
-        //ConversationTextManager.Instance.OnConversationEnd += UnPause;
+        ConversationTextManager.Instance.OnConversationStart += Pause;
+        ConversationTextManager.Instance.OnConversationEnd += UnPause;
         ConversationTextManager.Instance.OnConversationEnd += () => conversationFlag = false;
+
+        BattleManager.Instance.OnBattleStart += Pause;
+        BattleManager.Instance.OnBattleEnd += UnPause;
+        BattleManager.Instance.OnBattleEnd += () => battleFlag = false;
+
         mapDataController.SetChange(ResetAction);
         ResetAction();
         PlayerMove(changedPos);
@@ -82,9 +88,9 @@ public class ObjectEngine : MonoBehaviour
                 {
                     if (location.Position.x == -1 && location.Position.y == -1)
                     {
-                        for (int i=0; i<width; i++)
+                        for (int i = 0; i < width; i++)
                         {
-                            for (int j=0; j<height; j++)
+                            for (int j = 0; j < height; j++)
                             {
                                 _trapEventObjects[i][j].Add(objectData);
                             }
@@ -94,7 +100,7 @@ public class ObjectEngine : MonoBehaviour
                     {
                         _trapEventObjects[location.Position.x][location.Position.y].Add(objectData);
                     }
-                    
+
                 }
                 else
                 {
@@ -105,7 +111,7 @@ public class ObjectEngine : MonoBehaviour
         }
     }
 
-    
+
     [Conditional("UNITY_EDITOR")]
     private void OnDrawGizmos()
     {
@@ -116,23 +122,23 @@ public class ObjectEngine : MonoBehaviour
                 if (_trapEventObjects[j][i].Any())
                 {
                     Gizmos.color = Color.yellow;
-                    DrawRect(new Rect(j-0.5f, i-0.5f, 1, 1));
+                    DrawRect(new Rect(j - 0.5f, i - 0.5f, 1, 1));
                 }
                 else if (_eventObjects[j][i].Any())
                 {
                     Gizmos.color = Color.green;
-                    DrawRect(new Rect(j-0.5f, i-0.5f, 1, 1));
+                    DrawRect(new Rect(j - 0.5f, i - 0.5f, 1, 1));
                 }
             }
         }
     }
-    
+
     [Conditional("UNITY_EDITOR")]
     void DrawRect(Rect rect)
     {
         Gizmos.DrawWireCube(new Vector3(rect.center.x, rect.center.y, 0.01f), new Vector3(rect.size.x, rect.size.y, 0.01f));
     }
-    
+
     private async void Update()
     {
         if (conversationFlag || changeSceneFlag) return;
@@ -175,17 +181,17 @@ public class ObjectEngine : MonoBehaviour
         }
     }
 
-    /*private void Pause()
+    private void Pause()
     {
-        DebugLogger.Log("Pause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null), DebugLogger.Colors.Magenta);
+        UnityEngine.Debug.Log("Pause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null));
         pause.PauseAll();
     }
 
     private void UnPause()
     {
-        DebugLogger.Log("UnPause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null), DebugLogger.Colors.Magenta);
+        UnityEngine.Debug.Log("UnPause : " + UnityEngine.SceneManagement.SceneManager.GetActiveScene().name + " : " + (pause == null));
         pause.UnPauseAll();
-    }*/
+    }
 
     private async UniTask Call(ObjectData objectData, params int[] triggerType)
     {
@@ -256,6 +262,11 @@ public class ObjectEngine : MonoBehaviour
                 TileModify(eventArgs[1], Enum.Parse<MapDataController.TileLayer>(eventArgs[2]), position,
                     eventArgs[4].ToCharArray()[0]);
                 break;
+            case "Battle":
+                battleFlag = true;
+                Battle(eventArgs[1]);
+                await UniTask.WaitUntil(() => !battleFlag);
+                break;
             default: throw new NotImplementedException();
         }
     }
@@ -275,7 +286,7 @@ public class ObjectEngine : MonoBehaviour
             }
             else
             {
-               //FlagManager.Instance.DeleteFlag(nextFlag.Key);
+                //FlagManager.Instance.DeleteFlag(nextFlag.Key);
             }
         }
     }
@@ -283,8 +294,8 @@ public class ObjectEngine : MonoBehaviour
     private async UniTask SceneChange(string sceneName)
     {
         changeSceneFlag = true;
-        //ConversationTextManager.Instance.OnConversationStart -= Pause;
-        //ConversationTextManager.Instance.OnConversationEnd -= UnPause;
+        ConversationTextManager.Instance.OnConversationStart -= Pause;
+        ConversationTextManager.Instance.OnConversationEnd -= UnPause;
         await SceneManager.LoadSceneAsync(sceneName).ToUniTask();
         PlayerPrefs.SetString("SceneName", sceneName);
     }
@@ -299,6 +310,11 @@ public class ObjectEngine : MonoBehaviour
         ConversationTextManager.Instance.InitializeFromJson(fileName);
     }
 
+    private void Battle(string fileName)
+    {
+        BattleManager.Instance.InitializeFromJson(fileName);
+    }
+
     private void GetItem(string itemName)
     {
         //Item item = itemDatabase.GetItem(itemName);
@@ -307,7 +323,7 @@ public class ObjectEngine : MonoBehaviour
         SoundManager.Instance.PlaySE(9, 5f); //アイテム拾う
         inventory.Add(item);
         CombineItem(item);*/
-        
+
         /*if (item.HasContentText())
         {
             //ConversationTextManager.Instance.InitializeFromJson($"{itemName}_get");
@@ -326,9 +342,9 @@ public class ObjectEngine : MonoBehaviour
         }
     }*/
 
-    private void TileModify(string mapName, MapDataController.TileLayer layer, Vector2Int position, char tipSign) 
+    private void TileModify(string mapName, MapDataController.TileLayer layer, Vector2Int position, char tipSign)
     {
-        mapDataController.ChangeMapTile(mapName, layer, position, tipSign); 
+        mapDataController.ChangeMapTile(mapName, layer, position, tipSign);
         mapDataController.ApplyMapChange();
     }
 

@@ -12,7 +12,7 @@ public class BattleSpriteController : MonoBehaviour
     /// 背景の表示用Spriteです。
     /// </summary>
     [SerializeField]
-    SpriteRenderer _backgroundRenderer;
+    GameObject _backgroundRenderer;
 
     /// <summary>
     /// 透明画像
@@ -34,7 +34,7 @@ public class BattleSpriteController : MonoBehaviour
     /// </summary>
     public void ShowBackground()
     {
-        _backgroundRenderer.gameObject.SetActive(true);
+        _backgroundRenderer.SetActive(true);
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public class BattleSpriteController : MonoBehaviour
     /// </summary>
     public void HideBackground()
     {
-        _backgroundRenderer.gameObject.SetActive(false);
+        _backgroundRenderer.SetActive(false);
     }
 
     /// <summary>
