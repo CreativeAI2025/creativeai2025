@@ -1,9 +1,14 @@
 using UnityEngine;
 
-public class SkillEfectChange : MonoBehaviour
+public class SkillEfectChange :  MonoBehaviour
 {
     [Header("画像番号（前から3桁）")] int animationNum = 0;
     private Animator animator;
+    private BattleManager _battleManager;
+        public void SetReferences(BattleManager battleManager)
+    {
+        _battleManager = battleManager;
+    }
 
     void Awake()
     {
@@ -27,7 +32,13 @@ public class SkillEfectChange : MonoBehaviour
     public void PlaySkillAnimation(int animationNum)
     {
         this.animationNum = animationNum;
+         if (animator == null)
+    {
+        Debug.LogError("【エラー】Animator がアタッチされていません！", this);
+        return;
+    }
         animator.SetInteger("SkillID", animationNum);
         animator.SetTrigger("Play");
+        Logger.Instance.Log("アニメーション再生");
     }
 }
