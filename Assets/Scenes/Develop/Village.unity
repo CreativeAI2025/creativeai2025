@@ -1761,6 +1761,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1673223019}
   - component: {fileID: 1673223018}
+  - component: {fileID: 1673223020}
   m_Layer: 0
   m_Name: nushi
   m_TagString: Untagged
@@ -1812,7 +1813,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 6353318929024147617, guid: ce474b237b368f34eb57f303d2e58692, type: 3}
+  m_Sprite: {fileID: 3742304985178958822, guid: c8f22df86f1c48f4cb7811182b37ff40, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1838,6 +1839,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1673223020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673223017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf83768161ed144fb7050edad50db19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charatip: {fileID: 1673223018}
 --- !u!1839735485 &1884234020 stripped
 Tilemap:
   m_CorrespondingSourceObject: {fileID: 3142836783275010733, guid: a6b840703287d854aa1781e77453fb49, type: 3}
