@@ -26,7 +26,7 @@ public class SkillEfectExample : MonoBehaviour
         }
     }
 
-    void EfectView()
+    public void EfectView()
     {
         string s = null;
         if (newCreate)
