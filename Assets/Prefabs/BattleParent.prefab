@@ -2574,6 +2574,7 @@ Transform:
   - {fileID: 1600747570497265931}
   - {fileID: 3863738740851778525}
   - {fileID: 1596157226714666468}
+  - {fileID: 2223252311458488460}
   m_Father: {fileID: 5049202743805349742}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2287257980449768412
@@ -4511,6 +4512,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1600747570497265931}
   - component: {fileID: 8612176397843220293}
+  - component: {fileID: 4346007258387144996}
   m_Layer: 0
   m_Name: EnemyStatusManager
   m_TagString: Untagged
@@ -4534,6 +4536,18 @@ Transform:
   m_Father: {fileID: 25243301679496646}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8612176397843220293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3504672528870812818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cde34f1d63931fc418dce0aef7da4061, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4346007258387144996
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5599,11 +5613,11 @@ MonoBehaviour:
   - {fileID: 5754438089169877227}
   - {fileID: 1036315696625512994}
   enemyEffectSprites:
-  - {fileID: 1492690968226960541}
-  - {fileID: 6317334197352271949}
-  - {fileID: 773131465566538599}
-  - {fileID: 4336201617114122404}
-  - {fileID: 439770305636575312}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &4220334777128472513
 GameObject:
   m_ObjectHideFlags: 0
@@ -11033,6 +11047,56 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &9075169421319905903
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2223252311458488460}
+  - component: {fileID: 6404086433962357248}
+  m_Layer: 0
+  m_Name: SkillAnimaterManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2223252311458488460
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9075169421319905903}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 25243301679496646}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6404086433962357248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9075169421319905903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd16152a9e74c494fb52f99178b517e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyEffects:
+  - {fileID: 1492690968226960541}
+  - {fileID: 6317334197352271949}
+  - {fileID: 773131465566538599}
+  - {fileID: 4336201617114122404}
+  - {fileID: 439770305636575312}
 --- !u!1001 &1942554754645274480
 PrefabInstance:
   m_ObjectHideFlags: 0
