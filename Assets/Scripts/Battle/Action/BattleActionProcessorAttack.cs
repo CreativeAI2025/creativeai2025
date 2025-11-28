@@ -13,6 +13,7 @@ public class BattleActionProcessorAttack : MonoBehaviour
     /// 戦闘に関する機能を管理するクラスへの参照です。
     /// </summary>
     BattleManager _battleManager;
+   
 
     /// <summary>
     /// メッセージウィンドウを制御するクラスへの参照です。
@@ -23,6 +24,7 @@ public class BattleActionProcessorAttack : MonoBehaviour
     /// 戦闘関連のスプライトを制御するクラスへの参照です。
     /// </summary>
     BattleSpriteController _battleSpriteController;
+    SkillAnimationManager _skillAnimationManager;
 
     /// <summary>
     /// 参照をセットします。
@@ -33,6 +35,7 @@ public class BattleActionProcessorAttack : MonoBehaviour
         _actionProcessor = actionProcessor;
         _messageWindowController = _battleManager.GetWindowManager().GetMessageWindowController();
         _battleSpriteController = _battleManager.GetBattleSpriteController();
+        _skillAnimationManager = _battleManager.GetSkillAnimationManager();
     }
 
     /// <summary>
@@ -102,7 +105,9 @@ public class BattleActionProcessorAttack : MonoBehaviour
                 }
             }
             var skillData = SkillDataManager.Instance.GetSkillDataById(999);
-             _battleSpriteController.PlayEffectAtEnemy(targetId, skillData.effectSprite);
+           _skillAnimationManager.PlayEffectAtEnemy(targetId, 105, action.isTargetFriend);
+
+            // SkillEfectChange.Instance.PlaySkillAnimation(105);
             SoundManager.Instance.PlaySE(21, 0.5f);
             // ダメージメッセージ表示
             _actionProcessor.SetPauseMessage(true);

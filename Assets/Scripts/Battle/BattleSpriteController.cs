@@ -26,7 +26,7 @@ public class BattleSpriteController : MonoBehaviour
     /// <summary>
     /// 敵キャラクターの表示用Spriteです。
     /// </summary>
-    [SerializeField] private Image[] enemyEffectSprites;
+    [SerializeField] private List<SkillEfectChange> enemyEffectSprites = new List<SkillEfectChange>();
 
     /// <summary>
     /// カメラへの参照です。
@@ -109,8 +109,9 @@ public class BattleSpriteController : MonoBehaviour
     /// 敵へのスキルエフェクトを表示します。
     /// </summary>
     /// <param name="enemyId">敵キャラクターのID</param>
-    public void PlayEffectAtEnemy(int targetIndex, Sprite effectSprite)
+    public void PlayEffectAtEnemy(int targetIndex, int animationNum)
     {
+        enemyEffectSprites[targetIndex].PlaySkillAnimation(animationNum);
       //  enemyEffectSprites[i].sprite = effectSprite;
        // enemySprites[i].gameObject.SetActive(true);
 

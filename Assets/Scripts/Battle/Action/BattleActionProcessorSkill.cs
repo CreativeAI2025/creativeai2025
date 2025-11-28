@@ -10,6 +10,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
     MessageWindowController _messageWindowController;
     EnemyStatusManager _enemyStatusManager;
     BattleSpriteController _battleSpriteController;
+    SkillAnimationManager _skillAnimationManager;
 
     // 追加: 状態異常マネージャー
     [SerializeField] private StatusEffectManager statusEffectManager;
@@ -623,209 +624,276 @@ public class BattleActionProcessorSkill : MonoBehaviour
                 _battleManager.OnUpdateStatus();
                 while (_actionProcessor.IsPausedMessage) yield return null; // 💡 メッセージ完了まで待機
             }
-            _battleSpriteController.PlayEffectAtEnemy(currentTargetId, skillData.effectSprite);
+            // _battleSpriteController.PlayEffectAtEnemy(currentTargetId, skillData.effectSprite);
             switch (skillData.skillId)
             {
                 case 0:
                     SoundManager.Instance.PlaySE(6, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 1:
                     SoundManager.Instance.PlaySE(7, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 2:
                     SoundManager.Instance.PlaySE(8, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 3:
                     SoundManager.Instance.PlaySE(9, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 4:
                     SoundManager.Instance.PlaySE(10, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 5:
                     SoundManager.Instance.PlaySE(11, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 6:
                     SoundManager.Instance.PlaySE(12, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 7:
                     SoundManager.Instance.PlaySE(13, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 8:
                     SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 9:
                     SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 10:
                     SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 11:
                     SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 12:
                     SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 13:
                     SoundManager.Instance.PlaySE(27, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 14:
                     SoundManager.Instance.PlaySE(28, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 15:
                     SoundManager.Instance.PlaySE(29, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 16:
                     SoundManager.Instance.PlaySE(47, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 17:
                     SoundManager.Instance.PlaySE(46, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 18:
                     SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 19:
                     SoundManager.Instance.PlaySE(25, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 20:
                     SoundManager.Instance.PlaySE(25, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 21:
                     SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 22:
                     SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 23:
                     SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 24:
                     SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 25:
                     SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 26:
                     SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 27:
                     SoundManager.Instance.PlaySE(27, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 28:
                     SoundManager.Instance.PlaySE(44, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 29:
                     SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 30:
                     SoundManager.Instance.PlaySE(29, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 31:
                     SoundManager.Instance.PlaySE(28, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 32:
                     SoundManager.Instance.PlaySE(46, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 33:
                     SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 34:
                     SoundManager.Instance.PlaySE(47, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 35:
                     SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 36:
                     SoundManager.Instance.PlaySE(47, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 37:
                     SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 38:
                     SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 39:
                     SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 40:
                     SoundManager.Instance.PlaySE(14, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 41:
                     SoundManager.Instance.PlaySE(15, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 42:
                     SoundManager.Instance.PlaySE(16, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 43:
                     SoundManager.Instance.PlaySE(17, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 44:
                     SoundManager.Instance.PlaySE(18, 0.5f);
                     break;
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                 case 45:
                     SoundManager.Instance.PlaySE(19, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 46:
                     SoundManager.Instance.PlaySE(20, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 47:
                     SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 48:
                     SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 49:
                     SoundManager.Instance.PlaySE(45, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 50:
                     SoundManager.Instance.PlaySE(47, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 51:
                     SoundManager.Instance.PlaySE(47, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 52:
                     SoundManager.Instance.PlaySE(46, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 53:
                     SoundManager.Instance.PlaySE(48, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 54:
                     SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 901:
                     SoundManager.Instance.PlaySE(21, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 902:
                     SoundManager.Instance.PlaySE(27, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 903:
                     SoundManager.Instance.PlaySE(21, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 904:
                     SoundManager.Instance.PlaySE(46, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 905:
                     SoundManager.Instance.PlaySE(48, 0.5f);
                     break;
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                 case 906:
                     SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 907:
                     SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 908:
                     SoundManager.Instance.PlaySE(21, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 909:
                     SoundManager.Instance.PlaySE(21, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 910:
                     SoundManager.Instance.PlaySE(21, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 911:
                     SoundManager.Instance.PlaySE(21, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
                 case 912:
                     SoundManager.Instance.PlaySE(22, 0.5f);
+                    _skillAnimationManager.PlayEffectAtEnemy(currentTargetId, 105, action.isTargetFriend);
                     break;
             }
             // 修正: ターゲットの処理が終わったら、次のターゲットに進む前にユーザー入力待ちを挟む
@@ -872,6 +940,7 @@ public class BattleActionProcessorSkill : MonoBehaviour
         // _enemyStatusManager = _battleManager.GetEnemyStatusManager();
         _battleSpriteController = _battleManager.GetBattleSpriteController();
         statusEffectManager = _battleManager.GetStatusEffectManager();
+        _skillAnimationManager = _battleManager.GetSkillAnimationManager();
     }
 
     public void ProcessAction(BattleAction action)
