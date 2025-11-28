@@ -153,6 +153,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     public void ChangeCharacterStatus(int characterId, int hpDelta, int mpDelta)
     {
         var characterStatus = GetCharacterStatusById(characterId);
+        characterStatus.isDefeated = false;
         if (characterStatus == null)
         {
             Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {characterId}");

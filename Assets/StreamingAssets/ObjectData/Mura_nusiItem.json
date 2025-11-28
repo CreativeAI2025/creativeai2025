@@ -4,8 +4,29 @@
     {
       "MapName": "Village",
       "Position": [
-        35,
+        34,
         26
+      ]
+    },
+    {
+      "MapName": "Village",
+      "Position": [
+        36,
+        26
+      ]
+    },
+    {
+      "MapName": "Village",
+      "Position": [
+        35,
+        25
+      ]
+    },
+    {
+      "MapName": "Village",
+      "Position": [
+        35,
+        27
       ]
     }
   ],
@@ -13,16 +34,18 @@
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-      ["nusiItem",
+      [
+        "nusiItem",
         false
-    ],[
+      ],
+      [
         "NusiBattleFinished",
         true
       ]
     ],
     "NextFlag": [
       [
-      "nusiItem",
+        "nusiItem",
         true
       ]
     ]
