@@ -19,20 +19,19 @@ public class SkillEffect
     /// </summary>
     public float value;
 
-    public bool StatusEffectEnable;
-    /// <summary>
-    /// 状態異常のリストです
-    /// </summary>
-    public List<StatusEffect> StatusEffect;
-    /// <summary>
-    /// バフのリストです
-    /// </summary>
-    public List<Buff> Buff;
-
     /// <summary>
     /// 発動確率
     /// </summary>
     public int probability = 100;
+
+    /// <summary>
+    /// 状態異常のリストです
+    /// </summary>
+    public List<StatusEffect> StatusEffect = new List<StatusEffect>();
+    /// <summary>
+    /// バフのリストです
+    /// </summary>
+    public List<Buff> buff = new List<Buff>();
 
     /// <summary>
     /// 対象ステータス
@@ -48,7 +47,17 @@ public class SkillEffect
     /// <summary>
     /// 追加効果の有無
     /// </summary>
-    public bool isExtra = false;
+    [Header("追加効果の有無（あればTrue）")] public bool isExtra = false;
+
+    /// <summary>
+    /// 追加効果の魔法のカテゴリです。
+    /// </summary>
+    public SkillCategory extar_skillCategory;
+
+    /// <summary>
+    /// 追加効果の効果範囲です。
+    /// </summary>
+    public EffectTarget extar_EffectTarget;
 
     /// <summary>
     /// 追加効果の効果量です。
@@ -61,6 +70,15 @@ public class SkillEffect
     public int extra_probability = 100;
 
     /// <summary>
+    /// 状態異常のリストです
+    /// </summary>
+    public List<StatusEffect> extra_StatusEffect = new List<StatusEffect>();
+    /// <summary>
+    /// バフのリストです
+    /// </summary>
+    public List<Buff> extar_buff = new List<Buff>();
+
+    /// <summary>
     /// 追加効果の対象ステータス
     /// </summary>
     [Header("対象ステータス")] public string extra_status = "対象ステータスはありません";
@@ -70,8 +88,13 @@ public class SkillEffect
     /// </summary>
     public int extra_duration = 1;//持続ターン
 
+    public SkillEffect()
+    {
+    }
+
     public SkillEffect(SkillCategory skillCategory, EffectTarget EffectTarget, float value = 0, int probability = 100, string status = "対象ステータスはありません", int duration = 1,
-    bool isExtra = false, float extra_value = 0, int extra_probability = 100, string extra_status = "対象ステータスはありません", int extra_duration = 1)//コンストラクター
+    bool isExtra = false, SkillCategory extar_skillCategory = SkillCategory.None, EffectTarget extar_EffectTarget = EffectTarget.Own, float extra_value = 0, int extra_probability = 100,
+    string extra_status = "対象ステータスはありません", int extra_duration = 1)//コンストラクター
     {
         this.skillCategory = skillCategory;
         this.EffectTarget = EffectTarget;
@@ -81,9 +104,16 @@ public class SkillEffect
         this.duration = duration;
 
         this.isExtra = isExtra;
+        this.extar_skillCategory = extar_skillCategory;
+        this.extar_EffectTarget = extar_EffectTarget;
         this.extra_value = extra_value;
         this.extra_probability = extra_probability;
         this.extra_status = extra_status;
         this.extra_duration = extra_duration;
+    }
+
+    public void SetBuffList(List<Buff> buff)
+    {
+        this.buff = buff;
     }
 }

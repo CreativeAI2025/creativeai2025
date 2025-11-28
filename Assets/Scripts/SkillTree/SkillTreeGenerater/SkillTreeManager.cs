@@ -277,35 +277,6 @@ public class SkillTreeManager : MonoBehaviour
                 if (statusEntry != null)
                 {
                     statusEntry.count++;//取得状況の変更
-                    switch (status.GetType())//ステータス更新
-                    {
-                        case "攻撃力":
-                            parameterTable.parameterRecords[0].Attack = BeforeStatus(startStatus.Attack, status.GetPower(), statusEntry.count);
-                            break;
-                        case "防御力":
-                            parameterTable.parameterRecords[0].Defence = BeforeStatus(startStatus.Defence, status.GetPower(), statusEntry.count);
-                            break;
-                        case "魔法力":
-                            parameterTable.parameterRecords[0].MagicAttack = BeforeStatus(startStatus.MagicAttack, status.GetPower(), statusEntry.count);
-                            break;
-                        case "魔法防御力":
-                            parameterTable.parameterRecords[0].MagicDefence = BeforeStatus(startStatus.MagicDefence, status.GetPower(), statusEntry.count);
-                            break;
-                        case "素早さ":
-                            parameterTable.parameterRecords[0].Speed = BeforeStatus(startStatus.Speed, status.GetPower(), statusEntry.count);
-                            break;
-                        case "回避率":
-                            parameterTable.parameterRecords[0].Evasion = BeforeStatus(startStatus.Evasion, status.GetPower(), statusEntry.count);
-                            break;
-                        case "最大HP":
-                            parameterTable.parameterRecords[0].HP = BeforeStatus(startStatus.HP, status.GetPower(), statusEntry.count);
-                            break;
-                        case "最大MP":
-                            parameterTable.parameterRecords[0].MP = BeforeStatus(startStatus.MP, status.GetPower(), statusEntry.count);
-                            break;
-                        default:
-                            break;
-                    }
                 }
                 skillList.Add(n);
             }

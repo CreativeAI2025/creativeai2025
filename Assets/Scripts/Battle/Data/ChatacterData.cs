@@ -1,23 +1,27 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
+[CreateAssetMenu(fileName = "CharacterData", menuName = "Scriptable Objects/SimpleRpg/CharacterData")]
+public class CharacterData : ScriptableObject
+{
+  /// <summary>
+  /// キャラクターのIDです。
+  /// </summary>
+  public int characterId;
 
-  [CreateAssetMenu(fileName = "CharacterData", menuName = "Scriptable Objects/SimpleRpg/CharacterData")]
-    public class CharacterData : ScriptableObject
-    {
-        /// <summary>
-        /// キャラクターのIDです。
-        /// </summary>
-        public int characterId;
+  /// <summary>
+  /// キャラクターの名前です。
+  /// </summary>
+  public string characterName;
 
-        /// <summary>
-        /// キャラクターの名前です。
-        /// </summary>
-        public string characterName;
+  public string characterNameEn;
 
-        /// <summary>
-        /// レベルと覚える魔法の対応レコードのリストです。
-        /// </summary>
-        public List<CharacterSkillRecord> characterSkillRecords;
-    }
+  public int skillPointPerLevel = 30;
+
+  /// <summary>
+  /// キャラクターの見た目（等身大）
+  /// </summary>
+  public Sprite sprite;
+}

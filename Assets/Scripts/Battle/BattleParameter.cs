@@ -7,5 +7,7 @@ using UnityEngine;
     public int MagicAttack;
     public int MagicDefence;
     public int Speed;
-    public int Evasion;
+   public int Evasion;
+
+   public float atkBuff;
     }

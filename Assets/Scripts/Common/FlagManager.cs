@@ -26,13 +26,13 @@ public class FlagManager : DontDestroySingleton<FlagManager>
             Debug.Log("フラグデータがありませんでした");
             SaveInitFlags();
         }
-        ReiStatus = PlayerPrefs.GetInt("ReiStatus",0);
+        ReiStatus = PlayerPrefs.GetInt("ReiStatus", 0);
         SceneManager.sceneLoaded += SceneLoaded;
     }
-    
+
     void Update()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F))
         {
             string output = "Current Flags\n";
@@ -40,9 +40,9 @@ public class FlagManager : DontDestroySingleton<FlagManager>
             {
                 output += $"{e.Key}: {e.Value}\n";
             }
-            //DebugLogger.Log(output);
+            Debug.Log(output);
         }
-        #endif
+#endif
     }
 
     void SceneLoaded(Scene scene, LoadSceneMode mode)
@@ -58,7 +58,7 @@ public class FlagManager : DontDestroySingleton<FlagManager>
         _flags = flags.Flags;
         SaveFlag();
     }
-    
+
     public void AddFlag(string flagName)
     {
         _flags[flagName] = true;
@@ -69,7 +69,7 @@ public class FlagManager : DontDestroySingleton<FlagManager>
         _flags[flagName] = false;
         SaveFlag();
     }
-    
+
     private void SaveFlag()
     {
         FlagData saveFlagData = new FlagData()
@@ -79,7 +79,7 @@ public class FlagManager : DontDestroySingleton<FlagManager>
         SaveUtility.DataToSaveFile(saveFlagData, _flagSaveFilePath);
         _onFlagChanged?.Invoke();
     }
-    
+
     public bool HasFlag(string flagName) => _flags[flagName];
 
     public void DeleteFlagFile()

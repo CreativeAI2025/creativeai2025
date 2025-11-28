@@ -38,7 +38,7 @@ public class Question : MonoBehaviour
         if (!questionData.Any(question => question.Answer is null))
         {
             float branchCenterPos = 0;
-            float branchAreaHeight = questionLen * 50; //75でかけるといい感じになる
+            float branchAreaHeight = questionLen * 50;  // 縦の幅に合わせて調整してください
             float branchStartPos = branchCenterPos + branchAreaHeight / 2;
             float branchSpacing = branchAreaHeight / (questionLen - 1);
             for (int i = 0; i < questionLen; i++)

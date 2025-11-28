@@ -13,21 +13,27 @@ MonoBehaviour:
   m_Name: "\u30CE\u30A2_SkillData_21"
   m_EditorClassIdentifier: 
   skillId: 21
-  skillName: "\u30AC\u30FC\u30C9\u30D6\u30EC\u30A4\u30AB\u30FC"
-  skillDesc: "100%\u306E\u78BA\u7387\u3067\u76F8\u624B\u5168\u4F53\u306B1.5\u500D\u306E\u7269\u7406\u653B\u6483\u3067\u300190%\u306E\u78BA\u7387\u3067\u76F8\u624B\u5168\u4F53\u306E\u9632\u5FA1\u529B\u3001\u9B54\u6CD5\u9632\u5FA1\u529B\u309220%\u6E1B\u5C11\u3055\u305B\u308B"
-  cost: 21
+  skillName: "\u30B9\u30BF\u30F3"
+  skillDesc: "100%\u306E\u78BA\u7387\u3067\u76F8\u624B\u5168\u4F53\u306B1.5\u500D\u306E\u7279\u6B8A\u653B\u6483\u3067\u300170%\u306E\u78BA\u7387\u3067\u76F8\u624B\u5168\u4F53\u3092\u30DE\u30D2\u72B6\u614B\u306B\u3059\u308B"
+  cost: 12
   skillEffect:
-    skillCategory: 3
+    skillCategory: 4
     EffectTarget: 4
     value: 1.5
-    StatusEffectEnable: 0
-    StatusEffect: []
-    Buff: []
     probability: 100
+    StatusEffect: []
+    buff: []
     status: 
     duration: 0
     isExtra: 1
+    extar_skillCategory: 7
+    extar_EffectTarget: 4
     extra_value: 0
-    extra_probability: 90
+    extra_probability: 70
+    extra_StatusEffect:
+    - EffectCategory: 2
+      Duration: 0
+      Power: 0
+    extar_buff: []
     extra_status: 
     extra_duration: 0

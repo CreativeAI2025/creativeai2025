@@ -8,6 +8,7 @@ public class SkillPanelManager : MonoBehaviour
     [SerializeField] GameObject panel2;
 
     [SerializeField] List<SkillTreeManager> skillTreeManagers = new List<SkillTreeManager>();
+    [SerializeField] List<SkillTreeManager1> skillTreeManagers1 = new List<SkillTreeManager1>();
 
     void Start()
     {
@@ -39,5 +40,6 @@ public class SkillPanelManager : MonoBehaviour
     void UpdateSkillPointText(int num)
     {
         skillTreeManagers[num].UpdateSkillPointText();
+        skillTreeManagers1[num].UpdateSkillPointText();
     }
 }
