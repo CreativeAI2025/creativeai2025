@@ -1,0 +1,39 @@
+{
+  "Id": 1,
+  "Location": [
+    {
+      "MapName": "Forest",
+      "Position": [
+          8,
+          11
+      ]
+    },
+    {
+      "MapName": "Forest",
+      "Position": [
+          9,
+          11
+      ]
+    }
+  ],
+  "EventName": "Animation R1S5TT_1 | Conversation Mori_1_1_1",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+      "KentBattleFinished",
+        false
+      ],
+      [
+      "StopMori",
+        false
+      ]
+    ],
+    "NextFlag": [ 
+      [
+      "StopMori",
+        true
+      ]
+    ]
+  }
+}

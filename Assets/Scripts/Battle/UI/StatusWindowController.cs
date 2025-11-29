@@ -1,0 +1,105 @@
+using UnityEngine;
+
+/// <summary>
+/// ステータス表示のウィンドウを制御するクラスです。
+/// </summary>
+public class StatusWindowController : MonoBehaviour, IBattleWindowController
+{
+    /// <summary>
+    /// ステータス表示のUIを制御するクラスへの参照です。
+    /// </summary>
+    [SerializeField]
+    StatusUIController _uiController;
+    [SerializeField]
+    StatusUIController _uiController1;
+    [SerializeField]
+    StatusUIController _uiController2;
+    StatusUIController[] _uiControllers;
+
+    /// <summary>
+    /// コントローラの状態をセットアップします。
+    /// </summary>
+    /// <param name="battleManager">戦闘に関する機能を管理するクラス</param>
+    public void SetUpController(BattleManager battleManager)
+    {
+        // 配列化して扱いやすく
+        _uiControllers = new StatusUIController[3]
+        {
+            _uiController,
+            _uiController1,
+            _uiController2
+        };
+    }
+
+
+    /// <summary>
+    /// キャラクターのステータスを全てセットします。
+    /// </summary>
+    /// <param name="characterStatus">キャラクターのステータス</param>
+    public void SetCharacterStatus(CharacterStatus characterStatus)
+    {
+        if (characterStatus == null)
+        {
+            Logger.Instance.LogWarning("キャラクターステータスがnullです。");
+            return;
+        }
+
+        var characterName = CharacterDataManager.Instance.GetCharacterName(characterStatus.characterId);
+        _uiControllers[characterStatus.characterId - 1].SetCharacterName(characterName);
+
+        var level = characterStatus.level;
+        var parameterTable = CharacterDataManager.Instance.GetParameterTable(characterStatus.characterId);
+        var record = parameterTable.parameterRecords.Find(r => r.Level == level);
+
+        _uiControllers[characterStatus.characterId - 1].SetCurrentHp(characterStatus.currentHp);
+        _uiControllers[characterStatus.characterId - 1].SetMaxHp(record.HP);
+        _uiControllers[characterStatus.characterId - 1].SetCurrentMp(characterStatus.currentMp);
+        _uiControllers[characterStatus.characterId - 1].SetMaxMp(record.MP);
+
+    }
+
+    /// <summary>
+    /// 全キャラクターのステータスを更新します。
+    /// </summary>
+    public void UpdateAllCharacterStatus()
+    {
+        SetCharacterStatus(CharacterStatusManager.Instance.GetCharacterStatusById(1));
+        SetCharacterStatus(CharacterStatusManager.Instance.GetCharacterStatusById(2));
+        SetCharacterStatus(CharacterStatusManager.Instance.GetCharacterStatusById(3));
+        // foreach (var characterId in CharacterStatusManager.Instance.partyCharacter)
+        // {
+        //     var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(characterId);
+        //     SetCharacterStatus(characterStatus);
+        // }
+    }
+
+    /// <summary>
+    /// ステータス表示のウィンドウを表示します。
+    /// </summary>
+    public void ShowWindow()
+    {
+        _uiController.Show();
+        // foreach (var ui in _uiControllers)
+        // {
+        //     if (ui != null)
+        //     {
+        //         ui.Show();
+        //     }
+        // }
+    }
+
+    /// <summary>
+    /// ステータス表示のウィンドウを非表示にします。
+    /// </summary>
+    public void HideWindow()
+    {
+        _uiController.Hide();
+        // foreach (var ui in _uiControllers)
+        // {
+        //     if (ui != null)
+        //     {
+        //         ui.Hide();
+        //     }
+        // }
+    }
+}

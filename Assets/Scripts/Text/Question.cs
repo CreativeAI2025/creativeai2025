@@ -1,0 +1,77 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public class Question : MonoBehaviour
+{
+    [SerializeField] private QuestionBranch[] questionBranches;
+    [SerializeField] private TextWindowCursor cursor;
+    [SerializeField] private GameObject questionPanel;
+    private RectTransform[] rectTransforms;
+    private int cursorMax;
+    private int cursorPlace;
+
+    public void Initialize()
+    {
+        rectTransforms = new RectTransform[questionBranches.Length];
+        for (int i = 0; i < questionBranches.Length; i++)
+        {
+            rectTransforms[i] = questionBranches[i].GetComponent<RectTransform>();
+        }
+    }
+
+    public void DisplayQuestion(QuestionData[] questionData)
+    {
+        int questionLen = questionData.Length;
+        cursorMax = Mathf.Min(questionLen, questionBranches.Length);
+        for (int i = 0; i < cursorMax; i++)
+        {
+            if (questionData[i].Answer != null)
+            {
+                questionBranches[i].SetVisibleQuestionBranch(true);
+                questionBranches[i].QuestionBranchText(questionData[i].Answer);
+            }
+        }
+        cursorPlace = 0;
+        if (!questionData.Any(question => question.Answer is null))
+        {
+            float branchCenterPos = 0;
+            float branchAreaHeight = questionLen * 50;  // 縦の幅に合わせて調整してください
+            float branchStartPos = branchCenterPos + branchAreaHeight / 2;
+            float branchSpacing = branchAreaHeight / (questionLen - 1);
+            for (int i = 0; i < questionLen; i++)
+            {
+                rectTransforms[i].anchoredPosition = new(rectTransforms[i].anchoredPosition.x, branchStartPos - branchSpacing * i);
+            }
+            questionPanel.SetActive(true);
+            cursor.SetVisibleCursor(true);
+            cursor.CursorMove(rectTransforms[cursorPlace].position);
+        }
+    }
+
+    public void QuestionCursorMove(int increase)
+    {
+        if (cursorMax - 1 <= 0)
+            cursorMax = 1;
+
+        cursorPlace = Mathf.Clamp(cursorPlace + increase, 0, cursorMax - 1);
+        cursor.CursorMove(rectTransforms[cursorPlace].position);
+    }
+
+    public void InitializeQuestionBranch()
+    {
+        for (int i = 0; i < questionBranches.Length; i++)
+        {
+            questionBranches[i].SetVisibleQuestionBranch(false);
+        }
+        questionPanel.SetActive(false);
+        cursor.SetVisibleCursor(false);
+    }
+
+    public int GetCursorPlace()
+    {
+        return cursorPlace;
+    }
+}
