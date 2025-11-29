@@ -57,6 +57,9 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     [SerializeField]
     BattleResultManager _battleResultManager;
+
+    [SerializeField]
+    SkillAnimationManager _skillAnimationManager;
     /// <summary>
     /// 戦闘のフェーズです。
     /// </summary>
@@ -177,6 +180,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         _battleActionRegister.InitializeRegister(_battleActionProcessor);
         _enemyCommandSelector.SetReferences(this, _battleActionRegister);
         _battleResultManager.SetReferences(this);
+        _skillAnimationManager.SetReferences(this);
         statusEffectManager = GetStatusEffectManager();
         statusEffectManager.SetBattleManager(this);
         // _characterMoverManager.StopCharacterMover();
@@ -258,7 +262,10 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         return statusEffectManager;
     }
-
+public SkillAnimationManager GetSkillAnimationManager()
+    {
+        return _skillAnimationManager;
+    }
 
     /// <summary>
     /// コマンド入力を開始（敵が現れたあとや、ターンが終わったあとに呼ばれる）
