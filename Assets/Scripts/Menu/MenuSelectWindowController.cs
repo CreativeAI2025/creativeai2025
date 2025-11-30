@@ -85,7 +85,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
         {
             int id = ids[_cursor];
             var characterData = CharacterDataManager.Instance.GetCharacterData(id);
-            Sprite sprite = characterData.sprite;   // キャラクタースプライトの取得
+            Sprite sprite = CharacterDataManager.Instance.GetCharacterSprite(id);   // キャラクタースプライトの取得
             var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(id);
             int currentHp = characterStatus.currentHp;
             int maxHp = characterStatus.maxHp;

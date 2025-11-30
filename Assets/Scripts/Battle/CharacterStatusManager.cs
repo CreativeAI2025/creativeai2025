@@ -99,18 +99,20 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// <param name="level"></param>
     public void SetNewFriend(int id)
     {
+        /*
         var data = CharacterDataManager.Instance.GetCharacterData(id);
         if (data == null)
         {
             Debug.Log($"[CharacterStatusManager]ID：{id}　はデータに登録されていません。");
             return;
-        }
+        }*/
+        // 本当は上のようなnullチェックが必要なんだろうけど、Unityエディター上だと問題なく動作するんだけど、Windows版でビルドして配布形式で動かすとnull判定されるんだよね...
         partyCharacter.Add(id);
         int mainId = 1; // 主人公のID
         var mainCharacterStatus = GetCharacterStatusById(mainId);   // IDから主人公のキャラクターステータスを持ってくる
         int level = mainCharacterStatus.level;  // 新しく加入するメンバーのレベルを、主人公の現在のレベルと同じにする
         characterStatuses.Add(SetCharacterStatus(id, level));   // メンバーを加える
-        //Debug.Log($"新しい仲間が加わった！\nID：{id}\nレベル：{level}");
+        Debug.Log($"新しい仲間が加わった！\nID：{id}\nレベル：{level}");
     }
 
     /// <summary>

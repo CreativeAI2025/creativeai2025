@@ -92,9 +92,9 @@ public class BattleSpriteController : MonoBehaviour
                 }
                 else
                 {
-                    enemySprite = enemyData.sprite;
+                    enemySprite = EnemyDataManager.Instance.GetEnemySprite(enemyId);
                 }
-                enemySprites[i].sprite = enemySprite;
+                enemySprites[i].sprite = EnemyDataManager.Instance.GetEnemySprite(enemyId);
                 enemySprites[i].gameObject.SetActive(true);
             }
             else
@@ -112,8 +112,8 @@ public class BattleSpriteController : MonoBehaviour
     public void PlayEffectAtEnemy(int targetIndex, int animationNum)
     {
         enemyEffectSprites[targetIndex].PlaySkillAnimation(animationNum);
-      //  enemyEffectSprites[i].sprite = effectSprite;
-       // enemySprites[i].gameObject.SetActive(true);
+        //  enemyEffectSprites[i].sprite = effectSprite;
+        // enemySprites[i].gameObject.SetActive(true);
 
         //     if (targetIndex < 0 || targetIndex >= enemySprites.Length) return;
 
