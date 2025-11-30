@@ -176,4 +176,13 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
         }
         return null; // ロードされていない、またはIDが存在しない
     }
+
+    public void PrintAllCharacterData()
+    {
+        Debug.Log("ーーー　取得したキャラクターデータを記述します　ーーー");
+        foreach (KeyValuePair<int, CharacterData> kvp in characterDataDict)
+        {
+            Debug.Log($"Key:{kvp.Key}, Value:{kvp.Value.characterName}");
+        }
+    }
 }
