@@ -60,7 +60,7 @@ public class SoundManager : DontDestroySingleton<SoundManager>
     /// </summary>
     /// <param name="bgmIndex"></param>
     /// <param name="volume"></param> 
-    public void PlayBGM(int bgmIndex, float volume = 0.7f)
+    public void PlayBGM(int bgmIndex, float volume = 0.1f)
     {
         AudioClip bgmClip = audioClipsBGM[bgmIndex];
 

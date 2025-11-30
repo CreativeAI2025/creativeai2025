@@ -100,6 +100,7 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
         _characterDataList = new List<CharacterData>(handle.Result);
         handle.Release();
         characterDataDict = _characterDataList.ToDictionary(data => data.characterId, data => data);
+        Debug.Log("[CharacterDataManager]LoadCharacterData Count:" + characterDataDict.Count);
     }
     /// <summary>
     /// 全キャラクターのSpriteデータをロードします。
