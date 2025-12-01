@@ -8,7 +8,7 @@ public class MapEngine : MonoBehaviour
     [SerializeField] private Tilemap frontTilemap;
     [SerializeField] private Tilemap middleTilemap;
     [SerializeField] private Tilemap backTilemap;
-    [SerializeField] private Tilemap twinkleTile;
+    //[SerializeField] private Tilemap twinkleTile;
     [SerializeField] private Tile clearTile;
     public Tilemaps tilemaps;
     
@@ -55,10 +55,10 @@ public class MapEngine : MonoBehaviour
         PutSingleTile(frontTilemap, position, tileDictionary, mapDataController.GetStyleFrontChar(position));
     }
 
-    public void PutTwinkleTile(Vector3Int position, Dictionary<char, TileBase> tileDictionary)
+    /*public void PutTwinkleTile(Vector3Int position, Dictionary<char, TileBase> tileDictionary)
     {
         PutSingleTile(twinkleTile, position, tileDictionary, '?');
-    }
+    }*/
     
     private void PutSingleTile(Tilemap tilemap, Vector3Int position, Dictionary<char, TileBase> tileDictionary, char tileChar)
     {

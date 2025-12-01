@@ -124,11 +124,6 @@ Tilemap:
   m_CorrespondingSourceObject: {fileID: 6249181976371844021, guid: a6b840703287d854aa1781e77453fb49, type: 3}
   m_PrefabInstance: {fileID: 5580626682593497053}
   m_PrefabAsset: {fileID: 0}
---- !u!1839735485 &230581420 stripped
-Tilemap:
-  m_CorrespondingSourceObject: {fileID: 3590502762918392546, guid: a6b840703287d854aa1781e77453fb49, type: 3}
-  m_PrefabInstance: {fileID: 5580626682593497053}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &283772692
 GameObject:
   m_ObjectHideFlags: 0
@@ -1135,7 +1130,7 @@ PrefabInstance:
       objectReference: {fileID: 1828289599}
     - target: {fileID: 4628583461109545689, guid: 4f77b68f96dd2954f89a18e28535160d, type: 3}
       propertyPath: m_SortingOrder
-      value: 10
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4866882733963371132, guid: 4f77b68f96dd2954f89a18e28535160d, type: 3}
       propertyPath: m_Name
@@ -1237,7 +1232,7 @@ PrefabInstance:
     - target: {fileID: 7168359691995283053, guid: a6b840703287d854aa1781e77453fb49, type: 3}
       propertyPath: twinkleTile
       value: 
-      objectReference: {fileID: 230581420}
+      objectReference: {fileID: 0}
     - target: {fileID: 7168359691995283053, guid: a6b840703287d854aa1781e77453fb49, type: 3}
       propertyPath: frontTilemap
       value: 
@@ -1299,7 +1294,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 565276366968659256, guid: a6b840703287d854aa1781e77453fb49, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a6b840703287d854aa1781e77453fb49, type: 3}
