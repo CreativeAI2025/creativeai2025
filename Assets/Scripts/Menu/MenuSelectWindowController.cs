@@ -180,7 +180,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private string UseItem()
     {
-        string text = string.Empty;
+        string text = "この機能は　 今後　実装予定です。";
         // 使用するアイテムデータ
         ItemData itemData = _itemData;
         // 現在カーソルが指されているキャラクターのID
@@ -202,7 +202,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private string UseSkill()
     {
-        string text = string.Empty;
+        string text = "この機能は　 今後　実装予定です。";
         // 使用する予定のスキルデータ
         SkillData skillData = _skillData;
         // そのスキルを使用するキャラクターのID
