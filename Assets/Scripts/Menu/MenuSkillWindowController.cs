@@ -141,9 +141,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
             {
                 return;
             }
-            int userId = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
-            MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.SkillUse, userId);
-            SoundManager.Instance.PlaySE(3);
+            StartCoroutine(UseProcess());
         }
         else if (_inputSetting.GetRightKeyDown())
         {
@@ -322,5 +320,15 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         {
             stop = true;
         }
+    }
+
+    private IEnumerator UseProcess()
+    {
+        _canClose = false;
+        yield return null;
+        int userId = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
+        MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.SkillUse, userId);
+        SoundManager.Instance.PlaySE(3);
+        _canClose = true;
     }
 }

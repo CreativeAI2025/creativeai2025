@@ -51,12 +51,18 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             itemNum = 5,
             usedNum = 1
         };
+        PartyItemInfo item2 = new()
+        {
+            itemId = 109,
+            itemNum = 5,
+            usedNum = 1
+        };
         partyItemInfoList = new()
         {
-            item
+            item,
+            item2
         };
         partyGold = 1000;
-        partyItemInfoList = new();
     }
 
     /// <summary>
@@ -67,6 +73,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// <returns></returns>
     private CharacterStatus SetCharacterStatus(int id, int level)
     {
+        var characterData = CharacterDataManager.Instance.GetCharacterData(id);
         var characterParameterTable = CharacterDataManager.Instance.GetParameterTable(id);  // キャラクターのレベルごとのパラメーターテーブルを取得する
         var characterParameterRecord = characterParameterTable.parameterRecords[level - 1]; // キャラクターのレベルに応じたパラメーターを取得
         CharacterStatus characterStatus = new()
@@ -84,7 +91,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             currentMagicDefence = characterParameterRecord.MagicDefence,
             currentSpeed = characterParameterRecord.Speed,
             currentEvasion = characterParameterRecord.Evasion,
-            skillPoint = 0,
+            skillPoint = characterData.skillPointPerLevel * (level - 1),
             skillList = new List<int>()
         };
 
@@ -161,12 +168,10 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {characterId}");
             return;
         }
-        var parameterTable = CharacterDataManager.Instance.GetParameterTable(characterId);
-        var parameterRecord = parameterTable.parameterRecords.Find(p => p.Level == characterStatus.level);
         characterStatus.currentHp += hpDelta;
-        if (characterStatus.currentHp > parameterRecord.HP)
+        if (characterStatus.currentHp > characterStatus.maxHp)
         {
-            characterStatus.currentHp = parameterRecord.HP;
+            characterStatus.currentHp = characterStatus.maxHp;
         }
         else if (characterStatus.currentHp < 0)
         {
@@ -180,9 +185,9 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         }
 
         characterStatus.currentMp += mpDelta;
-        if (characterStatus.currentMp > parameterRecord.MP)
+        if (characterStatus.currentMp > characterStatus.maxMp)
         {
-            characterStatus.currentMp = parameterRecord.MP;
+            characterStatus.currentMp = characterStatus.maxMp;
         }
         else if (characterStatus.currentMp < 0)
         {

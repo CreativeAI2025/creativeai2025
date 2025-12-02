@@ -14,6 +14,7 @@ public class SkillTreeManager1 : MonoBehaviour
     [SerializeField] TextMeshProUGUI skillInfoText;//スキルの表示
     [SerializeField] GameObject skillBlockPanel;
     [SerializeField] int skillPoint = 1000; // 初期値設定
+    [SerializeField] bool debugMode = false;    // デバッグモードを起動するかどうか
 
     List<Node> skillList = new List<Node>();//取得済みのものを格納
     List<Skill> nodeSkillList = new List<Skill>();
@@ -41,7 +42,10 @@ public class SkillTreeManager1 : MonoBehaviour
         skillList = new List<Node>();
         skillBlocks = skillBlockPanel.GetComponentsInChildren<SkillBlocks1>();
         if (parameterTable != null) startStatus = parameterTable.parameterRecords[0];
-        CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint = skillPoint;    // デバッグ用？スキルポイントの初期値設定（実は危険なことをやっている）
+        if (debugMode)
+        {
+            CharacterStatusManager.Instance.GetCharacterStatusById(characterId).skillPoint = skillPoint;
+        }
     }
 
     // Update is called once per frame
