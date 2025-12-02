@@ -51,12 +51,18 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             itemNum = 5,
             usedNum = 1
         };
+        PartyItemInfo item2 = new()
+        {
+            itemId = 109,
+            itemNum = 5,
+            usedNum = 1
+        };
         partyItemInfoList = new()
         {
-            item
+            item,
+            item2
         };
         partyGold = 1000;
-        partyItemInfoList = new();
     }
 
     /// <summary>
