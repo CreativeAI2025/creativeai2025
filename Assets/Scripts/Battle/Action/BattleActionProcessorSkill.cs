@@ -85,13 +85,13 @@ public class BattleActionProcessorSkill : MonoBehaviour
 
         // 消費MP処理
         int hpDelta = 0;
-        int mpDelta = skillData.cost * -1;
-        if (action.isActorFriend)
-            CharacterStatusManager.Instance.ChangeCharacterStatus(action.actorId, hpDelta, mpDelta);
-        else
-            _enemyStatusManager.ChangeEnemyStatus(action.actorId, hpDelta, mpDelta);
+        // int mpDelta = skillData.cost * -1;
+        // if (action.isActorFriend)
+        //     CharacterStatusManager.Instance.ChangeCharacterStatus(action.actorId, hpDelta, mpDelta);
+        // else
+        //     _enemyStatusManager.ChangeEnemyStatus(action.actorId, hpDelta, mpDelta);
 
-        _actionProcessor.SetPauseProcess(true);
+        // _actionProcessor.SetPauseProcess(true);
 
 
 
