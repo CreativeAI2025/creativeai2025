@@ -67,6 +67,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
     /// <returns></returns>
     private CharacterStatus SetCharacterStatus(int id, int level)
     {
+        var characterData = CharacterDataManager.Instance.GetCharacterData(id);
         var characterParameterTable = CharacterDataManager.Instance.GetParameterTable(id);  // キャラクターのレベルごとのパラメーターテーブルを取得する
         var characterParameterRecord = characterParameterTable.parameterRecords[level - 1]; // キャラクターのレベルに応じたパラメーターを取得
         CharacterStatus characterStatus = new()
@@ -84,7 +85,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             currentMagicDefence = characterParameterRecord.MagicDefence,
             currentSpeed = characterParameterRecord.Speed,
             currentEvasion = characterParameterRecord.Evasion,
-            skillPoint = 0,
+            skillPoint = characterData.skillPointPerLevel * (level - 1),
             skillList = new List<int>()
         };
 
