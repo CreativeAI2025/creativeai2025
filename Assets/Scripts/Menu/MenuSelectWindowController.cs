@@ -163,6 +163,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
 
     private void SetPhase2Text()
     {
+        Debug.Log("スキル/アイテム使用フェーズ1");
         string text = string.Empty;
         if (MenuManager.Instance.MenuUsePhase == MenuUsePhase.SkillUse)
         {
@@ -225,6 +226,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     // 初期化をここで行う。
     private void InitializeCommand()
     {
+        Debug.Log("スキル/アイテム使用フェーズ０");
         _cursor = 0;
         _selectPhase = 0;
         _uiController.ShowSelectedCursor(_cursor);
