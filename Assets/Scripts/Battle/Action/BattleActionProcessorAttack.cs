@@ -104,7 +104,7 @@ public class BattleActionProcessorAttack : MonoBehaviour
                     EnemyStatusManager.Instance.OnDefeatEnemy(targetId);
                 }
             }
-            var skillData = SkillDataManager.Instance.GetSkillDataById(999);
+        //   var skillData = SkillDataManager.Instance.GetSkillDataById(999);
            _skillAnimationManager.PlayEffectAtEnemy(targetId, 102, action.isTargetFriend);
 
             // SkillEfectChange.Instance.PlaySkillAnimation(105);
