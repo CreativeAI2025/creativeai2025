@@ -122,7 +122,6 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     {
         yield return null;
         MenuManager.Instance.OnCloseSelectWindow();
-        SoundManager.Instance.PlaySE(3);
         HideWindow();
     }
 
