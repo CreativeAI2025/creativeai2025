@@ -43,7 +43,7 @@ public class GameInitializer : MonoBehaviour
             await characterDataManager.Initialize();
             await itemDatamanager.Initialize();
             characterStatusManager.Initialize();
-            await skillDataManager.Initialize();
+            skillDataManager.Initialize();
             FlagManager.Instance.DeleteFlagFile();
             await enemyDataManager.Initialize();
         }

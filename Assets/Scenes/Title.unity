@@ -731,6 +731,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 341906695}
   m_CullTransparentMesh: 1
+--- !u!1 &373471262
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 373471264}
+  - component: {fileID: 373471263}
+  m_Layer: 0
+  m_Name: SkillDataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &373471263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373471262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8b3d045e5d3e454a8674c8ccf980833, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _skillDatabase: {fileID: 11400000, guid: 1fab22b22ab7a5642ac4e759de5c56af, type: 2}
+--- !u!4 &373471264
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 373471262}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 494.0607, y: 285.22214, z: 90}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &435409702
 GameObject:
   m_ObjectHideFlags: 0
@@ -3393,7 +3438,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7461344460326838902, guid: f502a615a1d42564ea94d88496034dda, type: 3}
       propertyPath: debugMode
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7461344460326838902, guid: f502a615a1d42564ea94d88496034dda, type: 3}
+      propertyPath: skillPoint
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 7461344460326838902, guid: f502a615a1d42564ea94d88496034dda, type: 3}
       propertyPath: characterId
@@ -4317,3 +4366,4 @@ SceneRoots:
   - {fileID: 949712926}
   - {fileID: 437884441}
   - {fileID: 2047414981}
+  - {fileID: 373471264}

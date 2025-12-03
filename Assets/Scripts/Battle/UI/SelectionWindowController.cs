@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+using System.Collections;
 
 /// <summary>
 /// 選択ウィンドウを制御するクラスです。
@@ -326,6 +326,12 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
             return;
         }
 
+        StartCoroutine(TargetSelectProcess());
+    }
+
+    private IEnumerator TargetSelectProcess()
+    {
+        yield return null;
         if (_battleManager.SelectedCommand == BattleCommand.Skill)
         {
             var skillData = _skillController.GetSkillData(_selectedIndex);
@@ -346,6 +352,7 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
             SetCanSelectState(false);
             //}
         }
+
     }
 
     /// <summary>
