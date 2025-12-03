@@ -133,11 +133,6 @@ public class BattleActionRegister : MonoBehaviour
         var characterParam = GetCharacterParameterRecord(actorId);
 
         var itemData = ItemDataManager.Instance.GetItemDataById(itemId);
-        if (itemData == null)
-        {
-            Logger.Instance.LogError($"選択されたIDのアイテムは見つかりませんでした。ID : {itemId}");
-            return;
-        }
 
         // 💡 修正点: UI（BattleManager）から渡されたターゲットリストと属性をそのままアクションに登録します。
         // 以前のロジック（EffectTargetをチェックしてtargetId/isTargetFriendを計算する部分）は、

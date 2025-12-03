@@ -116,10 +116,12 @@ public class SelectionWindowSkillController : MonoBehaviour
     /// <param name="skillData">魔法データ</param>
     bool CanSelectSkill(SkillData skillData)
     {
+        /*
         if (skillData == null)
         {
             return false;
         }
+        */
 
         var currentSelectingCharacter = CharacterStatusManager.Instance.partyCharacter[0];
         var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(currentSelectingCharacter);

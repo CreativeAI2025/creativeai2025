@@ -113,10 +113,17 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
     /// <summary>
     /// ターゲット決定時の処理。アクションの範囲に応じて、単体または全体を決定します。
     /// </summary>
-    void OnPressedConfirmButton()
+    private void OnPressedConfirmButton()
     {
         if (_activeTargetIds == null || _activeTargetIds.Count == 0) return;
 
+        StartCoroutine(DelayPostCommandSelect());
+        HideWindow();
+    }
+
+
+    private IEnumerator DelayPostCommandSelect()
+    {
         List<int> finalTargetIds;
         bool isTargetFriend;
 
@@ -135,16 +142,7 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
 
         // BattleManagerに決定を通知し、アクションを登録させる
         BattleManager.Instance.OnTargetSelected(finalTargetIds, isTargetFriend, _selectedItemId);
-
-
-
-        StartCoroutine(DelayPostCommandSelect());
-        HideWindow();
-    }
-
-
-    private IEnumerator DelayPostCommandSelect()
-    {
+        Debug.Log("アクション決定！");
         // 1フレーム待つことでUIの非表示処理を完了させる
         yield return null;
     }
@@ -199,20 +197,20 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
         if (command == BattleCommand.Skill)
         {
             var skillData = SkillDataManager.Instance.GetSkillDataById(itemId);
-            if (skillData?.skillEffect != null)
-            {
-                // 最初の効果のターゲットを取得
-                return skillData.skillEffect.EffectTarget;
-            }
+            //if (skillData?.skillEffect != null)
+            //{
+            // 最初の効果のターゲットを取得
+            return skillData.skillEffect.EffectTarget;
+            //}
         }
 
         if (command == BattleCommand.Item)
         {
             var itemData = ItemDataManager.Instance.GetItemDataById(itemId);
-            if (itemData != null)
-            {
-                return itemData.itemEffect.effectTarget;
-            }
+            //if (itemData != null)
+            //{
+            return itemData.itemEffect.effectTarget;
+            //}
         }
 
         return EffectTarget.EnemySolo;
@@ -260,14 +258,7 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
         foreach (int battleId in enemyBattleIds)
         {
             var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(battleId);
-            if (enemyStatus != null && enemyStatus.enemyData != null)
-            {
-                names.Add(enemyStatus.enemyData.enemyName);
-            }
-            else
-            {
-                names.Add("不明な敵");
-            }
+            names.Add(enemyStatus.enemyData.enemyName);
         }
         return names;
     }
@@ -278,15 +269,7 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
         foreach (int charaId in characterIds)
         {
             var charaData = CharacterDataManager.Instance.GetCharacterData(charaId);
-            if (charaData != null)
-            {
-                // 名前だけでなく、必要に応じてHP/MP情報などもここで取得・整形可能
-                names.Add(charaData.characterName);
-            }
-            else
-            {
-                names.Add("不明な仲間");
-            }
+            names.Add(charaData.characterName);
         }
         return names;
     }
