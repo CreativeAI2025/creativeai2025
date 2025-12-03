@@ -85,7 +85,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
         {
             int id = ids[_cursor];
             var characterData = CharacterDataManager.Instance.GetCharacterData(id);
-            Sprite sprite = characterData.sprite;   // キャラクタースプライトの取得
+            Sprite sprite = CharacterDataManager.Instance.GetCharacterSprite(id);   // キャラクタースプライトの取得
             var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(id);
             int currentHp = characterStatus.currentHp;
             int maxHp = characterStatus.maxHp;
@@ -122,7 +122,6 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     {
         yield return null;
         MenuManager.Instance.OnCloseSelectWindow();
-        SoundManager.Instance.PlaySE(3);
         HideWindow();
     }
 
@@ -181,7 +180,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private string UseItem()
     {
-        string text = string.Empty;
+        string text = "この機能は　 今後　実装予定です。";
         // 使用するアイテムデータ
         ItemData itemData = _itemData;
         // 現在カーソルが指されているキャラクターのID
@@ -203,7 +202,7 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private string UseSkill()
     {
-        string text = string.Empty;
+        string text = "この機能は　 今後　実装予定です。";
         // 使用する予定のスキルデータ
         SkillData skillData = _skillData;
         // そのスキルを使用するキャラクターのID
