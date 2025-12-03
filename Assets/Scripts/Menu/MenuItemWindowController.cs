@@ -10,7 +10,6 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     private bool _canClose;
     private InputSetting _inputSetting;
     private int _itemListCursor; // スキルリスト内のどの位置を指しているかを数字で表す
-    private ItemData _selectedItemData;    // _itemListCursorが示すスキルのデータ
     private List<int> _itemList; // スキルのリスト（１キャラクター）
     private int _characterIndex;
     private int _characterIndexMax;
@@ -25,6 +24,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     {
         stop = false;
         _itemListCursor = 0;
+        _characterIndex = 0;
         SetItemList(); // スキルリストをセットする
         if (_itemList == null)
         {
@@ -39,7 +39,6 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         }
         else
         {
-            _selectedItemData = ItemDataManager.Instance.GetItemDataById(_itemList[_itemListCursor]);
             SetText();
         }
 
@@ -51,7 +50,6 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         _headerUIController.SetHeaderObject2(IMPORTANT_ITEM_TEXT);
         _headerUIController.SetHeaderObject3(string.Empty);
 
-        _characterIndex = 0;
         _characterIndexMax = 2;    // タブが「消費アイテム」と「大切なもの」の２種類のため、２を代入する。
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex); // キャラクターの添え字にあるタブを大きくする
@@ -114,8 +112,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
             {
                 return;
             }
-            MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.ItemUse, -1);
-            SoundManager.Instance.PlaySE(3);
+            StartCoroutine(UseProcess());
         }
         else if (_inputSetting.GetRightKeyDown())
         {
@@ -172,7 +169,6 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     {
         _itemListCursor++;
         _itemListCursor = _itemListCursor % _itemList.Count;
-        _selectedItemData = ItemDataManager.Instance.GetItemDataById(_itemList[_itemListCursor]);
         SetText();
         SoundManager.Instance.PlaySE(1);
     }
@@ -181,7 +177,6 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     {
         _itemListCursor--;
         _itemListCursor = (_itemListCursor + _itemList.Count) % _itemList.Count;
-        _selectedItemData = ItemDataManager.Instance.GetItemDataById(_itemList[_itemListCursor]);
         SetText();
         SoundManager.Instance.PlaySE(1);
     }
@@ -234,13 +229,11 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private void InitializePage()
     {
-
         _itemListCursor = 0;
         if (stop)
         {
             return;
         }
-        _selectedItemData = ItemDataManager.Instance.GetItemDataById(_itemList[_itemListCursor]);
         SetText();
     }
 
@@ -269,20 +262,21 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private void SetText()
     {
+        var itemData = ItemDataManager.Instance.GetItemDataById(CharacterStatusManager.Instance.partyItemInfoList[_itemListCursor].itemId);
         _uiController.SetItem1NameText(GetItemNameByCursor(_itemListCursor - 2));
         _uiController.SetItem2NameText(GetItemNameByCursor(_itemListCursor - 1));
         _uiController.SetItem3NameText(GetItemNameByCursor(_itemListCursor));
         _uiController.SetItem4NameText(GetItemNameByCursor(_itemListCursor + 1));
         _uiController.SetItem5NameText(GetItemNameByCursor(_itemListCursor + 2));
-        _uiController.SetItemSelectedDiscText(_selectedItemData.itemDesc);
-        _uiController.SetItemSelectedNameText(_selectedItemData.itemName);
-        _uiController.SetItemSelectedValueText(10);
+        _uiController.SetItemSelectedDiscText(itemData.itemDesc);
+        _uiController.SetItemSelectedNameText(itemData.itemName);
+        _uiController.SetItemSelectedValueText(CharacterStatusManager.Instance.partyItemInfoList[_itemListCursor].itemNum);
     }
 
     // 現在選択されているスキルデータを返す
     public ItemData getItemData()
     {
-        return _selectedItemData;
+        return ItemDataManager.Instance.GetItemDataById(CharacterStatusManager.Instance.partyItemInfoList[_itemListCursor].itemId);
     }
 
     /// <summary>
@@ -290,10 +284,33 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private void SetItemList()
     {
+        _uiController.InitializeText(); // テキストの初期化
         _itemList = new();
-        foreach (var iteminfo in CharacterStatusManager.Instance.partyItemInfoList)
+        if (_characterIndex == 0)
         {
-            _itemList.Add(iteminfo.itemId);
+            foreach (var iteminfo in CharacterStatusManager.Instance.partyItemInfoList)
+            {
+                _itemList.Add(iteminfo.itemId);
+            }
         }
+        else
+        {
+
+        }
+        stop = false;
+        if (_itemList.Count == 0)
+        {
+            stop = true;
+        }
+
+    }
+
+    private IEnumerator UseProcess()
+    {
+        _canClose = false;
+        yield return null;
+        MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.ItemUse, -1);
+        SoundManager.Instance.PlaySE(3);
+        _canClose = true;
     }
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c7565ae220b80a4f9879696791546a7, type: 3}
   m_Name: WorldMapData
   m_EditorClassIdentifier: 
-  backgroundImage: {fileID: 21300000, guid: 945bd7ef0298f1541b18239ff07e6908, type: 3}
+  backgroundImage: {fileID: -2903409891002091732, guid: 9f5765fec366860479f5599998cc716a, type: 3}
   mapPoints:
   - pointName: "\u6751"
     sceneName: Village
@@ -20,8 +20,7 @@ MonoBehaviour:
     position: {x: -250, y: 0}
     unlockedByDefault: 1
     neighborIndices: 01000000
-    icon: {fileID: -569765262, guid: c9435e49481fd4a46bf8d773bcd8d3e6, type: 3}
-    bgmID: 0
+    icon: {fileID: 7959735114290590459, guid: 20bdaf6c4628b184ea9dc3082ed301c4, type: 3}
     spawnPosition: {x: 16, y: 1}
   - pointName: "\u68EE"
     sceneName: Forest
@@ -29,34 +28,30 @@ MonoBehaviour:
     position: {x: -50, y: -30}
     unlockedByDefault: 1
     neighborIndices: 000000000200000003000000
-    icon: {fileID: 669787851, guid: c9435e49481fd4a46bf8d773bcd8d3e6, type: 3}
-    bgmID: 2
+    icon: {fileID: 8043028149534254930, guid: c17dc0cdd590a3a4182164a8b8c5fb13, type: 3}
     spawnPosition: {x: 1, y: 44}
   - pointName: "\u6D77"
     sceneName: Sea
     areaId: 
     position: {x: 0, y: -200}
-    unlockedByDefault: 1
+    unlockedByDefault: 0
     neighborIndices: 01000000
-    icon: {fileID: 287251872, guid: c9435e49481fd4a46bf8d773bcd8d3e6, type: 3}
-    bgmID: 3
+    icon: {fileID: 3239831677176006280, guid: 91c5ebc4c1704264dbebe61df9614678, type: 3}
     spawnPosition: {x: 0, y: 27}
   - pointName: "\u6D1E\u7A9F"
     sceneName: Cave
     areaId: 
     position: {x: 100, y: 50}
-    unlockedByDefault: 1
+    unlockedByDefault: 0
     neighborIndices: 0100000004000000
-    icon: {fileID: -1211640905, guid: c9435e49481fd4a46bf8d773bcd8d3e6, type: 3}
-    bgmID: 5
+    icon: {fileID: -2060358240998660804, guid: 0bc81a01e3f17a1459347cc25754dae5, type: 3}
     spawnPosition: {x: 12, y: 1}
   - pointName: "\u738B\u56FD"
     sceneName: Town
     areaId: 
     position: {x: 50, y: 200}
-    unlockedByDefault: 1
+    unlockedByDefault: 0
     neighborIndices: 03000000
-    icon: {fileID: 590093741, guid: c9435e49481fd4a46bf8d773bcd8d3e6, type: 3}
-    bgmID: 0
+    icon: {fileID: 7027500151075045027, guid: 85a2a0ee254163446acd2215bdccbe43, type: 3}
     spawnPosition: {x: 0, y: 0}
   startingPointIndex: 0

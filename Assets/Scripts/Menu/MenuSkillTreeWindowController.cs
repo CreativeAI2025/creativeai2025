@@ -134,7 +134,7 @@ public class MenuSkillTreeWindowController : MonoBehaviour, IMenuWindowControlle
         _characterIndexMax = characterIds.Count;    // パーティメンバーが二人なら「２」を返すよ
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex); // キャラクターの添え字にあるタブを大きくする
-
+        SkillSetActive(characterIds[_characterIndex]);
     }
 
     /// <summary>

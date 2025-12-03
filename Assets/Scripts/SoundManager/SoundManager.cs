@@ -5,6 +5,14 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using System;
 using UnityEngine.Serialization;
+using UnityEngine.SceneManagement;
+
+[System.Serializable]
+public class SoundMapData
+{
+    public string sceneName;
+    public string bgmName;
+}
 
 [RequireComponent(typeof(AudioSource))]
 public class SoundManager : DontDestroySingleton<SoundManager>
@@ -16,6 +24,8 @@ public class SoundManager : DontDestroySingleton<SoundManager>
     public AudioSource audioSourceSE; // SEのスピーカー
     public List<AudioClip> audioClipsSE; // SEの音源
     private Dictionary<string, int> audioClipsSEDict = new Dictionary<string, int>();
+    [SerializeField] private List<SoundMapData> soundMapDataList;
+    private Dictionary<string, string> soundMapDataDict = new Dictionary<string, string>();
 
     public override void Awake()
     {
@@ -29,6 +39,20 @@ public class SoundManager : DontDestroySingleton<SoundManager>
         {
             audioClipsSEDict.Add(audioClipsSE[i].name, i);
         }
+        foreach (var data in soundMapDataList)
+        {
+            if (!soundMapDataDict.ContainsKey(data.sceneName))
+            {
+                soundMapDataDict.Add(data.sceneName, data.bgmName);
+            }
+        }
+    }
+
+    void Start()
+    {
+        SceneManager.sceneLoaded += SceneLoaded;
+        AnimationManager.Instance.OnAnimationStart += StopBGM;
+        AnimationManager.Instance.OnAnimationEnd += SetCurrentSceneBGM;
     }
 
     /// <summary>
@@ -36,7 +60,7 @@ public class SoundManager : DontDestroySingleton<SoundManager>
     /// </summary>
     /// <param name="bgmIndex"></param>
     /// <param name="volume"></param> 
-    public void PlayBGM(int bgmIndex, float volume = 1f)
+    public void PlayBGM(int bgmIndex, float volume = 0.1f)
     {
         AudioClip bgmClip = audioClipsBGM[bgmIndex];
 
@@ -64,6 +88,7 @@ public class SoundManager : DontDestroySingleton<SoundManager>
     public void StopBGM()
     {
         audioSourceBGM.Stop();
+        audioSourceBGM.clip = null;
     }
 
     /// <summary>
@@ -115,5 +140,38 @@ public class SoundManager : DontDestroySingleton<SoundManager>
         {
             PlaySE(audioClipsSEDict[fileName]);
         }
+    }
+
+    /// <summary>
+    /// シーン切り替えが発生した時に、適当なBGMを流す
+    /// </summary>
+    /// <param name="nextScene"></param>
+    /// <param name="mode"></param>
+    private void SceneLoaded(Scene nextScene, LoadSceneMode mode)
+    {
+        string sceneName = nextScene.name;
+        if (!soundMapDataDict.ContainsKey(sceneName))
+        {
+            Debug.Log("[SoundManager]該当するシーン名が設定されていないか、間違っています");
+            return;
+        }
+        string bgmName = soundMapDataDict[sceneName];
+        Debug.Log($"bgmName「{bgmName}」");
+        ChangeBGM(bgmName);
+    }
+
+    /// <summary>
+    /// この関数が呼ばれたとき、シーン名を取得し、そこからDictionaryに登録されているBGMを流す
+    /// </summary>
+    public void SetCurrentSceneBGM()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (!soundMapDataDict.ContainsKey(sceneName))
+        {
+            Debug.Log("[SoundManager]該当するシーン名が設定されていないか、間違っています");
+            return;
+        }
+        string bgmName = soundMapDataDict[sceneName];
+        ChangeBGM(bgmName);
     }
 }

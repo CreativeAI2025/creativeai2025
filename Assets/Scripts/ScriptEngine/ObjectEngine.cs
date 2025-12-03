@@ -20,8 +20,7 @@ public class ObjectEngine : MonoBehaviour
 
     [SerializeField] private MapEngine mapEngine;
     [SerializeField] private MapDataController mapDataController;
-    private static Vector2Int changedPos = new Vector2Int(10, 4);
-    private int bgmNumber;
+    private static Vector2Int changedPos = new Vector2Int(12, 4);
     private string _mapName;
     private Vector2Int _pastGridPosition = new Vector2Int(-1, -1);
     private bool conversationFlag = false;
@@ -268,7 +267,6 @@ public class ObjectEngine : MonoBehaviour
                 //DebugLogger.Log("ChangeScene", DebugLogger.Colors.Green);
                 string[] args = eventArgs[1].Split(',');
                 changedPos = new Vector2Int(int.Parse(args[1]), int.Parse(args[2]));
-                bgmNumber = int.Parse(args[3]);
                 await SceneChange(args[0]);
                 break;
             case "Conversation":
@@ -315,7 +313,6 @@ public class ObjectEngine : MonoBehaviour
                 Worldmap();
                 await UniTask.WaitUntil(() => !worldmapFlag);
                 changedPos = WorldmapManager.Instance.GetSpawnPoint();
-                bgmNumber = WorldmapManager.Instance.GetBGM();
                 string sceneName = WorldmapManager.Instance.GetNextScene();
                 await SceneChange(sceneName);
                 break;
@@ -358,7 +355,6 @@ public class ObjectEngine : MonoBehaviour
         UnityEngine.Debug.Log($"移動先の座標｛{changedPos.x}、{changedPos.y}｝");
 
         await SceneManager.LoadSceneAsync(sceneName).ToUniTask();
-        SoundManager.Instance.PlayBGM(bgmNumber,0.7f);
         PlayerPrefs.SetString("SceneName", sceneName);
     }
 
@@ -384,7 +380,9 @@ public class ObjectEngine : MonoBehaviour
 
     private void JoinPartyMember(int id)
     {
-        string joinText = string.Empty; // ここで「○○が仲間に加わった！」というテキストを設定する
+        var characterData = CharacterDataManager.Instance.GetCharacterData(id);
+        var name = characterData.characterName;
+        string joinText = name + "が　仲間に加わった！"; // ここで「○○が仲間に加わった！」というテキストを設定する
         CharacterStatusManager.Instance.SetNewFriend(id);   // パーティメンバーに加える
         ConversationTextManager.Instance.InitializeFromString(joinText);    // 会話ウィンドウにテキストを表示させる
     }
@@ -396,7 +394,7 @@ public class ObjectEngine : MonoBehaviour
 
     private void Recover()
     {
-        string messageText = "全回復した！";
+        string messageText = "ゾフィは回復した";
         List<int> partyIds = CharacterStatusManager.Instance.partyCharacter;
         foreach (int id in partyIds)
         {

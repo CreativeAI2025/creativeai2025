@@ -57,6 +57,9 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     /// </summary>
     [SerializeField]
     BattleResultManager _battleResultManager;
+
+    [SerializeField]
+    SkillAnimationManager _skillAnimationManager;
     /// <summary>
     /// 戦闘のフェーズです。
     /// </summary>
@@ -114,7 +117,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         BattleData = new BattleData();
         BattleData.EnemyIds = enemyIds.ToArray();
-        BattleData.BGM = "bgm_05";    // BGMの設定（エンカウントなので、基本的には雑魚戦）
+        BattleData.BGM = "bgm_5";    // BGMの設定（エンカウントなので、基本的には雑魚戦）
         int enemyId = enemyIds[0];
         var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
         // エンカウントした敵の数に応じて、敵出現メッセージを変える
@@ -169,6 +172,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         SetBattlePhase(BattlePhase.ShowEnemy);
         TurnCount = 1;
         IsBattleFinished = false;
+        RunSelect = false;
         CharacterCursor = 0;    // キャラクターメンバーのリストの添え字を「０」にする
         _battleWindowManager.SetUpWindowControllers(this);
         var messageWindowController = _battleWindowManager.GetMessageWindowController();
@@ -177,6 +181,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         _battleActionRegister.InitializeRegister(_battleActionProcessor);
         _enemyCommandSelector.SetReferences(this, _battleActionRegister);
         _battleResultManager.SetReferences(this);
+        _skillAnimationManager.SetReferences(this);
         statusEffectManager = GetStatusEffectManager();
         statusEffectManager.SetBattleManager(this);
         // _characterMoverManager.StopCharacterMover();
@@ -258,7 +263,10 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         return statusEffectManager;
     }
-
+public SkillAnimationManager GetSkillAnimationManager()
+    {
+        return _skillAnimationManager;
+    }
 
     /// <summary>
     /// コマンド入力を開始（敵が現れたあとや、ターンが終わったあとに呼ばれる）
@@ -625,6 +633,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
 
         //_characterMoverManager.ResumeCharacterMover();
         BattlePhase = BattlePhase.NotInBattle;
+        SoundManager.Instance.SetCurrentSceneBGM();
     }
 
     public void OnBattleWin()
