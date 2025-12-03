@@ -27,6 +27,7 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     /// </summary>
     private List<CharacterData> _characterDataList;
     private Dictionary<int, CharacterData> characterDataDict;
+    private Dictionary<int, Sprite> _characterSpriteDict;
 
     public override void Awake()
     {
@@ -40,6 +41,7 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
             LoadParameterTables(),
             LoadCharacterData()
         );
+        await LoadAllCharacterSprites();
         Debug.Log("[CharacterDataManager]すべてのデータのロードが完了しました。");
     }
 
@@ -98,6 +100,45 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
         _characterDataList = new List<CharacterData>(handle.Result);
         handle.Release();
         characterDataDict = _characterDataList.ToDictionary(data => data.characterId, data => data);
+        Debug.Log("[CharacterDataManager]LoadCharacterData Count:" + characterDataDict.Count);
+    }
+    /// <summary>
+    /// 全キャラクターのSpriteデータをロードします。
+    /// </summary>
+    private async Task LoadAllCharacterSprites()
+    {
+        _characterSpriteDict = new Dictionary<int, Sprite>();
+
+        // CharacterDataList を基に、すべての Sprite を並行してロード
+        var loadTasks = new List<Task>();
+        var spriteHandles = new List<AsyncOperationHandle<Sprite>>();
+
+        foreach (var data in _characterDataList)
+        {
+            // AssetReferenceSprite からロード操作を開始
+            AsyncOperationHandle<Sprite> handle = data.sprite.LoadAssetAsync<Sprite>();
+            spriteHandles.Add(handle);
+
+            // ロード完了を待つ Task をリストに追加
+            loadTasks.Add(handle.Task.ContinueWith(t =>
+            {
+                if (t.Status == TaskStatus.RanToCompletion && handle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    // ロード成功時のみ Dictionary に追加
+                    lock (_characterSpriteDict) // 並行処理のためロック推奨
+                    {
+                        _characterSpriteDict[data.characterId] = handle.Result;
+                    }
+                }
+                else
+                {
+                    Debug.LogError($"Spriteロード失敗: ID {data.characterId}");
+                }
+            }));
+        }
+
+        // 全てのロード完了を待機
+        await Task.WhenAll(loadTasks);
     }
 
     /// <summary>
@@ -121,5 +162,27 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     {
         var characterData = GetCharacterData(characterId);
         return characterData.characterName;
+    }
+
+    /// <summary>
+    /// キャラクターのIDからSpriteを取得します。（同期アクセス）
+    /// </summary>
+    /// <param name="characterId">キャラクターID</param>
+    public Sprite GetCharacterSprite(int characterId) // 🚨 新しく追加
+    {
+        if (_characterSpriteDict != null && _characterSpriteDict.ContainsKey(characterId))
+        {
+            return _characterSpriteDict[characterId];
+        }
+        return null; // ロードされていない、またはIDが存在しない
+    }
+
+    public void PrintAllCharacterData()
+    {
+        Debug.Log("ーーー　取得したキャラクターデータを記述します　ーーー");
+        foreach (KeyValuePair<int, CharacterData> kvp in characterDataDict)
+        {
+            Debug.Log($"Key:{kvp.Key}, Value:{kvp.Value.characterName}");
+        }
     }
 }

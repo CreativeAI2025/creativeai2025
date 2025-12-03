@@ -21,9 +21,8 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private void SetUpSkill()
     {
-        stop = false;
-        _skillListCursor = 0;
-        SetSkillList(); // スキルリストをセットする
+        _characterIndex = 0;
+        InitializePage();
         if (_skillList == null)
         {
             stop = true;
@@ -80,7 +79,6 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
                 _headerUIController.SetHeaderObject3(text);
             }
         }
-        _characterIndex = 0;
         _characterIndexMax = characterIds.Count;    // パーティメンバーが二人なら「２」を返すよ
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex); // キャラクターの添え字にあるタブを大きくする
@@ -143,9 +141,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
             {
                 return;
             }
-            int userId = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
-            MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.SkillUse, userId);
-            SoundManager.Instance.PlaySE(3);
+            StartCoroutine(UseProcess());
         }
         else if (_inputSetting.GetRightKeyDown())
         {
@@ -232,7 +228,6 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex);
 
-        SetSkillList();
         InitializePage();
         SoundManager.Instance.PlaySE(1);
     }
@@ -253,7 +248,6 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex);
 
-        SetSkillList();
         InitializePage();
         SoundManager.Instance.PlaySE(1);
     }
@@ -265,6 +259,8 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     private void InitializePage()
     {
         _skillListCursor = 0;
+        _uiController.InitializeText();
+        SetSkillList();
         if (stop)
         {
             return;
@@ -316,6 +312,7 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private void SetSkillList()
     {
+        stop = false;
         int id = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
         CharacterStatus currentCharacterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(id);
         _skillList = currentCharacterStatus.skillList;
@@ -323,5 +320,15 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         {
             stop = true;
         }
+    }
+
+    private IEnumerator UseProcess()
+    {
+        _canClose = false;
+        yield return null;
+        int userId = CharacterStatusManager.Instance.partyCharacter[_characterIndex];
+        MenuManager.Instance.OnOpenSelectWindow(MenuUsePhase.SkillUse, userId);
+        SoundManager.Instance.PlaySE(3);
+        _canClose = true;
     }
 }
