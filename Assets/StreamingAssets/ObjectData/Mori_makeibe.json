@@ -4,35 +4,34 @@
     {
       "MapName": "Forest",
       "Position": [
-          2,
-          43
-        ]
+        2,
+        43
+      ]
     },
     {
       "MapName": "Forest",
       "Position": [
-          2,
-          44
-        ]
+        2,
+        44
+      ]
     },
     {
       "MapName": "Forest",
       "Position": [
-          2,
-          45
-        ]
+        2,
+        45
+      ]
     }
   ],
-  "EventName": "Battle Battle_makeibe",
+  "EventName": "Battle Battle_makeibe | Recover",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
       [
-      "MakeibeBattleFinished",
-      false
+        "MakeibeBattleFinished",
+        false
       ]
     ],
-    "NextFlag": [
-    ]
+    "NextFlag": []
   }
 }

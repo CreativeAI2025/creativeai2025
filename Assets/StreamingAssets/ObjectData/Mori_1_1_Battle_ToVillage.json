@@ -16,7 +16,7 @@
       ]
     }
   ],
-  "EventName": "Join 2 | Battle Battle_kent",
+  "EventName": "ChangeScene Village,16,1",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
@@ -30,9 +30,18 @@
       ],
       [
         "KentBattleTry",
-        false
+        true
+      ],
+      [
+        "KentBattleLose",
+        true
       ]
     ],
-    "NextFlag": []
+    "NextFlag": [
+      [
+        "KentBattleLose",
+        false
+      ]
+    ]
   }
 }

@@ -16,7 +16,7 @@
       ]
     }
   ],
-  "EventName": "Join 2 | Battle Battle_kent",
+  "EventName": "Battle Battle_kent",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
@@ -30,6 +30,10 @@
       ],
       [
         "KentBattleTry",
+        true
+      ],
+      [
+        "KentBattleLose",
         false
       ]
     ],
