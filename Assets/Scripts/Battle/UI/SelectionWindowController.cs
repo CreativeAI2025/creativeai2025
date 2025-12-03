@@ -329,22 +329,22 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
         if (_battleManager.SelectedCommand == BattleCommand.Skill)
         {
             var skillData = _skillController.GetSkillData(_selectedIndex);
-            if (skillData != null)
-            {
-                _battleManager.OnItemSelected(skillData.skillId);
-                HideWindow();
-                SetCanSelectState(false);
-            }
+            //if (skillData != null)
+            //{
+            _battleManager.OnItemSelected(skillData.skillId);
+            HideWindow();
+            SetCanSelectState(false);
+            //}
         }
         else if (_battleManager.SelectedCommand == BattleCommand.Item)
         {
             var itemInfo = _itemController.GetItemInfo(_selectedIndex);
-            if (itemInfo != null)
-            {
-                _battleManager.OnItemSelected(itemInfo.itemId);
-                HideWindow();
-                SetCanSelectState(false);
-            }
+            //if (itemInfo != null)
+            //{
+            _battleManager.OnItemSelected(itemInfo.itemId);
+            HideWindow();
+            SetCanSelectState(false);
+            //}
         }
     }
 

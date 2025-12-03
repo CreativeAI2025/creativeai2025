@@ -260,14 +260,7 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
         foreach (int battleId in enemyBattleIds)
         {
             var enemyStatus = EnemyStatusManager.Instance.GetEnemyStatusByBattleId(battleId);
-            if (enemyStatus != null && enemyStatus.enemyData != null)
-            {
-                names.Add(enemyStatus.enemyData.enemyName);
-            }
-            else
-            {
-                names.Add("不明な敵");
-            }
+            names.Add(enemyStatus.enemyData.enemyName);
         }
         return names;
     }
