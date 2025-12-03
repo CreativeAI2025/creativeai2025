@@ -52,9 +52,9 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
         var record = parameterTable.parameterRecords.Find(r => r.Level == level);
 
         _uiControllers[characterStatus.characterId - 1].SetCurrentHp(characterStatus.currentHp);
-        _uiControllers[characterStatus.characterId - 1].SetMaxHp(record.HP);
+        _uiControllers[characterStatus.characterId - 1].SetMaxHp(characterStatus.maxHp);
         _uiControllers[characterStatus.characterId - 1].SetCurrentMp(characterStatus.currentMp);
-        _uiControllers[characterStatus.characterId - 1].SetMaxMp(record.MP);
+        _uiControllers[characterStatus.characterId - 1].SetMaxMp(characterStatus.maxMp);
 
     }
 
