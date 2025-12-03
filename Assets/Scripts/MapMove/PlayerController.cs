@@ -67,13 +67,13 @@ public class PlayerController : MonoBehaviour
     protected virtual void Move()
     {
         // ✅ タイル中心補正はここで行う（MoveEndとResetで同様に扱う）
-        Vector3 targetWorld = new Vector3(targetPosition.x + 0.5f, targetPosition.y + 0.5f, 0);
+        Vector3 targetWorld = new Vector3(targetPosition.x, targetPosition.y, 0);
         _playerTransform.position = Vector3.MoveTowards(_playerTransform.position, targetWorld, Time.deltaTime * moveSpeed);
     }
 
     void MoveEnd()
     {
-        Vector3 targetVector = new Vector3(targetPosition.x + 0.5f, targetPosition.y + 0.5f, 0);
+        Vector3 targetVector = new Vector3(targetPosition.x, targetPosition.y, 0);
 
         // ✅ 到達判定（許容距離内なら移動完了）
         if (Vector3.Distance(targetVector, _playerTransform.position) > allowDistance) return;
@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
 
     protected void ResetPosition()
     {
-        _playerTransform.position = new Vector3(startPosition.x + 0.5f, startPosition.y + 0.5f, 0);
+        _playerTransform.position = new Vector3(startPosition.x, startPosition.y, 0);
         MovePrepare();
     }
 
