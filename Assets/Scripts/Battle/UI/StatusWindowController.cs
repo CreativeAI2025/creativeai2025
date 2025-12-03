@@ -78,17 +78,15 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     public void ShowWindow()
     {
-        _uiControllers[0].Show();
-         _uiControllers[1].Show();
-          _uiControllers[2].Show();
+        _uiControllers[0].Hide();
+        _uiControllers[1].Hide();
+        _uiControllers[2].Hide();
 
-        // foreach (var ui in _uiControllers)
-        // {
-        //     if (ui != null)
-        //     {
-        //         ui.Show();
-        //     }
-        // }
+        int partyMember = CharacterStatusManager.Instance.partyCharacter.Count;
+        for (int i = 0; i < partyMember; i++)
+        {
+            _uiControllers[i].Show();
+        }
     }
 
     /// <summary>

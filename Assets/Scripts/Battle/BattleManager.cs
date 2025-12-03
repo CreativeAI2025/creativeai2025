@@ -263,7 +263,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
     {
         return statusEffectManager;
     }
-public SkillAnimationManager GetSkillAnimationManager()
+    public SkillAnimationManager GetSkillAnimationManager()
     {
         return _skillAnimationManager;
     }
@@ -600,8 +600,7 @@ public SkillAnimationManager GetSkillAnimationManager()
     {
         Logger.Instance.Log("逃走に成功しました。");
         IsBattleFinished = true;
-        OnBattleWin();  // デバッグ用に勝ち判定にする
-        //OnFinishBattle();
+        OnBattleLose();
     }
 
     /// <summary>
