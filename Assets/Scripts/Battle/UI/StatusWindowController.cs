@@ -78,7 +78,10 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     public void ShowWindow()
     {
-        _uiController.Show();
+        _uiControllers[0].Show();
+         _uiControllers[1].Show();
+          _uiControllers[2].Show();
+
         // foreach (var ui in _uiControllers)
         // {
         //     if (ui != null)
@@ -93,7 +96,9 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     public void HideWindow()
     {
-        _uiController.Hide();
+        _uiControllers[0].Hide();
+        _uiControllers[1].Hide();
+        _uiControllers[2].Hide();
         // foreach (var ui in _uiControllers)
         // {
         //     if (ui != null)

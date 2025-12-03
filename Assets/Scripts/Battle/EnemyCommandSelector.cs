@@ -27,7 +27,20 @@ public class EnemyCommandSelector : MonoBehaviour
         _battleManager = battleManager;
         _battleActionRegister = battleActionRegister;
     }
+    List<int> GetAlivePartyTargets(int count = 1)
+    {
+        var aliveMembers = CharacterStatusManager.Instance.partyCharacter
+            .Where(id => CharacterStatusManager.Instance.GetCharacterStatusById(id).currentHp > 0)
+            .ToList();
 
+        if (aliveMembers.Count == 0)
+            return new List<int>();
+
+        return aliveMembers
+            .OrderBy(x => Random.value)
+            .Take(count)
+            .ToList();
+    }
     /// <summary>
     /// 敵キャラクターのコマンドを選択します。
     /// </summary>
@@ -42,8 +55,8 @@ public class EnemyCommandSelector : MonoBehaviour
             }
 
             // パーティメンバーへの攻撃対象（ここ改善必要かも？）
-            List<int> targetIds = new List<int>() { CharacterStatusManager.Instance.partyCharacter[0] };
-
+            // List<int> targetIds = new List<int>() { CharacterStatusManager.Instance.partyCharacter[0] };
+            List<int> targetIds = GetAlivePartyTargets(1);   // 単体攻撃
             // 行動パターンに応じて敵キャラクターのコマンドを選択します。
             EnemyActionRecord record = SelectActionFromRecords(enemyStatus.enemyData, enemyStatus.enemyBattleId);
             if (record == null)

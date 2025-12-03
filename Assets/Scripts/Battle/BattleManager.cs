@@ -172,6 +172,7 @@ public class BattleManager : DontDestroySingleton<BattleManager>
         SetBattlePhase(BattlePhase.ShowEnemy);
         TurnCount = 1;
         IsBattleFinished = false;
+        RunSelect = false;
         CharacterCursor = 0;    // キャラクターメンバーのリストの添え字を「０」にする
         _battleWindowManager.SetUpWindowControllers(this);
         var messageWindowController = _battleWindowManager.GetMessageWindowController();
