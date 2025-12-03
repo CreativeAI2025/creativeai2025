@@ -206,14 +206,16 @@ public class ObjectEngine : MonoBehaviour
             await Call(trapObjectData, 0, 4);
         }
 
-        /*
+
         // キャラクター全員がやられていたら、村へ飛ばし、回復させる
         if (CharacterStatusManager.Instance.IsAllCharacterDefeated() && CharacterStatusManager.Instance.partyCharacter.Count != 0)
         {
+            string zophyDefeatedText = "Conversation Battle_Defeated";
+            await CallEvent(zophyDefeatedText);
             string backToVillage = "ChangeScene Village,16,1";
             Recover();
             await CallEvent(backToVillage);
-        }*/
+        }
     }
 
     private void Pause()
