@@ -12,17 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f16436ac038bdf4b92bc19360a4c5c8, type: 3}
   m_Name: EnemyData_208
   m_EditorClassIdentifier: 
-  enemyId: 310
-  enemyName: "\u30C9\u30AF\u30DE\u30AD\u30C8\u30AB\u30B2"
-  sprite: {fileID: 2857129546579619091, guid: 289184deaabbbbe4c81f7dd7efa74d28, type: 3}
-  HP: 244
+  enemyId: 208
+  enemyName: "\u30B2\u30E9\u30AF"
+  sprite:
+    m_AssetGUID: 55e0aa331ec0def4fb31f25926af19c3
+    m_SubObjectName: enemySprite_309
+    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  HP: 113
   MP: 5
-  Attack: 119
-  Defence: 106
-  MagicAttack: 108
-  MagicDefence: 79
-  Speed: 63
+  Attack: 57
+  Defence: 75
+  MagicAttack: 57
+  MagicDefence: 70
+  Speed: 55
   Evasion: 0
-  exp: 55
-  gold: 33
+  exp: 37
+  gold: 20
   enemyActionRecords: []

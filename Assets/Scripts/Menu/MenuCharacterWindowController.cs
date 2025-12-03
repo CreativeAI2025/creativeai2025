@@ -201,6 +201,6 @@ public class MenuCharacterWindowController : MonoBehaviour, IMenuWindowControlle
         _uiController.SetMagicAtkValueText(currentCharacterStatus.currentMagicAttack);
         _uiController.SetMagicDefValueText(currentCharacterStatus.currentMagicDefence);
         _uiController.SetSpeedValueText(currentCharacterStatus.currentSpeed);
-        _uiController.SetCharacterSprite(currentCharacterData.sprite);
+        _uiController.SetCharacterSprite(CharacterDataManager.Instance.GetCharacterSprite(currentId));
     }
 }
