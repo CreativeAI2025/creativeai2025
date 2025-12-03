@@ -269,15 +269,7 @@ public class TargetSelectionWindowController : MonoBehaviour, IBattleWindowContr
         foreach (int charaId in characterIds)
         {
             var charaData = CharacterDataManager.Instance.GetCharacterData(charaId);
-            if (charaData != null)
-            {
-                // 名前だけでなく、必要に応じてHP/MP情報などもここで取得・整形可能
-                names.Add(charaData.characterName);
-            }
-            else
-            {
-                names.Add("不明な仲間");
-            }
+            names.Add(charaData.characterName);
         }
         return names;
     }
