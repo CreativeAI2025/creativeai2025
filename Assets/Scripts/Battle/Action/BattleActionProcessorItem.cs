@@ -98,17 +98,17 @@ public class BattleActionProcessorItem : MonoBehaviour
             }
             else if (itemData.itemEffect.itemEffectCategory == ItemEffectCategory.MPRecovery)
             {
+                int hpDelta = 0;
                 int mpDelta = DamageFormula.CalculateHealValue(itemData.itemEffect.value);
-                int mpConsume = 0;
 
                 // ステータス変更
                 if (action.isTargetFriend)
                 {
-                    CharacterStatusManager.Instance.ChangeCharacterStatus(targetId, mpDelta, mpConsume);
+                    CharacterStatusManager.Instance.ChangeCharacterStatus(targetId, hpDelta, mpDelta);
                 }
                 else
                 {
-                    EnemyStatusManager.Instance.ChangeEnemyStatus(targetId, mpDelta, mpConsume);
+                    EnemyStatusManager.Instance.ChangeEnemyStatus(targetId, hpDelta, mpDelta);
                 }
 
                 // メッセージ表示コルーチンを呼び出し

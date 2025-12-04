@@ -115,7 +115,12 @@ public class BattleMessage
     /// <summary>
     /// HP回復のターゲットのメッセージのフォーマットです。
     /// </summary>
-    public static readonly string HealTargetSuffix = "のHPが";
+    public static readonly string HpHealTargetSuffix = "のHPが";
+
+    /// <summary>
+    /// MP回復のターゲットのメッセージのフォーマットです。
+    /// </summary>
+    public static readonly string MpHealTargetSuffix = "のMPが";
 
     /// <summary>
     /// HP回復の効果量のメッセージのフォーマットです。
