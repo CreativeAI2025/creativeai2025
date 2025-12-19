@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.AddressableAssets;
 
 [CreateAssetMenu(fileName = "CharacterData", menuName = "Scriptable Objects/SimpleRpg/CharacterData")]
 public class CharacterData : ScriptableObject
@@ -22,5 +21,5 @@ public class CharacterData : ScriptableObject
   /// <summary>
   /// キャラクターの見た目（等身大）
   /// </summary>
-  public AssetReferenceSprite sprite;
+  public Sprite sprite;
 }
