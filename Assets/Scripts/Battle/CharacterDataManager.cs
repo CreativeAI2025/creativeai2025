@@ -14,7 +14,7 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     /// <summary>
     /// 読み込んだキャラクターの経験値表の一覧です。
     /// </summary>
-    private List<ExpTable> _expTables;
+    [SerializeField] private ExpTable _expTable;
 
     /// <summary>
     /// 読み込んだキャラクターのパラメータ表の一覧です。
@@ -35,7 +35,6 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     public async Task Initialize()
     {
         await Task.WhenAll(
-            LoadExpTables(),
             LoadParameterTables()
         );
         LoadCharacterData();
@@ -43,27 +42,11 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     }
 
     /// <summary>
-    /// 経験値表のデータをロードします。
-    /// </summary>
-    public async Task LoadExpTables()
-    {
-        AsyncOperationHandle<IList<ExpTable>> handle = Addressables.LoadAssetsAsync<ExpTable>(AddressablesLabels.ExpTable, null);
-        await handle.Task;
-        _expTables = new List<ExpTable>(handle.Result);
-        handle.Release();
-    }
-
-    /// <summary>
     /// 経験値表のデータを取得します。
     /// </summary>
     public ExpTable GetExpTable()
     {
-        ExpTable expTable = null;
-        if (_expTables.Count > 0)
-        {
-            expTable = _expTables[0];
-        }
-        return expTable;
+        return _expTable;
     }
 
     /// <summary>
