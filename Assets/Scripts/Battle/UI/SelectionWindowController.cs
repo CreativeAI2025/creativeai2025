@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-
+using System.Collections;
 
 /// <summary>
 /// 選択ウィンドウを制御するクラスです。
@@ -34,6 +34,11 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
     /// 現在選択中の項目のインデックスです。
     /// </summary>
     int _selectedIndex;
+
+    /// <summary>
+    /// １ページに表示する項目の最大数
+    /// </summary>
+    const int MAX_INDEX = 4;
 
     /// <summary>
     /// 現在のページ数です。
@@ -160,10 +165,12 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
 
             // ページ移動後、最初の有効項目にカーソルを合わせる
             _selectedIndex = 0;
-            while (!IsValidIndex(_selectedIndex) && _selectedIndex < 4)
+            while (!IsValidIndex(_selectedIndex) && _selectedIndex < MAX_INDEX)
             {
                 _selectedIndex++;
             }
+
+            _selectedIndex = _page * MAX_INDEX;
 
             ShowSelectionCursor();
         }
@@ -181,10 +188,12 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
 
             // ページ移動後、最初の有効項目にカーソルを合わせる
             _selectedIndex = 0;
-            while (!IsValidIndex(_selectedIndex) && _selectedIndex < 4)
+            while (!IsValidIndex(_selectedIndex) && _selectedIndex < MAX_INDEX)
             {
                 _selectedIndex++;
             }
+
+            _selectedIndex = _page * MAX_INDEX;
 
             ShowSelectionCursor();
         }
@@ -206,7 +215,7 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     void SelectUpperItem()
     {
-        int newIndex = _selectedIndex - 1;
+        int newIndex = _selectedIndex % MAX_INDEX - 1;
         if (newIndex < 0)
         {
             newIndex = 3; // 一番上から下にループ
@@ -214,7 +223,7 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
 
         if (IsValidIndex(newIndex))
         {
-            _selectedIndex = newIndex;
+            _selectedIndex = _page * MAX_INDEX + newIndex;
             ShowSelectionCursor();
         }
     }
@@ -224,7 +233,7 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     void SelectLowerItem()
     {
-        int newIndex = _selectedIndex + 1;
+        int newIndex = _selectedIndex % MAX_INDEX + 1;
         if (newIndex > 3)
         {
             newIndex = 0; // 一番下から上にループ
@@ -232,7 +241,7 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
 
         if (IsValidIndex(newIndex))
         {
-            _selectedIndex = newIndex;
+            _selectedIndex = _page * MAX_INDEX + newIndex;
             ShowSelectionCursor();
         }
     }
@@ -242,7 +251,7 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     bool IsUpperRow()
     {
-        int currentRow = _selectedIndex % 4;
+        int currentRow = _selectedIndex % MAX_INDEX;
         int upperRowMax = 1;
         return currentRow <= upperRowMax;
     }
@@ -269,7 +278,7 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     void ShowSelectionCursor()
     {
-        int index = _selectedIndex % 4;
+        int index = _selectedIndex % MAX_INDEX;
         _uiController.ShowSelectedCursor(index);
     }
 
@@ -326,26 +335,33 @@ public class SelectionWindowController : MonoBehaviour, IBattleWindowController
             return;
         }
 
+        StartCoroutine(TargetSelectProcess());
+    }
+
+    private IEnumerator TargetSelectProcess()
+    {
+        yield return null;
         if (_battleManager.SelectedCommand == BattleCommand.Skill)
         {
             var skillData = _skillController.GetSkillData(_selectedIndex);
-            if (skillData != null)
-            {
-                _battleManager.OnItemSelected(skillData.skillId);
-                HideWindow();
-                SetCanSelectState(false);
-            }
+            //if (skillData != null)
+            //{
+            _battleManager.OnItemSelected(skillData.skillId);
+            HideWindow();
+            SetCanSelectState(false);
+            //}
         }
         else if (_battleManager.SelectedCommand == BattleCommand.Item)
         {
             var itemInfo = _itemController.GetItemInfo(_selectedIndex);
-            if (itemInfo != null)
-            {
-                _battleManager.OnItemSelected(itemInfo.itemId);
-                HideWindow();
-                SetCanSelectState(false);
-            }
+            //if (itemInfo != null)
+            //{
+            _battleManager.OnItemSelected(itemInfo.itemId);
+            HideWindow();
+            SetCanSelectState(false);
+            //}
         }
+
     }
 
     /// <summary>
