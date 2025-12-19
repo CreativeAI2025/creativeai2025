@@ -40,7 +40,7 @@ public class GameInitializer : MonoBehaviour
         Debug.Log("ロードを開始します。");
         try
         {
-            await characterDataManager.Initialize();
+            characterDataManager.Initialize();
             await itemDatamanager.Initialize();
             characterStatusManager.Initialize();
             skillDataManager.Initialize();

@@ -22,4 +22,9 @@ public class CharacterData : ScriptableObject
   /// キャラクターの見た目（等身大）
   /// </summary>
   public Sprite sprite;
+
+  /// <summary>
+  /// キャラクターのレベルごとのステータス
+  /// </summary>
+  public ParameterTable parameterTable;
 }

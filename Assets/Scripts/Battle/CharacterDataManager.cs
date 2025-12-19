@@ -1,10 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using System.Linq;
-using System.Threading.Tasks;
 
 /// <summary>
 /// ゲーム内の味方キャラクターのデータを管理するクラスです。
@@ -17,12 +11,6 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     [SerializeField] private ExpTable _expTable;
 
     /// <summary>
-    /// 読み込んだキャラクターのパラメータ表の一覧です。
-    /// </summary>
-    private List<ParameterTable> _parameterTables;
-    private Dictionary<int, ParameterTable> _parameterTableDisc;
-
-    /// <summary>
     /// 読み込んだキャラクターのデータの一覧です。
     /// </summary>
     [SerializeField] private CharacterDatabase _characterDatabase;
@@ -32,11 +20,8 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
         base.Awake();
     }
 
-    public async Task Initialize()
+    public void Initialize()
     {
-        await Task.WhenAll(
-            LoadParameterTables()
-        );
         LoadCharacterData();
         Debug.Log("[CharacterDataManager]すべてのデータのロードが完了しました。");
     }
@@ -50,24 +35,13 @@ public class CharacterDataManager : DontDestroySingleton<CharacterDataManager>
     }
 
     /// <summary>
-    /// パラメータ表のデータをロードします。
-    /// </summary>
-    public async Task LoadParameterTables()
-    {
-        AsyncOperationHandle<IList<ParameterTable>> handle = Addressables.LoadAssetsAsync<ParameterTable>(AddressablesLabels.ParameterTable, null);
-        await handle.Task;
-        _parameterTables = new List<ParameterTable>(handle.Result);
-        handle.Release();
-        _parameterTableDisc = _parameterTables.ToDictionary(table => table.characterId, table => table);
-    }
-
-    /// <summary>
     /// IDからパラメータ表のデータを取得します。
     /// </summary>
     /// <param name="characterId">キャラクターID</param>
     public ParameterTable GetParameterTable(int characterId)
     {
-        return _parameterTableDisc[characterId];
+        var characterData = GetCharacterData(characterId);
+        return characterData.parameterTable;
     }
 
     /// <summary>
