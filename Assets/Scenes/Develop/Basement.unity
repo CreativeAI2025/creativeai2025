@@ -230,8 +230,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 443944180}
-  minPosition: {x: 1.5, y: 1}
-  maxPosition: {x: 40, y: 40}
+  minPosition: {x: 2.5, y: 1}
+  maxPosition: {x: 40, y: 65}
   smoothSpeed: 0.1
 --- !u!114 &319020871 stripped
 MonoBehaviour:
@@ -1411,6 +1411,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 443944178}
     - target: {fileID: 3405359358091297703, guid: 4f77b68f96dd2954f89a18e28535160d, type: 3}
+      propertyPath: moveSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405359358091297703, guid: 4f77b68f96dd2954f89a18e28535160d, type: 3}
       propertyPath: allowDistance
       value: 0.05
       objectReference: {fileID: 0}
@@ -1487,6 +1491,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 541172364278123210, guid: a6b840703287d854aa1781e77453fb49, type: 3}
+      propertyPath: m_TileAnchor.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 541172364278123210, guid: a6b840703287d854aa1781e77453fb49, type: 3}
+      propertyPath: m_TileAnchor.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1430290679980849988, guid: a6b840703287d854aa1781e77453fb49, type: 3}
       propertyPath: m_BodyType
       value: 2
@@ -1494,6 +1506,30 @@ PrefabInstance:
     - target: {fileID: 1430290679980849988, guid: a6b840703287d854aa1781e77453fb49, type: 3}
       propertyPath: m_Simulated
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142836783275010733, guid: a6b840703287d854aa1781e77453fb49, type: 3}
+      propertyPath: m_TileAnchor.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3142836783275010733, guid: a6b840703287d854aa1781e77453fb49, type: 3}
+      propertyPath: m_TileAnchor.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215218420669887832, guid: a6b840703287d854aa1781e77453fb49, type: 3}
+      propertyPath: m_TileAnchor.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3215218420669887832, guid: a6b840703287d854aa1781e77453fb49, type: 3}
+      propertyPath: m_TileAnchor.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249181976371844021, guid: a6b840703287d854aa1781e77453fb49, type: 3}
+      propertyPath: m_TileAnchor.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6249181976371844021, guid: a6b840703287d854aa1781e77453fb49, type: 3}
+      propertyPath: m_TileAnchor.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7168359691995283053, guid: a6b840703287d854aa1781e77453fb49, type: 3}
       propertyPath: tilemaps
