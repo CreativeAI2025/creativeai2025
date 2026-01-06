@@ -1,0 +1,37 @@
+{
+    "Id": 0,
+    "Location": [
+        {
+            "MapName": "Village",
+            "Position": [
+                15,
+                0
+            ]
+        },
+        {
+            "MapName": "Village",
+            "Position": [
+                16,
+                0
+            ]
+        },
+        {
+            "MapName": "Village",
+            "Position": [
+                17,
+                0
+            ]
+        }
+    ],
+    "EventName": "Conversation Village_to_Worldmap_prohibited | ChangeScene Village,16,1",
+    "TriggerType": 0,
+    "FlagCondition": {
+        "Flag": [
+            [
+                "NusiBattleFinished",
+                false
+            ]
+        ],
+        "NextFlag": []
+    }
+}
