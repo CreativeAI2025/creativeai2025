@@ -13,7 +13,7 @@ public class GameInitializer : MonoBehaviour
     }
     */
 
-    public async void InitializeGame()
+    public void InitializeGame()
     {
         /// <summary>
         /// パーティキャラクター（ゾフィ、リナ、ノア）のデータを登録するためのクラス
@@ -40,12 +40,12 @@ public class GameInitializer : MonoBehaviour
         Debug.Log("ロードを開始します。");
         try
         {
-            await characterDataManager.Initialize();
-            await itemDatamanager.Initialize();
+            characterDataManager.Initialize();
+            itemDatamanager.Initialize();
             characterStatusManager.Initialize();
-            await skillDataManager.Initialize();
+            skillDataManager.Initialize();
             FlagManager.Instance.DeleteFlagFile();
-            await enemyDataManager.Initialize();
+            enemyDataManager.Initialize();
         }
         catch (Exception e)
         {

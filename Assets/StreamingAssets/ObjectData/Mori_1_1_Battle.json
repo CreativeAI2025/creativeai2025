@@ -16,7 +16,7 @@
       ]
     }
   ],
-  "EventName": "Join 2 | Battle Battle_kent",
+  "EventName": "Join 2 | Battle Battle_kent | Recover",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
@@ -26,6 +26,10 @@
       ],
       [
         "KentBattleFinished",
+        false
+      ],
+      [
+        "KentBattleTry",
         false
       ]
     ],

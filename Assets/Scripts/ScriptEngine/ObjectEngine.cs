@@ -195,8 +195,8 @@ public class ObjectEngine : MonoBehaviour
         }
         if (player == null) return;
         List<ObjectData> trapObjectDatas = _trapEventObjects[player.GetGridPosition().x][player.GetGridPosition().y];
-        if (player.GetGridPosition() == _pastGridPosition && !trapObjectDatas.Any(trapObjectData => trapObjectData.TriggerType == 4)) return;// centerObjectData.TriggerType == 0 
-        _pastGridPosition = player.GetGridPosition();
+        //if (player.GetGridPosition() == _pastGridPosition && !trapObjectDatas.Any(trapObjectData => trapObjectData.TriggerType == 4)) return;// centerObjectData.TriggerType == 0 
+        //_pastGridPosition = player.GetGridPosition();
         foreach (ObjectData trapObjectData in trapObjectDatas)
         {
             if (trapObjectData.EventName.Contains("Conversation") && !ConversationTextManager.Instance.IsAllowCall)
@@ -204,6 +204,17 @@ public class ObjectEngine : MonoBehaviour
                 continue;
             }
             await Call(trapObjectData, 0, 4);
+        }
+
+
+        // キャラクター全員がやられていたら、村へ飛ばし、回復させる
+        if (CharacterStatusManager.Instance.IsAllCharacterDefeated() && CharacterStatusManager.Instance.partyCharacter.Count != 0)
+        {
+            string zophyDefeatedText = "Conversation Battle_Defeated";
+            await CallEvent(zophyDefeatedText);
+            string backToVillage = "ChangeScene Village,16,1";
+            Recover();
+            await CallEvent(backToVillage);
         }
     }
 
@@ -224,30 +235,32 @@ public class ObjectEngine : MonoBehaviour
         if (objectData is null) return;
         if (!triggerType.Contains(objectData.TriggerType)) return;
         string[] eventNames = objectData.EventName.Split(" | ");
+        if (IsFlagsInsufficient(objectData))
+        {
+            return; // continue;
+        }
+        if (objectData.FlagCondition.NextFlag is not null)
+        {
+            SetNextFlag(objectData.FlagCondition.NextFlag);
+        }
         foreach (string eventName in eventNames)
         {
             foreach (var x in objectData.FlagCondition.Flag)
             {
                 UnityEngine.Debug.Log(x.Key + " : expected: " + x.Value + " : actual:" + FlagManager.Instance.HasFlag(x.Key));
             }
-            if (IsFlagsInsufficient(objectData))
-            {
-                return; // continue;
-            }
             runFlag = true;
             await CallEvent(eventName);
         }
-        if (objectData.FlagCondition.NextFlag is not null)
-        {
-            SetNextFlag(objectData.FlagCondition.NextFlag);
-        }
+
         if (changeSceneFlag) return;
+        /*
         List<ObjectData> trapObjectDatas = _trapEventObjects[player.GetGridPosition().x][player.GetGridPosition().y];
         //DebugLogger.Log("end");
         foreach (ObjectData trapObjectData in trapObjectDatas)
         {
             await Call(trapObjectData, 0, 4);// フラグで制御されてるとはいえ再帰的になっているので要注意
-        }
+        }*/
     }
 
     private async UniTask CallEvent(string eventName)
@@ -304,9 +317,7 @@ public class ObjectEngine : MonoBehaviour
                 await UniTask.WaitUntil(() => !conversationFlag);
                 break;
             case "Recover":
-                conversationFlag = true;
                 Recover();
-                await UniTask.WaitUntil(() => !conversationFlag);
                 break;
             case "Worldmap":
                 worldmapFlag = true;
@@ -400,7 +411,7 @@ public class ObjectEngine : MonoBehaviour
         {
             CharacterStatusManager.Instance.ChangeCharacterStatus(id, 9999, 9999);
         }
-        ConversationTextManager.Instance.InitializeFromString(messageText);
+        //ConversationTextManager.Instance.InitializeFromString(messageText);
     }
 
     private void GetItem(string itemName)

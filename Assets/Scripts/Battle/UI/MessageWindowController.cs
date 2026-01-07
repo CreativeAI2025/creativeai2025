@@ -144,7 +144,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
         {
             message = $"{targetName}{buffMessage}{BattleMessage.FewStatusUpSuffix}";
         }
-        else if (1.2<buffValue && buffValue <= 1.7)
+        else if (1.2 < buffValue && buffValue <= 1.7)
         {
             message = $"{targetName}{buffMessage}{BattleMessage.StatusUpSuffix}";
         }
@@ -152,15 +152,15 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
         {
             message = $"{targetName}{buffMessage}{BattleMessage.VeryStatusUpSuffix}";
         }
-        else if (1.0>buffValue && buffValue>=0.8)
+        else if (1.0 > buffValue && buffValue >= 0.8)
         {
             message = $"{targetName}{buffMessage}{BattleMessage.FewStatusDownSuffix}";
         }
-        else if (0.8>buffValue && buffValue>= 0.6)
+        else if (0.8 > buffValue && buffValue >= 0.6)
         {
             message = $"{targetName}{buffMessage}{BattleMessage.StatusDownSuffix}";
         }
-        else if (0.6>buffValue )
+        else if (0.6 > buffValue)
         {
             message = $"{targetName}{buffMessage}{BattleMessage.VeryStatusDownSuffix}";
         }
@@ -172,7 +172,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     public void GenerateHpHealMessage(string targetName, int healNum)
     {
-        string message = $"{targetName}{BattleMessage.HealTargetSuffix} {healNum} {BattleMessage.HealNumSuffix}";
+        string message = $"{targetName}{BattleMessage.HpHealTargetSuffix} {healNum} {BattleMessage.HealNumSuffix}";
         StartCoroutine(ShowMessageWaitInputProcess(message));
     }
     /// <summary>
@@ -180,7 +180,7 @@ public class MessageWindowController : MonoBehaviour, IBattleWindowController
     /// </summary>
     public void GenerateMpHealMessage(string targetName, int healNum)
     {
-        string message = $"{targetName}{BattleMessage.HealTargetSuffix} {healNum} {BattleMessage.HealNumSuffix}";
+        string message = $"{targetName}{BattleMessage.MpHealTargetSuffix} {healNum} {BattleMessage.HealNumSuffix}";
         StartCoroutine(ShowMessageWaitInputProcess(message));
     }
     /// <summary>
