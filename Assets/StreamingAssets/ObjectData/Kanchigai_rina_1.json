@@ -4,13 +4,15 @@
     {
       "MapName": "Basement",
       "Position": [
-        [
         14,
-        50],
-        [
+        50
+      ]
+    },
+    {
+      "MapName": "Basement",
+      "Position": [
         15,
         50
-        ]
       ]
     }
   ],
@@ -18,20 +20,19 @@
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-        ["zofy_human",
+      [
+        "zofy_human",
         true
+      ],
+      [
+        "rina_friend",
+        true
+      ],
+      [
+        "noa_friend",
+        true
+      ]
     ],
-        [
-            "rina_friend",
-            true
-        ],
-         [
-            "noa_friend",
-            true
-        ]
-    ],
-    "NextFlag": [
-
-    ]
+    "NextFlag": []
   }
 }

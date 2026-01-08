@@ -4,12 +4,15 @@
     {
       "MapName": "Basement",
       "Position": [
-        [14,
-        50],
-        [
+        14,
+        50
+      ]
+    },
+    {
+      "MapName": "Basement",
+      "Position": [
         15,
         50
-        ]
       ]
     }
   ],
@@ -17,21 +20,23 @@
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-[
-    "rina_friend",
-    false
-],[
-    "noa_friend",
-    true
-],[
-    "zofy_human",
-    true
-],[
-  "ZebusBattleFinished",
-  true
-]
-],
-    "NextFlag": [
-    ]
+      [
+        "rina_friend",
+        false
+      ],
+      [
+        "noa_friend",
+        true
+      ],
+      [
+        "zofy_human",
+        true
+      ],
+      [
+        "ZebusBattleFinished",
+        true
+      ]
+    ],
+    "NextFlag": []
   }
 }
