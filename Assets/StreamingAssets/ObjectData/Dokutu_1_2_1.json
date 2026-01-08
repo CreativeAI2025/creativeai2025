@@ -1,0 +1,40 @@
+{
+  "Id": 2,
+  "Location": [
+     {
+      "MapName": "Cave",
+      "Position": [
+        9,
+        2
+      ]
+    },
+    {
+      "MapName": "Cave",
+      "Position": [
+        10,
+        2
+      ]
+    }
+  ],
+  "EventName": "Conversation Dokutu_1_2_1",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+["rina_friend",
+false
+    ],["caveCheck",
+      false
+        ],[
+"noa_friend",
+true],[
+  "AdelateBattleFinished",
+  false
+]
+],
+    "NextFlag": [
+      ["caveCheck",
+    true
+      ]
+    ]
+  }
+}

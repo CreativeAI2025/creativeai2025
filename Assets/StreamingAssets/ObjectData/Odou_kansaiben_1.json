@@ -1,0 +1,36 @@
+{
+  "Id": 0,
+  "Location": [
+    {
+      "MapName": "Basement",
+      "Position": [
+        [14,
+        50],
+        [
+        15,
+        50
+        ]  
+      ]
+    }
+  ],
+  "EventName": "Animation End-oudou3 |Conversation Odou_kansaiben_1 |Battle Battle_Kansaiben | Recover",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+        [
+            "zofy_human",
+            true
+        ],
+        [
+            "rina_friend",
+            false
+        ],
+        [
+            "noa_friend",
+            false
+        ]
+    ],
+    "NextFlag": [
+    ]
+  }
+}

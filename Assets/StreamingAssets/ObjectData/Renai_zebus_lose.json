@@ -1,0 +1,36 @@
+{
+  "Id": 2,
+  "Location": [
+    {
+      "MapName": "Basement",
+      "Position": [
+        [14,
+        50
+      ],[
+        15,
+        50
+      ]]
+    }
+  ],
+  "EventName": "Conversation Renai_zebus_lose",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+[
+    "rina_friend",
+    false
+],[
+    "noa_friend",
+    false
+],[
+    "zofy_human",
+    false
+],[
+  "ZebusBattleFinished",
+  false
+]
+],
+    "NextFlag": [
+    ]
+  }
+}

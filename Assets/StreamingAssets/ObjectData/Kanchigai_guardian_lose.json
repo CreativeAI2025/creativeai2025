@@ -1,0 +1,39 @@
+{
+  "Id": 2,
+  "Location": [
+    {
+      "MapName": "Basement_boss",
+      "Position": [
+        [14,
+        50
+      ],[
+        15,
+        50
+      ]]
+    }
+  ],
+  "EventName": "Conversation Kanchigai_guardian_lose",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+[
+    "rina_friend",
+    false
+],[
+    "noa_friend",
+    true
+],[
+    "zofy_human",
+    false
+],[
+    "nusi_lastboss",
+    true
+],[
+ "LastNusiBattleFinished",
+  false
+]
+],
+    "NextFlag": [
+    ]
+  }
+}

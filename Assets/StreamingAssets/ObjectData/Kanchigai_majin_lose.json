@@ -1,0 +1,37 @@
+{
+  "Id": 2,
+  "Location": [
+    {
+      "MapName": "Basement",
+      "Position": [
+        [14,
+        50
+      ],[
+        15,
+        50
+      ]
+      ]
+    }
+  ],
+  "EventName": "Conversation Kanchigai_majin_lose",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+[
+    "rina_friend",
+    true
+],[
+    "noa_friend",
+    false
+],[
+    "zofy_human",
+    false
+],[
+  "PochariusBattleFinished",
+  false
+]
+],
+    "NextFlag": [
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "Id": 0,
+  "Location": [
+    {
+      "MapName": "Basement",
+      "Position": [
+        [14,
+        50],
+        [
+        15,
+        50
+        ]        
+      ]
+    }
+  ],
+  "EventName": "Animation End-sibou2 |Conversation Odou_noa_win",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+        [
+            "zofy_human",
+            false
+        ],
+        [
+            "rina_friend",
+            false
+        ],
+        [
+            "noa_friend",
+            true
+        ],
+        [
+            "RinaNoaBattleFinished",
+            false
+        ]
+    ],
+    "NextFlag": [
+    ]
+  }
+}

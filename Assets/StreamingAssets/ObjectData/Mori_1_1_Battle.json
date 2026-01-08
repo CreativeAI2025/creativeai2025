@@ -4,19 +4,19 @@
     {
       "MapName": "Forest",
       "Position": [
-        8,
-        11
+          8,
+          11
       ]
     },
     {
       "MapName": "Forest",
       "Position": [
-        9,
-        11
+          9,
+          11
       ]
     }
   ],
-  "EventName": "Join 2 | Battle Battle_kent | Recover",
+  "EventName": " Join 2 | Battle Battle_kent | Recover",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
@@ -27,12 +27,9 @@
       [
         "KentBattleFinished",
         false
-      ],
-      [
-        "KentBattleTry",
-        false
       ]
     ],
-    "NextFlag": []
+    "NextFlag": [ 
+    ]
   }
 }

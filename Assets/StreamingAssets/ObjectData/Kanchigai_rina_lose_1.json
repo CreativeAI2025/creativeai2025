@@ -1,0 +1,38 @@
+{
+  "Id": 6,
+  "Location": [
+    {
+      "MapName": "Basement",
+      "Position": [
+       [14,
+        50],
+        [
+        15,
+        50
+        ]
+      ]
+    }
+  ],
+  "EventName": "Conversation Kanchigai_rina_lose_1 | Animation  End-zenmetsu1 | Conversation Kanchigai_rina_lose_2",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+         ["zofy_human",
+        true
+    ],
+        [
+            "rina_friend",
+            true
+        ],
+         [
+            "noa_friend",
+            true
+        ],[
+            "RinaNoaBattleFinished",
+            false
+        ]
+    ],
+    "NextFlag": [
+    ]
+  }
+}
