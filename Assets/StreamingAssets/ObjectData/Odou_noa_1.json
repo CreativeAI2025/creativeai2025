@@ -1,0 +1,38 @@
+{
+  "Id": 0,
+  "Location": [
+    {
+      "MapName": "Basement",
+      "Position": [
+        14,
+        50
+      ]
+    },
+    {
+      "MapName": "Basement",
+      "Position": [
+        15,
+        50
+      ]
+    }
+  ],
+  "EventName": "Animation End-oudou2 |Conversation Odou_noa_1 |Battle Battle_RinaNoa | Recover",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "zofy_human",
+        false
+      ],
+      [
+        "rina_friend",
+        false
+      ],
+      [
+        "noa_friend",
+        true
+      ]
+    ],
+    "NextFlag": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "Id": 4,
+  "Location": [
+    {
+      "MapName": "Sea",
+      "Position": [
+        23,
+        11
+      ]
+    }
+  ],
+  "EventName": "Conversation umi_1_4_1 | Animation R1S6TF_2 |Conversation umi_1_4_2",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+    [
+      "rina_friend",
+        true
+    ],
+    [
+      "noa_friend",
+        false
+    ],
+    [
+        "noafriendFinished",
+        false        
+    ]
+],
+    "NextFlag": [
+      [
+        "noafriendFinished",
+        true       
+    ]
+    ]
+  }
+}
