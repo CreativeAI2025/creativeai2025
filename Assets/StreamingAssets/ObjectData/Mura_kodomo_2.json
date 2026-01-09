@@ -4,7 +4,7 @@
     {
       "MapName": "Village",
       "Position": [
-        21,
+        20,
         22
       ]
     }
@@ -12,13 +12,12 @@
   "EventName": "Conversation Mura_kodomo_2",
   "TriggerType": 1,
   "FlagCondition": {
-    "Flag": [[
+    "Flag": [
+      [
         "NusiBattleFinished",
         true
-    ]
-       
+      ]
     ],
-    "NextFlag": [
-    ]
+    "NextFlag": []
   }
 }
