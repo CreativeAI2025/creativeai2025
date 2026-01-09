@@ -1,0 +1,38 @@
+{
+  "Id": 2,
+  "Location": [
+    {
+      "MapName": "Basement",
+      "Position": [
+        14,
+        50
+      ]
+    },
+    {
+      "MapName": "Basement",
+      "Position": [
+        15,
+        50
+      ]
+    }
+  ],
+  "EventName": "Conversation Renai_rina_1 | Battle Battle_Rina | Recover",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "rina_friend",
+        true
+      ],
+      [
+        "noa_friend",
+        false
+      ],
+      [
+        "zofy_human",
+        true
+      ]
+    ],
+    "NextFlag": []
+  }
+}

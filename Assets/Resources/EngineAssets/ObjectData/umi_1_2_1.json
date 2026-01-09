@@ -1,0 +1,32 @@
+{
+  "Id": 2,
+  "Location": [
+    {
+      "MapName": "Sea",
+      "Position": [
+        1,
+        26
+      ]
+    }
+  ],
+  "EventName": "Conversation umi_1_2_1",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "rina_friend",
+         false
+      ],
+      [
+       "umi",
+        false
+      ]
+    ],
+    "NextFlag": [
+      [
+       "umi",
+        true
+      ]
+    ]
+  }
+}

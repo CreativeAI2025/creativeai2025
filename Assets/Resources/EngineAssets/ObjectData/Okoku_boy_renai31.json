@@ -1,0 +1,32 @@
+{
+  "Id": 8,
+  "Location": [
+    {
+      "MapName": "Town",
+      "Position": [
+        24,
+        9
+      ]
+    }
+  ],
+  "EventName": "Conversation Okoku_boy_renai",
+  "TriggerType": 1,
+  "FlagCondition": {
+    "Flag": [
+    [
+        "zofy_human",
+        true
+    ],
+    [
+        "rina_friend",
+        true
+    ],
+    [
+        "noa_friend",
+        false
+    ]
+    ],
+    "NextFlag": [
+    ]
+  }
+}

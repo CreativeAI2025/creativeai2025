@@ -1,0 +1,42 @@
+{
+  "Id": 0,
+  "Location": [
+    {
+      "MapName": "Basement",
+      "Position": [
+        14,
+        50
+      ]
+    },
+    {
+      "MapName": "Basement",
+      "Position": [
+        15,
+        50
+      ]
+    }
+  ],
+  "EventName": "Animation End-sibou1 |Conversation Odou_zebus_lose",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "zofy_human",
+        false
+      ],
+      [
+        "rina_friend",
+        true
+      ],
+      [
+        "noa_friend",
+        true
+      ],
+      [
+        "ZebusBattleFinished",
+        true
+      ]
+    ],
+    "NextFlag": []
+  }
+}
