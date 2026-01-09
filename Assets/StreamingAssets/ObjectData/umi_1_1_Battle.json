@@ -1,0 +1,32 @@
+{
+  "Id": 1,
+  "Location": [
+    {
+      "MapName": "Sea",
+      "Position": [
+        23,
+        11
+      ]
+    }
+  ],
+  "EventName": "Join 3 | Battle Battle_butabana | Recover",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+    [
+      "rina_friend",
+        true
+    ],
+    [
+      "noa_friend",
+        true
+    ],
+    [
+      "ButabanaBattleFinished",
+        false
+    ]
+],
+    "NextFlag": [
+    ]
+  }
+}

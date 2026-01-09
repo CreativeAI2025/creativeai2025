@@ -1,0 +1,36 @@
+{
+  "Id": 7,
+  "Location": [
+    {
+      "MapName": "Town",
+      "Position": [
+        24,
+        9
+      ]
+    }
+  ],
+  "EventName": "Conversation Okoku_guardian_man",
+  "TriggerType": 1,
+  "FlagCondition": {
+    "Flag": [
+        [
+            "zofy_human",
+            true
+        ],
+        [
+            "rina_friend",
+            false
+        ],
+        [
+            "noa_friend",
+            true
+        ],
+        [
+            "nusi_lastboss",
+            true
+        ]
+    ],
+    "NextFlag": [
+    ]
+  }
+}

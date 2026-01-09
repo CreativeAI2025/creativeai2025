@@ -1,22 +1,22 @@
 {
-  "Id": 1,
+  "Id": 2,
   "Location": [
     {
-      "MapName": "Forest",
+      "MapName": "Basement",
       "Position": [
-        8,
-        11
+        14,
+        50
       ]
     },
     {
-      "MapName": "Forest",
+      "MapName": "Basement",
       "Position": [
-        9,
-        11
+        15,
+        50
       ]
     }
   ],
-  "EventName": "Battle Battle_kent | Recover",
+  "EventName": "Conversation Renai_rina_1 | Battle Battle_Rina | Recover",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
@@ -25,16 +25,12 @@
         true
       ],
       [
-        "KentBattleFinished",
+        "noa_friend",
         false
       ],
       [
-        "KentBattleTry",
+        "zofy_human",
         true
-      ],
-      [
-        "KentBattleLose",
-        false
       ]
     ],
     "NextFlag": []

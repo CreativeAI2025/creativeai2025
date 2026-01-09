@@ -1,0 +1,42 @@
+{
+  "Id": 8,
+  "Location": [
+    {
+      "MapName": "Town",
+      "Position": [
+        5,
+        7
+      ]
+    },
+    {
+      "MapName": "Town",
+      "Position": [
+        6,
+        7
+      ]
+    }
+  ],
+  "EventName": "Conversation Okoku_zebus_madam",
+  "TriggerType": 1,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "zofy_human",
+        true
+      ],
+      [
+        "rina_friend",
+        false
+      ],
+      [
+        "noa_friend",
+        true
+      ],
+      [
+        "nusi_lastboss",
+        false
+      ]
+    ],
+    "NextFlag": []
+  }
+}

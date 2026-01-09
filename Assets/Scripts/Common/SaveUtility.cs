@@ -38,6 +38,7 @@ public static class SaveUtility
     
     public static IFileAssetLoader FileAssetLoaderFactory()
     {
+        return new StreamingAssetLoader();
 #if UNITY_WEBGL
         return new ResourcesFileAssetLoader();
 #else
