@@ -2,44 +2,40 @@
   "Id": 1,
   "Location": [
     {
-      "MapName": "Forest",
+      "MapName": "Cave",
       "Position": [
         8,
-        11
+        41
       ]
     },
     {
-      "MapName": "Forest",
+      "MapName": "Cave",
       "Position": [
         9,
-        11
+        41
       ]
     }
   ],
-  "EventName": "Conversation Battle_Defeated | ChangeScene Village,16,1",
+  "EventName": "ChangeScene Village,16,1",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
       [
-        "rina_friend",
-        true
-      ],
-      [
-        "KentBattleFinished",
+        "AdelateBattleFinished",
         false
       ],
       [
-        "KentBattleTry",
+        "AdelateBattleTry",
         true
       ],
       [
-        "KentBattleLose",
+        "CaveMuraBack",
         true
       ]
     ],
-    "NextFlag": [
+    "NextFlag": [ 
       [
-        "KentBattleLose",
+        "CaveMuraBack",
         false
       ]
     ]
