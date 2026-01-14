@@ -2,22 +2,24 @@
   "EnemyIds": [
     602
   ],
-  "BGM": "bgm_8",
-  "EncounterMessage": "こいつも烏の紋章が入っているな……。",
-  "WinFlags": [
+    "BGM": "bgm_8",
+    "EncounterMessage":"こいつも烏の紋章が入っているな……。",
+    "WinFlags":
     [
-      "KentBattleFinished",
-      true
-    ]
-  ],
-  "LoseFlags": [
-    [
-      "KentBattleTry",
-      true
+      [
+        "KentBattleFinished",
+        true
+      ]        
     ],
+    "LoseFlags":
     [
-      "KentBattleLose",
-      true
+      [
+        "KentBattleTry",
+        true
+      ],
+      [
+        "MoriMuraBack",
+        true
+      ]
     ]
-  ]
 }
