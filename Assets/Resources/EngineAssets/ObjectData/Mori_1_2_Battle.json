@@ -1,0 +1,39 @@
+{
+  "Id": 1,
+  "Location": [
+    {
+      "MapName": "Forest",
+      "Position": [
+          8,
+          11
+      ]
+    },
+    {
+      "MapName": "Forest",
+      "Position": [
+          9,
+          11
+      ]
+    }
+  ],
+  "EventName": "Battle Battle_kent | Recover",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "rina_friend",
+        true
+      ],
+      [
+        "KentBattleTry",
+        true
+      ],
+      [
+        "MoriMuraBack",
+        false
+      ]
+    ],
+    "NextFlag": [ 
+    ]
+  }
+}

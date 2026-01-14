@@ -1,0 +1,43 @@
+{
+  "Id": 1,
+  "Location": [
+    {
+      "MapName": "Cave",
+      "Position": [
+        8,
+        41
+      ]
+    },
+    {
+      "MapName": "Cave",
+      "Position": [
+        9,
+        41
+      ]
+    }
+  ],
+  "EventName": "ChangeScene Village,16,1",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "AdelateBattleFinished",
+        false
+      ],
+      [
+        "AdelateBattleTry",
+        true
+      ],
+      [
+        "CaveMuraBack",
+        true
+      ]
+    ],
+    "NextFlag": [ 
+      [
+        "CaveMuraBack",
+        false
+      ]
+    ]
+  }
+}

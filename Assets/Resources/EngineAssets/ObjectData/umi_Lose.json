@@ -1,0 +1,36 @@
+{
+  "Id": 1,
+  "Location": [
+    {
+      "MapName": "Sea",
+      "Position": [
+        23,
+        11
+      ]
+    }
+  ],
+  "EventName": "ChangeScene Village,16,1",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "ButabanaBattleFinished",
+        false
+      ],
+      [
+        "ButabanaBattleTry",
+        true
+      ],
+      [
+        "umiMuraBack",
+        true
+      ]
+    ],
+    "NextFlag": [ 
+      [
+        "umiMuraBack",
+        false
+      ]
+    ]
+  }
+}
