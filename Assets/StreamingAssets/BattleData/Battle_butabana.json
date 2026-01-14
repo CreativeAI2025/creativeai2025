@@ -6,14 +6,20 @@
     "EncounterMessage":"こいつも烏の紋章が入っているな……。",
     "WinFlags":
     [
-      "ButabanaBattleFinished",
-      true
-    ]
-  ],
-  "LoseFlags": [
+      [
+        "ButabanaBattleFinished",
+        true 
+      ]       
+    ],
+    "LoseFlags":
     [
-      "ButabanaBattleTry",
-      true
+      [
+        "ButabanaBattleTry",
+        true
+      ],
+      [
+        "umiMuraBack",
+        true
+      ]
     ]
-  ]
 }
