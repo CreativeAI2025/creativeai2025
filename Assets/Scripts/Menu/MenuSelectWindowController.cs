@@ -180,20 +180,50 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private string UseItem()
     {
-        string text = "この機能は　 今後　実装予定です。";
+        string text = "効果がない";
         // 使用するアイテムデータ
         ItemData itemData = _itemData;
+        var value = itemData.itemEffect.value;
         // 現在カーソルが指されているキャラクターのID
         int selectedCharacterId = CharacterStatusManager.Instance.partyCharacter[_cursor];
-        /*
-        ーーーーー　景山君への依頼１　ーーーーー
-        アイテムを使用した時の処理を書いてほしいです。
-        必要な変数は用意したはず
-        この関数はアイテムが使えたかによって、特定の文字列を返すようにする
-        （返り値は、上の方にある「private const string ~~」のどれか）
-        （場合によっては、アイテム名がプラスで必要な場合もある）
-        もしアイテムの効果の対象が全員の場合は、selectedCharacterIdを使わなくていいです
-        */
+        var characterData = CharacterDataManager.Instance.GetCharacterData(selectedCharacterId);
+        var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(selectedCharacterId);
+
+        switch (itemData.itemEffect.itemEffectCategory)
+        {
+            case ItemEffectCategory.HPRecovery:
+                if (CharacterStatusManager.Instance.IsCharacterDefeated(selectedCharacterId))
+                {
+                    break;
+                }
+                if (characterStatus.maxHp == characterStatus.currentHp)
+                {
+                    break;
+                }
+                text = $"{characterData.characterName}のHPが　{value}回復した！";
+                CharacterStatusManager.Instance.ChangeCharacterStatus(selectedCharacterId, value, 0);
+                break;
+            case ItemEffectCategory.MPRecovery:
+                if (characterStatus.maxMp == characterStatus.currentMp)
+                {
+                    break;
+                }
+                text = $"{characterData.characterName}のMPが　{value}回復した！";
+                CharacterStatusManager.Instance.ChangeCharacterStatus(selectedCharacterId, 0, value);
+                break;
+            case ItemEffectCategory.StaEfeRecovery:
+                break;
+            case ItemEffectCategory.Revive:
+                text = $"{characterData.characterName}は　蘇った！";
+                if (!CharacterStatusManager.Instance.IsCharacterDefeated(selectedCharacterId))
+                {
+                    break;
+                }
+                // valueが割合（20だったら20%回復とする）と仮定する
+                int healValue = characterStatus.maxHp / 100 * value;
+                CharacterStatusManager.Instance.ChangeCharacterStatus(selectedCharacterId, healValue, 0);
+                break;
+        }
         return text;
     }
 
