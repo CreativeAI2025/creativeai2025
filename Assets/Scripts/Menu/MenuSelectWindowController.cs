@@ -263,11 +263,11 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
         }
         if (MenuManager.Instance.MenuUsePhase == MenuUsePhase.SkillUse)
         {
-            _uiController.InputText(_skillData.skillDesc);
+            _uiController.InputText($"{_skillData.skillName}　を誰に使用する？");
         }
         else if (MenuManager.Instance.MenuUsePhase == MenuUsePhase.ItemUse)
         {
-            _uiController.InputText(_itemData.itemDesc);
+            _uiController.InputText($"{_itemData.itemName}　を誰に使用する？");
         }
 
     }

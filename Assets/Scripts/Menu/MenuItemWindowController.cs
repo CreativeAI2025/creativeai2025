@@ -237,6 +237,16 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         SetText();
     }
 
+    public void RevisePage()
+    {
+        if (_itemListCursor > CharacterStatusManager.Instance.partyItemInfoList.Count - 1)
+        {
+            _itemListCursor--;
+            SetItemList();
+            SetText();
+        }
+    }
+
     /// <summary>
     /// 引数で与えられた値にあるスキルの名前を返す
     /// </summary>

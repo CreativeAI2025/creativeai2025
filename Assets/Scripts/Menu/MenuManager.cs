@@ -245,6 +245,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     {
         MenuUsePhase = MenuUsePhase.Closed;
         _menuSelectWindowController.HideWindow();
+        _menuItemWindowController.RevisePage();
     }
 
     /// <summary>
