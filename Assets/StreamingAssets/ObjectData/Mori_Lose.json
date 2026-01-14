@@ -16,24 +16,28 @@
       ]
     }
   ],
-  "EventName": "Join 2 | Battle Battle_kent | Recover",
+  "EventName": "ChangeScene Village,16,1",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-      [
-        "rina_friend",
-        true
-      ],
       [
         "KentBattleFinished",
         false
       ],
       [
         "KentBattleTry",
-        false
+        true
+      ],
+      [
+        "MoriMuraBack",
+        true
       ]
     ],
     "NextFlag": [ 
+      [
+        "MoriMuraBack",
+        false
+      ]
     ]
   }
 }

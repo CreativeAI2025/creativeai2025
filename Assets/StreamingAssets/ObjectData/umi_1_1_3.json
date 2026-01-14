@@ -9,7 +9,7 @@
       ]
     }
   ],
-  "EventName": "Join 3 | Conversation umi_1_1_3 | Battle Battle_butabana",
+  "EventName": "Conversation umi_1_1_3 | Animation R1S6TT_2",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
@@ -20,9 +20,17 @@
     [
       "noa_friend",
         true
+    ],
+    [
+      "StopUmi",
+        false
     ]
 ],
     "NextFlag": [
+      [
+      "StopUmi",
+        true
+    ]
     ]
   }
 }

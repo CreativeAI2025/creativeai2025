@@ -13,7 +13,7 @@ public static class SaveUtility
 
         return MessagePackSerializer.Deserialize<T>(msgPackData);
     }
-    
+
     public static void DataToJson<T>(T data, string savePath) where T : class
     {
         //データをJSON形式の文字列にシリアライズし、指定したパスに保存
@@ -29,21 +29,23 @@ public static class SaveUtility
 
         return MessagePackSerializer.Deserialize<T>(msgPackData);
     }
-    
+
     public static void DataToSaveFile<T>(T data, string savePath) where T : class
     {
         byte[] msgPackData = MessagePackSerializer.Serialize(data);
         File.WriteAllBytes(savePath, msgPackData);
     }
-    
+
     public static IFileAssetLoader FileAssetLoaderFactory()
     {
         return new StreamingAssetLoader();
+        /*
 #if UNITY_WEBGL
         return new ResourcesFileAssetLoader();
 #else
         return new StreamingAssetLoader();
 #endif
+*/
     }
 }
 
