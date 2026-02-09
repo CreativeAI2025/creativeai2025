@@ -91,7 +91,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             currentMagicDefence = characterParameterRecord.MagicDefence,
             currentSpeed = characterParameterRecord.Speed,
             currentEvasion = characterParameterRecord.Evasion,
-            skillPoint = characterData.skillPointPerLevel * (level - 1),
+            skillPoint = characterData.skillPointPerLevel * (level - 1) + SkillpointManager.Instance.GetSkillPoint(id),
             skillList = new List<int>()
         };
 
@@ -346,6 +346,8 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             UpdataCharacterCurrentStatus(characterId, category, value);
             categoryInt++;
         }
+        int amountSP = CharacterDataManager.Instance.GetCharacterData(characterId).skillPointPerLevel * newLevel;
+        SkillpointManager.Instance.ReloadSkillpoint(characterId, amountSP);
     }
 
     /// <summary>

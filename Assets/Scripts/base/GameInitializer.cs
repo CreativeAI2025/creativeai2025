@@ -45,6 +45,7 @@ public class GameInitializer : MonoBehaviour
             characterStatusManager.Initialize();
             skillDataManager.Initialize();
             FlagManager.Instance.DeleteFlagFile();
+            SkillpointManager.Instance.DeleteSkillpointFile();
             enemyDataManager.Initialize();
         }
         catch (Exception e)
