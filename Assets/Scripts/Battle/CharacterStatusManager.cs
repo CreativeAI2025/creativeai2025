@@ -346,9 +346,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             UpdataCharacterCurrentStatus(characterId, category, value);
             categoryInt++;
         }
-        // スキルポイントを加える
-        int sp = CharacterDataManager.Instance.GetCharacterData(characterId).skillPointPerLevel;
-        SkillpointManager.Instance.AddSkillpoint(characterId, sp);
+
     }
 
     /// <summary>
@@ -361,6 +359,8 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         int skillPointPerLevel = CharacterDataManager.Instance.GetCharacterData(characterId).skillPointPerLevel;
         var characterStatus = GetCharacterStatusById(characterId);
         characterStatus.skillPoint += skillPointPerLevel * gap;
+        // データファイルに保存
+        SkillpointManager.Instance.AddSkillpoint(characterId, skillPointPerLevel * gap);
     }
 
     /// <summary>

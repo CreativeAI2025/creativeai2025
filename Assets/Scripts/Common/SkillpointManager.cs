@@ -40,7 +40,6 @@ public class SkillpointManager : DontDestroySingleton<SkillpointManager>
     {
         string id = characterId.ToString();
         _points[id] += point;
-        SaveSkillpoint();
     }
 
     /// <summary>
@@ -54,9 +53,8 @@ public class SkillpointManager : DontDestroySingleton<SkillpointManager>
         return _points[id];
     }
 
-    private void SaveSkillpoint()
+    public void SaveSkillpoint()
     {
-
         SKillpointData saveSkillpointData = new SKillpointData()
         {
             Points = _points

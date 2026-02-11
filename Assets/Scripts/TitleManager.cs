@@ -8,9 +8,10 @@ public class TitleManager : MonoBehaviour
     [SerializeField] private Image _clickStartImage;
     [SerializeField] private Image[] _startGameImages;
     private int cursor = 0;
+    private int cursorMax;
     private int startPhase = 0; // 「０」クリックスタート、「１」ゲームスタート
-    private const int NEW_GAME_CURSOR = 0;
-    private const int LOAD_GAME_CURSOR = 1;
+    private const int NEW_GAME = 0;
+    private const int LOAD_GAME = 1;
     private InputSetting _inputSetting;
     private const float BRIGHT_ALPHA = 1.0f;
     private const float DARK_ALPHA = 0.5f;
@@ -45,12 +46,12 @@ public class TitleManager : MonoBehaviour
             }
             else if (_inputSetting.GetDecideInputDown())
             {
-                if (cursor == NEW_GAME_CURSOR)
+                if (cursor == NEW_GAME)
                 {
                     // 新しくゲームを始める処理
                     NewGame();
                 }
-                else if (cursor == LOAD_GAME_CURSOR)
+                else if (cursor == LOAD_GAME)
                 {
                     // 続きのゲームから始める処理
                     LoadGame();
@@ -65,11 +66,19 @@ public class TitleManager : MonoBehaviour
     private void Initialize()
     {
         cursor = 0;
+        cursorMax = _startGameImages.Length;
         startPhase = 0;
         _clickStartImage.gameObject.SetActive(true);
         foreach (var image in _startGameImages)
         {
             image.gameObject.SetActive(false);
+        }
+
+        // エンディングに到達したかどうかを判別し、「続きから」を選択するようにするか決める
+        if (PlayerPrefs.GetInt("Ending", 0) == NEW_GAME)
+        {
+            _startGameImages[LOAD_GAME].gameObject.SetActive(false);
+            cursorMax = 1;
         }
     }
 
@@ -113,6 +122,10 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     private void ChangeCursor()
     {
+        if (cursorMax != _startGameImages.Length)
+        {
+            return;
+        }
         SoundManager.Instance.PlaySE(1, 0.7f); // 効果音をつける
         if (cursor == 0)
         {
@@ -131,6 +144,7 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     private void NewGame()
     {
+        PlayerPrefs.DeleteAll();
         _gameInitializer.InitializeGame();
         SceneManager.LoadScene("zophy_House");
         Debug.Log("ゲームを最初から開始します。");
@@ -141,7 +155,7 @@ public class TitleManager : MonoBehaviour
     /// </summary>
     private void LoadGame()
     {
-        // ここに具体的な処理を加える
+        _gameInitializer.ContinueGame();
     }
 
 }
