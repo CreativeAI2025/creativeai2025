@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using MessagePack;
 
 [MessagePackObject(true)]
-public class FlagData
+public class SKillpointData
 {
-    public Dictionary<string, bool> Flags { get; set; }
+    public Dictionary<string, int> Points { get; set; }
 }

@@ -9,6 +9,7 @@ public class SkillDataManager : DontDestroySingleton<SkillDataManager>
     public override void Awake()
     {
         base.Awake();
+        Initialize();
     }
 
     public void Initialize()
