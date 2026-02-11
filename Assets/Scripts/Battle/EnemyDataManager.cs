@@ -13,6 +13,7 @@ public class EnemyDataManager : DontDestroySingleton<EnemyDataManager>
     public override void Awake()
     {
         base.Awake();
+        Initialize();
     }
 
     public void Initialize()

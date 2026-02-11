@@ -346,8 +346,9 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             UpdataCharacterCurrentStatus(characterId, category, value);
             categoryInt++;
         }
-        int amountSP = CharacterDataManager.Instance.GetCharacterData(characterId).skillPointPerLevel * newLevel;
-        SkillpointManager.Instance.ReloadSkillpoint(characterId, amountSP);
+        // スキルポイントを加える
+        int sp = CharacterDataManager.Instance.GetCharacterData(characterId).skillPointPerLevel;
+        SkillpointManager.Instance.AddSkillpoint(characterId, sp);
     }
 
     /// <summary>

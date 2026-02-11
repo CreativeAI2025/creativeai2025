@@ -36,10 +36,10 @@ public class SkillpointManager : DontDestroySingleton<SkillpointManager>
     /// </summary>
     /// <param name="characterId"></param>
     /// <param name="point"></param>
-    public void ReloadSkillpoint(int characterId, int point)
+    public void AddSkillpoint(int characterId, int point)
     {
         string id = characterId.ToString();
-        _points[id] = point;
+        _points[id] += point;
         SaveSkillpoint();
     }
 
