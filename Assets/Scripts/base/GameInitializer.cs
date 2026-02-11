@@ -6,51 +6,31 @@ using System;
 /// </summary>
 public class GameInitializer : MonoBehaviour
 {
-    /*
-    private async void Start()
-    {
-        InitializeGame();
-    }
-    */
-
+    /// <summary>
+    /// 新しくゲームを開始する際にステータスやフラグなどを初期化する。
+    /// </summary>
     public void InitializeGame()
     {
-        /// <summary>
-        /// パーティキャラクター（ゾフィ、リナ、ノア）のデータを登録するためのクラス
-        /// このデータは不変
-        /// </summary>
-        CharacterDataManager characterDataManager = CharacterDataManager.Instance;
-        /// <summary>
-        /// アイテムの定義データを登録するためのクラス
-        /// このデータは不変
-        /// </summary>
-        ItemDataManager itemDatamanager = ItemDataManager.Instance;
-        /// <summary>
-        /// スキル定義データを登録するためのクラス
-        /// </summary>
-        SkillDataManager skillDataManager = SkillDataManager.Instance;
-        /// <summary>
-        /// パーティキャラクターの状態に関する登録（パーティメンバーの初期化（最初はゾフィのみ）、所持金の初期化など）を行うためのクラス
-        /// </summary>
-        CharacterStatusManager characterStatusManager = CharacterStatusManager.Instance;
-        /// <summary>
-        /// 敵キャラクターのデータを登録するためのクラス
-        /// </summary>
-        EnemyDataManager enemyDataManager = EnemyDataManager.Instance;
         Debug.Log("ロードを開始します。");
         try
         {
-            characterDataManager.Initialize();
-            itemDatamanager.Initialize();
-            characterStatusManager.Initialize();
-            skillDataManager.Initialize();
+            CharacterStatusManager.Instance.Initialize();
             FlagManager.Instance.DeleteFlagFile();
-            enemyDataManager.Initialize();
+            SkillpointManager.Instance.DeleteSkillpointFile();
         }
         catch (Exception e)
         {
             Debug.LogError($"データロード中にエラーが発生しました：{e}");
             // エラー処理など
         }
+    }
+
+    /// <summary>
+    /// 続きから（＝強くてニューゲーム）を押した際に、ステータスやフラグを初期化する。
+    /// </summary>
+    public void ContinueGame()
+    {
+        CharacterStatusManager.Instance.Initialize();
+        FlagManager.Instance.DeleteFlagFile();
     }
 }
