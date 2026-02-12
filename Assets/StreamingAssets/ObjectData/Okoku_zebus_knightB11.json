@@ -1,0 +1,32 @@
+{
+  "Id": 6,
+  "Location": [
+    {
+      "MapName": "Town",
+      "Position": [
+        30,
+        30
+      ]
+    }
+  ],
+  "EventName": "Conversation Okoku_sonota_knightB",
+  "TriggerType": 1,
+  "FlagCondition": {
+    "Flag": [
+        [
+            "zofy_human",
+            false
+        ],
+        [
+            "rina_friend",
+            true
+        ],
+        [
+            "noa_friend",
+            true
+        ]
+    ],
+    "NextFlag": [
+    ]
+  }
+}

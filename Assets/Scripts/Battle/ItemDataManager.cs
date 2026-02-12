@@ -13,6 +13,7 @@ public class ItemDataManager : DontDestroySingleton<ItemDataManager>
     public override void Awake()
     {
         base.Awake();
+        Initialize();
     }
 
     public void Initialize()

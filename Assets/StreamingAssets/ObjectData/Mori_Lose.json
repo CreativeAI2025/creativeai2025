@@ -1,0 +1,43 @@
+{
+  "Id": 1,
+  "Location": [
+    {
+      "MapName": "Forest",
+      "Position": [
+          8,
+          11
+      ]
+    },
+    {
+      "MapName": "Forest",
+      "Position": [
+          9,
+          11
+      ]
+    }
+  ],
+  "EventName": "ChangeScene Village,16,1",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "KentBattleFinished",
+        false
+      ],
+      [
+        "KentBattleTry",
+        true
+      ],
+      [
+        "MoriMuraBack",
+        true
+      ]
+    ],
+    "NextFlag": [ 
+      [
+        "MoriMuraBack",
+        false
+      ]
+    ]
+  }
+}

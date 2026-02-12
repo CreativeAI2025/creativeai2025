@@ -1,0 +1,39 @@
+{
+  "Id": 0,
+  "Location": [
+     {
+      "MapName": "Cave",
+      "Position": [
+        8,
+        41
+      ]
+    },
+    {
+      "MapName": "Cave",
+      "Position": [
+        9,
+        41
+      ]
+    }
+  ],
+  "EventName": "Battle Battle_Adelate|Recover",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+[
+  "AdelateBattleFinished",
+  false
+],
+[
+  "StopCave",
+  true
+],
+[
+  "AdelateBattleTry",
+  false
+]
+],
+    "NextFlag": [
+    ]
+  }
+}
