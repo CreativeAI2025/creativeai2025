@@ -57,6 +57,13 @@ public class TitleManager : MonoBehaviour
                     LoadGame();
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.P))
+            {
+#if UNITY_EDITOR
+                // デバッグ用（パーティ全員がムキムキになります）（エディター上でのみ使用可能）
+                NewGameInDebug();
+#endif
+            }
         }
     }
 
@@ -146,6 +153,14 @@ public class TitleManager : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
         _gameInitializer.InitializeGame();
+        SceneManager.LoadScene("zophy_House");
+        Debug.Log("ゲームを最初から開始します。");
+    }
+
+    private void NewGameInDebug()
+    {
+        PlayerPrefs.DeleteAll();
+        _gameInitializer.InitializeGameInDebug();
         SceneManager.LoadScene("zophy_House");
         Debug.Log("ゲームを最初から開始します。");
     }
