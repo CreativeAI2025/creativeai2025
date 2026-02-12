@@ -25,6 +25,22 @@ public class GameInitializer : MonoBehaviour
         }
     }
 
+    public void InitializeGameInDebug()
+    {
+        Debug.Log("ロードを開始します。（デバッグモード）");
+        try
+        {
+            CharacterStatusManager.Instance.Initialize(51);
+            FlagManager.Instance.DeleteFlagFile();
+            SkillpointManager.Instance.DeleteSkillpointFile();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"データロード中にエラーが発生しました：{e}");
+            // エラー処理など
+        }
+    }
+
     /// <summary>
     /// 続きから（＝強くてニューゲーム）を押した際に、ステータスやフラグを初期化する。
     /// </summary>

@@ -65,6 +65,16 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         partyGold = 1000;
     }
 
+    public void Initialize(int level)
+    {
+        partyCharacter = new List<int>() { 1 };
+        // デバッグ用に適当な値をぶち込んでいます
+        characterStatuses = new List<CharacterStatus>()
+        {
+            SetCharacterStatus(1, level)
+        };
+    }
+
     /// <summary>
     /// CharacterStatusを返す
     /// 新しくキャラクター生成を行った際に使用する
