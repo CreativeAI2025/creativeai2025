@@ -1,0 +1,29 @@
+{
+    "Content": [
+        {
+            "Speaker": "ゾフィ",
+            "Text": "（大切なものはもうない……。）",
+            "ChangeImage": [
+                {
+                    "ImageName":"BackgroundPanel",
+                    "SpriteName": "Black"
+                }
+            ]
+        },
+        {
+            "QuestionData": [
+                {
+                    "Answer": "諦める。",
+	                "NextTalkData":"Dokutu_1_3_4",
+                    "NextFlag": [
+                        ["BadEnd", true]
+                    ]
+                },
+                {
+                    "Answer": "諦めない。",
+	                "NextTalkData":"Dokutu_3_2"
+                }
+            ]
+        }
+    ]
+}
