@@ -25,4 +25,24 @@ MonoBehaviour:
   Evasion: 0
   exp: 37
   gold: 20
-  enemyActionRecords: []
+  enemyActionRecords:
+  - enemyActionCategory: 1
+    enemyConditionRecords:
+    - conditionCategory: 0
+      comparisonOperator: 0
+      turnCriteria: 0
+      hpRateCriteria: 0
+    skillData: {fileID: 11400000, guid: b80877d58c61ae44ca85f6546caba4ab, type: 2}
+    priority: 60
+  - enemyActionCategory: 1
+    enemyConditionRecords: []
+    skillData: {fileID: 11400000, guid: 3c11ed0fb40a4e745b318a3e870cfe4e, type: 2}
+    priority: 30
+  - enemyActionCategory: 1
+    enemyConditionRecords:
+    - conditionCategory: 0
+      comparisonOperator: 0
+      turnCriteria: 0
+      hpRateCriteria: 0
+    skillData: {fileID: 11400000, guid: 07ab5e06b4942534d8780188e46e0715, type: 2}
+    priority: 50
