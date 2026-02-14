@@ -137,11 +137,13 @@ public class MenuSkillWindowController : MonoBehaviour, IMenuWindowController
         }
         else if (_inputSetting.GetDecideInputDown())
         {
+            /*
             if (stop)
             {
                 return;
             }
             StartCoroutine(UseProcess());
+            */
         }
         else if (_inputSetting.GetRightKeyDown())
         {
