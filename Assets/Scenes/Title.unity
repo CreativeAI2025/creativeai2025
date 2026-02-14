@@ -1508,10 +1508,14 @@ PrefabInstance:
     - target: {fileID: 3368282245592625517, guid: 072fb0142fcfe25458ca270ee1156900, type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: d6ac23ef851cc434080deff600c85b51, type: 2}
+      objectReference: {fileID: 11400000, guid: 88fe1d17c3fca5e4cbf55a5c7a49fabc, type: 2}
+    - target: {fileID: 3368282245592625517, guid: 072fb0142fcfe25458ca270ee1156900, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 6480909807123872300, guid: 88fe1d17c3fca5e4cbf55a5c7a49fabc, type: 2}
     - target: {fileID: 3368282245592625517, guid: 072fb0142fcfe25458ca270ee1156900, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5090822359687579901, guid: 072fb0142fcfe25458ca270ee1156900, type: 3}
       propertyPath: text
@@ -1548,10 +1552,14 @@ PrefabInstance:
     - target: {fileID: 7319797112384962541, guid: 072fb0142fcfe25458ca270ee1156900, type: 3}
       propertyPath: m_fontAsset
       value: 
-      objectReference: {fileID: 11400000, guid: d6ac23ef851cc434080deff600c85b51, type: 2}
+      objectReference: {fileID: 11400000, guid: 88fe1d17c3fca5e4cbf55a5c7a49fabc, type: 2}
+    - target: {fileID: 7319797112384962541, guid: 072fb0142fcfe25458ca270ee1156900, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 6480909807123872300, guid: 88fe1d17c3fca5e4cbf55a5c7a49fabc, type: 2}
     - target: {fileID: 7319797112384962541, guid: 072fb0142fcfe25458ca270ee1156900, type: 3}
       propertyPath: m_hasFontAssetChanged
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7719071242496699044, guid: 072fb0142fcfe25458ca270ee1156900, type: 3}
       propertyPath: m_fontSize
@@ -3186,7 +3194,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3240290111608659594, guid: f502a615a1d42564ea94d88496034dda, type: 3}
       propertyPath: m_IsActive
-      value: 0
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3258303713790184217, guid: f502a615a1d42564ea94d88496034dda, type: 3}
