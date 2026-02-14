@@ -1,12 +1,9 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using System;
 
 // アニメーション再生を司ります
 public class AnimationManager : DontDestroySingleton<AnimationManager>
 {
-    // アニメーションリストのゲームオブジェクトを渡す
-    private AnimationList _currentAnimationList;
     private const string ANIMATION_LIST_NAME = "AnimationList";
     public event Action OnAnimationStart { add => _onAnimationStart += value; remove => _onAnimationStart -= value; }
     private Action _onAnimationStart;
@@ -16,16 +13,8 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
     private InputSetting _inputSetting;
     [SerializeField] AnimationWindowController _windowController;
 
-    /// <summary>
-    /// アニメーションリストがあるゲームオブジェクトを取得する
-    /// </summary>
-    private void SetCurrentAnimationList()
-    {
-        _currentAnimationList = GameObject.Find(ANIMATION_LIST_NAME).GetComponent<AnimationList>();
-    }
     void Start()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
         _inputSetting = InputSetting.Load();
         _windowController.HideWindow();
     }
@@ -45,12 +34,6 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
         }
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        Debug.Log("[AnimationManager]シーン名「" + scene.name + "」が読み込まれたので、アニメーションリストを更新します。");
-        SetCurrentAnimationList();
-    }
-
     /// <summary>
     /// アニメーションを、アニメーション名から開始する
     /// </summary>
@@ -59,13 +42,15 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
     {
         _onAnimationStart?.Invoke();
         Debug.Log($"[AnimationManager]アニメーション名「{animationName}」を再生します。");
-        if (_currentAnimationList == null)
+        GameObject obj = (GameObject)Resources.Load(string.Join("/", "Animation", animationName));
+        if (obj == null)
         {
-            Debug.Log("[AnimationManager]animationListがnullです。");
+            Debug.Log($"[AnimationManager]「{animationName}が存在しません。");
             _onAnimationEnd?.Invoke();
             return;
         }
-        TimelineController controller = _currentAnimationList.GetTimelineController(animationName);
+        GameObject instance = Instantiate(obj);
+        TimelineController controller = instance.GetComponent<TimelineController>();
         if (controller == null)
         {
             Debug.Log("[AnimationManager]受け取ったAnimationControllerがnullです。");
@@ -80,7 +65,7 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
             return;
         }
         // アニメーションが登録されているゲームオブジェクトを表示させる
-        controller.gameObject.SetActive(true);
+        obj.SetActive(true);
         // アニメーション終了時に、OnTimelineFinished()を呼び出すように設定する
         notifier.OnTimelineEnd += () => OnTimelineFinished(notifier);
         // アニメーションを開始させる
@@ -103,6 +88,7 @@ public class AnimationManager : DontDestroySingleton<AnimationManager>
 
             //  NotifierがアタッチされているGameObject（＝TimelineControllerと同じGameObject）を非アクティブにする
             notifier.gameObject.SetActive(false);
+            Destroy(notifier.gameObject);
             _windowController.HideWindow();
             EndAnimation();
         }
