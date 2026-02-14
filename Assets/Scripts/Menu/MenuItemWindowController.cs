@@ -9,8 +9,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     [SerializeField] private MenuHeaderMiniUIController _headerUIController;
     private bool _canClose;
     private InputSetting _inputSetting;
-    private int _itemListCursor; // スキルリスト内のどの位置を指しているかを数字で表す
-    private List<int> _itemList; // スキルのリスト（１キャラクター）
+    private int _itemListCursor; // アイテムリスト内のどの位置を指しているかを数字で表す
     private int _characterIndex;
     private int _characterIndexMax;
     private const string NORMAL_ITEM_TEXT = "戦闘";
@@ -25,22 +24,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         stop = false;
         _itemListCursor = 0;
         _characterIndex = 0;
-        SetItemList(); // スキルリストをセットする
-        if (_itemList == null)
-        {
-            stop = true;
-            Debug.Log("[MenuItemWindowController]itemListがnull");
-            return;
-        }
-        if (_itemList.Count == 0)
-        {
-            stop = true;
-            Debug.Log("[MenuItemWindowController]itemListの要素が０");
-        }
-        else
-        {
-            SetText();
-        }
+        LoadItemList(); // スキルリストをセットする
 
         // ヘッダーの設定
         _headerUIController.Initialize();
@@ -168,7 +152,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     private void ShowNextItem()
     {
         _itemListCursor++;
-        _itemListCursor = _itemListCursor % _itemList.Count;
+        _itemListCursor = _itemListCursor % CharacterStatusManager.Instance.partyItemInfoList.Count;
         SetText();
         SoundManager.Instance.PlaySE(1);
     }
@@ -176,7 +160,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     private void ShowPreviousItem()
     {
         _itemListCursor--;
-        _itemListCursor = (_itemListCursor + _itemList.Count) % _itemList.Count;
+        _itemListCursor = (_itemListCursor + CharacterStatusManager.Instance.partyItemInfoList.Count) % CharacterStatusManager.Instance.partyItemInfoList.Count;
         SetText();
         SoundManager.Instance.PlaySE(1);
     }
@@ -197,7 +181,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex);
 
-        SetItemList();
+        LoadItemList();
         InitializePage();
         SoundManager.Instance.PlaySE(1);
     }
@@ -218,7 +202,7 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
         _headerUIController.SetSameHeight();
         _headerUIController.SetHeight(_characterIndex);
 
-        SetItemList();
+        LoadItemList();
         InitializePage();
         SoundManager.Instance.PlaySE(1);
     }
@@ -244,16 +228,11 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
     /// <returns></returns>
     private string GetItemNameByCursor(int n)
     {
-        if (_itemList == null)
-        {
-            Debug.Log("[MenuItemWindowController]_itemListがnull");
-            return string.Empty;
-        }
-        if (n < 0 || n > _itemList.Count - 1)
+        if (n < 0 || n > CharacterStatusManager.Instance.partyItemInfoList.Count - 1)
         {
             return "---";
         }
-        ItemData sd = ItemDataManager.Instance.GetItemDataById(_itemList[n]);
+        ItemData sd = ItemDataManager.Instance.GetItemDataById(CharacterStatusManager.Instance.partyItemInfoList[n].itemId);
         return sd.itemName;
     }
 
@@ -281,28 +260,24 @@ public class MenuItemWindowController : MonoBehaviour, IMenuWindowController
 
     /// <summary>
     /// アイテムの種類により、表示するアイテムリストを変える
+    /// また、表示するテキストも切り替える
     /// </summary>
-    private void SetItemList()
+    public void LoadItemList()
     {
         _uiController.InitializeText(); // テキストの初期化
-        _itemList = new();
-        if (_characterIndex == 0)
-        {
-            foreach (var iteminfo in CharacterStatusManager.Instance.partyItemInfoList)
-            {
-                _itemList.Add(iteminfo.itemId);
-            }
-        }
-        else
-        {
-
-        }
         stop = false;
-        if (_itemList.Count == 0)
+        if (_characterIndex == 1)
         {
             stop = true;
+            return;
         }
-
+        if (CharacterStatusManager.Instance.partyItemInfoList.Count == 0)
+        {
+            stop = true;
+            return;
+        }
+        _itemListCursor = _itemListCursor % CharacterStatusManager.Instance.partyItemInfoList.Count;
+        SetText();
     }
 
     private IEnumerator UseProcess()
