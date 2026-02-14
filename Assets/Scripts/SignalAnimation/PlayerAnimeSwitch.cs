@@ -64,6 +64,10 @@ public class PlayerAnimeSwitch : MonoBehaviour
     {
         animator.SetTrigger("NoahIdolFrontTrigger");
     }
+     public void NoahDown()
+    {
+        animator.SetTrigger("NoahDownTrigger");
+    }
     public void LinaIdolFront()
     {
         animator.SetTrigger("LinaIdolFrontTrigger");
