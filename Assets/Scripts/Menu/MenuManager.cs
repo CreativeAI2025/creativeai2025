@@ -244,7 +244,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     public void OnCloseSelectWindow()
     {
         MenuUsePhase = MenuUsePhase.Closed;
-        _menuSelectWindowController.HideWindow();
+        _menuItemWindowController.LoadItemList();
     }
 
     /// <summary>
