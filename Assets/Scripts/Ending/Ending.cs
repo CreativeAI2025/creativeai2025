@@ -26,6 +26,7 @@ public class Ending : MonoBehaviour
         playableDirector = this.gameObject.GetComponent<PlayableDirector>();
         playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0.5f);
         isEnd = false;
+        EndingFlag();
         EndSelect(end_num);
         SkillpointManager.Instance.SaveSkillpoint();
         PlayerPrefs.SetInt("Ending", 1);
@@ -53,6 +54,7 @@ public class Ending : MonoBehaviour
             //Debug.Log("Openingに戻る");
             SoundManager.Instance.StopBGM();
             //Titleシーンを呼び出す
+
         }
     }
 
@@ -64,5 +66,13 @@ public class Ending : MonoBehaviour
     {
         endImage.sprite = endList[end_num].end_picture;
         SoundManager.Instance.PlayBGM(endList[end_num].bgm_id, 0.5f);
+    }
+
+    void EndingFlag()
+    {
+        // if (FlagManager.Instance.HasFlag())
+        // {
+
+        // }
     }
 }
