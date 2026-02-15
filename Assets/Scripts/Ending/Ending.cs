@@ -27,6 +27,8 @@ public class Ending : MonoBehaviour
         playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0.5f);
         isEnd = false;
         EndSelect(end_num);
+        SkillpointManager.Instance.SaveSkillpoint();
+        PlayerPrefs.SetInt("Ending", 1);
     }
 
     // Update is called once per frame
