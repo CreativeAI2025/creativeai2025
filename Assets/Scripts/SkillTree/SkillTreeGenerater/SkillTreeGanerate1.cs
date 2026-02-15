@@ -41,7 +41,7 @@ public class SkillTreeGanerate1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) || FlagManager.Instance.HasFlag("tutorial_completed"))
         {
             sum_sp = 0;
             dataSetting1.Reset();
