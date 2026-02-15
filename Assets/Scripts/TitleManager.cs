@@ -171,6 +171,8 @@ public class TitleManager : MonoBehaviour
     private void LoadGame()
     {
         _gameInitializer.ContinueGame();
+        SceneManager.LoadScene("zophy_House");
+        Debug.Log("ゲームを強い状態で最初から開始します。");
     }
 
 }

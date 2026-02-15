@@ -3,37 +3,39 @@ using TMPro;
 
 public class MenuSelectUIController : MonoBehaviour, IMenuUIController
 {
-    [SerializeField] TextMeshProUGUI _textField;
-    [SerializeField] MenuCharacterStatusUI _characterStatusField1;
-    [SerializeField] MenuCharacterStatusUI _characterStatusField2;
-    [SerializeField] MenuCharacterStatusUI _characterStatusField3;
+    [SerializeField] private TextMeshProUGUI _textField;
+    [SerializeField] private MenuCharacterStatusUI[] _characterStatusUIs;
 
     private void SetupSelectWindow()
     {
-        _characterStatusField1.Initialize();
-        _characterStatusField2.Initialize();
-        _characterStatusField3.Initialize();
+        foreach (var ui in _characterStatusUIs)
+        {
+            ui.Initialize();
+        }
     }
 
     public void HideAllCursor()
     {
-        _characterStatusField1.Hide();
-        _characterStatusField2.Hide();
-        _characterStatusField3.Hide();
+        foreach (var ui in _characterStatusUIs)
+        {
+            ui.Hide();
+        }
     }
 
     private void GetDarkAll()
     {
-        _characterStatusField1.MakeCharacterImageDark();
-        _characterStatusField2.MakeCharacterImageDark();
-        _characterStatusField3.MakeCharacterImageDark();
+        foreach (var ui in _characterStatusUIs)
+        {
+            ui.MakeCharacterImageDark();
+        }
     }
 
     public void GetBrightAll()
     {
-        _characterStatusField1.MakeCharacterImageBright();
-        _characterStatusField2.MakeCharacterImageBright();
-        _characterStatusField3.MakeCharacterImageBright();
+        foreach (var ui in _characterStatusUIs)
+        {
+            ui.MakeCharacterImageBright();
+        }
     }
 
     public void InputText(string text)
@@ -44,25 +46,7 @@ public class MenuSelectUIController : MonoBehaviour, IMenuUIController
     public void ShowSelectedCursor(int cursor)
     {
         GetDarkAll();
-
-        if (cursor < 0 || cursor > 2)
-        {
-            Debug.Log("そんなにパーティメンバーがいるわけないでしょうが");
-            return;
-        }
-
-        switch (cursor)
-        {
-            case 0:
-                _characterStatusField1.MakeCharacterImageBright();
-                break;
-            case 1:
-                _characterStatusField2.MakeCharacterImageBright();
-                break;
-            case 2:
-                _characterStatusField3.MakeCharacterImageBright();
-                break;
-        }
+        _characterStatusUIs[cursor].MakeCharacterImageBright();
     }
 
     /// <summary>
@@ -74,47 +58,19 @@ public class MenuSelectUIController : MonoBehaviour, IMenuUIController
     /// <param name="maxHP"></param>
     /// <param name="currentMP"></param>
     /// <param name="maxMP"></param>
-    public void SetCharacterStatus1(Sprite sprite, int currentHP, int maxHP, int currentMP, int maxMP)
+    public void SetCharacterStatus(int cursor, Sprite sprite, int currentHP, int maxHP, int currentMP, int maxMP)
     {
-        _characterStatusField1.SetCharacterSprite(sprite);
+        _characterStatusUIs[cursor].SetCharacterSprite(sprite);
 
         float hpRate = (float)currentHP / (float)maxHP;
-        _characterStatusField1.SetHPTextFromValue(currentHP, maxHP);
-        _characterStatusField1.SetHpbarSize(hpRate);
+        _characterStatusUIs[cursor].SetHPTextFromValue(currentHP, maxHP);
+        _characterStatusUIs[cursor].SetHpbarSize(hpRate);
 
         float mpRate = (float)currentMP / (float)maxMP;
-        _characterStatusField1.SetMPTextFromValue(currentMP, maxMP);
-        _characterStatusField1.SetMpbarSize(mpRate);
+        _characterStatusUIs[cursor].SetMPTextFromValue(currentMP, maxMP);
+        _characterStatusUIs[cursor].SetMpbarSize(mpRate);
 
-        _characterStatusField1.Show();
-    }
-    public void SetCharacterStatus2(Sprite sprite, int currentHP, int maxHP, int currentMP, int maxMP)
-    {
-        _characterStatusField2.SetCharacterSprite(sprite);
-
-        float hpRate = (float)currentHP / (float)maxHP;
-        _characterStatusField2.SetHPTextFromValue(currentHP, maxHP);
-        _characterStatusField2.SetHpbarSize(hpRate);
-
-        float mpRate = (float)currentMP / (float)maxMP;
-        _characterStatusField2.SetMPTextFromValue(currentMP, maxMP);
-        _characterStatusField2.SetMpbarSize(mpRate);
-
-        _characterStatusField2.Show();
-    }
-    public void SetCharacterStatus3(Sprite sprite, int currentHP, int maxHP, int currentMP, int maxMP)
-    {
-        _characterStatusField3.SetCharacterSprite(sprite);
-
-        float hpRate = (float)currentHP / (float)maxHP;
-        _characterStatusField3.SetHPTextFromValue(currentHP, maxHP);
-        _characterStatusField3.SetHpbarSize(hpRate);
-
-        float mpRate = (float)currentMP / (float)maxMP;
-        _characterStatusField3.SetMPTextFromValue(currentMP, maxMP);
-        _characterStatusField3.SetMpbarSize(mpRate);
-
-        _characterStatusField3.Show();
+        _characterStatusUIs[cursor].Show();
     }
 
     public void Show()
