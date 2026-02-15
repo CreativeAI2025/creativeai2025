@@ -14,13 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyId: 207
   enemyName: "\u30AC\u30FC\u30CB\u30A3\u30A2\u30F3"
-  sprite:
-    m_AssetGUID: be81a786e2c526140b636b4566a26c64
-    m_SubObjectName: enemySprite_207
-    m_SubObjectType: UnityEngine.Sprite, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-    m_SubObjectGUID: 
-    m_EditorAssetChanged: 0
+  sprite: {fileID: 21300000, guid: be81a786e2c526140b636b4566a26c64, type: 3}
   HP: 150
   MP: 0
   Attack: 71
@@ -31,4 +25,16 @@ MonoBehaviour:
   Evasion: 0
   exp: 37
   gold: 20
-  enemyActionRecords: []
+  enemyActionRecords:
+  - enemyActionCategory: 1
+    enemyConditionRecords: []
+    skillData: {fileID: 11400000, guid: e062595b72246a94cae7193e0a21a34c, type: 2}
+    priority: 40
+  - enemyActionCategory: 1
+    enemyConditionRecords: []
+    skillData: {fileID: 11400000, guid: 2ac01020799a54c4b82dfce748bd75ba, type: 2}
+    priority: 40
+  - enemyActionCategory: 1
+    enemyConditionRecords: []
+    skillData: {fileID: 11400000, guid: 810e9780c2afcc643a6d037f2b5f1483, type: 2}
+    priority: 70

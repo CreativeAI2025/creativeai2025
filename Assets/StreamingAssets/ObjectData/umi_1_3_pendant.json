@@ -1,0 +1,28 @@
+{
+  "Id": 3,
+  "Location": [
+    {
+      "MapName": "Sea",
+      "Position": [
+        22,
+        5
+      ]
+    }
+  ],
+  "EventName": " Conversation umi_1_3_pendant",
+  "TriggerType": 2,
+  "FlagCondition": {
+    "Flag": [
+    [
+      "noa_friend",
+        false
+    ],
+    [
+        "noafriendFinished",
+        true       
+    ]
+],
+    "NextFlag": [
+    ]
+  }
+}

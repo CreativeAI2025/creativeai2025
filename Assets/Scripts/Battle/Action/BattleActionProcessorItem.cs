@@ -33,11 +33,6 @@ public class BattleActionProcessorItem : MonoBehaviour
     public void ProcessAction(BattleAction action)
     {
         var itemData = ItemDataManager.Instance.GetItemDataById(action.itemId);
-        if (itemData == null)
-        {
-            Logger.Instance.LogWarning($"アイテムデータが見つかりませんでした。 ID: {action.itemId}");
-            return;
-        }
 
         // 消費アイテムの場合、所持数を減らします。
         if (action.isActorFriend && itemData.itemCategory == ItemCategory.ConsumableItem)
@@ -53,12 +48,13 @@ public class BattleActionProcessorItem : MonoBehaviour
     IEnumerator ProcessItemActionCoroutine(BattleAction action)
     {
         var itemData = ItemDataManager.Instance.GetItemDataById(action.itemId);
+        /*
         if (itemData == null)
         {
             Logger.Instance.LogWarning($"アイテムデータが見つかりませんでした。 ID: {action.itemId}");
             _actionProcessor.SetPauseProcess(false);
             yield break;
-        }
+        }*/
 
         // 消費アイテムの場合、所持数を減らします。（ループ前に一度だけ実行）
         if (action.isActorFriend && itemData.itemCategory == ItemCategory.ConsumableItem)
@@ -102,17 +98,17 @@ public class BattleActionProcessorItem : MonoBehaviour
             }
             else if (itemData.itemEffect.itemEffectCategory == ItemEffectCategory.MPRecovery)
             {
+                int hpDelta = 0;
                 int mpDelta = DamageFormula.CalculateHealValue(itemData.itemEffect.value);
-                int mpConsume = 0;
 
                 // ステータス変更
                 if (action.isTargetFriend)
                 {
-                    CharacterStatusManager.Instance.ChangeCharacterStatus(targetId, mpDelta, mpConsume);
+                    CharacterStatusManager.Instance.ChangeCharacterStatus(targetId, hpDelta, mpDelta);
                 }
                 else
                 {
-                    EnemyStatusManager.Instance.ChangeEnemyStatus(targetId, mpDelta, mpConsume);
+                    EnemyStatusManager.Instance.ChangeEnemyStatus(targetId, hpDelta, mpDelta);
                 }
 
                 // メッセージ表示コルーチンを呼び出し
@@ -125,7 +121,7 @@ public class BattleActionProcessorItem : MonoBehaviour
                 characterStatus.Paralysis = false;
                 characterStatus.Sleep = false;
                 characterStatus.Confusion = false;
-                yield return StartCoroutine(ShowItemStaEfeRecoveryMessage(targetId,  action.isTargetFriend));
+                yield return StartCoroutine(ShowItemStaEfeRecoveryMessage(targetId, action.isTargetFriend));
             }
             else if (itemData.itemEffect.itemEffectCategory == ItemEffectCategory.Revive)
             {
@@ -181,7 +177,7 @@ public class BattleActionProcessorItem : MonoBehaviour
             yield return null;
         }
     }
-        /// <summary>
+    /// <summary>
     /// 状態異常回復アイテムのメッセージを表示します。
     /// </summary>
     IEnumerator ShowItemStaEfeRecoveryMessage(int targetId, bool isTargetFriend)

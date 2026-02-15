@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 [CreateAssetMenu(fileName = "EnemyData", menuName = "Scriptable Objects/EnemyData")]
 public class EnemyData : ScriptableObject
 {
     public int enemyId;
     public string enemyName;
-    public AssetReferenceSprite sprite;
+    public Sprite sprite;
     public int HP;
     public int MP;
     public int Attack;

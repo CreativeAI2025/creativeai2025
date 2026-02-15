@@ -22,7 +22,7 @@ public class SkillEfectExample : MonoBehaviour
             // skillEfectChange[0].PlaySkillAnimation(animationNum[0]);
             // skillEfectChange[1].PlaySkillAnimation(animationNum[1]);
             // skillEfectChange[2].PlaySkillAnimation(animationNum[2]);
-            EfectView();
+            //EfectView();
         }
     }
 

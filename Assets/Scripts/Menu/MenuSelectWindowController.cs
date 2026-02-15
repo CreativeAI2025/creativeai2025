@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine.TextCore.Text;
 
 public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
 {
@@ -83,29 +84,23 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
         _uiController.HideAllCursor();  // 一度全てのキャラクターステータスウィンドウを閉じる（後から必要な箇所だけ追加する）
         while (_cursor < _cursorMax)
         {
-            int id = ids[_cursor];
-            var characterData = CharacterDataManager.Instance.GetCharacterData(id);
-            Sprite sprite = CharacterDataManager.Instance.GetCharacterSprite(id);   // キャラクタースプライトの取得
-            var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(id);
-            int currentHp = characterStatus.currentHp;
-            int maxHp = characterStatus.maxHp;
-            int currentMp = characterStatus.currentMp;
-            int maxMp = characterStatus.maxMp;
-            switch (_cursor)
-            {
-                case 0:
-                    _uiController.SetCharacterStatus1(sprite, currentHp, maxHp, currentMp, maxMp);
-                    break;
-                case 1:
-                    _uiController.SetCharacterStatus2(sprite, currentHp, maxHp, currentMp, maxMp);
-                    break;
-                case 2:
-                    _uiController.SetCharacterStatus3(sprite, currentHp, maxHp, currentMp, maxMp);
-                    break;
-            }
+            SetNewStatusUI(_cursor);
             _cursor++;
         }
         _cursor = 0;
+    }
+
+    private void SetNewStatusUI(int cursor)
+    {
+        int id = CharacterStatusManager.Instance.partyCharacter[cursor];
+        var characterData = CharacterDataManager.Instance.GetCharacterData(id);
+        Sprite sprite = characterData.sprite;   // キャラクタースプライトの取得
+        var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(id);
+        int currentHp = characterStatus.currentHp;
+        int maxHp = characterStatus.maxHp;
+        int currentMp = characterStatus.currentMp;
+        int maxMp = characterStatus.maxMp;
+        _uiController.SetCharacterStatus(cursor, sprite, currentHp, maxHp, currentMp, maxMp);
     }
 
     public void OpenMenuUseSelect()
@@ -180,20 +175,51 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
     /// </summary>
     private string UseItem()
     {
-        string text = "この機能は　 今後　実装予定です。";
+        string text = "効果がなかった";
         // 使用するアイテムデータ
         ItemData itemData = _itemData;
+        int value = itemData.itemEffect.value;
         // 現在カーソルが指されているキャラクターのID
         int selectedCharacterId = CharacterStatusManager.Instance.partyCharacter[_cursor];
-        /*
-        ーーーーー　景山君への依頼１　ーーーーー
-        アイテムを使用した時の処理を書いてほしいです。
-        必要な変数は用意したはず
-        この関数はアイテムが使えたかによって、特定の文字列を返すようにする
-        （返り値は、上の方にある「private const string ~~」のどれか）
-        （場合によっては、アイテム名がプラスで必要な場合もある）
-        もしアイテムの効果の対象が全員の場合は、selectedCharacterIdを使わなくていいです
-        */
+        var characterStatus = CharacterStatusManager.Instance.GetCharacterStatusById(selectedCharacterId);
+        string name = CharacterDataManager.Instance.GetCharacterName(selectedCharacterId);
+        switch (itemData.itemEffect.itemEffectCategory)
+        {
+            case ItemEffectCategory.HPRecovery:
+                // もし瀕死なら回復しない
+                if (CharacterStatusManager.Instance.IsCharacterDefeated(selectedCharacterId))
+                {
+                    break;
+                }
+                if (characterStatus.currentHp >= characterStatus.maxHp)
+                {
+                    break;
+                }
+                CharacterStatusManager.Instance.ChangeCharacterStatus(selectedCharacterId, value, 0);
+                text = $"{name}のHPが回復した！";
+                CharacterStatusManager.Instance.UseItem(itemData.itemId);
+                break;
+            case ItemEffectCategory.MPRecovery:
+                if (characterStatus.currentMp >= characterStatus.maxMp)
+                {
+                    break;
+                }
+                CharacterStatusManager.Instance.ChangeCharacterStatus(selectedCharacterId, value, 0);
+                text = $"{name}のMPが回復した！";
+                CharacterStatusManager.Instance.UseItem(itemData.itemId);
+                break;
+            case ItemEffectCategory.Revive:
+                if (!CharacterStatusManager.Instance.IsCharacterDefeated(selectedCharacterId))
+                {
+                    break;
+                }
+                int reviveValue = characterStatus.maxHp * value / 100;
+                CharacterStatusManager.Instance.ChangeCharacterStatus(selectedCharacterId, reviveValue, 0);
+                text = $"{name}は復活した！";
+                CharacterStatusManager.Instance.UseItem(itemData.itemId);
+                break;
+        }
+        SetNewStatusUI(_cursor);
         return text;
     }
 
@@ -209,15 +235,6 @@ public class MenuSelectWindowController : MonoBehaviour, IMenuWindowController
         int userId = _skillUserId;
         // 現在カーソルが指されているキャラクターのID
         int selectedCharacterId = CharacterStatusManager.Instance.partyCharacter[_cursor];
-        /*
-        ーーーーー　景山君への依頼１　ーーーーー
-        スキルを使用した時の処理を書いてほしいです。
-        必要な変数は用意したはず
-        この関数はスキルが使えたかによって、特定の文字列を返すようにする
-        （返り値は、上の方にある「private const string ~~」のどれか）
-        （場合によっては、スキル名がプラスで必要な場合もある）
-        もしスキルの効果の対象が全員の場合は、selectedCharacterIdを使わなくていいです
-        */
         return text;
     }
 

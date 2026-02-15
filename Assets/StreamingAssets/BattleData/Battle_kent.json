@@ -6,14 +6,20 @@
     "EncounterMessage":"こいつも烏の紋章が入っているな……。",
     "WinFlags":
     [
-      "KentBattleFinished",
-      true
-    ]
-  ],
-  "LoseFlags": [
+      [
+        "KentBattleFinished",
+        true
+      ]        
+    ],
+    "LoseFlags":
     [
-      "KentBattleTry",
-      true
+      [
+        "KentBattleTry",
+        true
+      ],
+      [
+        "MoriMuraBack",
+        true
+      ]
     ]
-  ]
 }

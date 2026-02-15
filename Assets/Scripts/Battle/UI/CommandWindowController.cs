@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 /// <summary>
 /// コマンドウィンドウを制御するクラスです。
@@ -68,8 +69,14 @@ public class CommandWindowController : MonoBehaviour, IBattleWindowController
         }
         else if (_inputSetting.GetDecideInputDown())
         {
-            BattleManager.Instance.OnCommandSelected(_selectedCommand);
+            StartCoroutine(DecideProcess());
         }
+    }
+
+    private IEnumerator DecideProcess()
+    {
+        yield return null;
+        BattleManager.Instance.OnCommandSelected(_selectedCommand);
     }
 
     /// <summary>

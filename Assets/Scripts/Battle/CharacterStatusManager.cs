@@ -65,6 +65,16 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         partyGold = 1000;
     }
 
+    public void Initialize(int level)
+    {
+        partyCharacter = new List<int>() { 1 };
+        // デバッグ用に適当な値をぶち込んでいます
+        characterStatuses = new List<CharacterStatus>()
+        {
+            SetCharacterStatus(1, level)
+        };
+    }
+
     /// <summary>
     /// CharacterStatusを返す
     /// 新しくキャラクター生成を行った際に使用する
@@ -91,7 +101,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             currentMagicDefence = characterParameterRecord.MagicDefence,
             currentSpeed = characterParameterRecord.Speed,
             currentEvasion = characterParameterRecord.Evasion,
-            skillPoint = characterData.skillPointPerLevel * (level - 1),
+            skillPoint = characterData.skillPointPerLevel * (level - 1) + SkillpointManager.Instance.GetSkillPoint(id),
             skillList = new List<int>()
         };
 
@@ -346,6 +356,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
             UpdataCharacterCurrentStatus(characterId, category, value);
             categoryInt++;
         }
+
     }
 
     /// <summary>
@@ -358,6 +369,8 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         int skillPointPerLevel = CharacterDataManager.Instance.GetCharacterData(characterId).skillPointPerLevel;
         var characterStatus = GetCharacterStatusById(characterId);
         characterStatus.skillPoint += skillPointPerLevel * gap;
+        // データファイルに保存
+        SkillpointManager.Instance.AddSkillpoint(characterId, skillPointPerLevel * gap);
     }
 
     /// <summary>

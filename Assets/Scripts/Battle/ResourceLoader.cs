@@ -15,8 +15,7 @@ public class ResourceLoader : MonoBehaviour
     void LoadDefinitionData()
     {
         CharacterDataManager.Instance.LoadCharacterData();
-        CharacterDataManager.Instance.LoadExpTables();
-        CharacterDataManager.Instance.LoadParameterTables();
+        //CharacterDataManager.Instance.LoadParameterTables();
 
         EnemyDataManager.Instance.LoadEnemyData();
         //ItemDataManager.Instance.LoadItemData();

@@ -1,0 +1,31 @@
+{
+  "Id": 1,
+  "Location": [
+    {
+      "MapName": "Sea",
+      "Position": [
+        23,
+        11
+      ]
+    }
+  ],
+  "EventName": "Battle Battle_butabana | Recover",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+      [
+        "noa_friend",
+        true
+      ],
+      [
+        "ButabanaBattleTry",
+        true
+      ],
+      [
+        "umiMuraBack",
+        false
+      ]
+    ],
+    "NextFlag": []
+  }
+}

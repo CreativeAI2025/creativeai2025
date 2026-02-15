@@ -80,28 +80,17 @@ public class BattleSpriteController : MonoBehaviour
         const int EncountMax = 5;
         for (int i = 0; i < EncountMax; i++)
         {
-            Sprite enemySprite = voidSprite;
             if (i < enemyIds.Count)
             {
                 // 適切な画像を入れる
                 int enemyId = enemyIds[i];
                 var enemyData = EnemyDataManager.Instance.GetEnemyDataById(enemyId);
-                if (enemyData == null)
-                {
-                    Logger.Instance.LogWarning($"敵キャラクターの画像が取得できませんでした。 ID: {enemyId}");
-                }
-                else
-                {
-                    enemySprite = EnemyDataManager.Instance.GetEnemySprite(enemyId);
-                }
-                enemySprites[i].sprite = EnemyDataManager.Instance.GetEnemySprite(enemyId);
-                enemySprites[i].gameObject.SetActive(true);
+                enemySprites[i].sprite = enemyData.sprite;
+                enemySprites[i].gameObject.transform.parent.gameObject.SetActive(true);
             }
             else
             {
-                // 透明の画像を入れる
-                enemySprites[i].sprite = enemySprite;
-                enemySprites[i].gameObject.SetActive(false);
+                enemySprites[i].gameObject.transform.parent.gameObject.SetActive(false);
             }
         }
     }
@@ -133,7 +122,7 @@ public class BattleSpriteController : MonoBehaviour
     {
         foreach (var image in enemySprites)
         {
-            image.gameObject.SetActive(false);
+            image.gameObject.transform.parent.gameObject.SetActive(false);
         }
     }
 

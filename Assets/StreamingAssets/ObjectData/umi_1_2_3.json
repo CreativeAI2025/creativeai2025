@@ -1,0 +1,40 @@
+{
+  "Id": 2,
+  "Location": [
+    {
+      "MapName": "Sea",
+      "Position": [
+        23,
+        11
+      ]
+    }
+  ],
+  "EventName": "Conversation umi_1_2_3",
+  "TriggerType": 0,
+  "FlagCondition": {
+    "Flag": [
+    [
+      "rina_friend",
+        false
+    ],
+    [
+      "noa_friend",
+        true
+    ],
+    [
+      "ButabanaBattleFinished",
+        true
+    ],
+    [
+      "noafriendFinished",
+        false
+    ]
+],
+    "NextFlag": [
+      [
+      "noafriendFinished",
+        true
+    ]
+    ]
+  }
+}
