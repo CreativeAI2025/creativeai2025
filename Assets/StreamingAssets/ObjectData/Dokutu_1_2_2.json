@@ -1,7 +1,7 @@
 {
-  "Id": 2,
+  "Id": 0,
   "Location": [
-    {
+     {
       "MapName": "Cave",
       "Position": [
         8,
@@ -16,28 +16,32 @@
       ]
     }
   ],
-  "EventName": "Animation R1S7TF_2 | Conversation Dokutu_1_4_2",
-  "TriggerType": 2,
+  "EventName": "Animation R1S7TT_1 | Conversation Dokutu_1_1_2",
+  "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
 ["rina_friend",
+false
+    ],["noa_friend",
 true
-    ],[
-"noa_friend",
-true],[
-  "AdelateBattleFinished",
-  true
+    ],
+    [
+  "StopCave",
+  false
+],[
+  "AdelateBattleTry",
+  false
 ],
 [
-  "rinanoafriendFinished",
+  "AdelateBattleFinished",
   false
 ]
 ],
     "NextFlag": [
       [
-  "rinanoafriendFinished",
-  true
-]
+        "StopCave",
+        true
+      ]
     ]
   }
 }

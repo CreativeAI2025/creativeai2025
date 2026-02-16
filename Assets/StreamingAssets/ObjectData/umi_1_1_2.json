@@ -4,12 +4,12 @@
     {
       "MapName": "Sea",
       "Position": [
-        22,
+        23,
         11
       ]
     }
   ],
-  "EventName": "Animation R1S6TT | Conversation umi_1_1_2",
+  "EventName": "Animation R1S6TT_1 | Conversation umi_1_1_2",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
@@ -23,6 +23,10 @@
     ]
     ],
     "NextFlag": [
+      [
+      "StopUmi",
+        true
+    ]
     ]
   }
 }

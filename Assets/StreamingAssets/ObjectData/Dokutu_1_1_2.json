@@ -16,12 +16,22 @@
       ]
     }
   ],
-  "EventName": "Conversation Dokutu_1_1_2",
+  "EventName": "Animation R1S7TT_1 | Conversation Dokutu_1_1_2",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-[
+["rina_friend",
+true
+    ],
+    [
   "StopCave",
+  false
+],[
+  "AdelateBattleTry",
+  false
+],
+[
+  "AdelateBattleFinished",
   false
 ]
 ],
