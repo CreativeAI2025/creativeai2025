@@ -1,32 +1,60 @@
 {
   "Content": [
     {
+      "Speaker": "ゾフィ",
+      "Text": "（今の音はなんだ？）"
+    },
+    {
       "Speaker": "ノア",
-      "Text": "あなたは……！",
+      "Text": "くそっ！\n　これでも倒せないか……。",
       "ChangeImage": [
-                {
-                    "ImageName": "RightPanel",
-                    "SpriteName": "zofy"
-                },
-                {
-                    "ImageName": "LeftPanel",
-                    "SpriteName": "noa"
-                }
-            ]
+        {
+          "ImageName": "LeftPanel",
+          "SpriteName": "noa"
+        }
+      ]
     },
     {
       "Speaker": "ゾフィ",
-      "Text": "今はそれどころじゃない。\n　とにかく目の前の敵を……。"
+      "Text": "この声……。"
     },
     {
       "Speaker": "ブタバナ",
       "Text": "グギャアアア！",
       "ChangeImage": [
-                {
-                    "ImageName": "LeftPanel",
-                    "SpriteName": "mb2"
-                }
+        {
+          "ImageName": "LeftPanel",
+          "SpriteName": "mb2"
+        }
+      ]
+    },
+    {
+      "Speaker": "ノア",
+      "Text": "くっ！ここまでか……。",
+      "ChangeImage": [
+        {
+          "ImageName": "RightPanel",
+          "SpriteName": "noa"
+        }
+      ]
+    },
+    {
+      "Speaker": "ゾフィ",
+      "Text": "（…今度こそ、助けるべきか？）",
+      "QuestionData": [
+        {
+          "Answer": "戦う",
+          "NextFlag": [
+            [
+              "noa_friend",
+              true
             ]
+          ]
+        },
+        {
+          "Answer": "様子を見る"
+        }
+      ]
     }
   ]
 }

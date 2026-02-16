@@ -244,7 +244,7 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     public void OnCloseSelectWindow()
     {
         MenuUsePhase = MenuUsePhase.Closed;
-        _menuSelectWindowController.HideWindow();
+        _menuItemWindowController.LoadItemList();
     }
 
     /// <summary>
@@ -279,6 +279,10 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     private void SceneLoaded(Scene nextScene, LoadSceneMode mode)
     {
         SetIsMenuOpen(nextScene.name);
+        if (!isOpenMenu)
+        {
+            return;
+        }
         playerPause = GameObject.Find("Pause").GetComponent<Pause>();
     }
 }
