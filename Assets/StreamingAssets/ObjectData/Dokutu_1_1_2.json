@@ -1,17 +1,17 @@
 {
   "Id": 0,
   "Location": [
-     {
+    {
       "MapName": "Cave",
       "Position": [
-        8,
+        7,
         41
       ]
     },
     {
       "MapName": "Cave",
       "Position": [
-        9,
+        8,
         41
       ]
     }
@@ -20,21 +20,23 @@
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-["rina_friend",
-true
+      [
+        "rina_friend",
+        true
+      ],
+      [
+        "StopCave",
+        false
+      ],
+      [
+        "AdelateBattleTry",
+        false
+      ],
+      [
+        "AdelateBattleFinished",
+        false
+      ]
     ],
-    [
-  "StopCave",
-  false
-],[
-  "AdelateBattleTry",
-  false
-],
-[
-  "AdelateBattleFinished",
-  false
-]
-],
     "NextFlag": [
       [
         "StopCave",

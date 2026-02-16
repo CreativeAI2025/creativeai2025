@@ -1,17 +1,17 @@
 {
   "Id": 0,
   "Location": [
-     {
+    {
       "MapName": "Cave",
       "Position": [
-        8,
+        7,
         41
       ]
     },
     {
       "MapName": "Cave",
       "Position": [
-        9,
+        8,
         41
       ]
     }
@@ -20,24 +20,23 @@
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-[
-  "AdelateBattleFinished",
-  false
-],
-[
-  "StopCave",
-  true
-],
-[
-    "AdelateBattleTry",
-    true
-],
-[
-    "CaveMuraBack",
-    false
-]
-],
-    "NextFlag": [
-    ]
+      [
+        "AdelateBattleFinished",
+        false
+      ],
+      [
+        "StopCave",
+        true
+      ],
+      [
+        "AdelateBattleTry",
+        true
+      ],
+      [
+        "CaveMuraBack",
+        false
+      ]
+    ],
+    "NextFlag": []
   }
 }
