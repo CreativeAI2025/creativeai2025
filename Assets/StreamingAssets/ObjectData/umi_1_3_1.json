@@ -9,28 +9,28 @@
       ]
     }
   ],
-  "EventName": " Animation R1S6FF_2| Conversation umi_1_3_1",
+  "EventName": "Animation R1S6FF_2 | Conversation umi_1_3_1",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-    [
-      "rina_friend",
+      [
+        "rina_friend",
         false
+      ],
+      [
+        "noa_friend",
+        false
+      ],
+      [
+        "noafriendFinished",
+        false
+      ]
     ],
-    [
-      "noa_friend",
-        false
-    ],
-    [
-      "noafriendFinished",
-        false
-    ]
-],
     "NextFlag": [
-    [
-      "noafriendFinished",
+      [
+        "noafriendFinished",
         true
-    ]
+      ]
     ]
   }
 }

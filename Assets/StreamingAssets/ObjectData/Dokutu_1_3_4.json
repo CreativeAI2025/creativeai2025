@@ -4,14 +4,14 @@
     {
       "MapName": "Cave",
       "Position": [
-        8,
+        7,
         41
       ]
     },
     {
       "MapName": "Cave",
       "Position": [
-        9,
+        8,
         41
       ]
     }
@@ -20,14 +20,15 @@
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-["BadEnd",
-true
-    ],[
-      "AdelateBattleFinished",
-  true
-    ]
-],
-    "NextFlag": [
-    ]
+      [
+        "BadEnd",
+        true
+      ],
+      [
+        "AdelateBattleFinished",
+        true
+      ]
+    ],
+    "NextFlag": []
   }
 }

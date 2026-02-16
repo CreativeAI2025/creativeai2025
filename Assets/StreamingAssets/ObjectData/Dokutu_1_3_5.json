@@ -4,38 +4,40 @@
     {
       "MapName": "Cave",
       "Position": [
-        8,
+        7,
         41
       ]
     },
     {
       "MapName": "Cave",
       "Position": [
-        9,
+        8,
         41
       ]
     }
   ],
-  "EventName": "Conversation Dokutu_1_3_5",
+  "EventName": "Animation R1S7FF_2 | Conversation Dokutu_3_2",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-["BadEnd",
-false
-    ],[
-      "AdelateBattleFinished",
-  true
+      [
+        "BadEnd",
+        false
+      ],
+      [
+        "AdelateBattleFinished",
+        true
+      ],
+      [
+        "rinanoafriendFinished",
+        false
+      ]
     ],
-    [
-  "rinanoafriendFinished",
-  false
-]
-],
     "NextFlag": [
       [
-  "rinanoafriendFinished",
-  true
-]
+        "rinanoafriendFinished",
+        true
+      ]
     ]
   }
 }
