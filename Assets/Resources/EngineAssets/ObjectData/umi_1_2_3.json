@@ -4,37 +4,41 @@
     {
       "MapName": "Sea",
       "Position": [
-        23,
+        22,
         11
       ]
     }
   ],
-  "EventName": "Conversation umi_1_2_3",
+  "EventName": "Animation R1S6FT_2 | Conversation umi_1_2_3",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-    [
-      "rina_friend",
+      [
+        "rina_friend",
         false
-    ],
-    [
-      "noa_friend",
+      ],
+      [
+        "noa_friend",
         true
-    ],
-    [
-      "ButabanaBattleFinished",
+      ],
+      [
+        "StopUmi",
         true
-    ],
-    [
-      "noafriendFinished",
+      ],
+      [
+        "ButabanaBattleTry",
         false
-    ]
-],
+      ],
+      [
+        "StopUmi_2",
+        false
+      ]
+    ],
     "NextFlag": [
       [
-      "noafriendFinished",
+        "StopUmi_2",
         true
-    ]
+      ]
     ]
   }
 }
