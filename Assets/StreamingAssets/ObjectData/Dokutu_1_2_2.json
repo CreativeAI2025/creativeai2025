@@ -1,15 +1,22 @@
 {
-  "Id": 2,
+  "Id": 0,
   "Location": [
     {
-      "MapName": "Sea",
+      "MapName": "Cave",
       "Position": [
-        22,
-        11
+        7,
+        41
+      ]
+    },
+    {
+      "MapName": "Cave",
+      "Position": [
+        8,
+        41
       ]
     }
   ],
-  "EventName": "Animation R1S6FT_2 | Conversation umi_1_2_3",
+  "EventName": "Animation R1S7FT_1 | Conversation Dokutu_1_1_2",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
@@ -22,21 +29,21 @@
         true
       ],
       [
-        "StopUmi",
-        true
-      ],
-      [
-        "ButabanaBattleTry",
+        "StopCave",
         false
       ],
       [
-        "StopUmi_2",
+        "AdelateBattleTry",
+        false
+      ],
+      [
+        "AdelateBattleFinished",
         false
       ]
     ],
     "NextFlag": [
       [
-        "StopUmi_2",
+        "StopCave",
         true
       ]
     ]

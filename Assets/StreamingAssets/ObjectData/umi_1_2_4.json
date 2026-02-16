@@ -13,20 +13,28 @@
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-    [
-      "rina_friend",
+      [
+        "rina_friend",
         false
-    ],
-    [
-      "noa_friend",
+      ],
+      [
+        "noa_friend",
         true
-    ],
-    [
-      "ButabanaBattleFinished",
+      ],
+      [
+        "ButabanaBattleFinished",
         true
-    ]
-],
+      ],
+      [
+        "noafriendFinished",
+        false
+      ]
+    ],
     "NextFlag": [
+      [
+        "noafriendFinished",
+        true
+      ]
     ]
   }
 }

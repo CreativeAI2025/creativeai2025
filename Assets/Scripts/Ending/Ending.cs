@@ -18,7 +18,7 @@ public class Ending : MonoBehaviour
     PlayableDirector playableDirector;
     [SerializeField] Image endImage;
     [SerializeField] List<End> endList;
-    [SerializeField] int end_num = 0;
+    [Header("王道：0,主人公死亡：1,恋愛：2,全滅：3,敵の勘違い：4,スチルなし：5"), SerializeField] int end_num = 0;
     private bool isEnd;//　終了を検知したかどうか
     InputSetting inputSetting;
 
@@ -73,11 +73,103 @@ public class Ending : MonoBehaviour
         SoundManager.Instance.PlayBGM(endList[end_num].bgm_id, 0.5f);
     }
 
+    /// <summary>
+    /// フラグによるエンディングスチルの変更
+    /// </summary>
     void EndingFlag()
     {
-        // if (FlagManager.Instance.HasFlag())
-        // {
-
-        // }
+        if (FlagManager.Instance.HasFlag("rina_friend") && FlagManager.Instance.HasFlag("noa_friend"))
+        {
+            if (!FlagManager.Instance.HasFlag("zofy_human"))
+            {
+                if (FlagManager.Instance.HasFlag("ZebusBattleFinished"))
+                {
+                    end_num = 0;
+                }
+                else if (!FlagManager.Instance.HasFlag("ZebusBattleFinished"))
+                {
+                    end_num = 1;
+                }
+            }
+            else if (FlagManager.Instance.HasFlag("zofy_human"))
+            {
+                if (!FlagManager.Instance.HasFlag("RinaNoaBattleFinished"))
+                {
+                    end_num = 3;
+                }
+                else if (FlagManager.Instance.HasFlag("RinaNoaBattleFinished"))
+                {
+                    end_num = 4;
+                }
+            }
+        }
+        else if (FlagManager.Instance.HasFlag("rina_friend"))
+        {
+            if (FlagManager.Instance.HasFlag("zofy_human"))
+            {
+                end_num = 2;
+            }
+            else if (!FlagManager.Instance.HasFlag("zofy_human"))
+            {
+                if (!FlagManager.Instance.HasFlag("PochariusBattleFinished"))
+                {
+                    end_num = 3;
+                }
+                else if (FlagManager.Instance.HasFlag("PochariusBattleFinished"))
+                {
+                    end_num = 4;
+                }
+            }
+        }
+        else if (FlagManager.Instance.HasFlag("noa_friend"))
+        {
+            if (!FlagManager.Instance.HasFlag("zofy_human"))
+            {
+                if (!FlagManager.Instance.HasFlag("RinaNoaBattleFinished"))
+                {
+                    end_num = 0;
+                }
+                else if (FlagManager.Instance.HasFlag("RinaNoaBattleFinished"))
+                {
+                    end_num = 1;
+                }
+            }
+            else if (FlagManager.Instance.HasFlag("zofy_human"))
+            {
+                if (!FlagManager.Instance.HasFlag("nusiItem"))
+                {
+                    end_num = 2;
+                }
+                else if (!FlagManager.Instance.HasFlag("LastNusiBattleFinished"))
+                {
+                    end_num = 3;
+                }
+                else if (FlagManager.Instance.HasFlag("LastNusiBattleFinished"))
+                {
+                    end_num = 4;
+                }
+            }
+        }
+        else
+        {
+            if (FlagManager.Instance.HasFlag("zofy_human"))
+            {
+                if (FlagManager.Instance.HasFlag("KentBattleFinished"))
+                {
+                    end_num = 0;
+                }
+                else if (!FlagManager.Instance.HasFlag("KentBattleFinished"))
+                {
+                    end_num = 1;
+                }
+            }
+            else if (!FlagManager.Instance.HasFlag("zofy_human"))
+            {
+                if (FlagManager.Instance.HasFlag("PochariusBattleFinished"))
+                {
+                    end_num = 3;
+                }
+            }
+        }
     }
 }

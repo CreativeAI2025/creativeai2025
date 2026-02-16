@@ -13,24 +13,23 @@
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-    [
-      "rina_friend",
+      [
+        "noa_friend",
         true
-    ],
-    [
-      "noa_friend",
-        true
-    ],
-    [
-      "ButabanaBattleFinished",
+      ],
+      [
+        "ButabanaBattleFinished",
         false
+      ],
+      [
+        "ButabanaBattleTry",
+        false
+      ],
+      [
+        "StopUmi_2",
+        true
+      ]
     ],
-    [
-      "ButabanaBattleTry",
-      false
-    ]
-],
-    "NextFlag": [
-    ]
+    "NextFlag": []
   }
 }

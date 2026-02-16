@@ -9,28 +9,31 @@
       ]
     }
   ],
-  "EventName": "Join 3 | Battle Battle_butabana | Recover",
+  "EventName": "Battle Battle_butabana | Recover",
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-    [
-      "rina_friend",
-        false
-    ],
-    [
-      "noa_friend",
+      [
+        "noa_friend",
         true
-    ],
-    [
-      "ButabanaBattleFinished",
+      ],
+      [
+        "ButabanaBattleFinished",
         false
+      ],
+      [
+        "ButabanaBattleTry",
+        true
+      ],
+      [
+        "StopUmi_2",
+        true
+      ],
+      [
+        "umiMuraBack",
+        false
+      ]
     ],
-    [
-      "ButabanaBattleTry",
-      false
-    ]
-],
-    "NextFlag": [
-    ]
+    "NextFlag": []
   }
 }
