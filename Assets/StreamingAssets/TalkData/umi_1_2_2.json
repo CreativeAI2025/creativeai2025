@@ -8,11 +8,11 @@
       "Speaker": "ノア",
       "Text": "くそっ！\n　これでも倒せないか……。",
       "ChangeImage": [
-                {
-                    "ImageName": "LeftPanel",
-                    "SpriteName": "noa"
-                }
-            ]
+        {
+          "ImageName": "LeftPanel",
+          "SpriteName": "noa"
+        }
+      ]
     },
     {
       "Speaker": "ゾフィ",
@@ -22,21 +22,21 @@
       "Speaker": "ブタバナ",
       "Text": "グギャアアア！",
       "ChangeImage": [
-                {
-                    "ImageName": "LeftPanel",
-                    "SpriteName": "mb2"
-                }
-            ]
+        {
+          "ImageName": "LeftPanel",
+          "SpriteName": "mb2"
+        }
+      ]
     },
     {
       "Speaker": "ノア",
       "Text": "くっ！ここまでか……。",
       "ChangeImage": [
-                {
-                    "ImageName": "RightPanel",
-                    "SpriteName": "rina"
-                }
-            ]
+        {
+          "ImageName": "RightPanel",
+          "SpriteName": "noa"
+        }
+      ]
     },
     {
       "Speaker": "ゾフィ",
@@ -45,7 +45,10 @@
         {
           "Answer": "戦う",
           "NextFlag": [
-            ["noa_friend", true]
+            [
+              "noa_friend",
+              true
+            ]
           ]
         },
         {
