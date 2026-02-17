@@ -14,15 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyId: 603
   enemyName: "\u30D6\u30BF\u30D0\u30CA"
-  sprite: {fileID: 0}
-  HP: 1
-  MP: 0
-  Attack: 0
-  Defence: 0
-  MagicAttack: 0
-  MagicDefence: 0
-  Speed: 0
+  sprite: {fileID: 1921655221735959026, guid: e2da70d67c56ae1489470365b5c92d5f, type: 3}
+  HP: 450
+  MP: 50
+  Attack: 80
+  Defence: 40
+  MagicAttack: 40
+  MagicDefence: 30
+  Speed: 30
   Evasion: 0
-  exp: 0
-  gold: 0
-  enemyActionRecords: []
+  exp: 500
+  gold: 1000
+  enemyActionRecords:
+  - enemyActionCategory: 0
+    enemyConditionRecords: []
+    skillData: {fileID: 0}
+    priority: 50
+  - enemyActionCategory: 0
+    enemyConditionRecords: []
+    skillData: {fileID: 0}
+    priority: 30
+  - enemyActionCategory: 0
+    enemyConditionRecords: []
+    skillData: {fileID: 0}
+    priority: 20
