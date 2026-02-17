@@ -5,11 +5,11 @@
             "MapName": "Castle",
             "Position": [
                 38,
-                7
+                6
             ]
         }
     ],
-    "EventName": "ChangeScene Basement,16,1",
+    "EventName": "TileModify Castle Tiles 38,7 - | TileModify Castle StylesBack 38,7 g | TileModify Castle StylesMiddle 38,7 =",
     "TriggerType": 0,
     "FlagCondition": {
         "Flag": [
@@ -19,9 +19,14 @@
             ],
             [
                 "open",
-                true
+                false
             ]
         ],
-        "NextFlag": []
+        "NextFlag": [
+            [
+                "open",
+                true
+            ]
+        ]
     }
 }
