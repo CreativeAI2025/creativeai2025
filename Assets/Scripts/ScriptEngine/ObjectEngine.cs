@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Threading;
 using System.Diagnostics;
+using UnityEngine.InputSystem;
 
 public class ObjectEngine : MonoBehaviour
 {
@@ -327,6 +328,9 @@ public class ObjectEngine : MonoBehaviour
                 string sceneName = WorldmapManager.Instance.GetNextScene();
                 await SceneChange(sceneName);
                 break;
+            case "Remove":
+                RemovePartyMember(int.Parse(eventArgs[1]));
+                break;
             default: throw new NotImplementedException();
         }
     }
@@ -412,6 +416,11 @@ public class ObjectEngine : MonoBehaviour
             CharacterStatusManager.Instance.ChangeCharacterStatus(id, 9999, 9999);
         }
         //ConversationTextManager.Instance.InitializeFromString(messageText);
+    }
+
+    private void RemovePartyMember(int id)
+    {
+        CharacterStatusManager.Instance.RemoveFriend(id);
     }
 
     private void GetItem(string itemName)
