@@ -1,0 +1,32 @@
+{
+    "Id": 0,
+    "Location": [
+        {
+            "MapName": "Castle",
+            "Position": [
+                38,
+                6
+            ]
+        }
+    ],
+    "EventName": "TileModify Castle Tiles 38,7 - | TileModify Castle StylesBack 38,7 g | TileModify Castle StylesMiddle 38,7 =",
+    "TriggerType": 0,
+    "FlagCondition": {
+        "Flag": [
+             [
+                "chika",
+                true
+            ],
+            [
+                "open",
+                false
+            ]
+        ],
+        "NextFlag": [
+            [
+                "open",
+                true
+            ]
+        ]
+    }
+}

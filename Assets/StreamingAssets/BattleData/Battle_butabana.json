@@ -1,25 +1,23 @@
 {
   "EnemyIds": [
-    603
+    604
   ],
-    "BGM": "bgm_8",
-    "EncounterMessage":"こいつも烏の紋章が入っているな……。",
-    "WinFlags":
+  "BGM": "bgm_8",
+  "EncounterMessage": "こいつも烏の紋章が入っているな……。",
+  "WinFlags": [
     [
-      [
-        "ButabanaBattleFinished",
-        true 
-      ]       
-    ],
-    "LoseFlags":
-    [
-      [
-        "ButabanaBattleTry",
-        true
-      ],
-      [
-        "umiMuraBack",
-        true
-      ]
+      "ButabanaBattleFinished",
+      true
     ]
+  ],
+  "LoseFlags": [
+    [
+      "ButabanaBattleTry",
+      true
+    ],
+    [
+      "umiMuraBack",
+      true
+    ]
+  ]
 }
