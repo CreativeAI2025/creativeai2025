@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f16436ac038bdf4b92bc19360a4c5c8, type: 3}
+  m_Name: EnemyData_611
+  m_EditorClassIdentifier: 
+  enemyId: 611
+  enemyName: "\u30DD\u30C1\u30E3\u30EA\u30A6\u30B9"
+  sprite: {fileID: 4283459233586718417, guid: 4e75b337625c2a34c9697ad020e07a4d, type: 3}
+  HP: 1900
+  MP: 999
+  Attack: 210
+  Defence: 100
+  MagicAttack: 60
+  MagicDefence: 40
+  Speed: 60
+  Evasion: 5
+  exp: 1000
+  gold: 1000
+  enemyActionRecords:
+  - enemyActionCategory: 0
+    enemyConditionRecords: []
+    skillData: {fileID: 0}
+    priority: 50
+  - enemyActionCategory: 0
+    enemyConditionRecords: []
+    skillData: {fileID: 0}
+    priority: 30
+  - enemyActionCategory: 0
+    enemyConditionRecords: []
+    skillData: {fileID: 0}
+    priority: 20
