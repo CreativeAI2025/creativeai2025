@@ -4,15 +4,15 @@
     {
       "MapName": "Cave",
       "Position": [
-        9,
+        11,
         2
       ]
     },
     {
       "MapName": "Cave",
       "Position": [
-        10,
-        41
+        12,
+        2
       ]
     }
   ],
@@ -20,20 +20,27 @@
   "TriggerType": 0,
   "FlagCondition": {
     "Flag": [
-["rina_friend",
-true
-    ],["caveCheck",
-      false
-        ],[
-"noa_friend",
-true],[
-  "AdelateBattleFinished",
-  false
-]
-],
+      [
+        "rina_friend",
+        true
+      ],
+      [
+        "caveCheck",
+        false
+      ],
+      [
+        "noa_friend",
+        false
+      ],
+      [
+        "AdelateBattleFinished",
+        false
+      ]
+    ],
     "NextFlag": [
-      ["caveCheck",
-    true
+      [
+        "caveCheck",
+        true
       ]
     ]
   }

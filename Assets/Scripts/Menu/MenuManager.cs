@@ -279,6 +279,10 @@ public class MenuManager : DontDestroySingleton<MenuManager>
     private void SceneLoaded(Scene nextScene, LoadSceneMode mode)
     {
         SetIsMenuOpen(nextScene.name);
+        if (!isOpenMenu)
+        {
+            return;
+        }
         playerPause = GameObject.Find("Pause").GetComponent<Pause>();
     }
 }
