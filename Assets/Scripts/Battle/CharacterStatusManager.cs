@@ -87,11 +87,12 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         var characterData = CharacterDataManager.Instance.GetCharacterData(id);
         var characterParameterTable = CharacterDataManager.Instance.GetParameterTable(id);  // キャラクターのレベルごとのパラメーターテーブルを取得する
         var characterParameterRecord = characterParameterTable.parameterRecords[level - 1]; // キャラクターのレベルに応じたパラメーターを取得
+        var expTable = CharacterDataManager.Instance.GetExpTable();
         CharacterStatus characterStatus = new()
         {
             characterId = id,
             level = characterParameterRecord.Level,
-            exp = 0,
+            exp = expTable.expRecords[level - 1].Exp,
             currentHp = characterParameterRecord.HP,
             maxHp = characterParameterRecord.HP,
             currentMp = characterParameterRecord.MP,
