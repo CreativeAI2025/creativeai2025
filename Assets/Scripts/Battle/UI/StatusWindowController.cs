@@ -85,7 +85,7 @@ public class StatusWindowController : MonoBehaviour, IBattleWindowController
         int partyMember = CharacterStatusManager.Instance.partyCharacter.Count;
         for (int i = 0; i < partyMember; i++)
         {
-            _uiControllers[i].Show();
+            _uiControllers[CharacterStatusManager.Instance.partyCharacter[i] - 1].Show();
         }
     }
 
