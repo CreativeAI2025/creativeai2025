@@ -169,7 +169,6 @@ public class ObjectEngine : MonoBehaviour
     private async void Update()
     {
         if (conversationFlag || changeSceneFlag) return;
-        if (Input.GetKeyDown(KeyCode.R)) CallEvent("Remove 2");
         if (_inputSetting.GetDecideInputDown())
         {
             Vector2Int frontPosition = new Vector2Int(player.GetGridPosition().x + player.Direction.x, player.GetGridPosition().y + player.Direction.y);
