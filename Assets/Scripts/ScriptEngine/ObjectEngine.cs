@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Threading;
 using System.Diagnostics;
+using UnityEngine.InputSystem;
 
 public class ObjectEngine : MonoBehaviour
 {
@@ -168,6 +169,7 @@ public class ObjectEngine : MonoBehaviour
     private async void Update()
     {
         if (conversationFlag || changeSceneFlag) return;
+        if (Input.GetKeyDown(KeyCode.R)) CallEvent("Remove 2");
         if (_inputSetting.GetDecideInputDown())
         {
             Vector2Int frontPosition = new Vector2Int(player.GetGridPosition().x + player.Direction.x, player.GetGridPosition().y + player.Direction.y);
@@ -327,6 +329,9 @@ public class ObjectEngine : MonoBehaviour
                 string sceneName = WorldmapManager.Instance.GetNextScene();
                 await SceneChange(sceneName);
                 break;
+            case "Remove":
+                RemovePartyMember(int.Parse(eventArgs[1]));
+                break;
             default: throw new NotImplementedException();
         }
     }
@@ -412,6 +417,11 @@ public class ObjectEngine : MonoBehaviour
             CharacterStatusManager.Instance.ChangeCharacterStatus(id, 9999, 9999);
         }
         //ConversationTextManager.Instance.InitializeFromString(messageText);
+    }
+
+    private void RemovePartyMember(int id)
+    {
+        CharacterStatusManager.Instance.RemoveFriend(id);
     }
 
     private void GetItem(string itemName)

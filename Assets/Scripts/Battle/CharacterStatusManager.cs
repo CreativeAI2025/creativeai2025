@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 /// <summary>
@@ -129,7 +130,21 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         var mainCharacterStatus = GetCharacterStatusById(mainId);   // IDから主人公のキャラクターステータスを持ってくる
         int level = mainCharacterStatus.level;  // 新しく加入するメンバーのレベルを、主人公の現在のレベルと同じにする
         characterStatuses.Add(SetCharacterStatus(id, level));   // メンバーを加える
-        Debug.Log($"新しい仲間が加わった！\nID：{id}\nレベル：{level}");
+        UnityEngine.Debug.Log($"新しい仲間が加わった！\nID：{id}\nレベル：{level}");
+    }
+
+    public void RemoveFriend(int id)
+    {
+        int cursor = 0;
+        while (partyCharacter[cursor] != id)
+        {
+            if (cursor >= partyCharacter.Count)
+                return;
+            cursor++;
+        }
+        UnityEngine.Debug.Log($"[CharacterStatusManager]IDが{id}の味方メンバーをパーティから削除します。");
+        partyCharacter.RemoveAt(cursor);
+        characterStatuses.RemoveAt(cursor);
     }
 
     /// <summary>
@@ -175,7 +190,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         characterStatus.isDefeated = false;
         if (characterStatus == null)
         {
-            Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {characterId}");
+            UnityEngine.Debug.LogWarning($"キャラクターのステータスが見つかりませんでした。 ID : {characterId}");
             return;
         }
         characterStatus.currentHp += hpDelta;
@@ -253,7 +268,7 @@ public class CharacterStatusManager : DontDestroySingleton<CharacterStatusManage
         var partyItemInfo = partyItemInfoList.Find(info => info.itemId == itemId);
         if (partyItemInfo == null)
         {
-            Debug.LogWarning($"対象のアイテムを所持していません。 ID : {itemId}");
+            UnityEngine.Debug.LogWarning($"対象のアイテムを所持していません。 ID : {itemId}");
             return;
         }
 
