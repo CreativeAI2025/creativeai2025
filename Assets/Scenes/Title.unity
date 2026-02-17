@@ -2119,6 +2119,54 @@ PrefabInstance:
       propertyPath: m_text
       value: /
       objectReference: {fileID: 0}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: _backgroundRenderer
+      value: 
+      objectReference: {fileID: 2139479843}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: battleBackgroundMapDataList.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: battleBackgroundMapDataList.Array.data[0].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 28075255c63b2564b82bb30fa807b0dd, type: 3}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: battleBackgroundMapDataList.Array.data[1].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 11b48e120b59bf342bca8f3cbcc93fe2, type: 3}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: battleBackgroundMapDataList.Array.data[2].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8c155f9664cfe404790e65f66f1d7823, type: 3}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: battleBackgroundMapDataList.Array.data[3].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ea1535974a004c84d9de841aeac44310, type: 3}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: battleBackgroundMapDataList.Array.data[4].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ba7b02d59ae697346a3e1770f2d7a083, type: 3}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: battleBackgroundMapDataList.Array.data[0].sceneName
+      value: Village
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: battleBackgroundMapDataList.Array.data[1].sceneName
+      value: Forest
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: battleBackgroundMapDataList.Array.data[2].sceneName
+      value: Sea
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: battleBackgroundMapDataList.Array.data[3].sceneName
+      value: Cave
+      objectReference: {fileID: 0}
+    - target: {fileID: 5827618236542467998, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+      propertyPath: battleBackgroundMapDataList.Array.data[4].sceneName
+      value: Basement
+      objectReference: {fileID: 0}
     - target: {fileID: 5851601785498710600, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -4144,6 +4192,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 11c7d4364470de543a2a795164551973, type: 3}
+--- !u!114 &2139479843 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7157557440454970273, guid: 6641b0ce2d2e46f49bbcdef5ddc5eb09, type: 3}
+  m_PrefabInstance: {fileID: 1150998767}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2584167925413637339
 PrefabInstance:
   m_ObjectHideFlags: 0
