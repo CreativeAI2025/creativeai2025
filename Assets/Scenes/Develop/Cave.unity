@@ -420,7 +420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 443944180}
   minPosition: {x: 1.5, y: 1}
-  maxPosition: {x: 40, y: 29}
+  maxPosition: {x: 40, y: 54}
   smoothSpeed: 0.1
 --- !u!1001 &414787404
 PrefabInstance:
@@ -1338,6 +1338,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 443944178}
     - target: {fileID: 3405359358091297703, guid: 4f77b68f96dd2954f89a18e28535160d, type: 3}
+      propertyPath: moveSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3405359358091297703, guid: 4f77b68f96dd2954f89a18e28535160d, type: 3}
       propertyPath: allowDistance
       value: 0.05
       objectReference: {fileID: 0}
@@ -1351,7 +1355,7 @@ PrefabInstance:
       objectReference: {fileID: 463361415}
     - target: {fileID: 4628583461109545689, guid: 4f77b68f96dd2954f89a18e28535160d, type: 3}
       propertyPath: m_SortingOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4866882733963371132, guid: 4f77b68f96dd2954f89a18e28535160d, type: 3}
       propertyPath: m_Name
