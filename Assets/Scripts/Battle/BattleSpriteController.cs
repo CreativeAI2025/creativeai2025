@@ -1,7 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Linq;
+using UnityEngine.SceneManagement;
+
+[System.Serializable]
+public class BattleBackgroundMapData
+{
+    public string sceneName;
+    public Sprite sprite;
+}
 
 /// <summary>
 /// 戦闘関連のスプライトを制御するクラスです。
@@ -12,7 +19,10 @@ public class BattleSpriteController : MonoBehaviour
     /// 背景の表示用Spriteです。
     /// </summary>
     [SerializeField]
-    GameObject _backgroundRenderer;
+    Image _backgroundRenderer;
+
+    [SerializeField] private BattleBackgroundMapData[] battleBackgroundMapDataList;
+    private Dictionary<string, int> _battleBackgroundMapDataDict = new Dictionary<string, int>();
 
     /// <summary>
     /// 透明画像
@@ -28,17 +38,28 @@ public class BattleSpriteController : MonoBehaviour
     /// </summary>
     [SerializeField] private List<SkillEfectChange> enemyEffectSprites = new List<SkillEfectChange>();
 
-    /// <summary>
-    /// カメラへの参照です。
-    /// </summary>
-    Camera _mainCamera;
+    void Awake()
+    {
+        for (int i = 0; i < battleBackgroundMapDataList.Length; i++)
+        {
+            _battleBackgroundMapDataDict.Add(battleBackgroundMapDataList[i].sceneName, i);
+        }
+    }
 
     /// <summary>
     /// 背景を表示します。
     /// </summary>
     public void ShowBackground()
     {
-        _backgroundRenderer.SetActive(true);
+        // シーンに合わせた戦闘背景を設定する
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (!_battleBackgroundMapDataDict.ContainsKey(sceneName))
+        {
+            Debug.Log($"[BattleSpriteController]戦闘背景としてシーン「{sceneName}が配置されていません。");
+            return;
+        }
+        _backgroundRenderer.sprite = battleBackgroundMapDataList[_battleBackgroundMapDataDict[sceneName]].sprite;
+        _backgroundRenderer.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -46,30 +67,8 @@ public class BattleSpriteController : MonoBehaviour
     /// </summary>
     public void HideBackground()
     {
-        _backgroundRenderer.SetActive(false);
+        _backgroundRenderer.gameObject.SetActive(false);
     }
-
-    /// <summary>
-    /// 背景と敵キャラクターの位置をカメラに合わせて設定します。
-    /// </summary>
-    /*
-    public void SetSpritePosition()
-    {
-        if (_mainCamera == null)
-        {
-            _mainCamera = Camera.main;
-        }
-
-        var cameraPos = _mainCamera.transform.position;
-        var newPosition = new Vector3(cameraPos.x, cameraPos.y, 0);
-
-        var backgroundPosOffset = new Vector3(0, 0, 0);
-        _backgroundRenderer.transform.position = newPosition + backgroundPosOffset;
-
-        var enemyPosOffset = new Vector3(0, -0.5f, 0);
-        _backgroundRenderer.transform.position = newPosition + enemyPosOffset;
-    }
-    */
 
     /// <summary>
     /// 敵キャラクターを表示します。
