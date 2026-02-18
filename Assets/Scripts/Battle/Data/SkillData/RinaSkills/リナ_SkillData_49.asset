@@ -13,24 +13,25 @@ MonoBehaviour:
   m_Name: "\u30EA\u30CA_SkillData_49"
   m_EditorClassIdentifier: 
   skillId: 49
+  effectSprite: {fileID: 0}
   skillName: "\u3069\u3093\u3069\u3093\u884C\u304D\u307E\u3059\u308F\uFF01"
   skillDesc: "100%\u306E\u78BA\u7387\u3067\u5473\u65B9\u4E00\u4EBA\u306E\u9632\u5FA1\u529B\u30FB\u7D20\u65E9\u3055\u309220%\u4E0A\u6607\u3055\u305B\u308B"
   cost: 9
   skillEffect:
     skillCategory: 6
     EffectTarget: 1
-    value: 20
+    value: 1.2
     probability: 100
     StatusEffect: []
     buff:
     - BuffCategory: 1
       effectTarget: 1
-      Duration: 0
-      Power: 20
+      Duration: 3
+      Power: 1.2
     - BuffCategory: 4
       effectTarget: 1
-      Duration: 0
-      Power: 20
+      Duration: 3
+      Power: 1.2
     status: "\u9632\u5FA1\u529B\u3001\u7D20\u65E9\u3055"
     duration: 0
     isExtra: 0
